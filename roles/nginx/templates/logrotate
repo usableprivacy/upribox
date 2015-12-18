@@ -1,0 +1,26 @@
+{{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.error}}
+{{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.access}}
+{{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.interface_error}}
+{{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.interface_access}}
+{{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.blackhole_error}}
+{{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.blackhole_access}}
+{{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.css_error}}
+{{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.css_access}}
+{
+    su root tmp-logger
+	daily
+	missingok
+	rotate 0
+    maxsize 10M
+	notifempty
+	create 0640 www-data adm
+	sharedscripts
+	prerotate
+		if [ -d /etc/logrotate.d/httpd-prerotate ]; then \
+			run-parts /etc/logrotate.d/httpd-prerotate; \
+		fi; \
+	endscript
+	postrotate
+		[ ! -f /var/run/nginx.pid ] || kill -USR1 `cat /var/run/nginx.pid`
+	endscript
+}

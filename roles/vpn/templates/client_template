@@ -1,0 +1,29 @@
+client
+comp-lzo
+dev tun
+proto udp
+remote <IP-ADRESS> 1194
+# tls-remote server
+verify-x509-name server name
+key-direction 1
+<tls-auth>
+{{tls_auth.stdout}}
+</tls-auth>
+
+<ca>
+{{ca_cert.stdout}}
+</ca>
+
+<key>
+#CLIENT_KEY
+</key>
+
+<cert>
+#CLIENT_CERT
+</cert>
+
+redirect-gateway def1
+link-mtu 1586
+cipher AES-256-CBC
+auth SHA384
+keysize 256

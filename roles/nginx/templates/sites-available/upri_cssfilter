@@ -1,0 +1,50 @@
+server {
+	listen 80;
+
+	root /usr/share/nginx/www-upri-blackhole;
+	index index.html index.htm;
+
+	server_name filter.upri.box;
+
+	access_log {{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.css_access}};
+  error_log {{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.css_error}} error;
+
+  gzip on;
+	gzip_disable "msie6";
+  gzip_types text/css;
+
+    location ~ ^.*/upri.css {
+        rewrite_by_lua '
+            local cssdomain = string.match(ngx.var.uri, "(%w+%.%w+)/")
+            local css = require "css"
+            local special = css.is_special(cssdomain)
+
+            if special then
+                    return ngx.redirect("special.css")
+                else
+                    return ngx.redirect("/generic.css")
+            end
+
+            ngx.print(csscontent)
+        ';
+    }
+    location ~ ^.*/special.css {
+        content_by_lua '
+            local cssdomain = string.match(ngx.var.uri, "(%w+%.%w+)/")
+
+            local css = require "css"
+            local csscontent = css.getcss(cssdomain)
+            ngx.header["Cache-Control"] = "max-age=86400"
+            ngx.print(csscontent)
+        ';
+    }
+
+	location ~ ^/generic.css {
+        content_by_lua '
+            local css = require "css"
+            local csscontent = css.getcommon()
+            ngx.header["Cache-Control"] = "max-age=86400"
+            ngx.print(csscontent)
+        ';
+    }
+}

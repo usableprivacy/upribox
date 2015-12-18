@@ -1,0 +1,48 @@
+{
+    "interfaces": {
+        "general": {
+            "mode": "dhcp"
+        },
+        "static": {
+            "dns": "192.168.0.254",
+            "gateway": "192.168.0.254",
+            "ip": "192.168.0.95",
+            "netmask": "255.255.255.0"
+        }
+    },
+    "ssh": {
+        "general": {
+            "enabled": "yes"
+        }
+    },
+    "tor": {
+        "general": {
+            "enabled": "yes"
+        }
+    },
+    "unattended_upgrades": {
+        "general": {
+            "autoclean_days": 21,
+            "download_days": 1,
+            "enabled": 1,
+            "install_days": 1,
+            "update_days": 1
+        }
+    },
+    "wlan": {
+        "general": {
+            "channel": 9,
+            "hw_mode": "g",
+            "ieee80211n": 1,
+            "wmm_enabled": 1
+        },
+        "ninja": {
+            "passwd": "MyRaspberryP1T0r!",
+            "ssid": "upriBoxTor"
+        },
+        "upri": {
+            "passwd": "MyRaspberryP1!",
+            "ssid": "upriBox"
+        }
+    }
+}

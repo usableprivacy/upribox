@@ -1,0 +1,16 @@
+{
+    "general": {
+        "channel": "6",
+        "hw_mode": "g",
+        "ieee80211n": "1",
+        "wmm_enabled": "1"
+    },
+    "upri": {
+        "ssid": "upribox",
+        "passwd": "changeme"
+    },
+    "ninja": {
+        "ssid": "upribox-ninja",
+        "passwd": "changeme"
+    }
+}

@@ -1,0 +1,9 @@
+Django==1.8.3
+click==4.1
+django-autoslug==1.8.0
+django-rq==0.8.0
+django-widget-tweaks==1.4.1
+redis==2.10.3
+requests==2.7.0
+rq==0.5.4
+wsgiref==0.1.2

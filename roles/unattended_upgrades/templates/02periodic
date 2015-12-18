@@ -1,0 +1,23 @@
+// Control parameters for cron jobs by /etc/cron.daily/apt //
+
+
+// Enable the update/upgrade script (0=disable)
+APT::Periodic::Enable "{{ default_settings.unattended_upgrades.general.enabled if not (ansible_local is defined and ansible_local.unattended_upgrade is defined and ansible_local.unattended_upgrade.general is defined) else ansible_local.unattended_upgrade.general.enabled| default(default_settings.unattended_upgrades.general.enabled) }}";
+
+// Do "apt-get update" automatically every n-days (0=disable)
+APT::Periodic::Update-Package-Lists "{{ default_settings.unattended_upgrades.general.update_days if not (ansible_local is defined and ansible_local.unattended_upgrade is defined and ansible_local.unattended_upgrade.general is defined) else ansible_local.unattended_upgrade.general.update_days| default(default_settings.unattended_upgrades.general.update_days) }}";
+
+
+// Do "apt-get upgrade --download-only" every n-days (0=disable)
+APT::Periodic::Download-Upgradeable-Packages "{{  default_settings.unattended_upgrades.general.download_days if not (ansible_local is defined and ansible_local.unattended_upgrade is defined and ansible_local.unattended_upgrade.general is defined) else ansible_local.unattended_upgrade.general.download_days| default( default_settings.unattended_upgrades.general.download_days) }}";
+
+
+// Run the "unattended-upgrade" security upgrade script
+// every n-days (0=disabled)
+// Requires the package "unattended-upgrades" and will write
+// a log in /var/log/unattended-upgrades
+APT::Periodic::Unattended-Upgrade "{{  default_settings.unattended_upgrades.general.install_days if not (ansible_local is defined and ansible_local.unattended_upgrade is defined and ansible_local.unattended_upgrade.general is defined) else ansible_local.unattended_upgrade.general.install_days| default( default_settings.unattended_upgrades.general.install_days) }}";
+
+
+// Do "apt-get autoclean" every n-days (0=disable)
+APT::Periodic::AutocleanInterval "{{  default_settings.unattended_upgrades.general.autoclean_days if not (ansible_local is defined and ansible_local.unattended_upgrade is defined and ansible_local.unattended_upgrade.general is defined) else ansible_local.unattended_upgrade.general.autoclean_days| default( default_settings.unattended_upgrades.general.autoclean_days) }}";

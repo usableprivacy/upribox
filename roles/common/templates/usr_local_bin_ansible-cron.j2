@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Ansible Update Cronjob: runs ansible-pull up to three times
+n=0
+until [ $n -ge 3 ]
+do
+    # update ansible
+    /usr/local/bin/ansible-pull -d {{ pull_workdir }} -C {{ pull_branch }} \
+    -i {{ pull_workdir }}/environments/production/inventory_pull -U {{ pull_repo_url }} \
+    >>{{ default_settings.log.general.path }}/{{ default_settings.log.ansible_pull.logfiles.logname }} 2>&1 && break
+
+    n=$[$n+1]
+	echo "update $n failed" >>{{ default_settings.log.general.path }}/{{ default_settings.log.ansible_pull.logfiles.logname }}
+done

@@ -1,0 +1,43 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-03 14:02+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: statistics/templates/statistics.html:5
+msgid "Statistiken - upribox"
+msgstr "statistics - upribox"
+
+#: statistics/templates/statistics.html:8
+msgid "Statistik"
+msgstr "statistics"
+
+#: statistics/templates/statistics.html:9
+msgid "Geblockete Inhalte."
+msgstr "overview on blocked content"
+
+#: statistics/templates/statistics.html:13
+msgid ""
+"Die Statistiken liefern einen &Uuml;berblick &uuml;ber geblockte Webinhalte."
+msgstr "Statistics offer an overview on blocked web content."
+
+#: statistics/templates/statistics.html:17
+#: statistics/templates/statistics.html:22
+msgid "Geblockte Inhalte"
+msgstr "blocked content"
+
+#~ msgid "Besuchte Webseiten"
+#~ msgstr "visited websites"

@@ -1,0 +1,108 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-03 14:02+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: more/forms.py:13
+msgid "Benutzername"
+msgstr "user name"
+
+#: more/forms.py:18
+msgid "Altes Passwort"
+msgstr "existing password"
+
+#: more/forms.py:23
+msgid "Neues Passwort"
+msgstr "new password"
+
+#: more/forms.py:28
+msgid "Neues Passwort erneut eingeben"
+msgstr "re-enter new password"
+
+#: more/forms.py:42
+msgid "Das alte Passwort ist inkorrekt"
+msgstr "old password is invalid"
+
+#: more/jobs.py:15
+msgid "SSH wird gestartet..."
+msgstr "SSH restarts..."
+
+#: more/jobs.py:17
+msgid "SSH wird gestoppt..."
+msgstr "SSH stops..."
+
+#: more/jobs.py:22
+msgid "Konfiguration von SSH erfolgreich."
+msgstr "configuration of SSH successful."
+
+#: more/jobs.py:27
+msgid "Starten von SSH fehlgeschlagen."
+msgstr "starting of SSH failed."
+
+#: more/jobs.py:29
+msgid "Stoppen von SSH fehlgeschlagen."
+msgstr "stopping of SSH failed."
+
+#: more/jobs.py:31
+msgid "Es ist ein unbekannter Fehler aufgetreten."
+msgstr "unknown error occured."
+
+#: more/templates/more.html:7
+msgid "Admin - upribox"
+msgstr ""
+
+#: more/templates/more.html:10
+msgid "Admin"
+msgstr ""
+
+#: more/templates/more.html:11
+msgid "Admin-Daten &auml;ndern."
+msgstr "change administration data"
+
+#: more/templates/more.html:16
+msgid "Admin-Zugangsdaten"
+msgstr "Admin-Login"
+
+#: more/templates/more.html:20
+msgid "SSH"
+msgstr ""
+
+#: more/templates/more.html:21
+msgid ""
+"Mithilfe dieser Funktion können erfahrene Benutzer die upribox selbstständig "
+"konfigurieren."
+msgstr "This function should be used by experts to configure their upribox."
+
+#: more/templates/more.html:24
+msgid "Ein-/Ausschalten"
+msgstr "switch On/Off"
+
+#: more/templates/more.html:30
+msgid "SSH ist aktiviert"
+msgstr "SSH is activated"
+
+#: more/templates/more.html:31
+msgid "Ausschalten"
+msgstr "switch off"
+
+#: more/templates/more.html:35
+msgid "SSH ist deaktiviert"
+msgstr "SSH is deactivated"
+
+#: more/templates/more.html:36
+msgid "Einschalten"
+msgstr "switch On"

@@ -1,0 +1,29 @@
+---
+default_settings:
+  interfaces:
+    general:
+      mode: dhcp
+  
+    static:
+      ip: 192.168.0.95
+      netmask: 255.255.255.0
+      gateway: 192.168.0.254
+      dns: 192.168.0.254
+
+  wlan:
+    upri:
+      ssid: upriBox
+      passwd: MyRaspberryP1!
+
+    ninja:
+      ssid: upriBoxTor
+      passwd: MyRaspberryP1T0r!
+
+    general:
+      channel: 9
+      hw_mode: g
+      ieee80211n: 1
+      wmm_enabled: 1
+
+magic_mac_prefix: '02'
+magic_mac_postfix: '30'

@@ -1,0 +1,8 @@
+{{ default_settings.log.general.path }}/{{ default_settings.log.ansible_pull.logfiles.logname }} {
+  su root tmp-logger
+  rotate 0
+  daily
+  missingok
+  notifempty
+  maxsize 10M
+}

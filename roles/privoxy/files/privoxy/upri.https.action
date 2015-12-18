@@ -1,0 +1,28 @@
+# HTTP -> HTTPS (similar to HTTPS-Everywhere)
+
+{+redirect{s@^http://@https://@} \
+}
+mediawiki.org
+www.mediawiki.org
+wikimedia.org
+*.wikimedia.org
+wikimediafoundation.org
+www.wikimediafoundation.org
+wikibooks.org
+*.wikibooks.org
+wikidata.org
+*.wikidata.org
+wikinews.org
+*.wikinews.org
+wikipedia.org
+*.wikipedia.org
+wikiquote.org
+*.wikiquote.org
+wikisource.org
+*.wikisource.org
+wikiversity.org
+*.wikiversity.org
+wikivoyage.org
+*.wikivoyage.org
+wiktionary.org
+*.wiktionary.org

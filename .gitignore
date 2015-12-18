@@ -1,0 +1,12 @@
+vpn-psk
+/environments/development/inventory
+/environments/production/inventory
+/roles/common/files/id_rsa_git
+
+.DS_Store
+*.pyc
+/upribox_interface/db.sqlite3
+/upribox_interface/.idea
+
+/upribox_interface/ansible/facts.d/*
+!/upribox_interface/ansible/facts.d/.gitkeep

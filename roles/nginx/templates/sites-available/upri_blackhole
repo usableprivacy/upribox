@@ -1,0 +1,118 @@
+lua_package_path '/etc/nginx/lua/?.lua;;';
+
+map $http_accept $emptyfile_suffix {
+	"~*text/html"  ".html";
+	"~*image/png"  ".png";
+	"~*image/gif"  ".gif";
+	"~*image/jpeg" ".jpg";
+	"*/*"          ".js";
+}
+
+log_format blackhole_combined '"$host" - [$time_local] '
+ 	'"$request" "$emptyfile_suffix" "$http_referer" '
+  '"$http_user_agent"';
+
+server {
+	
+  listen   80 default_server; ## listen for ipv4; this line is default and implied
+
+  location = /robots.txt  { access_log off; log_not_found off; }
+  location = /favicon.ico { access_log off; log_not_found off; }
+  
+  gzip off;
+	
+  access_log {{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.blackhole_access}} blackhole_combined;
+  error_log {{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.blackhole_error}} error;
+
+	root /usr/share/nginx/www-upri-blackhole;
+	
+	#rewrite all requests to a blank HTML file
+	location / {
+
+	  default_type text/html;
+
+    try_files /blank$emptyfile_suffix /blank;
+		
+    rewrite_by_lua '
+		
+                local ck = require "cookie"
+                local cookie, err = ck:new()
+
+                -- get all cookies
+                local fields, err = cookie:get_all()
+
+		if fields then
+
+		local toplevel = string.match(ngx.var.host, "%.%w+%.%w+")
+		local subdomain = string.match(ngx.var.host, "%.%w+%.%w+%.%w+")
+		local domains = {ngx.var.host, toplevel, subdomain}
+
+			for k, v in pairs(fields) do
+			    for index, host in pairs(domains) do
+				    if host then
+					    cookie:set({
+						key = k,
+						value = "",
+						domain = host,
+						expires = "Thu, 01-Jan-1970 00:00:01 GMT"
+					    })
+				    end
+			    end
+			end
+		end
+		
+            ';
+	}
+	location /pagead {
+        default_type 'text/plain';
+        rewrite_by_lua '
+
+        if ngx.var.host == "www.googleadservices.com" then
+                local adurl = ngx.req.get_uri_args()["adurl"]
+                if adurl then
+                        return ngx.redirect(adurl)
+                end
+        end
+
+        ';
+	}
+	location /DealFrame {
+        default_type 'text/plain';
+        rewrite_by_lua '
+
+        if ngx.var.host == "stat.dealtime.com" then
+                local adurl = ngx.req.get_uri_args()["url"]
+                if adurl then
+                        return ngx.redirect(adurl)
+                end
+        end
+
+        ';
+	}
+    location /C/ {
+        default_type 'ext/plain';
+        rewrite_by_lua '
+
+        if ngx.var.host == "track.adform.net" then
+                local adurl = ngx.req.get_uri_args()["url"]
+                if adurl then
+                        return ngx.redirect(adurl)
+                end
+        end
+
+        ';
+	}
+	location /r.rfa {
+        default_type 'ext/plain';
+        rewrite_by_lua '
+
+        if ngx.var.host == "r.refinedads.com" then
+                local adurl = ngx.req.get_uri_args()["url"]
+                if adurl then
+                        return ngx.redirect(adurl)
+                end
+        end
+
+        ';
+	}
+}

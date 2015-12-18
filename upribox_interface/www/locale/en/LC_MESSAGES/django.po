@@ -1,0 +1,249 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-03 14:02+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: www/templates/base.html:12
+msgid "upribox - Ein einfaches Werkzeug zum Schutz der Privatsphäre"
+msgstr "upribox - A simple gadget to protect your Internet privacy"
+
+#: www/templates/base.html:27
+msgid "Start"
+msgstr ""
+
+#: www/templates/base.html:27
+msgid "upribox"
+msgstr ""
+
+#: www/templates/base.html:29
+msgid "Usable Privacy Box"
+msgstr ""
+
+#: www/templates/base.html:33 www/templates/base.html.py:55
+msgid "FAQ"
+msgstr ""
+
+#: www/templates/base.html:33 www/templates/base.html.py:55
+#: www/templates/faq.html:8
+msgid "Hilfe"
+msgstr "Help"
+
+#: www/templates/base.html:34
+msgid "Menü"
+msgstr "menu"
+
+#: www/templates/base.html:38
+msgid "Silent Modus"
+msgstr "silent mode"
+
+#: www/templates/base.html:39
+msgid "Ninja Modus"
+msgstr "ninja mode"
+
+#: www/templates/base.html:40
+msgid "VPN"
+msgstr ""
+
+#: www/templates/base.html:41
+msgid "Statistiken"
+msgstr "statistics"
+
+#: www/templates/base.html:42 www/templates/base.html.py:56
+#: www/templates/login.html:21
+msgid "Admin"
+msgstr "Admin"
+
+#: www/templates/base.html:43 www/templates/base.html.py:57
+msgid "Logout"
+msgstr "logout"
+
+#: www/templates/faq.html:5
+msgid "Hilfe - upribox"
+msgstr "Help - upribox"
+
+#: www/templates/faq.html:9
+msgid "H&auml;ufig gestellte Fragen"
+msgstr "frequently asked questions"
+
+#: www/templates/faq.html:16
+msgid "WLAN-Zugangsdaten &auml;ndern"
+msgstr "Changing the WiFi settings"
+
+#: www/templates/faq.html:17
+#, python-format
+msgid ""
+" Frage: Ich will die Zugangsdaten zum Beispiel f&uuml;r das WLAN "
+"\"%(ninja_ssid)s\" &auml;ndern. Muss ich mich daf&uuml;r in das "
+"entsprechende WLAN einw&auml;hlen?"
+msgstr ""
+"Question: I want to change the password of the \"%(ninja_ssid)s\". Do I need "
+"to connect to this WiFi?"
+
+#: www/templates/faq.html:18
+#, python-format
+msgid ""
+" Nein, die WLAN-Zugangsdaten k&ouml;nnen auch ge&auml;ndert werden, wenn du "
+"dich im WLAN \"%(upri_ssid)s\" befindest."
+msgstr ""
+"No. The WiFi passwords can also be changed if you are connected to the "
+"\"%(upri_ssid)s\"."
+
+#: www/templates/faq.html:20
+msgid "Kontakt"
+msgstr "contact"
+
+#: www/templates/faq.html:21
+#, python-format
+msgid ""
+"\n"
+"        Sie haben eine Frage zur upribox, die hier nicht angef&uuml;hrt ist? "
+"Sie wollen mit den EntwicklerInnen in Kontakt treten? Dann schreiben Sie uns "
+"eine E-Mail an die Adresse <a href=\"mailto:%(email)s\">%(email)s</a>."
+msgstr ""
+"\n"
+"Do you have additional questions regarding the upribox? Get in touch with "
+"the upribox developers!. Drop us an E-mail: <a href=\"mailto:%(email)s\">"
+"%(email)s</a>."
+
+#: www/templates/form.html:6
+msgid "abbrechen"
+msgstr "cancel"
+
+#: www/templates/form.html:6
+msgid "&auml;ndern"
+msgstr "change"
+
+#: www/templates/form.html:26
+msgid "Speichern"
+msgstr "save"
+
+#: www/templates/login.html:7
+msgid "Login - upribox"
+msgstr ""
+
+#: www/templates/login.html:9
+msgid "upribox Administration"
+msgstr "administration"
+
+#: www/templates/login.html:19
+msgid "Legend"
+msgstr "legend"
+
+#: www/templates/login.html:20 www/templates/login.html.py:40
+msgid "Login"
+msgstr ""
+
+#: www/templates/login.html:28
+msgid "Passwort"
+msgstr "password"
+
+#: www/templates/login.html:48
+msgid "Information einklappen"
+msgstr "hide information"
+
+#: www/templates/login.html:48
+msgid "Wie kann ich mich einloggen?"
+msgstr "Where do I find the passwords?"
+
+#: www/templates/login.html:50
+msgid ""
+"Die Daten für den Login finden Sie auf ihrer Anleitung \"upribox "
+"Administration\""
+msgstr "Your find your login credentials on your upribox instruction manual."
+
+#: www/templates/login.html:52
+msgid "Information ausblenden"
+msgstr "hide information"
+
+#: www/templates/login.html:56 www/templates/login.html.py:59
+msgid "Status"
+msgstr "status"
+
+#: www/templates/login.html:61
+msgid "Silent Modus l&auml;uft."
+msgstr "silent mode active."
+
+#: www/templates/login.html:67
+msgid "Ninja Modus l&auml;uft."
+msgstr "ninja mode active."
+
+#: www/templates/login.html:71
+msgid "Ninja Modus l&auml;uft nicht."
+msgstr "ninja mode inactive."
+
+#: www/templates/login.html:79
+msgid "VPN Modus l&auml;uft."
+msgstr "VPN active."
+
+#: www/templates/login.html:83
+msgid "VPN Modus l&auml;uft nicht."
+msgstr "VPN inactive."
+
+#: www/templates/login.html:89
+msgid "Infos und Tipps"
+msgstr "general hints"
+
+#: www/templates/login.html:91
+msgid ""
+"Verwenden Sie einen aktuellen Webbrowser, wir empfehlen Mozilla Firefox."
+msgstr "Use an up-to-date web browser, we recommend Mozilla Firefox."
+
+#: www/templates/login.html:92
+msgid ""
+"Verwenden Sie den Ninja-Modus zusammen mit dem \"Privaten Modus\" Ihres "
+"Browsers."
+msgstr ""
+"Use the ninja mode in combination with the \"private mode\" of your web "
+"browser."
+
+#: www/templates/login.html:93
+msgid "Setzen sie ihre Browsereinstellungen zurück, bevor Sie loslegen."
+msgstr "Reset your web browser before starting to use the upribox."
+
+#: www/templates/modal.html:10
+msgid ""
+"\n"
+"                Sie wurden aus der upribox ausgeloggt! Bitte klicken Sie auf "
+"\"Schließen\" und loggen Sie sich erneut ein.\n"
+"            "
+msgstr ""
+"\n"
+"You have been logged out! Click on \"close\" and login again."
+
+#: www/templates/modal.html:15
+#, python-format
+msgid ""
+"\n"
+"                Die Upribox konnte nicht erreicht werden. Bitte stellen Sie "
+"sicher, dass Sie sich mit dem Wlan \"%(upri_ssid)s\" oder \"%(ninja_ssid)s\" "
+"verbunden sind.\n"
+"            "
+msgstr ""
+"\n"
+"upribox can not be reached. Ensure that you are connected to the "
+"\"%(upri_ssid)s\" or \"%(ninja_ssid)s\" WiFi."
+
+#: www/templates/modal.html:24
+msgid "Schließen"
+msgstr "close"
+
+#: www/templatetags/base_extras.py:40
+msgid "abgelaufen"
+msgstr "time out"
+
+#~ msgid "Erweitert"
+#~ msgstr "extended"

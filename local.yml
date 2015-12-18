@@ -1,0 +1,19 @@
+---
+- hosts: upriboxes_pull
+  remote_user: "{{ remote_user }}"
+  become: yes
+  become_method: sudo
+  roles:
+    - { role: common, tags: ["common"] }
+    - { role: iptables, tags: ["iptables"] }
+    - { role: unattended_upgrades, tags: ["unattended_upgrades"] }
+    - { role: django, tags: ["django"] }
+    - { role: wlan, tags: ["wlan"] }
+    - { role: dns, tags: ["dns"] }
+    - { role: vpn, tags: ["vpn"] }
+    - { role: privoxy, tags: ["privoxy"] }
+    - { role: tor, tags: ["tor"] }
+    - { role: dns_ninja, tags: ["dns_ninja"] }
+    - { role: nginx, tags: ["nginx"] }
+  post_tasks:
+    - include: roles/ssh/main.yml tags=toggle_ssh

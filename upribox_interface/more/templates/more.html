@@ -1,0 +1,41 @@
+{% extends request.is_ajax|yesno:"base_ajax.html,base.html" %}
+
+{% load i18n %}
+{% load widget_tweaks %}
+{% load base_extras %}
+
+{% block title %}{% trans "Admin - upribox" %}{% endblock %}
+
+{% block header %}
+    <h1>{% trans "Admin" %}</h1>
+    <p>{% trans "Admin-Daten &auml;ndern." %}</p>
+{% endblock %}
+
+{% block content %}
+
+    {% trans "Admin-Zugangsdaten" as form_title %}
+    {% url "upri_more" as href %}
+    {% include "form.html" %}
+
+    <h2>{% trans "SSH" %}</h2>
+    <p>{% trans "Mithilfe dieser Funktion können erfahrene Benutzer die upribox selbstständig konfigurieren." %}</p>
+    <form>
+        <fieldset>
+            <legend>{% trans "Ein-/Ausschalten" %}</legend>
+
+            {% get_fact 'ssh' 'general' 'enabled' as sshenabled%}
+
+            {% if sshenabled == 'yes'%}
+                <div class="switch icon i-on">
+                    <p>{% trans "SSH ist aktiviert" %}</p>
+                    <button class="js-toggle-button" data-state-enabled="no" href="{% url 'upri_ssh_toggle' %}">{% trans "Ausschalten" %}</button>
+                </div>
+            {% else %}
+                <div class="switch icon i-off">
+                    <p>{% trans "SSH ist deaktiviert" %}</p>
+                    <button class="js-toggle-button" data-state-enabled="yes" href="{% url 'upri_ssh_toggle' %}">{% trans "Einschalten" %}</button>
+                </div>
+            {% endif %}
+        </fieldset>
+    </form>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% load base_extras %}
+{% load i18n %}
+<div class="column column-4 js-vpn-profile">
+    <span class="column header">
+        <h2>{{ profile.profilename }}</h2>
+    </span>
+
+    {% vpn_link_valid profile as url_valid %}
+    {% if url_valid %}
+    <p>
+        <span>{% trans "Gültig: " %}<span class="js-vpn-timer" data-link-update="{% url 'upri_vpn_get' slug=profile.slug %}" data-vpn-timeout="{% seconds_until profile.download_valid_until %}">{{ profile.download_valid_until|format_seconds_until }}</span></span>
+        <a target="_blank" href="{% url 'upri_vpn_download' download_slug=profile.download_slug %}">http://upri.box{% url 'upri_vpn_download' download_slug=profile.download_slug %}</a>
+    </p>
+    {% endif %}
+    <button class="js-vpn-link-generate"href="{% url 'upri_vpn_create_download' slug=profile.slug %}">{% trans 'Profil herunterladen' %}</button>
+    <div class="spacer"></div>
+
+    {% if url_valid %}
+    <button class="action-qr-show">{% trans "QR-Code anzeigen" %}</button>
+    <div class="qr-image hidden"></div>
+    <div class="test-class"></div>
+    <div class="spacer"></div>
+    {% endif %}
+    <button class="js-delete-profile" href="{% url 'upri_vpn_delete' slug=profile.slug %}">{% trans 'Profil l&ouml;schen' %}</button>
+</div>

@@ -1,0 +1,4 @@
+---
+#jinja2 has to evaluate this string seperately, because it is not possible to just include this string in a "when" statement
+- set_fact:
+    vpn: "{{ default_settings.vpn.general.enabled if not (ansible_local is defined and ansible_local.vpn is defined and ansible_local.vpn.general is defined) else ansible_local.vpn.general.enabled | default(default_settings.vpn.general.enabled) }}"

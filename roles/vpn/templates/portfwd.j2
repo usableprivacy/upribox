@@ -1,0 +1,179 @@
+#!/usr/bin/python
+#
+#------------------------------------------
+
+import miniupnpc
+import sys
+import requests
+import subprocess
+import re
+from os.path import exists
+
+# Port for OpenVPN
+PORT = {{vpn_port}}
+
+# Regex for parsing NATPMP output
+PUB_IP_REGEX = r'\bPublic IP address : (?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b'
+IPV4_REGEX = r'\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b'
+
+# Comparison of public IP with saved one, if new is found, update dns
+# return values:
+# 1: error in file handling(read/write) 
+def cmp_ip(pub_ip):
+
+    # Load saved public IP
+    try:
+        if debug:
+            print 'Load saved public IP from file'
+        # Read from file and create file if doesn't exist 
+        with open('/tmp/ip.txt', 'a+') as f:
+            pub_ip_svd = f.readline()
+
+            if debug:
+                print ' Saved public IP:', pub_ip_svd
+
+        if pub_ip_svd != pub_ip:
+            with open('/tmp/ip.txt', 'w') as f:
+                if debug:
+                    print 'Save public IP to file'
+                f.write(pub_ip)
+                dns_update()
+
+    except IOError as e:
+        if debug:
+            print ' Exception :', e
+            print 'Public IP cannot be loaded' 
+        return 1
+
+    return 0
+
+# DNS update
+# return values:
+# 1: HTTPS request failed 
+def dns_update():
+    if debug:
+        print 'Send DNS update' 
+    try:
+        if exists('{{cert_dns_path}}'):
+            r = requests.get('https://api.upribox.org/dnsupdate/', cert='{{cert_dns_path}}', timeout=3, verify='{{ssl_pinning_path}}')
+            if debug: 
+                if r.text == 'OK':
+                    print ' DNS Update Successful'
+                else:
+                    print ' Error - DNS update not successful'
+                    return 1
+        else:
+            return 1
+    except Exception, e:
+        if debug:
+            print ' Exception :', e
+        return 1
+
+    return 0
+
+debug = False
+if len(sys.argv) > 1:
+    debug = sys.argv[1] == '--debug'
+
+### Check if UPNP is available and set port forwarding
+upnpc = miniupnpc.UPnP()
+
+# Discover UPNP devices
+upnpc.discoverdelay = 200
+
+if debug:
+    print 'Check UPNP Support'
+
+pub_ip = None
+try:
+    ndevices = upnpc.discover()
+    if debug:
+        print ' %d UPNP device(s) detected' % (ndevices)
+
+    if ndevices:
+        upnpc.selectigd()
+        pub_ip = upnpc.externalipaddress() 
+except Exception:
+    if debug:
+        print ' No appropriate UPNP device available' 
+
+# If UPNP device with public IP is found activate port forwarding  
+if pub_ip:
+    if debug:
+        print ' internal ip: ', upnpc.lanaddr
+        print ' external ip: ', pub_ip
+        print ' status: %s, connection type: %s' % (upnpc.statusinfo(), upnpc.connectiontype())
+
+    # Check current port mapping status
+    try:
+        r = upnpc.getspecificportmapping(PORT, 'UDP')
+
+        if r is None:
+            if debug:
+                print ' Enable port forwarding with UPNP'
+            s = upnpc.addportmapping(PORT, 'UDP', upnpc.lanaddr, PORT, 'upri.box OpenVPN port', '')
+    
+            if s:
+                if debug:
+                    print ' Successful port mapping,  %s:%s - %s:%s' % ( upnpc.lanaddr, PORT, upnpc.externalipaddress(), PORT) 
+                cmp_ip(pub_ip)
+            
+            elif debug: 
+                print ' Error: Unable to map port'
+     
+        else:
+            if 'upri.box OpenVPN port' in r[2]:
+                if debug: 
+                    print ' upri.box OpenVPN port already mapped!'    
+                cmp_ip(pub_ip)
+            elif debug:
+                print ' Port already in use by other application!', r
+    except Exception:
+         if debug:
+            print ' Execption: Adding port mapping not possible'
+    
+### Check NATPMP support     
+else:
+    try:    
+        if debug:
+            print 'Check NATPMP Support'
+
+        natpmp_chk = 'natpmpc'
+        p = subprocess.Popen(natpmp_chk, stdout=subprocess.PIPE, stderr=None)
+        retcode = p.wait()
+        status = p.communicate()[0]
+
+        if debug:
+            print ' NATPMP Status:'
+            print status
+
+
+        # If NATPMP avaiable - enable port forwarding
+        if ('readnatpmpresponseorretry returned 0' in status) :    
+            if debug:
+                print ' Enable port forwarding with NATPMP'
+
+            natpmp_en = ['natpmpc', '-a', str(PORT), str(PORT), 'udp', '86400']
+            p = subprocess.Popen(natpmp_en, stdout=subprocess.PIPE, stderr=None)
+            retcode = p.wait()
+            status = p.communicate()[0]
+
+            if debug:
+                print status
+
+        for line in status:
+            if re.match(PUB_IP_REGEX, line):
+                pub_ip_natpmp = line
+
+                pub_ip = re.findall(IPV4_REGEX,pub_ip_natpmp)
+                if debug:
+                    print ' public IP: ', pub_ip
+                cmp_ip(pub_ip)
+
+    except Exception, e:
+        if debug:
+            print ' Exception :', e
+
+    # Perform DNS update in case UPNP and NATPMP aren't available
+    else:
+        dns_update()

@@ -1,0 +1,13 @@
+---
+- name: restart hostapd before tor
+  shell: killall /sbin/wpa_supplicant
+  register: kill_result
+  failed_when: kill_result.rc != 0 and kill_result.rc != 1 # killall returns 1 if no process was killed
+  notify: restart hostapd for tor
+  
+- name: restart hostapd for tor
+  shell: "service hostapd restart"
+  notify: restart tor
+
+- name: restart tor
+  service: name=tor state=restarted

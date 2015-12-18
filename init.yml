@@ -1,0 +1,9 @@
+- hosts: upriboxes
+  remote_user: "{{ raspberry_default_user }}"
+  become: yes
+  become_method: sudo
+  tasks:
+    - include: roles/common/tasks/init.yml
+  vars: 
+    ansible_become_pass: "{{ raspberry_default_pass }}"
+    ansible_ssh_pass: "{{ raspberry_default_pass }}"

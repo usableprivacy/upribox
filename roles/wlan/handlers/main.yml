@@ -1,0 +1,25 @@
+---
+- name: restart dnsmasq
+  service: name=dnsmasq state=restarted
+
+- name: restart hostapd
+  shell: killall /sbin/wpa_supplicant
+  register: kill_result
+  failed_when: kill_result.rc != 0 and kill_result.rc != 1 # killall returns 1 if no process was killed
+  notify: restart hostapd 2
+
+- name: restart hostapd 2
+  shell: "service hostapd restart"
+  notify: get ip address
+  
+- name: get ip address
+  shell: "ip addr show wlan0"
+  register: ipaddr
+  changed_when: true
+  notify: fix ip address
+
+# during initial deployment, wlan0 often does not receive an ip address
+# this does not happen on subsequent reboots
+- name: fix ip address
+  shell: "ip addr add dev wlan0 192.168.55.254/24" 
+  when: ipaddr.stdout.find("192.168.55.254") == -1 

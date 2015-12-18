@@ -1,0 +1,10 @@
+- name: get development variables
+  set_fact:
+    other_env: "{{lookup('file', 'environments/development/group_vars/all.yml')|from_yaml}}"
+  when: env=="production"
+    
+- name: get production variables
+  set_fact:
+    other_env: "{{lookup('file', 'environments/production/group_vars/all.yml')|from_yaml}}"
+  when: env=="development"
+    

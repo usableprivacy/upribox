@@ -1,0 +1,20 @@
+[
+{
+    "fields": {
+        "username": "upri",
+        "first_name": "",
+        "last_name": "",
+        "is_active": true,
+        "is_superuser": true,
+        "is_staff": true,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "pbkdf2_sha256$20000$enruC8baEGEG$X5XcVfBwNz1TBxXmPalQ64IUBeBuEr+6L6ykLMBSqz0=",
+        "email": "upri@upri.box",
+        "date_joined": "2015-07-20T09:53:39.787Z"
+    },
+    "model": "auth.user",
+    "pk": 1
+}
+]

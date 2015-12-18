@@ -1,0 +1,7 @@
+#!/bin/sh
+openvpn --rmtun --dev tun0
+openvpn --mktun --dev tun0 --dev-type tun --user openvpn --group openvpn
+
+ifconfig tun0 192.168.155.1 netmask 255.255.255.255 pointopoint 192.168.155.2
+ifconfig tun0 txqueuelen 10000
+route add -net 192.168.155.0 netmask 255.255.255.0 gw 192.168.155.2

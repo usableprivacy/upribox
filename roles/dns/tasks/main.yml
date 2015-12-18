@@ -1,0 +1,46 @@
+---
+- include: ../../tor/tasks/tor_state.yml tags=toggle_tor
+- include: ../../common/tasks/other_env.yml tags=toggle_tor
+
+- name: install services
+  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
+  with_items:
+    - resolvconf
+    - dnsmasq
+    
+- name: enable services
+  service: name={{ item }} enabled=yes
+  with_items:
+    - dnsmasq
+
+- name: add dnsmasq user to loggers group
+  user: name=dnsmasq groups="tmp-logger" append=yes
+
+- name: configure dnsmasq
+  template: src=dnsmasq.j2 dest=/etc/dnsmasq.conf owner=root group=root mode=644
+  notify: restart dnsmasq
+  register: res
+  tags:
+    - toggle_tor
+  
+# dnsmasq does not log per default
+#- name: remove default logfiles
+#  file: path=/var/log/dnsmasq.log state=absent
+#  when: res|changed
+
+- name: remove dnsmasq log files from other environment
+  file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
+  with_dict: "{{other_env.default_settings.log.dnsmasq.logfiles}}"
+  when: res|changed
+  tags:
+    - toggle_tor
+    
+#- name: copy the resolvconf config file
+#  copy: src=dnsblacklist.conf dest=/etc/dnsmasq.d/dnsblacklist.conf mode="0644"
+#  notify:
+#    - restart dnsmasq
+
+- name: modify logrotate.d entry
+  template: src=logrotate.j2 dest=/etc/logrotate.d/dnsmasq mode=0644
+  tags:
+    - toggle_tor

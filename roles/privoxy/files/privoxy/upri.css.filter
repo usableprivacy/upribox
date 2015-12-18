@@ -1,0 +1,2 @@
+FILTER: upri-elemhide-filter
+s@[^'"\s]\s*<head[^>]*>(?=\s*[^'"\s])@$&<link rel="stylesheet" type="text/css" href="http://filter.upri.box/$host/upri.css"></link>@iUD

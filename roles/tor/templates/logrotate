@@ -1,0 +1,13 @@
+{{default_settings.log.general.path}}/{{default_settings.log.tor.subdir}}/*log {
+    su debian-tor tmp-logger
+    daily
+	rotate 0
+	missingok
+	notifempty
+    maxsize 10M
+	create 0644 debian-tor adm
+	sharedscripts
+	postrotate
+		/etc/init.d/tor reload > /dev/null
+	endscript
+}

@@ -1,0 +1,4 @@
+---
+#jinja2 has to evaluate this string seperately, because it is not possible to just include this string in a "when" statement
+- set_fact:
+    tor: "{{ default_settings.tor.general.enabled if not (ansible_local is defined and ansible_local.tor is defined and ansible_local.tor.general is defined) else ansible_local.tor.general.enabled | default(default_settings.tor.general.enabled) }}"

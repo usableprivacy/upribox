@@ -1,0 +1,23 @@
+# mysite_uwsgi.ini file
+[uwsgi]
+
+# Django-related settings
+# the base directory (full path)
+chdir           = /usr/share/nginx/www-upri-interface
+# settings module
+env = DJANGO_SETTINGS_MODULE={{ django_settings_file }}
+# Django's wsgi file
+module          = wsgi
+# the virtualenv (full path)
+home            = /var/webapp-virtualenv
+# process-related settings
+# master
+master          = true
+# maximum number of worker processes
+processes       = 10
+# the socket (use the full path to be safe
+socket          = /var/run/uwsgi/upri_interface.sock
+# ... with appropriate permissions - may be needed
+chmod-socket    = 664
+# clear environment on exit
+vacuum          = true

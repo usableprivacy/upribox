@@ -1,0 +1,268 @@
+---
+- include: vpn_state.yml tags=toggle_vpn
+- include: ../../common/tasks/other_env.yml 
+
+- name: install services
+  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
+  with_items:
+    - openvpn
+    - python-miniupnpc
+    - natpmp-utils
+    
+- name: add port forwarding script
+  template: src=portfwd.j2 dest=/usr/local/bin/portfwd.py owner=upri group=upri mode=0755
+
+- name: create crontab entry for port forwarding and dns update
+  template: src=etc_cron.d_portfwd.j2 dest=/etc/cron.d/portfwd owner=root group=root mode=0644
+  when: vpn|bool
+  tags:
+    - toggle_vpn
+
+- name: start port forwarding script
+  command: python /usr/local/bin/portfwd.py
+  when: vpn|bool
+  tags:
+    - toggle_vpn
+
+- name: delete crontab entry if vpn is not enabled 
+  file: path=/etc/cron.d/portfwd state=absent
+  when: not vpn|bool
+  tags:
+    - toggle_vpn
+
+- name: copy the port forwarding deletion script
+  template: src=delete_portfwd.j2 dest=/usr/local/bin/delete_portfwd.py owner=root group=root mode=0755
+
+- name: delete port forwarding
+  command: python /usr/local/bin/delete_portfwd.py
+  when: not vpn|bool
+  tags:
+    - toggle_vpn
+
+#- name: enable services
+#  service: name={{ item }} enabled=yes
+#  with_items:
+#    - openvpn
+
+- name: create User openvpn
+  user: name=openvpn shell=/bin/false home=/var/lib/openvpn groups="tmp-logger" append=yes
+    
+- name: copy openssl.cnf file
+  copy: src=openssl.cnf dest=/etc/ssl/openssl.cnf owner=root group=root mode=644
+  notify:
+    - restart openvpn
+    - restart openvpn-su
+    
+- name: creating openvpn folders and setting permissions
+  file: path={{ item }} state=directory owner=openvpn group=openvpn #recurse=yes
+  with_items:
+    - /etc/openvpn
+    - /etc/openvpn/ca
+    - /var/lib/openvpn
+
+- name: creating openvpn folders
+  file: path={{ item }} state=directory recurse=yes
+  with_items:
+    - /etc/openssl/demoCA/newcerts
+    - /etc/openssl/demoCA/private
+
+- name: check if index.txt exists
+  stat: path=/etc/openssl/demoCA/index.txt
+  register: res
+
+- name: creating index.txt
+  file: path=/etc/openssl/demoCA/index.txt state=touch
+  when: not res.stat.exists
+
+- name: check if serial file exists
+  stat: path=/etc/openssl/demoCA/serial
+  register: res
+
+- name: creating serial
+  copy: src=serial dest=/etc/openssl/demoCA/serial
+  #shell: 'echo "01" >> /etc/openssl/demoCA/serial'
+  when: not res.stat.exists
+
+- name: check if CA exists
+  stat: path="{{ item }}"
+  with_items:
+    - /etc/openvpn/ca/caKey.pem
+    - /etc/openvpn/ca/caCert.pem
+  register: res
+  
+- name: creating CA
+  shell: 'openssl req -x509 -nodes -subj "/C=AT/ST=Austria/L=Vienna/O=Usable Privacy Box/OU=VPN/CN=ca" -days 3650 -newkey rsa:2048 -keyout /etc/openvpn/ca/caKey.pem -out /etc/openvpn/ca/caCert.pem'
+  args: 
+    chdir: /etc/openssl
+  when: not res.results[0].stat.exists and not res.results[1].stat.exists
+  notify:
+    - restart openvpn
+    - restart openvpn-su
+  register: res
+  
+- name: change permissions for CA Key
+  file: path=/etc/openvpn/ca/caKey.pem owner=root group=root mode=640
+  when: res|changed
+
+- name: check if Server Files exists
+  stat: path="{{ item }}"
+  with_items:
+    - /etc/openvpn/ca/serverKey.pem
+    - /etc/openvpn/ca/serverReq.pem
+  register: res
+
+- name: creating Server Key
+  shell: 'openssl req -newkey rsa:2048 -nodes -subj "/C=AT/ST=Austria/L=Vienna/O=Usable Privacy Box/OU=VPN/CN=server" -keyout /etc/openvpn/ca/serverKey.pem -out /etc/openvpn/ca/serverReq.pem'
+  args: 
+    chdir: /etc/openssl
+  when: not res.results[0].stat.exists and not res.results[1].stat.exists
+  notify:
+    - restart openvpn
+    - restart openvpn-su
+  register: res
+  
+- name: change permissions for Server Key
+  file: path=/etc/openvpn/ca/serverKey.pem owner=root group=openvpn mode=640
+  when: res|changed
+
+- name: check if Server Certificates exists
+  stat: path="{{ item }}"
+  with_items:
+    - /etc/openvpn/ca/serverCert.pem
+    - /etc/openvpn/ca/serverReq.pem
+    - /etc/openvpn/ca/caCert.pem
+    - /etc/openvpn/ca/caKey.pem
+  register: res
+
+- name: creating Server Certificate
+  shell: 'openssl ca -in /etc/openvpn/ca/serverReq.pem -days 730 -batch -out /etc/openvpn/ca/serverCert.pem -notext -cert /etc/openvpn/ca/caCert.pem -keyfile /etc/openvpn/ca/caKey.pem'
+  args: 
+    chdir: /etc/openssl
+  when: not res.results[0].stat.exists and res.results[1].stat.exists and res.results[2].stat.exists and res.results[3].stat.exists
+  notify:
+    - restart openvpn
+    - restart openvpn-su
+  
+- name: deleting unused files
+  file: path={{item}} state=absent
+  with_items:
+    - /etc/openvpn/ca/serverReq.pem
+  
+- name: check if DH Parameters exists
+  stat: path="{{ item }}"
+  with_items:
+    - /etc/openvpn/ca/dHParam.pem
+  register: res
+
+- name: creating DH Parameters
+  shell: 'openssl dhparam -outform PEM -out /etc/openvpn/ca/dHParam.pem 1024'
+  args: 
+    chdir: /etc/openssl
+  when: not res.results[0].stat.exists
+  notify:
+    - restart openvpn
+    - restart openvpn-su
+  
+- name: check if pre-shared static key exists
+  stat: path="{{ item }}"
+  with_items:
+    - /etc/openvpn/ca/tls-auth.key
+  register: res
+
+- name: creating Auth Key
+  shell: 'openvpn --genkey --secret /etc/openvpn/ca/tls-auth.key'
+  args: 
+    chdir: /etc/openssl
+  when: not res.results[0].stat.exists
+  register: res
+  notify:
+    - restart openvpn
+    - restart openvpn-su
+  #register: tls_auth
+  
+- name: set permissions for tls-auth.key
+  file: path=/etc/openvpn/ca/tls-auth.key owner=root group=openvpn mode=640 
+
+- name: get tls-auth content
+  shell: "cat /etc/openvpn/ca/tls-auth.key"
+  register: tls_auth
+
+- name: get ca cert content
+  shell: "cat /etc/openvpn/ca/caCert.pem"
+  register: ca_cert
+
+- name: copy client config template
+  template: src=client_template dest=/etc/openvpn/client_template mode=640 owner=root group=root
+
+- name: check if crl exists
+  stat: path="/etc/openssl/demoCA/crl.pem"
+  register: res
+
+- name: generate certificate revocation list
+  shell: 'openssl ca -gencrl -crlhours 1 -out crl.pem'
+  args: 
+    chdir: /etc/openssl/demoCA
+  when: not res.stat.exists
+  notify:
+    - restart openvpn
+    - restart openvpn-su
+
+- name: Copy the openvpn server config
+  template: src=openvpn_server.conf dest=/etc/openvpn/server.conf
+  notify:
+    - restart openvpn
+    - restart openvpn-su
+  register: res
+  
+- name: remove log files from other environment
+  file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
+  with_dict: "{{other_env.default_settings.log.vpn.logfiles}}"
+  when: res|changed
+  
+- name: Copy the openvpn-su init script
+  template: src=openvpn_init-su dest=/etc/init.d/openvpn-su mode=755
+  notify:
+    - restart openvpn
+    - restart openvpn-su
+
+- name: Copy the openvpn defaults file
+  copy: src=openvpn_defaults dest=/etc/default/openvpn
+  notify:
+    - restart openvpn
+    - restart openvpn-su
+
+- name: Copy the openvpn startup file
+  copy: src=openvpn_startup dest=/etc/openvpn/openvpn_startup mode=755
+  notify:
+    - restart openvpn
+    - restart openvpn-su
+    
+- name: Copy the openvpn shutdown file
+  copy: src=openvpn_shutdown dest=/etc/openvpn/openvpn_shutdown mode=755
+  notify:
+    - restart openvpn
+    - restart openvpn-su
+    
+- name: disable openvpn service
+  service: name=openvpn enabled=no
+  #shell: 'update-rc.d -f openvpn remove'
+
+- name: enable openvpn-su service
+  service: name=openvpn-su enabled={{vpn}}
+  #when: not vpn|bool
+  tags:
+    - toggle_vpn
+  notify:
+    - restart openvpn
+    - restart openvpn-su
+
+#- name: enable openvpn-su service
+#  service: name=openvpn-su enabled=no
+#  when: not vpn|bool
+#  tags:
+#    - toggle_vpn
+
+- name: modify logrotate.d entry
+  template: src={{item.src}} dest=/etc/logrotate.d/{{item.dest}} mode=0644
+  with_items:
+    - { src: 'logrotate.j2', dest: 'openvpn' }

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load base_extras %}
+{% load widget_tweaks %}
+
+{% block title %}{% trans "Login - upribox" %}{% endblock %}
+{% block header %}
+    <h1>{% trans "upribox Administration" %}</h1>
+    <p>&nbsp;</p>
+{% endblock %}
+
+{% block content %}
+    <div class="row clearfix">
+        <div class="col-2 col-2-main js-col-2-main">
+
+            <form method="post" action="{% url 'django.contrib.auth.views.login' %}" class="login-form">
+                <fieldset class="limited">
+                    <legend>{% trans "Legend" %}</legend>
+                    <h2>{% trans "Login" %}</h2>
+                    <label for="Admin">{% trans "Admin" %}: </label>
+
+                    {{ form.username|add_error_class:'form-input-error'}}
+                    {% for error in form.username.errors %}
+                        <p class="error-message">{{ error|striptags }}</p>
+                    {% endfor %}
+
+                    <label for="two">{% trans "Passwort" %}:</label>
+                    {{ form.password|add_error_class:'form-input-error'}}
+                    {% for error in form.password.errors %}
+                        <p class="error-message">{{ error|striptags }}</p>
+                    {% endfor %}
+
+                    {% for error in form.non_field_errors %}
+                        <p class="error-message">{{ error|striptags }}</p>
+                    {% endfor %}
+
+                    <input type="hidden" name="next" value="{{ next }}" />
+                    {% csrf_token %}
+                    <input type="submit" name="submit" id="submit" value="{% trans "Login" %}" class="submit"/>
+                </fieldset>
+            </form>
+        </div>
+
+        <div class="col-2 col-2-info js-col-2-info">
+            <aside>
+                <h2 class="icon i-information js-info-trigger">
+                    <a href="#" title="{% trans "Information einklappen" %}" class="i-arrow">{% trans "Wie kann ich mich einloggen?" %}</a>
+                </h2>
+                <p>{% trans 'Die Daten für den Login finden Sie auf ihrer Anleitung "upribox Administration"' %}</p>
+
+                <a href="#" title="{% trans "Information ausblenden" %}" class="info-out i-arrow js-info-trigger">{% trans "Information ausblenden" %}</a>
+            </aside>
+        </div>
+    </div>
+    <h2>{% trans "Status" %}</h2>
+    <form>
+        <fieldset>
+            <legend>{% trans "Status" %}</legend>
+            <div>
+                <p class="switch icon i-on">{% trans "Silent Modus l&auml;uft." %}</p>
+            </div>
+
+            {% get_fact 'tor' 'general' 'enabled' as torenabled%}
+            {% if torenabled == 'yes' %}
+                <div class="switch icon i-on">
+                    <p>{% trans "Ninja Modus l&auml;uft." %}</p>
+                </div>
+            {% else %}
+                <div class="switch icon i-off">
+                    <p>{% trans "Ninja Modus l&auml;uft nicht." %}</p>
+                </div>
+            {% endif %}
+
+            {% get_fact 'vpn' 'general' 'enabled' as vpnenabled%}
+
+            {% if vpnenabled == 'yes'%}
+                <div class="switch icon i-on">
+                    <p>{% trans "VPN Modus l&auml;uft." %}</p>
+                </div>
+            {% else %}
+                <div class="switch icon i-off">
+                    <p>{% trans "VPN Modus l&auml;uft nicht." %}</p>
+                </div>
+            {% endif %}
+        </fieldset>
+    </form>
+
+    <h2>{% trans "Infos und Tipps" %}</h2>
+    <ul>
+        <li>{% trans "Verwenden Sie einen aktuellen Webbrowser, wir empfehlen Mozilla Firefox." %}</li>
+        <li>{% trans 'Verwenden Sie den Ninja-Modus zusammen mit dem "Privaten Modus" Ihres Browsers.' %}</li>
+        <li>{% trans "Setzen sie ihre Browsereinstellungen zurück, bevor Sie loslegen." %}</li>
+    </ul>
+{% endblock %}

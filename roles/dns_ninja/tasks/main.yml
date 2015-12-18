@@ -1,0 +1,73 @@
+--- 
+- include: ../../tor/tasks/tor_state.yml tags=toggle_tor
+- include: ../../common/tasks/other_env.yml tags=toggle_tor
+    
+- name: install services
+  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
+  with_items:
+    - dnsmasq
+  
+- name: enable services
+  service: name={{ item }} enabled=yes
+  with_items:
+    - dnsmasq  
+
+- name: add dnsmasq user to loggers group
+  user: name=dnsmasq groups="tmp-logger" append=yes
+
+#- stat: path=/etc/init.d/dnsmasq-ninja
+#  register: p
+#  when: not tor|bool
+#  tags:
+#    - toggle_tor
+    
+#- name: disable service dnsmasq-ninja
+#  service: name={{ item }} enabled=no state=stopped
+#  with_items:
+#    - dnsmasq-ninja 
+#  when: not tor|bool and p.stat.exists
+#  tags:
+#    - toggle_tor    
+    
+- name: copy dnsmasq ninja default
+  copy: src=dnsmasq-ninja/default/dnsmasq-ninja dest=/etc/default
+  notify: restart dnsmasq_ninja
+  when: tor|bool
+  tags:
+    - toggle_tor
+
+- name: copy dnsmasq ninja init.d
+  copy: src=dnsmasq-ninja/init.d/dnsmasq-ninja dest=/etc/init.d mode="755"
+  notify: restart dnsmasq_ninja
+  when: tor|bool
+  tags:
+    - toggle_tor
+
+- name: copy dnsmasq ninja conf
+  template: src=dnsmasq-ninja.conf dest=/etc/
+  notify: restart dnsmasq_ninja
+  when: tor|bool
+  tags:
+    - toggle_tor
+  register: res
+
+- name: remove dnsmasq log files from other environment
+  file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
+  with_dict: "{{other_env.default_settings.log.dnsmasq_ninja.logfiles}}"
+  when: res|changed or (other_env.default_settings.log.general.path != default_settings.log.general.path or other_env.default_settings.log.dnsmasq_ninja.logfiles.logname != default_settings.log.dnsmasq_ninja.logfiles.logname)
+  tags:
+    - toggle_tor
+  
+- name: toggle service dnsmasq-ninja
+  service: name={{ item }} enabled={{ tor }} state={{ "stopped" if not tor|bool else "started" }}
+  when: tor|bool
+  with_items:
+    - dnsmasq-ninja 
+  tags:
+    - toggle_tor
+  when: tor|bool
+  
+- name: modify logrotate.d entry
+  template: src=logrotate.j2 dest=/etc/logrotate.d/dnsmasq_ninja mode=0644
+  tags:
+    - toggle_tor

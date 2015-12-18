@@ -1,0 +1,4 @@
+# do NOT edit
+# needed for ansible pull mode
+[upriboxes_pull]
+127.0.0.1 pull_deployment=True

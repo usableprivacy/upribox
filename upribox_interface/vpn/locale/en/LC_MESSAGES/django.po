@@ -1,0 +1,261 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-03 14:02+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: vpn/forms.py:16
+msgid "Name:"
+msgstr ""
+
+#: vpn/forms.py:22
+msgid "Domain:"
+msgstr ""
+
+#: vpn/forms.py:47
+msgid "Profil existiert bereits"
+msgstr "profile already exists"
+
+#: vpn/forms.py:60
+msgid "Die Domain darf maximal 255 Zeichen lang sein"
+msgstr "domain must be less than 255 characters"
+
+#: vpn/forms.py:63
+msgid ""
+"Die Domain darf lediglich Buchstaben, Ziffern, Punkte und Minusse enthalten"
+msgstr "domain may only contain characters, numbers, dots and dashes"
+
+#: vpn/forms.py:66
+msgid "Die Domain ist nicht gültig"
+msgstr "domain is invalid"
+
+#: vpn/jobs.py:16
+msgid "VPN wird gestartet..."
+msgstr "starting VPN..."
+
+#: vpn/jobs.py:18
+msgid "VPN wird gestoppt..."
+msgstr "stopping VPN..."
+
+#: vpn/jobs.py:24
+msgid "Konfiguration des VPNs erfolgreich."
+msgstr "VPN configuration successful"
+
+#: vpn/jobs.py:29
+msgid "Starten des VPNs fehlgeschlagen."
+msgstr "starting VPN failed"
+
+#: vpn/jobs.py:31
+msgid "Stoppen des VPNs fehlgeschlagen."
+msgstr "stopping VPN failed."
+
+#: vpn/jobs.py:33
+msgid "Es ist ein unbekannter Fehler aufgetreten."
+msgstr "an unknown error occurred."
+
+#: vpn/jobs.py:38
+msgid "VPN Profile wird generiert..."
+msgstr "generating VPN profile..."
+
+#: vpn/jobs.py:41
+msgid "Generieren des VPN Profiles erfolgreich."
+msgstr "VPN profile successfully generated."
+
+#: vpn/jobs.py:45
+#, fuzzy
+#| msgid "Generieren des VP Profiles fehlgeschlagen."
+msgid "Generieren des VPN Profiles fehlgeschlagen."
+msgstr "generation of VPN profile failed."
+
+#: vpn/jobs.py:51
+msgid "VPN Profile wird entfernt..."
+msgstr "removing VPN profile..."
+
+#: vpn/jobs.py:54
+msgid "Entfernen des VPN Profiles erfolgreich."
+msgstr "VPN profile sucessfully removed."
+
+#: vpn/jobs.py:58
+#, fuzzy
+#| msgid "Entfernen des VP Profiles fehlgeschlagen."
+msgid "Entfernen des VPN Profiles fehlgeschlagen."
+msgstr "Removal of VPN profile failed."
+
+#: vpn/templates/vpn.html:7
+msgid "VPN - upribox"
+msgstr ""
+
+#: vpn/templates/vpn.html:10
+msgid "VPN"
+msgstr ""
+
+#: vpn/templates/vpn.html:11
+msgid "Sicherer Zugang von &uuml;berall."
+msgstr "secure access from anywhere"
+
+#: vpn/templates/vpn.html:15
+msgid ""
+"Sie wollen unterwegs auf sichere Weise Ihre E-Mails abrufen oder eine &Uuml;"
+"berweisung t&auml;tigen? Richten Sie daf&uuml;r VPN ein und nutzen Sie Ihr "
+"Internet, als w&auml;ren Sie zu Hause. Sie sch&uuml;tzen Ihre Daten vor dem "
+"Zugriff von Dritten in offenen Wireless-Netzwerken."
+msgstr ""
+"You are on the move and want to access your E-mails or online banking "
+"securely? Use the upribox VPN to protect your data when using public WiFi "
+"hotspots."
+
+#: vpn/templates/vpn.html:20
+msgid "Ein-/Ausschalten"
+msgstr "switch On/Off"
+
+#: vpn/templates/vpn.html:26
+msgid "VPN läuft"
+msgstr "VPN actived"
+
+#: vpn/templates/vpn.html:27
+msgid "Ausschalten"
+msgstr "disable"
+
+#: vpn/templates/vpn.html:30
+msgid "VPN Verbindung wird getestet..."
+msgstr "testing VPN connection..."
+
+#: vpn/templates/vpn.html:32
+msgid ""
+"Ihre upribox ist nicht aus dem Internet erreichbar. Ermöglichen Sie den "
+"Zugriff indem Sie:"
+msgstr ""
+"Your upribox is not accessible via the Internet. Try one of the following:"
+
+#: vpn/templates/vpn.html:34
+msgid "UPnP oder NAT-PMP auf Ihrem Router (Gateway) aktivieren, oder"
+msgstr "activate UPnP or NAT-PMP on your router/modem, or"
+
+#: vpn/templates/vpn.html:35
+msgid ""
+"eine Port-Weiterleitung auf Ihrem Router für UDP-Port 1194 zu Ihrer upribox "
+"konfigurieren!"
+msgstr ""
+"configure a port-forwarding rule from your router to UDP port 1194 of your "
+"upribox."
+
+#: vpn/templates/vpn.html:58
+msgid "\"Die upribox ist nicht erreichbar.\""
+msgstr "\"upribox is not reachable.\""
+
+#: vpn/templates/vpn.html:62
+msgid "\"Die upribox ist erreichbar.\""
+msgstr "\"upribox is reachable.\""
+
+#: vpn/templates/vpn.html:65
+msgid "\"Fehler beim Testen der Verbindung: \""
+msgstr "\"error testing connectivity: \""
+
+#: vpn/templates/vpn.html:74
+msgid "VPN läuft nicht"
+msgstr "VPN deactivated"
+
+#: vpn/templates/vpn.html:75
+msgid "Einschalten"
+msgstr "enable"
+
+#: vpn/templates/vpn.html:85
+msgid "Information einklappen"
+msgstr "hide information"
+
+#: vpn/templates/vpn.html:85
+msgid "Wie funktioniert VPN?"
+msgstr "How does VPN work?"
+
+#: vpn/templates/vpn.html:87
+msgid ""
+"Mit Hilfe von VPN (Virtual Private Network) surfen sie unterwegs &uuml;ber "
+"ihre upribox. Um den Zugriff auf ihre upribox zu sch&uuml;tzen, erfordern "
+"Verbindungen spezielle VPN-Profile. Erstellen Sie pro Benutzer ein VPN-"
+"Profil und laden sie das Profil dann z.B. auf ihr Smartphone."
+msgstr ""
+"VPN (virtual private network) makes it possible to surf with your upribox "
+"while on the road. Access to your upribox is protected via VPN user "
+"profiles. Create a VPN profile and download it to e.g. your smartphone."
+
+#: vpn/templates/vpn.html:89
+msgid "Das upribox-VPN blockiert Werbung automatisch."
+msgstr "upribox-VPN blocks advertisement automatically."
+
+#: vpn/templates/vpn.html:91
+#, python-format
+msgid ""
+"H&auml;ufig gestellte Fragen zur upribox finden Sie unter <a href="
+"\"%(faq_url)s\" title=\"FAQ\">Hilfe</a>."
+msgstr ""
+"Answers to frequently asked questions (FAQ) can be found here: <a href="
+"\"%(faq_url)s\" title=\"FAQ\">Help</a>."
+
+#: vpn/templates/vpn.html:92
+msgid "Information ausblenden"
+msgstr "hide information"
+
+#: vpn/templates/vpn.html:97
+msgid "VPN-Profile"
+msgstr "VPN profile"
+
+#: vpn/templates/vpn.html:99
+msgid "Noch kein Profil erstellt. Erstellen Sie gleich ein Profil!"
+msgstr "No profiles found. Go ahead and create one!"
+
+#: vpn/templates/vpn.html:101
+#, python-format
+msgid ""
+"\n"
+"        Die Verwendung des upribox-VPN erfordert die Erstellung von VPN-"
+"Profilen und die Installation der OpenVPN Client Software. F&uuml;r Ihr "
+"Smartphone k&ouml;nnen Sie einen der offziellen Clients f&uuml;r <a href="
+"\"%(android)s\">Android</a> oder <a href=\"  %(ios)s\">iOS</a> "
+"herunterladen. Für den Desktop empfehlen wir folgende Programme: <a href="
+"\"%(macos)s\">Tunnelblick f&uuml;r Mac OS</a> oder <a href=\"%(windows)s"
+"\">OpenVPN GUI f&uuml;r Windows</a>."
+msgstr ""
+"\n"
+"Usage of the upribox VPN requires the creation of VPN profiles and "
+"installation of OpenVPN. For your smartphone, download the official OpenVPN "
+"software for <a href=\"%(android)s\">Android</a> or <a href=\"  %(ios)s"
+"\">iOS</a>. For your desktop computer we recommend  <a href=\"%(macos)s"
+"\">Tunnelblick for Mac OS</a> or <a href=\"%(windows)s \">OpenVPN GUI for "
+"Windows</a>."
+
+#: vpn/templates/vpn.html:113
+msgid "Neues Profil erstellen"
+msgstr "create new profile"
+
+#: vpn/templates/vpn.html:127
+msgid "Generieren"
+msgstr "generate"
+
+#: vpn/templates/vpn_profile.html:11
+msgid "Gültig: "
+msgstr "Valid: "
+
+#: vpn/templates/vpn_profile.html:15
+msgid "Profil herunterladen"
+msgstr "download profile"
+
+#: vpn/templates/vpn_profile.html:19
+msgid "QR-Code anzeigen"
+msgstr "show QR-code"
+
+#: vpn/templates/vpn_profile.html:24
+msgid "Profil l&ouml;schen"
+msgstr "delete profile"

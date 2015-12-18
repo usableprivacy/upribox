@@ -1,0 +1,11 @@
+---
+- include: ../tasks/vpn_state.yml tags=toggle_vpn
+
+- name: restart openvpn
+  service: name=openvpn state=stopped
+  #notify: 
+#    - restart openvpn su
+  
+- name: restart openvpn-su
+  service: name="openvpn-su" state={{"restarted" if vpn|bool else "stopped"}}
+  #shell: "/usr/sbin/service openvpn-su restart"

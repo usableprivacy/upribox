@@ -1,0 +1,66 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-03 14:02+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: lib/utils.py:73
+#, fuzzy
+#| msgid "Bitte das Passwort zur Bestätigung erneut eingeben"
+msgid "Bitte das Passwort zur Bestätigung erneut eingeben."
+msgstr "Re-enter the password."
+
+#: lib/utils.py:77
+#, fuzzy
+#| msgid "Die beiden Passwörter stimmen nicht überein"
+msgid "Die beiden Passwörter stimmen nicht überein."
+msgstr "The passwords do not match."
+
+#: lib/utils.py:84
+#, fuzzy
+#| msgid "Das Passwort muss mindestens 1 Ziffer beinhalten"
+msgid "Das Passwort muss mindestens 1 Ziffer beinhalten."
+msgstr "Password must contain at least one number."
+
+#: lib/utils.py:87
+#, fuzzy
+#| msgid "Das Passwort muss mindestens 1 Kleinbuchstaben beinhalten"
+msgid "Das Passwort muss mindestens 1 Kleinbuchstaben beinhalten."
+msgstr "password must contain at least one lower case character."
+
+#: lib/utils.py:90
+#, fuzzy
+#| msgid "Das Passwort muss mindestens 1 Großbuchstaben beinhalten"
+msgid "Das Passwort muss mindestens 1 Großbuchstaben beinhalten."
+msgstr "password must contain at least one upper case character."
+
+#: lib/utils.py:93
+#, fuzzy
+#| msgid "Das Passwort muss mindestens 1 Sonderzeichen beinhalten"
+msgid "Das Passwort muss mindestens 1 Sonderzeichen beinhalten."
+msgstr "password must contain at least one special character."
+
+#: lib/utils.py:95
+#, fuzzy
+#| msgid "Das Passwort muss zwischen 8 und 63 Zeichen lang sein"
+msgid "Das Passwort muss zwischen 8 und 63 Zeichen lang sein."
+msgstr "password must be between 8 and 63 characters long."
+
+#: lib/utils.py:98
+#, fuzzy, python-format
+#| msgid "Das Passwort darf lediglich die Sonderzeichen %s enthalten"
+msgid "Das Passwort darf lediglich die Sonderzeichen %s enthalten."
+msgstr "password may only contain the following special characters: %s ."

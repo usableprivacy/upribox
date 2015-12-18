@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+{% load static from staticfiles %}
+{% load base_extras %}
+{% load i18n %}
+
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}" class="no-js">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+		<title>{% block title %}{% endblock %}</title>
+		<meta name="description" content="{% trans "upribox - Ein einfaches Werkzeug zum Schutz der Privatsphäre" %}" />
+		<meta name="publisher" content="FH St. Pölten" />
+		<meta name="author" content="FH St. Pölten" />
+		<meta name="designer" content="Lisa Gringl" />
+		<meta name="robots" content="noindex, nofollow" />
+		<meta name="viewport" content="width=device-width, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<link rel="stylesheet" href="{% static "css/chartist.min.css" %}">
+		<link rel="stylesheet" href="{% static "css/fonts.css" %}" type="text/css" />
+		<link rel="stylesheet" href="{% static "css/style.css" %}" type="text/css" />
+	</head>
+	<body data-poll-url="{% url 'upri_jobstatus' %}" data-clear-url="{% url 'upri_clear_jobstatus' %}">
+		<div id="site-container">
+			<header id="site-header">
+				<h1>
+					<a href="{% url 'upri_silent' %}" title="{% trans "Start" %}">{% trans "upribox" %}</a>
+				</h1>
+				<p>{% trans "Usable Privacy Box" %}</p>
+
+                {% onpage request 'upri_login' as onlogin %}
+                {% if not onlogin %}
+                <a href="{% url 'upri_faq' %}" title="{% trans "FAQ" %}" class="faq-link only-mobile">{% trans "Hilfe" %}</a>
+				<button class="btn-menu only-mobile js-menu">{% trans "Menü" %}</button>
+
+				<nav class="clearfix">
+					<ul>
+						<li><a href="{% url 'upri_silent' %}" title="{% trans "Silent Modus" %}" class="icon i-silent {% navactive request 'upri_silent' %}">{% trans "Silent Modus" %}</a></li>
+						<li><a href="{% url 'upri_ninja' %}" title="{% trans "Ninja Modus" %}" class="icon i-ninja {% navactive request 'upri_ninja' %}">{% trans "Ninja Modus" %}</a></li>
+						<li><a href="{% url 'upri_vpn' %}" title="{% trans "VPN" %}" class="icon i-vpn {% navactive request 'upri_vpn' %}">{% trans "VPN" %}</a></li>
+						<li><a href="{% url 'upri_statistics' %}" title="{% trans "Statistiken" %}" class="icon i-statistics {% navactive request 'upri_statistics' %}">{% trans "Statistiken" %}</a></li>
+						<li class="only-mobile"><a href="{% url 'upri_more' %}" title="{% trans "Admin" %}" class="icon i-more">{% trans "Admin" %}</a></li>
+						<li class="only-mobile"><a href="{% url 'upri_logout' %}" title="{% trans "Logout" %}" class="icon i-logout">{% trans "Logout" %}</a></li>
+					</ul>
+				</nav>
+                {% endif %}
+			</header>
+
+			<main role="main" class="clearfix">
+                {% if not onlogin %}
+				<nav>
+					<ul>
+                        {% onpage request 'upri_faq' as onfaq %}
+                        {% onpage request 'upri_more' as onmore %}
+						{% if onfaq %}<li>{% trans "Hilfe" %}</li>{% else %}<li><a href="{% url 'upri_faq' %}" title="{% trans "FAQ" %}" class="">{% trans "Hilfe" %}</a></li>{% endif %}
+						{% if onmore %}<li>{% trans "Admin" %}</li>{% else %}<li><a href="{% url 'upri_more' %}" title="{% trans "Admin" %}" class="">{% trans "Admin" %}</a></li>{% endif %}
+						<li><a href="{% url 'upri_logout' %}" title="{% trans "Logout" %}" class="icon i-logout">{% trans "Logout" %}</a></li>
+					</ul>
+				</nav>
+                {% endif %}
+
+				<article>
+                    <header>
+                        {% block header %}
+                        {% endblock %}
+					</header>
+
+                    <div id="main-content">
+                        {% block content %}{% endblock %}
+                    </div>
+
+				</article>
+			</main>
+
+            {% block extra %}
+            {% endblock %}
+            {% if message or messagestore%}
+                {% include 'modal.html' %}
+            {% endif %}
+		</div>
+		<script type="text/javascript" src="{% static "js/vendor/chartist.min.js" %}"></script>
+		<script type="text/javascript" src="{% static "js/vendor/jquery-1.11.3.min.js" %}"></script>
+		<script type="text/javascript" src="{% static "js/vendor/js-cookie-2.0.2.js" %}"></script>
+        <script type="text/javascript" src="{% static "js/vendor/qrcode.min.js" %}"></script>
+
+		<script type="text/javascript" src="{% static "js/main.js" %}"></script>
+	</body>
+</html>

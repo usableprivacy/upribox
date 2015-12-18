@@ -1,0 +1,13 @@
+---
+# variables for port forwarding - dns update
+dns_update_cron_schedule: '*/15 * * * *'
+dns_update_cron_user: root
+
+# api.upribox.org certificate
+ssl_pinning_path: "/usr/local/etc/upri-filter-update/update-server.pem"
+
+# client cert for DNS updates
+cert_dns_path: "/usr/local/etc/credentials.pem"
+
+# port for openvpn server
+vpn_port: 1194

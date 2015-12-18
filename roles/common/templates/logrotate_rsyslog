@@ -1,0 +1,37 @@
+{{default_settings.log.general.path}}/{{default_settings.log.rsyslog.subdir}}/{{default_settings.log.rsyslog.logfiles.syslog}}
+{
+    su root tmp-logger
+	rotate 0
+	daily
+    maxsize 10M
+	missingok
+	notifempty
+	postrotate
+		invoke-rc.d rsyslog rotate > /dev/null
+	endscript
+}
+
+{{default_settings.log.general.path}}/{{default_settings.log.rsyslog.subdir}}/{{default_settings.log.rsyslog.logfiles.mail_info}}
+{{default_settings.log.general.path}}/{{default_settings.log.rsyslog.subdir}}/{{default_settings.log.rsyslog.logfiles.mail_warn}}
+{{default_settings.log.general.path}}/{{default_settings.log.rsyslog.subdir}}/{{default_settings.log.rsyslog.logfiles.mail_error}}
+{{default_settings.log.general.path}}/{{default_settings.log.rsyslog.subdir}}/{{default_settings.log.rsyslog.logfiles.mail}}
+{{default_settings.log.general.path}}/{{default_settings.log.rsyslog.subdir}}/{{default_settings.log.rsyslog.logfiles.daemon}}
+{{default_settings.log.general.path}}/{{default_settings.log.rsyslog.subdir}}/{{default_settings.log.rsyslog.logfiles.kern}}
+{{default_settings.log.general.path}}/{{default_settings.log.rsyslog.subdir}}/{{default_settings.log.rsyslog.logfiles.auth}}
+{{default_settings.log.general.path}}/{{default_settings.log.rsyslog.subdir}}/{{default_settings.log.rsyslog.logfiles.user}}
+{{default_settings.log.general.path}}/{{default_settings.log.rsyslog.subdir}}/{{default_settings.log.rsyslog.logfiles.lpr}}
+{{default_settings.log.general.path}}/{{default_settings.log.rsyslog.subdir}}/{{default_settings.log.rsyslog.logfiles.cron}}
+{{default_settings.log.general.path}}/{{default_settings.log.rsyslog.subdir}}/{{default_settings.log.rsyslog.logfiles.debug}}
+{{default_settings.log.general.path}}/{{default_settings.log.rsyslog.subdir}}/{{default_settings.log.rsyslog.logfiles.messages}}
+{
+    su root tmp-logger
+	rotate 0
+	daily
+	missingok
+	notifempty
+    maxsize 10M
+	sharedscripts
+	postrotate
+		invoke-rc.d rsyslog rotate > /dev/null
+	endscript
+}

@@ -1,0 +1,35 @@
+CLIENT-HEADER-TAGGER: html-requests Tags html requests
+s@^Accept:\s*text/html.*(?!xml)@HTML-REQUEST@i
+
+CLIENT-HEADER-TAGGER: client-ip-address Tags the request with the client's IP address.
+s@@IP-ADDRESS: $origin@D
+
+SERVER-HEADER-TAGGER: upri-block tagger used for blocking requests
+s@.*@UPRI-BLOCK@i
+
+SERVER-HEADER-TAGGER: upri-accept tagger used for allowing requests
+s@.*@UPRI-ACCEPT@i
+
+SERVER-HEADER-TAGGER: upri-image-content Tags the requests for advanced image filtering
+s@^Content-Type: image/\s*([^;]+).*@UPRI-IMAGE@i
+
+SERVER-HEADER-TAGGER: upri-image-exception Tags the exceptions for advanced image filtering
+s@^Content-Type: image/\s*([^;]+).*@UPRI-IMAGE-EX@i
+
+SERVER-HEADER-TAGGER: upri-script-content Tags the requests for advanced script filtering
+s@^Content-Type: application/\s*([^;]+).*@UPRI-SCRIPT@i
+
+SERVER-HEADER-TAGGER: upri-script-exception Tags the exceptions for advanced script filtering
+s@^Content-Type: application/\s*([^;]+).*@UPRI-SCRIPT-EX@i
+
+SERVER-HEADER-TAGGER: upri-stylesheet-content Tags the requests for advanced stylesheet filtering
+s@^Content-Type: text/css$@UPRI-STYLESHEET@i
+
+SERVER-HEADER-TAGGER: upri-stylesheet-exception Tags the exceptions for advanced stylesheet filtering
+s@^Content-Type: text/css$@UPRI-STYLESHEET-EX@i
+
+CLIENT-HEADER-TAGGER: upri-xmlhttprequest-content Tags the requests for advanced xmlhttprequest filtering
+s@^X-Requested-With: xmlhttprequest$@UPRI-XMLHTTPREQUEST@i
+
+CLIENT-HEADER-TAGGER: upri-xmlhttprequest-exception Tags the exceptions for advanced xmlhttprequest filtering
+s@^X-Requested-With: xmlhttprequest$@UPRI-XMLHTTPREQUEST-EX@i

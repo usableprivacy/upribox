@@ -1,0 +1,29 @@
+{% load widget_tweaks %}
+{% load i18n %}
+
+<form class="js-form">
+    <fieldset class="limited">
+        <h2>{{ form_title }} (<a href="#" class="js-abort-form{% if not form.errors %} hidden{% endif %}">{% trans "abbrechen" %}</a><a href="#" class="js-edit-form{% if form.errors %} hidden{% endif %}">{% trans "&auml;ndern" %}</a>)
+        </h2>
+
+
+        {% for error in form.non_field_errors %}
+            <p class="error-message">{{ error|striptags }}</p>
+        {% endfor %}
+
+        {% with extraattr=form.errors|yesno:'data-enabled,disabled' %}
+
+            {% for field in form %}
+                {{ field.label_tag }}
+                {{ field|attr:extraattr|add_error_class:'form-input-error'}}
+                {% for error in field.errors %}
+                    <p class="error-message">{{ error|striptags }}</p>
+                {% endfor %}
+            {% endfor %}
+
+            {% csrf_token %}
+
+            <input type="submit" name="submit" value="{% trans "Speichern" %}" href="{{ href }}" class="js-form-submit" {{ extraattr }} />
+        {% endwith %}
+        </fieldset>
+</form>

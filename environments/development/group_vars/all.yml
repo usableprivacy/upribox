@@ -1,0 +1,103 @@
+---
+env: development
+raspberry_default_user: pi
+raspberry_default_pass: raspberry
+
+remote_user: upri
+sudo_group: upriusers
+hostname: upribox
+remote_user_login_shell: /bin/bash
+
+apt_cache_time: 3600
+apt_target_state: installed
+
+ansible_pip_version: 1.9.2
+ansible_uwsgi_version: 1.9.2
+
+django_settings_file: settings_dev
+
+default_settings:
+  django:
+    # this path is for "upri-config.py parse_logs"
+    # if you want to change the path, you will also have to
+    # edit django's settings file
+    db: '/usr/share/nginx/www-upri-interface/db.sqlite3'
+  tor:
+    general:
+      enabled: 'yes'
+  ssh:
+    general:
+      enabled: 'yes'
+  vpn:
+    general:
+      enabled: 'yes'
+  log:
+    general:
+      path: '/var/log/log'
+    privoxy:
+      subdir: 'privoxy'
+      logfiles:
+        logname: 'privoxy.log'
+    tor:
+      subdir: 'tor'
+      logfiles:
+        logname:  'log'
+    rqworker:
+      logfiles:
+        stdout: 'rqworker.out.log'
+        stderr: 'rqworker.err.log'
+    supervisor:
+      logfiles:
+        logname: 'supervisord.log'
+    uwsgi:
+      logfiles:
+        logname: 'uwsgi.log'
+    dnsmasq:
+      logfiles:
+        logname: 'dnsmasq.log'
+    dnsmasq_ninja:
+      logfiles:
+        logname: 'dnsmasq_ninja.log'
+    nginx:
+      logfiles:
+        error: 'nginx_error.log'
+        access: 'nginx_access.log'
+        interface_error: 'nginx_interface_error.log'
+        interface_access: 'nginx_interface_access.log'
+        blackhole_error: 'nginx_blackhole_error.log'
+        blackhole_access: 'nginx_blackhole_access.log'
+        css_error: 'nginx_css_error.log'
+        css_access: 'nginx_css_access.log'
+    vpn:
+      logfiles:
+        logname: 'openvpn.log'
+        status: 'openvpn-status.log'
+    rsyslog:
+      subdir: 'rsyslog'
+      logfiles:
+          auth: 'auth.log'
+          syslog: 'syslog'
+          cron: 'cron.log'
+          daemon: 'daemon.log'
+          kern: 'kern.log'
+          lpr: 'lpr.log'
+          mail: 'mail.log'
+          user: 'user.log'
+          mail_info: 'mail.info'
+          mail_warn: 'mail.warn'
+          mail_error: 'mail.error'
+          news_crit: 'news.crit'
+          news_err: 'news.err'
+          news_notice: 'news.notice'
+          debug: 'debug'
+          messages: 'messages'
+      
+# variables for pull updates in development mode
+pull_cron_schedule: '0 */4 * * *'
+pull_cron_user: root
+pull_logfile: /var/log/ansible-pull.log
+pull_workdir: /var/lib/ansible/local
+pull_branch: master
+pull_repo_url: git@github.com:usableprivacy/upribox.git
+pull_git_host: github.com
+pull_git_sshkey: '|1|YSIl0HnC//DkFvWLLsAsBxDU10Q=|PC/XJu88KyBvcN7nilLAbany2bE= ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=='

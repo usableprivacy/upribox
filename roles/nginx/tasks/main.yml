@@ -1,0 +1,78 @@
+---
+- include: ../../common/tasks/other_env.yml 
+
+- name: install services
+  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
+  with_items:
+    - nginx-extras
+
+- name: enable services
+  service: name={{ item }} enabled=yes
+  with_items:
+    - nginx
+
+#- name: copy the nginx sites-available
+#  copy: src=sites-available dest=/etc/nginx/
+#  notify: restart nginx
+
+- name:  copy nginx site configurations
+  template: src={{item.src}} dest={{item.dest}} mode=0644
+  with_items:
+      - { src: 'sites-available/upri_interface', dest: '/etc/nginx/sites-available/upri_interface' }
+      - { src: 'sites-available/upri_blackhole', dest: '/etc/nginx/sites-available/upri_blackhole' }
+      - { src: 'sites-available/upri_cssfilter', dest: '/etc/nginx/sites-available/upri_cssfilter' }
+  notify:
+    - restart nginx
+
+- name: copy the nginx content
+  copy: src=nginx dest=/usr/share/
+
+- name: copy the lua files
+  copy: src=lua dest=/etc/nginx
+
+- name: remove default nginx site
+  file: path=/etc/nginx/sites-enabled/default state=absent
+
+- name: change nginx logdir
+  lineinfile:
+    dest: /etc/nginx/nginx.conf
+    regexp: "access_log"
+    line: "access_log {{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.access}};"
+  notify: restart nginx
+  register: res_access
+
+- name: change nginx logdir
+  lineinfile:
+    dest: /etc/nginx/nginx.conf
+    regexp: "error_log"
+    line: "error_log {{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.error}};"
+  notify: restart nginx
+  register: res_error
+
+- name: remove log files from other environment
+  file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
+  with_dict: "{{other_env.default_settings.log.nginx.logfiles}}"
+  when: res_access|changed or res_error|changed 
+
+- name: remove logfiles from default location
+  file: path=var/log/nginx/* state=absent
+  notify: restart nginx
+  when: res_access|changed or res_error|changed
+
+- name: modify logrotate.d entry
+  template: src=logrotate dest=/etc/logrotate.d/nginx mode=0644
+
+- name: link sites
+  file: src=/etc/nginx/sites-available/{{item}} dest=/etc/nginx/sites-enabled/{{item}} state=link
+  with_items:
+    - upri_blackhole
+    - upri_cssfilter
+    - upri_interface
+  notify:
+    - restart nginx
+
+- name: install dependencies
+  apt: name={{ item }} state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
+  with_items:
+    - python-requests
+

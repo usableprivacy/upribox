@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load base_extras %}
+{% block title %}{% trans "Hilfe - upribox" %}{% endblock %}
+
+{% block header %}
+    <h1>{% trans "Hilfe" %}</h1>
+    <p>{% trans "H&auml;ufig gestellte Fragen" %}</p>
+{% endblock %}
+
+{% block content %}
+    {% get_fact 'wlan' 'ninja' 'ssid' as ninja_ssid %}
+    {% get_fact 'wlan' 'upri' 'ssid' as upri_ssid %}
+
+    <h2>{% trans "WLAN-Zugangsdaten &auml;ndern" %}</h2>
+    <p><strong>{% blocktrans %} Frage: Ich will die Zugangsdaten zum Beispiel f&uuml;r das WLAN "{{ ninja_ssid }}" &auml;ndern. Muss ich mich daf&uuml;r in das entsprechende WLAN einw&auml;hlen?{% endblocktrans %}</strong></p>
+    <p>{% blocktrans %} Nein, die WLAN-Zugangsdaten k&ouml;nnen auch ge&auml;ndert werden, wenn du dich im WLAN "{{ upri_ssid }}" befindest.{% endblocktrans %}</p>
+
+    <h2>{% trans "Kontakt" %}</h2>
+    <p>{% blocktrans with email="feedback@upribox.org" %}
+        Sie haben eine Frage zur upribox, die hier nicht angef&uuml;hrt ist? Sie wollen mit den EntwicklerInnen in Kontakt treten? Dann schreiben Sie uns eine E-Mail an die Adresse <a href="mailto:{{ email }}">{{ email }}</a>.{% endblocktrans %}</p>
+
+{% endblock %}
