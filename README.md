@@ -4,18 +4,16 @@ The [upribox](https://upribox) software is used to create Raspberry Pi images to
  * Transparent adblocking + Tor network (ninja wifi)
  * OpenVPN server for privacy on the road
 
-
-
 ---
 
 # Getting Started
-See the [official Raspberry Pi documentation](https://www.raspberrypi.org/documentation/installation/installing-images/) for pointers on how to install the upribox image on the SD card. Upon the first boot the SSH/VPN keys are automatically re-generated and the system partitions are resized to use the entire size of the SD card. In the following you also find a list of recommended (and tested hardware) for the upribox software. Make sure that you use a compatible USB WiFi dongle!
+See the [official Raspberry Pi documentation](https://www.raspberrypi.org/documentation/installation/installing-images/) for pointers on how to install the upribox image on the SD card. Upon the first boot the SSH/VPN keys are automatically re-generated (this will take a couple of minutes), and the system partitions are resized to use the entire size of the SD card. In the following you also find a list of recommended (and tested hardware) for the upribox software. Make sure that you use a compatible USB WiFi dongle!
 
-### [upribox-v0.1-image.zip]()
-**SHA-256: **
+### [upribox-image-v0_1.zip](https://s3-us-west-2.amazonaws.com/usableprivacy/upribox-image-v0_1.zip) (December 2015)
+*SHA1Sum: 8a9744050b78a3411972e2758be53c74adfc5da4*
 
 #### Default passwords
-**Silent WiFi** (SSID: *upribox* ), **Ninja WiFi** (SSID: *upribox-ninja*), password: *changeme*. **SSH/Webinterface** login: *upri* password: *raspberry*. **Webinterface** login: *upri* password: *changethedefaults!*
+**Silent WiFi** (SSID: *upribox* ), **Ninja WiFi** (SSID: *upribox-ninja*), password: *changeme*. **SSH/Webinterface** login: *upri* password: *changethedefaults!*.
 
 #### Webinterface
 Once you are connect to either of the upribox wifi networks (Silent or Ninja) you can access the upribox Webinterface via the following URI: [http://upri.box](http://upri.box).
