@@ -5,8 +5,10 @@
 - name: configure hosts
   copy: src=hosts dest=/etc/hosts owner=root group=root mode=644
   
-- name: configure locale
-  shell: 'update-locale LC_ALL="en_GB.UTF-8" LANG="en_GB.UTF-8"'
+- name: install sudo
+  apt: name={{ item }} state=present force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
+  with_items:
+    - sudo
   
 - name: create sudo group
   group: name="{{ sudo_group }}" state=present
@@ -20,3 +22,6 @@
 - name: add authorized key
   authorized_key: user="{{ remote_user }}" key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
   when: pull_deployment is not defined
+
+- name: disable root account
+  shell: passwd -dl root
