@@ -1,8 +1,8 @@
 ---
 - name: restart uwsgi
   # service module appears to be buggy for uwsgi, use "command" instead
-  #service: name=uwsgi state=restarted
-  command: /usr/sbin/service uwsgi restart
+  service: name=django-uwsgi state=restarted
+  #command: /usr/sbin/service uwsgi restart
   
 - name: reload uwsgi
   #touching of the config file is enough for uwsgi to reload it

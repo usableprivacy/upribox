@@ -1,41 +1,40 @@
 ---
-- include: init.yml
 - include: ../../common/tasks/other_env.yml 
   
   # we use this to determine if the script is running for the first time -> user pi gets deleted on first run
-- name: check if default user exists
-  shell: /usr/bin/getent passwd "{{ raspberry_default_user }}" | /usr/bin/wc -l | /usr/bin/tr -d ' '
-  register: user_exist
-  changed_when: false
+  #- name: check if default user exists
+  #shell: /usr/bin/getent passwd "{{ raspberry_default_user }}" | /usr/bin/wc -l | /usr/bin/tr -d ' '
+  #register: user_exist
+  #changed_when: false
   
-- name: copy apt sources
-  copy: src=apt_sources/{{ item.src }} dest=/etc/apt/{{ item.dest }} owner=root group=root mode=644 
-  with_items:
-    - { src: 'preferences', dest: 'preferences' }
-    - { src: 'sources.list', dest: 'sources.list' }
-    - { src: 'raspi.list', dest: 'sources.list.d/raspi.list' }
+#- name: copy apt sources
+#  copy: src=apt_sources/{{ item.src }} dest=/etc/apt/{{ item.dest }} owner=root group=root mode=644 
+#  with_items:
+#    - { src: 'preferences', dest: 'preferences' }
+#    - { src: 'sources.list', dest: 'sources.list' }
+#    - { src: 'raspi.list', dest: 'sources.list.d/raspi.list' }
   
-- name: upgrade raspberrypi-bootloader
-  apt: name={{ item }} state=latest force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
-  with_items:
-    - raspberrypi-bootloader
-  when: user_exist.stdout == "1"
+#- name: upgrade raspberrypi-bootloader
+#  apt: name={{ item }} state=latest force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
+#  with_items:
+#    - raspberrypi-bootloader
+#  when: user_exist.stdout == "1"
 
-- name: expand disk space
-  shell: raspi-config --expand-rootfs
-  when: user_exist.stdout == "1"
+#- name: expand disk space
+#  shell: raspi-config --expand-rootfs
+#  when: user_exist.stdout == "1"
 
 # Disable raspi-config at startup
-- stat: path=/etc/profile.d/raspi-config.sh
-  register: raspi_config
+#- stat: path=/etc/profile.d/raspi-config.sh
+#  register: raspi_config
 
-- name: disable raspi config in profile
-  file: path=/etc/profile.d/raspi-config.sh state=absent
-  when: raspi_config.stat.exists
+#- name: disable raspi config in profile
+#  file: path=/etc/profile.d/raspi-config.sh state=absent
+#  when: raspi_config.stat.exists
 
-- name: disable raspi config at boot
-  shell: sed -i /etc/inittab -e "s/^#\(.*\)#\s*RPICFG_TO_ENABLE\s*/\1/" -e "/#\s*RPICFG_TO_DISABLE/d"
-  when: raspi_config.stat.exists
+#- name: disable raspi config at boot
+#  shell: sed -i /etc/inittab -e "s/^#\(.*\)#\s*RPICFG_TO_ENABLE\s*/\1/" -e "/#\s*RPICFG_TO_DISABLE/d"
+#  when: raspi_config.stat.exists
 
 - name: create group for logging users
   group: name="tmp-logger" state=present
@@ -53,7 +52,6 @@
     state: present
     insertafter: EOF
     line: "tmpfs	/var/tmp/log	tmpfs	nosuid,size=15%,uid=root,gid=tmp-logger,mode=0771	0	0"
-  when: user_exist.stdout == "1"
   register: fstab
 
 - name: update rsyslog config for logging to desired logging directory
@@ -99,28 +97,28 @@
 #  shell: "sudo mount -a"
 #  when: fstab|changed
   
-- name: reboot
-  command: shutdown -r now "ansible reboot"
-  async: 0
-  poll: 0
-  ignore_errors: true
-  when: user_exist.stdout == "1"
+#- name: reboot
+#  command: shutdown -r now "ansible reboot"
+#  async: 0
+#  poll: 0
+#  ignore_errors: true
+#  when: user_exist.stdout == "1"
   
-- name: wait for reboot
-  local_action: wait_for host={{ inventory_hostname }}
-                state=started
-  become: false
-  when: user_exist.stdout == "1"
+#- name: wait for reboot
+#  local_action: wait_for host={{ inventory_hostname }}
+#                state=started
+#  become: false
+#  when: user_exist.stdout == "1"
   
-- name: kill default user processes
-  remote_user: "{{ remote_user }}"
-  shell: killall -u "{{ raspberry_default_user }}"
-  when: user_exist.stdout == "1"
-  register: kill_result
-  failed_when: kill_result.rc != 0 and kill_result.rc != 1 # killall returns 1 if no process was killed
+#- name: kill default user processes
+#  remote_user: "{{ remote_user }}"
+#  shell: killall -u "{{ raspberry_default_user }}"
+#  when: user_exist.stdout == "1"
+#  register: kill_result
+#  failed_when: kill_result.rc != 0 and kill_result.rc != 1 # killall returns 1 if no process was killed
   
-- name: remove default user
-  user: name="{{ raspberry_default_user }}" state=absent remove=yes
+#- name: remove default user
+#  user: name="{{ raspberry_default_user }}" state=absent remove=yes
   
 - name: install dependencies
   apt: name={{ item }} state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
@@ -128,6 +126,7 @@
     - python-pip
     - python-dev
     - libffi-dev
+    - git
 
 - name: install ansible via pip
   pip: name=ansible state=present version="{{ansible_pip_version}}"
@@ -137,6 +136,9 @@
                host="{{ pull_git_host }}"
                key="{{ pull_git_sshkey }}"
   
+- name: create root ssh directory
+  file: path=/root/.ssh state=directory
+
 - name: copy git deployment key
   copy: src=id_upribox_deployement-github dest=/root/.ssh/id_rsa_git owner=root group=root mode=0600
   when: pull_deployment is not defined

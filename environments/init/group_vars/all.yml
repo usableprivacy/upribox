@@ -1,0 +1,16 @@
+---
+env: init
+
+ansible_connection: ssh
+ansible_ssh_user: root
+ansible_ssh_pass: root
+
+remote_user: upri
+sudo_group: upriusers
+hostname: upribox
+remote_user_login_shell: /bin/bash
+
+apt_cache_time: 3600
+apt_target_state: installed
+
+ansible_pip_version: 1.9.2

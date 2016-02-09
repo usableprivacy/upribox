@@ -1,22 +1,27 @@
 ---
 - include: ../../tor/tasks/tor_state.yml tags=ssid,toggle_tor
 
-- name: install services
+- name: install required packages
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
   with_items:
-    - resolvconf
-    - dnsmasq
-
-- name: install hostapd
-  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }} default_release=jessie
-  with_items:
     - hostapd
+    - wireless-regdb
+    - crda
+    - iw 
+    - ifplugd
+    - isc-dhcp-server
 
-- name: enable services
-  service: name={{ item }} enabled=yes
-  with_items:
-    - hostapd
-    - dnsmasq
+- name: set dhcp network interfaces
+  copy: src=isc-dhcp-server dest=/etc/default/isc-dhcp-server owner=root group=root mode=644
+
+- name: set dhcp ip ranges
+  copy: src=dhcpd.conf dest=/etc/dhcp/dhcpd.conf owner=root group=root mode=644
+
+- name: create systemd directory for hostapd
+  file: path=/etc/systemd/system/hostapd.service.d
+
+- name: override hostapd systemd dependencies
+  copy: src=hostapd-systemd-override dest=/etc/systemd/system/hostapd.service.d/override.conf owner=root group=root mode=644
     
 - name: enable ip forwarding
   sysctl: name=net.ipv4.ip_forward value=1 state=present
@@ -40,12 +45,6 @@
   failed_when: res.rc != 0 and res.rc != 6
   when: result|changed
   
-#- name: configure dnsmasq
-#  template: src=dnsmasq.j2 dest=/etc/dnsmasq.conf owner=root group=root mode=644
-#  notify: restart dnsmasq
-#  tags:
-#    - toggle_tor
-  
 - name: configure hostapd
   template: src=hostapd.j2 dest=/etc/hostapd/hostapd.conf owner=root group=root mode=644
   notify: restart hostapd
@@ -57,3 +56,16 @@
 - name: configure hostapd config file path
   template: src=hostapd_default.j2 dest=/etc/default/hostapd owner=root group=root mode=644
   notify: restart hostapd
+
+- name: create systemd directory for isc-dhcp-server
+  file: path=/etc/systemd/system/isc-dhcp-server.service.d
+
+- name: override isc-dhcp-server systemd dependencies
+  copy: src=isc-dhcp-systemd-override dest=/etc/systemd/system/isc-dhcp-server.service.d/override.conf owner=root group=root mode=644
+
+- name: enable services
+  service: name={{ item }} enabled=yes
+  with_items:
+    - hostapd
+    - isc-dhcp-server
+  notify: restart isc-dhcp-server

@@ -24,6 +24,9 @@
   notify:
     - restart privoxy
 
+- name: create privoxy log dir
+  file: path={{default_settings.log.general.path}}/{{default_settings.log.privoxy.subdir}} state=directory mode=0755 owner=privoxy
+
 - name: modify logdir in privoxy init script
   lineinfile:
     dest: /etc/init.d/privoxy

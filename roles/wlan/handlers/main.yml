@@ -11,6 +11,9 @@
 - name: restart hostapd 2
   shell: "service hostapd restart"
   notify: get ip address
+
+- name: restart isc-dhcp-server
+  shell: "service isc-dhcp-server restart"
   
 - name: get ip address
   shell: "ip addr show wlan0"

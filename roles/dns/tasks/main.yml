@@ -5,7 +5,7 @@
 - name: install services
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
   with_items:
-    - resolvconf
+    - openresolv
     - dnsmasq
     
 - name: enable services
@@ -35,10 +35,10 @@
   tags:
     - toggle_tor
     
-#- name: copy the resolvconf config file
-#  copy: src=dnsblacklist.conf dest=/etc/dnsmasq.d/dnsblacklist.conf mode="0644"
-#  notify:
-#    - restart dnsmasq
+- name: copy the openresolv config file
+  copy: src=resolvconf.conf dest=/etc/resolvconf.conf mode="0644"
+  notify:
+    - restart dnsmasq
 
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/dnsmasq mode=0644

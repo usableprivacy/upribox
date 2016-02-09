@@ -1,0 +1,6 @@
+---
+- name: touch crontab
+  shell: touch /etc/cron.d/ansible-pull
+  
+- name: restart rsyslog
+  service: name=rsyslog state=restarted

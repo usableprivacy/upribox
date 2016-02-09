@@ -31,7 +31,7 @@ bogus-priv
 
 # Change this line if you want dns to get its upstream servers from
 # somewhere other that /etc/resolv.conf
-resolv-file=/var/run/dnsmasq/resolv.conf
+resolv-file=/etc/dnsmasq-resolv.conf
 
 # By  default,  dnsmasq  will  send queries to any of the upstream
 # servers it knows about and tries to favour servers to are  known
@@ -149,9 +149,9 @@ domain=ninja.upri.box,192.168.56.0/24
 # is needed for networks we reach the dnsmasq DHCP server via a relay
 # agent. If you don't know what a DHCP relay agent is, you probably
 # don't need to worry about this.
-dhcp-range=wlan0,192.168.55.100,192.168.55.200,255.255.255.0,12h
+#dhcp-range=wlan0,192.168.55.100,192.168.55.200,255.255.255.0,12h
 {% if tor|bool %}
-dhcp-range=wlan0_0,192.168.56.100,192.168.56.200,255.255.255.0,12h
+#dhcp-range=wlan0_0,192.168.56.100,192.168.56.200,255.255.255.0,12h
 {% endif %}
 
 # This is an example of a DHCP range which sets a tag, so that

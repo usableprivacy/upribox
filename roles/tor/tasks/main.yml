@@ -17,6 +17,12 @@
   tags:
     - toggle_tor
 
+- name: create systemd directory for tor
+  file: path=/etc/systemd/system/tor.service.d
+
+- name: override hostapd systemd dependencies
+  copy: src=tor-systemd-override dest=/etc/systemd/system/tor.service.d/override.conf owner=root group=root mode=644
+
 - name: stop tor service
   service:  name={{ item }} state=stopped
   with_items:
