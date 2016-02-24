@@ -3,17 +3,11 @@
   service: name=dnsmasq state=restarted
 
 - name: restart hostapd
-  shell: killall /sbin/wpa_supplicant
-  register: kill_result
-  failed_when: kill_result.rc != 0 and kill_result.rc != 1 # killall returns 1 if no process was killed
-  notify: restart hostapd 2
-
-- name: restart hostapd 2
-  shell: "service hostapd restart"
+  service: name=hostapd state=restarted
   notify: get ip address
 
 - name: restart isc-dhcp-server
-  shell: "service isc-dhcp-server restart"
+  service: name=isc-dhcp-server state=restarted
   
 - name: get ip address
   shell: "ip addr show wlan0"

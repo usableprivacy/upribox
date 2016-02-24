@@ -19,5 +19,6 @@ processes       = 10
 socket          = /var/run/uwsgi/upri_interface.sock
 # ... with appropriate permissions - may be needed
 chmod-socket    = 664
+chown-socket 	= www-data:www-data
 # clear environment on exit
 vacuum          = true

@@ -11,14 +11,8 @@
     - ifplugd
     - isc-dhcp-server
 
-- name: set dhcp network interfaces
-  copy: src=isc-dhcp-server dest=/etc/default/isc-dhcp-server owner=root group=root mode=644
-
-- name: set dhcp ip ranges
-  copy: src=dhcpd.conf dest=/etc/dhcp/dhcpd.conf owner=root group=root mode=644
-
 - name: create systemd directory for hostapd
-  file: path=/etc/systemd/system/hostapd.service.d
+  file: path=/etc/systemd/system/hostapd.service.d state=directory
 
 - name: override hostapd systemd dependencies
   copy: src=hostapd-systemd-override dest=/etc/systemd/system/hostapd.service.d/override.conf owner=root group=root mode=644
@@ -28,6 +22,7 @@
         
 - name: configure interfaces
   template: src=interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=644
+  register: interfaces
   tags:
     - toggle_tor
 
@@ -57,15 +52,31 @@
   template: src=hostapd_default.j2 dest=/etc/default/hostapd owner=root group=root mode=644
   notify: restart hostapd
 
+- name: install dhcp server
+  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
+  with_items:
+    - isc-dhcp-server
+
 - name: create systemd directory for isc-dhcp-server
-  file: path=/etc/systemd/system/isc-dhcp-server.service.d
+  file: path=/etc/systemd/system/isc-dhcp-server.service.d state=directory
 
 - name: override isc-dhcp-server systemd dependencies
   copy: src=isc-dhcp-systemd-override dest=/etc/systemd/system/isc-dhcp-server.service.d/override.conf owner=root group=root mode=644
+
+- name: set dhcp network interfaces
+  copy: src=isc-dhcp-server dest=/etc/default/isc-dhcp-server owner=root group=root mode=644
+
+- name: set dhcp ip ranges
+  copy: src=dhcpd.conf dest=/etc/dhcp/dhcpd.conf owner=root group=root mode=644
+  notify: restart isc-dhcp-server
 
 - name: enable services
   service: name={{ item }} enabled=yes
   with_items:
     - hostapd
     - isc-dhcp-server
-  notify: restart isc-dhcp-server
+
+- name: start services
+  service: name={{ item }} state=started
+  with_items:
+    - hostapd

@@ -39,6 +39,7 @@
   copy: src=resolvconf.conf dest=/etc/resolvconf.conf mode="0644"
   notify:
     - restart dnsmasq
+    - ifupdown eth0
 
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/dnsmasq mode=0644

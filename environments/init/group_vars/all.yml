@@ -3,7 +3,7 @@ env: init
 
 ansible_connection: ssh
 ansible_ssh_user: root
-ansible_ssh_pass: root
+ansible_ssh_pass: raspberry
 
 remote_user: upri
 sudo_group: upriusers

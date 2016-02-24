@@ -127,6 +127,7 @@
     - python-dev
     - libffi-dev
     - git
+    - psmisc
 
 - name: install ansible via pip
   pip: name=ansible state=present version="{{ansible_pip_version}}"

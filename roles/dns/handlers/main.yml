@@ -1,3 +1,6 @@
 ---
 - name: restart dnsmasq
   service: name=dnsmasq state=restarted
+
+- name: ifupdown eth0
+  shell: ifdown eth0 && ifup eth0
