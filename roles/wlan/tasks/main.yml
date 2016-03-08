@@ -52,11 +52,6 @@
   template: src=hostapd_default.j2 dest=/etc/default/hostapd owner=root group=root mode=644
   notify: restart hostapd
 
-- name: install dhcp server
-  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
-  with_items:
-    - isc-dhcp-server
-
 - name: create systemd directory for isc-dhcp-server
   file: path=/etc/systemd/system/isc-dhcp-server.service.d state=directory
 
@@ -64,11 +59,15 @@
   copy: src=isc-dhcp-systemd-override dest=/etc/systemd/system/isc-dhcp-server.service.d/override.conf owner=root group=root mode=644
 
 - name: set dhcp network interfaces
-  copy: src=isc-dhcp-server dest=/etc/default/isc-dhcp-server owner=root group=root mode=644
+  template: src=isc-dhcp-server.j2 dest=/etc/default/isc-dhcp-server owner=root group=root mode=644
+  notify: restart isc-dhcp-server
+  tags:
+    - toggle_tor
 
 - name: set dhcp ip ranges
-  copy: src=dhcpd.conf dest=/etc/dhcp/dhcpd.conf owner=root group=root mode=644
-  notify: restart isc-dhcp-server
+  template: src=dhcpd.conf.j2 dest=/etc/dhcp/dhcpd.conf owner=root group=root mode=644
+  tags:
+    - toggle_tor
 
 - name: enable services
   service: name={{ item }} enabled=yes

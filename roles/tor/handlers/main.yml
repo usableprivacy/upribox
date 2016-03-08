@@ -1,6 +1,6 @@
 ---
 - name: reload hostapd before tor
-  service: name=hostapd state=reloaded
+  shell: service hostapd stop && sleep 5 && service hostapd start
   notify: restart tor
   
 - name: restart tor

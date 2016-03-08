@@ -3,11 +3,8 @@
   service: name=dnsmasq state=restarted
 
 - name: restart hostapd
-  service: name=hostapd state=restarted
+  shell: service hostapd stop && sleep 5 && service hostapd start
   notify: get ip address
-
-- name: restart isc-dhcp-server
-  service: name=isc-dhcp-server state=restarted
   
 - name: get ip address
   shell: "ip addr show wlan0"
@@ -19,4 +16,7 @@
 # this does not happen on subsequent reboots
 - name: fix ip address
   shell: "ip addr add dev wlan0 192.168.55.254/24" 
-  when: ipaddr.stdout.find("192.168.55.254") == -1 
+  when: ipaddr.stdout.find("192.168.55.254") == -1
+
+- name: restart isc-dhcp-server
+  service: name=isc-dhcp-server state=restarted
