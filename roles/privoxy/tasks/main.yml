@@ -27,6 +27,9 @@
 - name: create privoxy log dir
   file: path={{default_settings.log.general.path}}/{{default_settings.log.privoxy.subdir}} state=directory mode=0755 owner=privoxy
 
+- name: create tmpfiles.d conf file
+  template: src=systemd-log-dir dest=/usr/lib/tmpfiles.d/privoxy.conf
+
 - name: modify logdir in privoxy init script
   lineinfile:
     dest: /etc/init.d/privoxy
