@@ -137,6 +137,9 @@
                host="{{ pull_git_host }}"
                key="{{ pull_git_sshkey }}"
   
+- name: create directory /root/.ssh if not exists
+  file: path=/root/.ssh state=directory recurse=yes owner=root group=root mode=600
+  
 - name: copy git deployment key
   copy: src=id_upribox_deployement-github dest=/root/.ssh/id_rsa_git owner=root group=root mode=0600
   when: pull_deployment is not defined
