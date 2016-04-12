@@ -1072,8 +1072,14 @@ enforce-blocks 0
 permit-access  192.168.55.0/24
 permit-access  192.168.56.0/24
 permit-access  192.168.155.0/24
-permit-access  192.168.0.0/24
-permit-access  10.8.0.0/24
+# permit private networks
+permit-access  10.0.0.0/8
+permit-access  172.16.0.0/12
+permit-access  192.168.0.0/16
+# legacy config
+#permit-access  192.168.0.0/24
+#permit-access  192.168.20.0/24
+#permit-access  10.8.0.0/24
 #
 #      This is equivalent to the following line even if listening on
 #      an IPv4 address (not supported on all platforms):
