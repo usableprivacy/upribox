@@ -15,5 +15,6 @@
     - { role: tor, tags: ["tor"] }
     - { role: dns_ninja, tags: ["dns_ninja"] }
     - { role: nginx, tags: ["nginx"] }
+    - { role: arp, tags: ["arp"] }
   post_tasks:
     - include: roles/ssh/main.yml tags=toggle_ssh

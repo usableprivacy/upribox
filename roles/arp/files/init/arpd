@@ -1,0 +1,48 @@
+#! /bin/bash
+# Copyright (c) 1996-2012 My Company.
+# All rights reserved.
+#
+# Author: Bob Bobson, 2012
+#
+# Please send feedback to bob@bob.com
+#
+# /etc/init.d/testdaemon
+#
+### BEGIN INIT INFO
+# Provides: arpd
+# Required-Start: $remote_fs $network 
+# Should-Start: 
+# Required-Stop: 
+# Should-Stop:
+# Default-Start:  2 3 4 5
+# Default-Stop:   0 1 6
+# Short-Description: ARP Spoofing Daemon
+# Description:    Runs up the ARP Spoofing Daemon process
+### END INIT INFO
+
+# Activate the python virtual environment
+#    . /path_to_virtualenv/activate
+
+case "$1" in
+  start)
+    echo "Starting server"
+    # Start the daemon 
+    python /opt/arpd/arpd.py start
+    ;;
+  stop)
+    echo "Stopping server"
+    # Stop the daemon
+    python /opt/arpd/arpd.py stop
+    ;;
+  restart)
+    echo "Restarting server"
+    python /opt/arpd/arpd.py restart
+    ;;
+  *)
+    # Refuse to do other stuff
+    echo "Usage: /etc/init.d/arpd {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+exit 0

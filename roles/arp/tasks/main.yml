@@ -1,0 +1,16 @@
+---
+- name: create working directory for arp daemon
+  file: path=/opt/arpd state=directory recurse=yes mode=0771 owner=root group=root
+
+- name: copy the arpd files
+  copy: src=arpd/ dest=/opt/arpd owner=root group=root mode=0774
+
+- name: copy arpd init script
+  copy: src=init/arpd dest=/etc/init.d/arpd owner=root group=root mode=0755
+
+- name: install dependencies via pip
+  pip: name="{{ item }}" state=present
+  with_items:
+    - netifaces
+    - netaddr
+    - python-daemon
