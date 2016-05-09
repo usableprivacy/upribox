@@ -9,4 +9,4 @@
   shell: touch /etc/uwsgi/upri_uwsgi.ini
   
 - name: restart supervisor
-  command: /usr/sbin/service supervisor restart
+  service: name=supervisor state=restarted

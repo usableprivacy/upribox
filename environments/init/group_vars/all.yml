@@ -1,9 +1,9 @@
 ---
 env: init
+raspberry_default_user: pi
+raspberry_default_pass: raspberry
 
 ansible_connection: ssh
-ansible_ssh_user: root
-ansible_ssh_pass: raspberry
 
 remote_user: upri
 sudo_group: upriusers

@@ -1,0 +1,9 @@
+- hosts: upriboxes
+  remote_user: "{{ raspberry_default_user }}"
+  become: yes
+  become_method: sudo
+  roles:
+    - { role: init, tags: ["init"] }
+  vars: 
+    ansible_ssh_pass: "{{ raspberry_default_pass }}"
+    ansible_become_pass: "{{ raspberry_default_pass }}"

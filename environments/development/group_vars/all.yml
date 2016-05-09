@@ -9,7 +9,7 @@ remote_user_login_shell: /bin/bash
 apt_cache_time: 3600
 apt_target_state: installed
 
-ansible_pip_version: 1.9.2
+ansible_pip_version: 2.0.2.0
 ansible_uwsgi_version: 1.9.2
 
 django_settings_file: settings_dev

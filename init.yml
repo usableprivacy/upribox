@@ -1,3 +1,0 @@
-- hosts: upriboxes
-  tasks:
-    - include: roles/init/tasks/init.yml

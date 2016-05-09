@@ -1,7 +1,5 @@
 ---
 env: production
-raspberry_default_user: pi
-raspberry_default_pass: raspberry
 
 remote_user: upri
 sudo_group: upriusers

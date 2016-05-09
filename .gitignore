@@ -1,7 +1,10 @@
 vpn-psk
 /environments/development/inventory
 /environments/production/inventory
+/environments/init/inventory
 /roles/common/files/id_rsa_git
+
+*.retry
 
 .DS_Store
 *.pyc

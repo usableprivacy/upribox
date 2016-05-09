@@ -1,11 +1,11 @@
 ---
 - include: ../../common/tasks/other_env.yml 
   
-  # we use this to determine if the script is running for the first time -> user pi gets deleted on first run
-  #- name: check if default user exists
-  #shell: /usr/bin/getent passwd "{{ raspberry_default_user }}" | /usr/bin/wc -l | /usr/bin/tr -d ' '
-  #register: user_exist
-  #changed_when: false
+# we use this to determine if the script is running for the first time -> user pi gets deleted on first run
+# - name: check if default user exists
+#   shell: /usr/bin/getent passwd "{{ raspberry_default_user }}" | /usr/bin/wc -l | /usr/bin/tr -d ' '
+#   register: user_exist
+#   changed_when: false
   
 #- name: copy apt sources
 #  copy: src=apt_sources/{{ item.src }} dest=/etc/apt/{{ item.dest }} owner=root group=root mode=644 
@@ -35,6 +35,9 @@
 #- name: disable raspi config at boot
 #  shell: sed -i /etc/inittab -e "s/^#\(.*\)#\s*RPICFG_TO_ENABLE\s*/\1/" -e "/#\s*RPICFG_TO_DISABLE/d"
 #  when: raspi_config.stat.exists
+
+- name: configure hosts
+  copy: src=hosts dest=/etc/hosts owner=root group=root mode=644
 
 - name: create group for logging users
   group: name="tmp-logger" state=present
@@ -123,6 +126,7 @@
 - name: install dependencies
   apt: name={{ item }} state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
   with_items:
+    - libssl-dev
     - python-pip
     - python-dev
     - libffi-dev
