@@ -10,6 +10,7 @@
     - iw 
     - ifplugd
     - isc-dhcp-server
+    - rng-tools
 
 - name: create systemd directory for hostapd
   file: path=/etc/systemd/system/hostapd.service.d state=directory
