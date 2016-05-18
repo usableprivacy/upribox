@@ -1,19 +1,22 @@
-# Usable Privacy Box
-The [upribox](https://upribox) software is used to create Raspberry Pi images to turn your Raspberry Pi into a privacy-enhancing Wireless router. Main features:
- * Transparent blocking of advertisement/tracking (silent wifi)
- * Transparent adblocking + Tor network (ninja wifi)
- * OpenVPN server for privacy on the road
+# Usable Privacy Box 
+### Privacy made easy for the Raspberry Pi 1, 2, and 3
+The [upribox](https://upribox.org) software is used to create Raspberry Pi images to turn your Raspberry Pi into a privacy-enhancing Wireless router. Main features:
+* Transparent advertisment- and tracker-blocking (silent wifi)
+* Transparent adblocking + Tor network (ninja wifi)
+* OpenVPN server for privacy on the road
 
 ---
 
 # Getting Started
-See the [official Raspberry Pi documentation](https://www.raspberrypi.org/documentation/installation/installing-images/) for pointers on how to install the upribox image on the SD card. Upon the first boot the SSH/VPN keys are automatically re-generated (this will take a couple of minutes), and the system partitions are resized to use the entire size of the SD card. In the following you also find a list of recommended (and tested hardware) for the upribox software. Make sure that you use a compatible USB WiFi dongle!
+See the [official Raspberry Pi documentation](https://www.raspberrypi.org/documentation/installation/installing-images/) for pointers on how to install the upribox image on the SD card. Upon the first boot the SSH/VPN keys are automatically re-generated (this will take a couple of minutes), and the system partitions are resized to use the entire size of the SD card.
+In the following you also find a list of required (and tested hardware) for the upribox software. Make sure that you use a compatible USB WiFi dongle!
 
-### [upribox-image-v0_1.zip](https://s3-us-west-2.amazonaws.com/usableprivacy/upribox-image-v0_1.zip) (December 2015)
-*SHA1Sum: 8a9744050b78a3411972e2758be53c74adfc5da4*
+### [upribox-image-v0_5.zip](https://s3-us-west-2.amazonaws.com/usableprivacy/upribox-image-v0_5.zip) (May 2016)
+*SHA1Sum: c48c4a7e620fad18e58f306003a0c83346bf94d2*
 
 #### Default passwords
-**Silent WiFi** (SSID: *upribox* ), **Ninja WiFi** (SSID: *upribox-ninja*), password: *changeme*. **SSH/Webinterface** login: *upri* password: *changethedefaults!*.
+* **Silent WiFi** (SSID: *upribox* ), **Ninja WiFi** (SSID: *upribox-ninja*), password: *changeme*
+* **SSH/Webinterface** login: *upri* password: *changethedefaults!*
 
 #### Webinterface
 Once you are connect to either of the upribox wifi networks (Silent or Ninja) you can access the upribox Webinterface via the following URI: [http://upri.box](http://upri.box).
@@ -22,8 +25,9 @@ Once you are connect to either of the upribox wifi networks (Silent or Ninja) yo
 ### List of recommended hardware*
 * Raspberry Pi 2 [[Amazon.com]](http://amzn.to/1YewXnz) [[Element14]](http://element14.com/raspberrypi2) [[Adafruit]](https://www.adafruit.com/products/2358)
 * microSDHC Class 10 (min. 4GB) [[Amazon.com]](http://amzn.to/1YewW33)
-* Power supply [[Amazon]](http://amzn.to/1QhAna9) [[Adafruit]](https://www.adafruit.com/products/1995)
+* Power supply [[Amazon.com]](http://amzn.to/1QhAna9) [[Adafruit]](https://www.adafruit.com/products/1995)
 * TL-WN722N Wireless USB adapter [[Amazon.com]](http://amzn.to/1I3zG1v)
+* Since Version 0.5 of the upribox we support the Pi3 natively, so no additional WiFI dongle is required. Currently the Pi3 Wifi only supports one active Hotspot, therefor you can not yet activate the **Ninja WiFi** on the Pi3.
 
 *The upribox software works with Raspberry Pi 1 as well, but the performance for adblocking is considerable worse. Other potentially suitable USB WiFi hardware can be found in the [Pi(rate)Box Wiki](https://piratebox.cc/raspberry_pi:piratebox_wifi_compatibility).
 
@@ -38,7 +42,7 @@ The upribox performs an auto-update every **four hours**:
 
 ## Development / Reproducibility
 
-The current upribox image is based on the [Raspbian Wheezy image](https://www.raspberrypi.org/downloads/raspbian/) and customized with [ansible](http://www.ansible.com). The Raspbian image can be staged into *production* or *development* mode.
+The current upribox image is based on [Raspbian Jessie Lite](https://www.raspberrypi.org/downloads/raspbian/) and customized with [ansible](http://www.ansible.com). The Raspbian image can be staged into *production* or *development* mode.
 
 ### Prerequisites
 * install ansible 1.9.6 (`sudo pip install ansible==1.9.6`)
