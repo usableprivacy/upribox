@@ -20,14 +20,14 @@ import util
 
 class DaemonApp():
 
-    def __init__(self, logger, interface):
+    def __init__(self, logger, interface, pidfile):
         # disable scapys verbosity global
         conf.verb = 0
 
         self.stdin_path = '/dev/null'
         self.stdout_path = '/dev/tty'
         self.stderr_path = '/dev/tty'
-        self.pidfile_path = '/var/run/apate/apate.pid'
+        self.pidfile_path = pidfile
         self.pidfile_timeout = 5
         # self.pidfile_timeout = 0
 

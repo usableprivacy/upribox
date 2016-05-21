@@ -5,7 +5,9 @@ import sys
 import signal
 import lockfile
 import os
+import json
 
+CONFIG_FILE = "/etc/apate/config.json"
 
 def main():
 
@@ -13,20 +15,36 @@ def main():
         print "This daemon needs to be run as root"
         sys.exit(1)
 
+    try:
+        with open(CONFIG_FILE) as config:
+            data = json.load(config)
+    except ValueError as ve:
+            print "Could not parse the configuration file"
+            print str(ve)
+            sys.exit(3)
+    except IOError as ioe:
+        print "An error occurred while trying to open the configuration file"
+        print str(ioe)
+        sys.exit(4)
+
+    if not all(val in data for val in ('logfile', 'pidfile', 'interface')):
+        print "The configuration file does not include all necessary options"
+        sys.exit(2)
+
     # set up logger for daemon
     logger = logging.getLogger("DaemonLog")
     logger.setLevel(logging.INFO)
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    handler = logging.FileHandler("/var/log/log/apate/apate.log")
+    handler = logging.FileHandler(data['logfile'])
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
     # this should be in config file
-    interface = "eth0"
+    # interface = data['interface']
 
     # catch error with could arise during initialisation
     try:
-        dapp = daemon_app.DaemonApp(logger, interface)
+        dapp = daemon_app.DaemonApp(logger, str(data['interface']), data['pidfile'])
     except Exception as e:
         logger.error("An error happened during initialsising the daemon process - terminating process")
         logger.exception(e)

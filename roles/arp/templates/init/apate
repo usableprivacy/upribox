@@ -21,7 +21,18 @@
 ### END INIT INFO
 
 # Activate the python virtual environment
-#    . /path_to_virtualenv/activate
+. /opt/apate/venv/bin/activate
+
+PID={{ default_settings.apate.pid.dir }}
+LOGDIR={{ default_settings.log.general.path }}/{{ default_settings.log.apate.subdir }}
+
+if [ ! -d $PID ]; then
+    mkdir $PID || return 2
+fi
+
+if [ ! -d $LOGDIR ]; then
+    mkdir $LOGDIR || return 2
+fi
 
 case "$1" in
   start)
