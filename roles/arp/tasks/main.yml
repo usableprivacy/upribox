@@ -24,6 +24,6 @@
 
 - name: remove log files from other environment
   file: path={{other_env.default_settings.log.general.path}}/{{other_env.default_settings.log.apate.subdir}} state=absent
-  #/{{item.value}}
-  #with_dict: "{{other_env.default_settings.log.privoxy.logfiles}}"
-  #when: res|changed
+
+- name: modify logrotate.d entry
+  template: src=logrotate.j2 dest=/etc/logrotate.d/apate mode=0644
