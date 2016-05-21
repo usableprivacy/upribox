@@ -17,7 +17,7 @@ def main():
     logger = logging.getLogger("DaemonLog")
     logger.setLevel(logging.INFO)
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    handler = logging.FileHandler("/var/log/log/arpd/arpd.log")
+    handler = logging.FileHandler("/var/log/log/apate/apate.log")
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
@@ -51,7 +51,7 @@ def main():
 
         # runner only catches AlreadyLocked, which is not thrown if a timeout was specified other than None or 0
         # Following is thrown otherwise and slips through:
-        # LockTimeout: Timeout waiting to acquire lock for /var/run/arpd/arpd.pid
+        # LockTimeout: Timeout waiting to acquire lock for /var/run/apate/apate.pid
         # though this should not be logged as an exception
 
         # restart fails if timeout is set to 0 or None

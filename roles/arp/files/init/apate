@@ -9,10 +9,10 @@
 # /etc/init.d/testdaemon
 #
 ### BEGIN INIT INFO
-# Provides: arpd
-# Required-Start: $remote_fs $network 
-# Should-Start: 
-# Required-Stop: 
+# Provides: apate
+# Required-Start: $remote_fs $network
+# Should-Start:
+# Required-Stop:
 # Should-Stop:
 # Default-Start:  2 3 4 5
 # Default-Stop:   0 1 6
@@ -26,21 +26,21 @@
 case "$1" in
   start)
     echo "Starting server"
-    # Start the daemon 
-    python /opt/arpd/arpd.py start
+    # Start the daemon
+    python /opt/apate/apate.py start
     ;;
   stop)
     echo "Stopping server"
     # Stop the daemon
-    python /opt/arpd/arpd.py stop
+    python /opt/apate/apate.py stop
     ;;
   restart)
     echo "Restarting server"
-    python /opt/arpd/arpd.py restart
+    python /opt/apate/apate.py restart
     ;;
   *)
     # Refuse to do other stuff
-    echo "Usage: /etc/init.d/arpd {start|stop|restart}"
+    echo "Usage: /etc/init.d/apate {start|stop|restart}"
     exit 1
     ;;
 esac

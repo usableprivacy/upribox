@@ -27,7 +27,7 @@ class DaemonApp():
         self.stdin_path = '/dev/null'
         self.stdout_path = '/dev/tty'
         self.stderr_path = '/dev/tty'
-        self.pidfile_path = '/var/run/arpd/arpd.pid'
+        self.pidfile_path = '/var/run/apate/apate.pid'
         self.pidfile_timeout = 5
         # self.pidfile_timeout = 0
 
