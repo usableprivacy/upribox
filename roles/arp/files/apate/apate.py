@@ -8,6 +8,7 @@ import os
 import json
 
 CONFIG_FILE = "/etc/apate/config.json"
+CONFIG_OPTIONS = ('logfile', 'pidfile', 'interface', 'stderr', 'stdout')
 
 def main():
 
@@ -27,7 +28,7 @@ def main():
         print str(ioe)
         sys.exit(4)
 
-    if not all(val in data for val in ('logfile', 'pidfile', 'interface')):
+    if not all(val in data for val in CONFIG_OPTIONS):
         print "The configuration file does not include all necessary options"
         sys.exit(2)
 
@@ -44,7 +45,7 @@ def main():
 
     # catch error with could arise during initialisation
     try:
-        dapp = daemon_app.DaemonApp(logger, str(data['interface']), data['pidfile'])
+        dapp = daemon_app.DaemonApp(logger, str(data['interface']), data['pidfile'], data['stdout'], data['stderr'])
     except Exception as e:
         logger.error("An error happened during initialsising the daemon process - terminating process")
         logger.exception(e)

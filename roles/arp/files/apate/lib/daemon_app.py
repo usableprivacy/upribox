@@ -18,15 +18,16 @@ from netaddr import IPAddress, IPNetwork, AddrFormatError
 
 import util
 
+
 class DaemonApp():
 
-    def __init__(self, logger, interface, pidfile):
+    def __init__(self, logger, interface, pidfile, stdout, stderr):
         # disable scapys verbosity global
         conf.verb = 0
 
-        self.stdin_path = os.devnull #'/dev/null'
-        self.stdout_path = '/var/log/log/apate/std.log' #os.ttyname(sys.stdout.fileno()) #'/dev/tty'#'/var/log/log/apate/apate.log'#
-        self.stderr_path = '/var/log/log/apate/std.log' #os.ttyname(sys.stderr.fileno()) #'/dev/tty'#'/var/log/log/apate/apate.log'#
+        self.stdin_path = os.devnull
+        self.stdout_path = stdout
+        self.stderr_path = stderr
         self.pidfile_path = pidfile
         self.pidfile_timeout = 5
         # self.pidfile_timeout = 0
@@ -74,7 +75,7 @@ class DaemonApp():
 
         try:
             # get MAC address of gateway
-            self.gateMAC = util.get_mac(self.gateway, self.interface) #self.__get_mac(self.gateway)
+            self.gateMAC = util.get_mac(self.gateway, self.interface)  # self.__get_mac(self.gateway)
         except Exception:
             self.logger.error("Unable to get MAC address of Gateway")
             raise DaemonError()
@@ -120,7 +121,7 @@ class DaemonApp():
         packets = [Ether(dst=self.gateMAC) / ARP(op=1, psrc=str(x), pdst=str(x)) for x in self.ip_range]
         # gratuitous arp to clients
         packets.append(Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=self.gateway,
-                                               hwdst=ETHER_BROADCAST))
+                                                        hwdst=ETHER_BROADCAST))
         while True:
             # gratuitous arp to clients
             # sendp(Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=self.gateway,
@@ -189,7 +190,7 @@ class SniffThread(threading.Thread):  # Process):
         if pkt[ARP].op == 1:
 
             if pkt[Ether].dst == self.mac:
-                #incoming packets(that are sniffed): Windows correctly fills in the hwdst, linux (router) only 00:00:00:00:00:00
+                # incoming packets(that are sniffed): Windows correctly fills in the hwdst, linux (router) only 00:00:00:00:00:00
                 sendp(Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=pkt[ARP].pdst, pdst=pkt[ARP].psrc, hwdst=pkt[ARP].hwsrc, hwsrc=self.mac))
 
             # broadcast request to or from gateway
@@ -200,7 +201,7 @@ class SniffThread(threading.Thread):  # Process):
                 # spoof receiver
                 dest = self.gateMAC
                 if pkt[ARP].pdst != self.gateway:
-                    dest = util.get_mac(pkt[ARP].pdst, self.interface)#__get_mac(pkt[ARP].pdst)
+                    dest = util.get_mac(pkt[ARP].pdst, self.interface)  # __get_mac(pkt[ARP].pdst)
 
                 packets.append(Ether(dst=dest) / ARP(op=2, psrc=pkt[ARP].psrc, hwsrc=self.mac, pdst=pkt[ARP].pdst, hwdst=dest))
 

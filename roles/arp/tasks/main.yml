@@ -6,21 +6,25 @@
 
 - name: copy the apate files
   copy: src=apate/ dest=/opt/apate owner=root group=root mode=0774
+  notify: restart apate
 
 - name: copy apate init script
   template: src=init/apate dest=/etc/init.d/apate owner=root group=root mode=0755
+  notify: restart apate
 
 - name: create apate config dir
   file: path=/etc/apate state=directory recurse=yes mode=0771 owner=root group=root
 
 - name: copy apate config file
   template: src=config.json dest=/etc/apate/config.json owner=root group=root mode=0755
+  notify: restart apate
 
 - name: install virtualenv
   apt: name=python-virtualenv state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
 
 - name: install requirements to virtualenv
   pip: requirements=/opt/apate/requirements.txt virtualenv=/opt/apate/venv
+  notify: restart apate
 
 - name: remove log files from other environment
   file: path={{other_env.default_settings.log.general.path}}/{{other_env.default_settings.log.apate.subdir}} state=absent

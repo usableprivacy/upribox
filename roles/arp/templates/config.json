@@ -1,5 +1,7 @@
 {
     "pidfile": "{{ default_settings.apate.pid.dir }}/{{ default_settings.apate.pid.file }}",
     "logfile": "{{ default_settings.log.general.path }}/{{ default_settings.log.apate.subdir }}/{{ default_settings.log.apate.logfiles.logname }}",
-    "interface": "eth0"
+    "interface": "eth0",
+    "stdout": "{{ default_settings.log.general.path }}/{{ default_settings.log.apate.subdir }}/{{ default_settings.log.apate.logfiles.stdout }}",
+    "stderr": "{{ default_settings.log.general.path }}/{{ default_settings.log.apate.subdir }}/{{ default_settings.log.apate.logfiles.stderr }}"
 }

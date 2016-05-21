@@ -46,6 +46,8 @@ default_settings:
       subdir: 'apate'
       logfiles:
         logname: apate.log
+        stdout: stdout.log
+        stderr: stderr.log
     tor:
       subdir: 'tor'
       logfiles:
