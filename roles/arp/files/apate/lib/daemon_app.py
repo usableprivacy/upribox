@@ -24,9 +24,9 @@ class DaemonApp():
         # disable scapys verbosity global
         conf.verb = 0
 
-        self.stdin_path = '/dev/null'
-        self.stdout_path = '/dev/tty'
-        self.stderr_path = '/dev/tty'
+        self.stdin_path = os.devnull #'/dev/null'
+        self.stdout_path = '/var/log/log/apate/std.log' #os.ttyname(sys.stdout.fileno()) #'/dev/tty'#'/var/log/log/apate/apate.log'#
+        self.stderr_path = '/var/log/log/apate/std.log' #os.ttyname(sys.stderr.fileno()) #'/dev/tty'#'/var/log/log/apate/apate.log'#
         self.pidfile_path = pidfile
         self.pidfile_timeout = 5
         # self.pidfile_timeout = 0

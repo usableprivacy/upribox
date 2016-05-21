@@ -27,3 +27,6 @@
 
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/apate mode=0644
+
+- name: enable apate service
+  service: name=apate enabled=yes
