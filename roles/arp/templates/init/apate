@@ -14,6 +14,11 @@
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
 
+if [[ $EUID -ne 0 ]]; then
+   echo "This daemon must be run as root"
+   exit 1
+fi
+
 # Activate the python virtual environment
 . /opt/apate/venv/bin/activate
 
