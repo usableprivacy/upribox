@@ -1,5 +1,6 @@
 from lib import daemon_app
 from daemon import runner
+
 import logging
 import sys
 import signal
@@ -10,19 +11,22 @@ import json
 CONFIG_FILE = "/etc/apate/config.json"
 CONFIG_OPTIONS = ('logfile', 'pidfile', 'interface', 'stderr', 'stdout')
 
+
 def main():
 
+    # check if run as root
     if os.geteuid() != 0:
         print "This daemon needs to be run as root"
         sys.exit(1)
 
+    # parse configuration file
     try:
         with open(CONFIG_FILE) as config:
             data = json.load(config)
     except ValueError as ve:
-            print "Could not parse the configuration file"
-            print str(ve)
-            sys.exit(3)
+        print "Could not parse the configuration file"
+        print str(ve)
+        sys.exit(3)
     except IOError as ioe:
         print "An error occurred while trying to open the configuration file"
         print str(ioe)
@@ -40,10 +44,7 @@ def main():
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
-    # this should be in config file
-    # interface = data['interface']
-
-    # catch error with could arise during initialisation
+    # catch error which could arise during initialisation
     try:
         dapp = daemon_app.DaemonApp(logger, str(data['interface']), data['pidfile'], data['stdout'], data['stderr'])
     except Exception as e:
