@@ -20,10 +20,10 @@ Once you are connect to either of the upribox wifi networks (Silent or Ninja) yo
 
 
 ### List of recommended hardware*
-* Raspberry Pi 2 [[Amazon.com]](http://amzn.to/1YewXnz) [[Element14]](http://element14.com/raspberrypi2) [[Adafruit]](https://www.adafruit.com/products/2358)
-* microSDHC Class 10 (min. 4GB) [[Amazon.com]](http://amzn.to/1YewW33)
-* Power supply [[Amazon]](http://amzn.to/1QhAna9) [[Adafruit]](https://www.adafruit.com/products/1995)
-* TL-WN722N Wireless USB adapter [[Amazon.com]](http://amzn.to/1I3zG1v)
+* Raspberry Pi 2 [[Element14]](http://element14.com/raspberrypi2) [[Adafruit]](https://www.adafruit.com/products/2358)
+* microSDHC Class 10 (min. 4GB)
+* Power supply [[Adafruit]](https://www.adafruit.com/products/1995)
+* TL-WN722N Wireless USB adapter
 
 *The upribox software works with Raspberry Pi 1 as well, but the performance for adblocking is considerable worse. Other potentially suitable USB WiFi hardware can be found in the [Pi(rate)Box Wiki](https://piratebox.cc/raspberry_pi:piratebox_wifi_compatibility).
 
