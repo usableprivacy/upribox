@@ -65,7 +65,6 @@
     - dnsmasq-ninja 
   tags:
     - toggle_tor
-  when: tor|bool
   
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/dnsmasq_ninja mode=0644

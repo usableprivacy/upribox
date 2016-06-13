@@ -1,6 +1,11 @@
 ---
   - include: ../../tor/tasks/tor_state.yml tags=toggle_tor
 
+  - name: install services
+    apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
+    with_items:
+     - iptables
+
   - name: copy the iptables rules file
     template: src=iptables.upribox.ipv4 dest=/etc/iptables.upribox.ipv4 owner=root group=root mode=0644
     notify:

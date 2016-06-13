@@ -1,0 +1,38 @@
+# The ddns-updates-style parameter controls whether or not the server will
+# attempt to do a DNS update when a lease is confirmed. We default to the
+# behavior of the version 2 packages ('none', since DHCP v2 didn't
+# have support for DDNS.)
+ddns-update-style none;
+
+default-lease-time 600;
+max-lease-time 7200;
+
+# If this DHCP server is the official DHCP server for the local
+# network, the authoritative directive should be uncommented.
+#authoritative;
+
+# Use this to send dhcp log messages to a different log file (you also
+# have to hack syslog.conf to complete the redirection).
+log-facility local7;
+
+
+subnet 192.168.55.0 netmask 255.255.255.0 {
+        option routers                  192.168.55.254;
+        option subnet-mask              255.255.255.0;
+        option broadcast-address        192.168.55.255;
+        option domain-name-servers      192.168.55.254;
+	range 192.168.55.100 192.168.55.200;
+        default-lease-time 86400;
+        max-lease-time 86400;
+}
+{% if tor|bool%}
+subnet 192.168.56.0 netmask 255.255.255.0 {
+        option routers                  192.168.56.254;
+        option subnet-mask              255.255.255.0;
+        option broadcast-address        192.168.56.255;
+        option domain-name-servers      192.168.56.254;
+	range 192.168.56.100 192.168.56.200;
+        default-lease-time 86400;
+        max-lease-time 86400;
+}
+{% endif %}

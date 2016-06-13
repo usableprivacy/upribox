@@ -17,6 +17,12 @@
   tags:
     - toggle_tor
 
+- name: create systemd directory for tor
+  file: path=/etc/systemd/system/tor.service.d state=directory
+
+- name: override tor systemd dependencies
+  copy: src=tor-systemd-override dest=/etc/systemd/system/tor.service.d/override.conf owner=root group=root mode=644
+
 - name: stop tor service
   service:  name={{ item }} state=stopped
   with_items:
@@ -28,14 +34,14 @@
   #restarting tor with a handler is necessary, if the hostapd config was changed and tor is enabled
 - name: restart service tor
   shell: "/bin/true"
-  notify: restart hostapd before tor
+  notify: reload hostapd before tor
   when: tor|bool and hostapd_status is defined and hostapd_status|changed
   tags:
     - toggle_tor
     
 - name: copy tor config
   template: src=torrc dest=/etc/tor/torrc
-  notify: restart hostapd before tor
+  notify: reload hostapd before tor
   when: tor|bool
   tags:
     - toggle_tor
@@ -45,7 +51,7 @@
     dest: /etc/init.d/tor
     regexp: "^TORLOGDIR="
     line: "TORLOGDIR={{default_settings.log.general.path}}/{{default_settings.log.tor.subdir}}"
-  notify: restart hostapd before tor
+  notify: reload hostapd before tor
   when: tor|bool
   register: res
   tags:
