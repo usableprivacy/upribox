@@ -36,6 +36,10 @@
 #  shell: sed -i /etc/inittab -e "s/^#\(.*\)#\s*RPICFG_TO_ENABLE\s*/\1/" -e "/#\s*RPICFG_TO_DISABLE/d"
 #  when: raspi_config.stat.exists
 
+- name: Stop update process if master is pulled from old wheezy image
+  fail: msg="You are running the outdated wheezy image, update process stoped."
+  when: ansible_distribution_release == "wheezy"
+
 - name: configure hosts
   copy: src=hosts dest=/etc/hosts owner=root group=root mode=644
 
