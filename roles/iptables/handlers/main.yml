@@ -1,4 +1,4 @@
 ---
   - name: restore iptables
-    shell: /sbin/iptables-restore < /etc/iptables.upribox.ipv4
+    shell: /sbin/iptables-restore < /etc/iptables/rules.v4
 
