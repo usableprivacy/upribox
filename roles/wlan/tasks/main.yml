@@ -26,6 +26,35 @@
   register: interfaces
   tags:
     - toggle_tor
+    - network_config
+
+- name: check if static ip setup is enabled
+  set_fact:
+    static_ip_setup: True
+  when: 
+   (ansible_local is defined) and
+   (ansible_local.interfaces is defined) and 
+   (ansible_local.interfaces.general is defined) and 
+   (ansible_local.interfaces.general.mode is defined) and 
+   (ansible_local.interfaces.general.mode == "static") and 
+   (ansible_local.interfaces.static is defined)
+  tags:
+    - toggle_tor
+    - network_config
+
+- name: disable dhcpcd on eth0 for static config
+  lineinfile: dest=/etc/dhcpcd.conf regexp=^denyinterfaces\ eth0 line="denyinterfaces eth0" state=present
+  when: static_ip_setup is defined
+  tags:
+    - toggle_tor
+    - network_config
+
+- name: re-enable dhcpcd on eth0
+  lineinfile: dest=/etc/dhcpcd.conf regexp=^denyinterfaces\ eth0 line="denyinterfaces eth0" state=absent
+  when: static_ip_setup is not defined
+  tags:
+    - toggle_tor
+    - network_config
 
 - name: configure ifplugd
   copy: src=ifplugd dest=/etc/default/ifplugd owner=root group=root mode=644
