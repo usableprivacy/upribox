@@ -23,10 +23,10 @@ Once you are connect to either of the upribox wifi networks (Silent or Ninja) yo
 
 
 ### List of recommended hardware*
-* Raspberry Pi 2 [[Amazon.com]](http://amzn.to/1YewXnz) [[Element14]](http://element14.com/raspberrypi2) [[Adafruit]](https://www.adafruit.com/products/2358)
-* microSDHC Class 10 (min. 4GB) [[Amazon.com]](http://amzn.to/1YewW33)
-* Power supply [[Amazon.com]](http://amzn.to/1QhAna9) [[Adafruit]](https://www.adafruit.com/products/1995)
-* TL-WN722N Wireless USB adapter [[Amazon.com]](http://amzn.to/1I3zG1v)
+* Raspberry Pi 2/3 [[Amazon.com]](https://www.amazon.com/Raspberry-Pi-RASP-PI-3-Model-Motherboard/dp/B01CD5VC92) [[Element14]](http://element14.com/raspberrypi2) [[Adafruit]](https://www.adafruit.com/products/2358)
+* microSDHC Class 10 (min. 4GB) [[Amazon.com]](https://www.amazon.com/SanDisk-MicroSDHC-Standard-Packaging-SDSDQUAN-008G-G4A/dp/B00M55C0VU/)
+* Power supply [[Amazon.com]](https://www.amazon.com/Kootek-Universal-Charger-Raspberry-External/dp/B00GWDLJGS) [[Adafruit]](https://www.adafruit.com/products/1995)
+* TL-WN722N Wireless USB adapter [[Amazon.com]](https://www.amazon.com/TP-LINK-TL-WN722N-Wireless-Adapter-External/dp/B002SZEOLG)
 * Since Version 0.5 of the upribox we support the Pi3 natively, so no additional WiFI dongle is required. Currently the Pi3 Wifi only supports one active Hotspot, therefor you can not yet activate the **Ninja WiFi** on the Pi3.
 
 *The upribox software works with Raspberry Pi 1 as well, but the performance for adblocking is considerable worse. Other potentially suitable USB WiFi hardware can be found in the [Pi(rate)Box Wiki](https://piratebox.cc/raspberry_pi:piratebox_wifi_compatibility).
@@ -37,37 +37,6 @@ The upribox performs an auto-update every **four hours**:
 
 * Blocking rules for privoxy and DNS
 * Software updates via ansible + updates from github
-
----
-
-## Development / Reproducibility
-
-The current upribox image is based on [Raspbian Jessie Lite](https://www.raspberrypi.org/downloads/raspbian/) and customized with [ansible](http://www.ansible.com). The Raspbian image can be staged into *production* or *development* mode.
-
-### Prerequisites
-* install ansible 1.9.6 (`sudo pip install ansible==1.9.6`)
-* make sure to log into your Raspberry via ssh once because ansible uses ~/.ssh/known_hosts for verification (or disable host verification)
-* install sshpass (most likely available in your distribution's repositories)
-* make sure you have a public/private key pair for ssh on your development machine. ~/.ssh/id_rsa.pub will be automatically added to the authorized_hosts on the Raspberry
-
-### Development Mode
-This mode is intended for testing new features and debugging the upribox software. As such log files are persistent and auto software updates are disabled by default.
-
-#### Getting started
-* copy environments/development/inventory.sample to environments/development/inventory
-* add your RaspberryPi address(es) in the [upriboxes] section in environments/development/inventory
-* run the initial setup with `ansible-playbook -i environments/init/inventory setup.yml`
-  This command will log into your Raspberry with the default credentials pi/raspberry, create a new user (upri) and delete pi.
-  Add `--ask-pass` if you changed the default password.
-* from now on, the config can be deployed with `ansible-playbook -i environments/development/inventory site.yml`
-
-#### Production Mode
-* copy environments/production/inventory.sample to environments/production/inventory
-* add your RaspberryPi address(es) in the [upriboxes] section in environments/production/inventory
-* run the initial setup with `ansible-playbook -i environments/init/inventory setup.yml`
-  This command will log into your Raspberry with the default credentials pi/raspberry, create a new user (upri) and delete pi.
-  Add `--ask-pass` if you changed the default password.
-* from now on, the config can be deployed with `ansible-playbook -i environments/production/inventory site.yml`
 
 ---
 

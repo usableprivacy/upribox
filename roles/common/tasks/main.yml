@@ -1,40 +1,5 @@
 ---
 - include: ../../common/tasks/other_env.yml 
-  
-# we use this to determine if the script is running for the first time -> user pi gets deleted on first run
-# - name: check if default user exists
-#   shell: /usr/bin/getent passwd "{{ raspberry_default_user }}" | /usr/bin/wc -l | /usr/bin/tr -d ' '
-#   register: user_exist
-#   changed_when: false
-  
-#- name: copy apt sources
-#  copy: src=apt_sources/{{ item.src }} dest=/etc/apt/{{ item.dest }} owner=root group=root mode=644 
-#  with_items:
-#    - { src: 'preferences', dest: 'preferences' }
-#    - { src: 'sources.list', dest: 'sources.list' }
-#    - { src: 'raspi.list', dest: 'sources.list.d/raspi.list' }
-  
-#- name: upgrade raspberrypi-bootloader
-#  apt: name={{ item }} state=latest force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
-#  with_items:
-#    - raspberrypi-bootloader
-#  when: user_exist.stdout == "1"
-
-#- name: expand disk space
-#  shell: raspi-config --expand-rootfs
-#  when: user_exist.stdout == "1"
-
-# Disable raspi-config at startup
-#- stat: path=/etc/profile.d/raspi-config.sh
-#  register: raspi_config
-
-#- name: disable raspi config in profile
-#  file: path=/etc/profile.d/raspi-config.sh state=absent
-#  when: raspi_config.stat.exists
-
-#- name: disable raspi config at boot
-#  shell: sed -i /etc/inittab -e "s/^#\(.*\)#\s*RPICFG_TO_ENABLE\s*/\1/" -e "/#\s*RPICFG_TO_DISABLE/d"
-#  when: raspi_config.stat.exists
 
 - name: Stop update process if master is pulled from old wheezy image
   fail: msg="You are running the outdated wheezy image, update process stoped."
@@ -97,35 +62,6 @@
 
 - name: modify logrotate.d entry
   template: src=logrotate_rsyslog dest=/etc/logrotate.d/rsyslog mode=0644
-
-# mount tmpfs without reboot
-
-#- name: mount tmpfs for logging
-#  shell: "sudo mount -a"
-#  when: fstab|changed
-  
-#- name: reboot
-#  command: shutdown -r now "ansible reboot"
-#  async: 0
-#  poll: 0
-#  ignore_errors: true
-#  when: user_exist.stdout == "1"
-  
-#- name: wait for reboot
-#  local_action: wait_for host={{ inventory_hostname }}
-#                state=started
-#  become: false
-#  when: user_exist.stdout == "1"
-  
-#- name: kill default user processes
-#  remote_user: "{{ remote_user }}"
-#  shell: killall -u "{{ raspberry_default_user }}"
-#  when: user_exist.stdout == "1"
-#  register: kill_result
-#  failed_when: kill_result.rc != 0 and kill_result.rc != 1 # killall returns 1 if no process was killed
-  
-#- name: remove default user
-#  user: name="{{ raspberry_default_user }}" state=absent remove=yes
   
 - name: install dependencies
   apt: name={{ item }} state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
