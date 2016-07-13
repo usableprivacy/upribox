@@ -1,13 +1,13 @@
-import sys
+# import sys
 import os
-import thread
+# import thread
 import logging
 import time
 import netifaces as ni
 import threading
-import socket
-import struct
-import binascii
+# import socket
+# import struct
+# import binascii
 
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 # suppresses following message
@@ -16,9 +16,11 @@ from scapy.all import conf, sendp, srp, ARP, Ether, ETHER_BROADCAST, sniff
 from netaddr import IPAddress, IPNetwork, AddrFormatError
 
 import util
+from sniff_thread import HolisticSniffThread, SelectiveSniffThread
+from apate_redis import ApateRedis
 
 
-class DaemonApp():
+class _DaemonApp(object):
 
     def __init__(self, logger, interface, pidfile, stdout, stderr):
         # disable scapys verbosity global
@@ -78,7 +80,25 @@ class DaemonApp():
             self.logger.error("Unable to get MAC address of Gateway")
             raise DaemonError()
 
-        self.t1 = SniffThread(self.interface, self.gateway, self.mac, self.gateMAC)
+    def __return_to_normal(self):
+        pass
+
+    def exit(self, signal_number, stack_frame):
+        self.__return_to_normal()
+        # TODO check if thread is alive (active)
+        # self.t1.stop()
+        raise SystemExit()
+
+    def run(self):
+        pass
+
+
+class HolisticDaemonApp(_DaemonApp):
+
+    def __init__(self, logger, interface, pidfile, stdout, stderr):
+        super(self.__class__, self).__init__(logger, interface, pidfile, stdout, stderr)
+
+        self.t1 = HolisticSniffThread(self.interface, self.gateway, self.mac, self.gateMAC)
         self.t1.daemon = True
 
     def __return_to_normal(self):
@@ -110,51 +130,81 @@ class DaemonApp():
             time.sleep(20)
 
 
-class SniffThread(threading.Thread):
+class SelectiveDaemonApp(_DaemonApp):
 
-    def __init__(self, interface, gateway, mac, gateMAC):
-        threading.Thread.__init__(self)
-        # super(self.__class__, self).__init__()
-        self.interface = interface
-        self.gateway = gateway
-        self.mac = mac
-        self.gateMAC = gateMAC
+    def __init__(self, logger, interface, pidfile, stdout, stderr):
+        super(self.__class__, self).__init__(logger, interface, pidfile, stdout, stderr)
+        self.redis = ApateRedis(self.network)
+
+        # TODO change
+        # self.t1 = HolisticSniffThread(self.interface, self.gateway, self.mac, self.gateMAC)
+        # self.t1.daemon = True
+        self.t1 = SelectiveSniffThread(self.interface, self.gateway, self.mac, self.gateMAC, self.redis)
+        self.t1.daemon = True
+
+    def __return_to_normal(self):
+
+        # spoof clients
+        sendp(
+            Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=self.gateway, hwdst=ETHER_BROADCAST,
+                                             hwsrc=self.gateMAC))
+
+        # packets = [Ether(dst=dev[1]) / ARP(op=1, psrc=self.gateway, pdst=dev[0].rsplit(":", 1)[-1], hwsrc=self.gateMAC) for dev in self.redis.get_devices_values(filter=True)]
+
+        # spoof the gateway
+        packets = [Ether(dst=self.gateMAC) / ARP(op=2, psrc=dev[0], pdst=self.gateway, hwsrc=dev[1]) for dev in self.redis.get_devices_values(filter=True)]
+
+        sendp(packets)
+
+    def exit(self, signal_number, stack_frame):
+        self.__return_to_normal()
+        # TODO check if thread is alive (active)
+        self.t1.stop()
+        raise SystemExit()
 
     def run(self):
-        # the filter argument in scapy's sniff function seems to be applied too late
-        # therefore some unwanted packets are processed (e.g. tcp packets of ssh session)
-        # but it still decreases the number of packets that need to be processed by the lfilter function
-        sniff(prn=self.__arp_handler, filter="arp and inbound", lfilter=lambda x: x.haslayer(ARP), store=0, iface=self.interface)
+        # TODO
+        # start threads (listener and host discovery)
+        self.t1.start()
 
-    def __arp_handler(self, pkt):
-        if pkt[ARP].op == 1:
+        DiscoveryThread(self.gateway, self.network).start()
 
-            if pkt[Ether].dst == self.mac:
-                # incoming packets(that are sniffed): Windows correctly fills in the hwdst, linux (router) only 00:00:00:00:00:00
-                sendp(Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=pkt[ARP].pdst, pdst=pkt[ARP].psrc, hwdst=pkt[ARP].hwsrc, hwsrc=self.mac))
-                # TODO also spoof gateway?
+        # spoof clients
+        p1 = lambda dev: Ether(dst=dev[1]) / ARP(op=2, psrc=self.gateway, pdst=dev[0], hwdst=dev[1])
 
-            # broadcast request to or from gateway
-            elif pkt[Ether].dst.lower() == util.hex2str_mac(ETHER_BROADCAST) and (pkt[ARP].psrc == self.gateway or pkt[ARP].pdst == self.gateway):
-                # spoof transmitter
-                packets = [Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=pkt[ARP].pdst, pdst=pkt[ARP].psrc, hwsrc=self.mac, hwdst=pkt[ARP].hwsrc)]
+        # spoof gateway
+        p2 = lambda dev: Ether(dst=self.gateMAC) / ARP(op=2, psrc=dev[0], pdst=self.gateway, hwdst=self.gateMAC)
 
-                # get mac address of original target
-                dest = self.gateMAC
-                if pkt[ARP].pdst != self.gateway:
-                    dest = util.get_mac(pkt[ARP].pdst, self.interface)
+        while(True):
+            packets = [p(dev) for dev in self.redis.get_devices_values(filter=True) for p in (p1, p2)]
 
-                # spoof receiver
-                packets.append(Ether(dst=dest) / ARP(op=2, psrc=pkt[ARP].psrc, hwsrc=self.mac, pdst=pkt[ARP].pdst, hwdst=dest))
+            # # spoof clients
+            # packets = [Ether(dst=dev[1]) / ARP(op=2, psrc=self.gateway, pdst=util.get_device_ip(dev[0]), hwdst=dev[1]) for dev in self.redis.get_devices_values(filter=True)]
+            #
+            # # spoof gateway
+            # packets += [Ether(dst=self.gateMAC) / ARP(op=2, psrc=util.get_device_ip(dev[0], pdst=self.gateway, hwdst=self.gateMAC)) for dev in]
 
-                # print packets[0].show()
-                # print packets[1].show()
-
-                threading.Timer(7.0, sendp, [packets]).start()
-
-    def stop(self):
-        thread.exit()
+            sendp(packets)
+            time.sleep(5)
 
 
 class DaemonError(Exception):
     pass
+
+
+class DiscoveryThread(threading.Thread):
+
+    def __init__(self, gateway, network):
+        threading.Thread.__init__(self)
+        # super(self.__class__, self).__init__()
+        # self.interface = interface
+        self.gateway = gateway
+        self.network = network
+        # self.mac = mac
+        # self.gateMAC = gateMAC
+
+    def run(self):
+        sendp(Ether(dst=ETHER_BROADCAST)/ARP(op=1, psrc=self.gateway, pdst=str(self.network)))
+
+    def stop(self):
+        thread.exit()

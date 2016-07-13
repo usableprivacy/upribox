@@ -46,7 +46,8 @@ def main():
 
     # catch error which could arise during initialisation
     try:
-        dapp = daemon_app.DaemonApp(logger, str(data['interface']), data['pidfile'], data['stdout'], data['stderr'])
+        # dapp = daemon_app.HolisticDaemonApp(logger, str(data['interface']), data['pidfile'], data['stdout'], data['stderr'])
+        dapp = daemon_app.SelectiveDaemonApp(logger, str(data['interface']), data['pidfile'], data['stdout'], data['stderr'])
     except Exception as e:
         logger.error("An error happened during initialsising the daemon process - terminating process")
         logger.exception(e)
