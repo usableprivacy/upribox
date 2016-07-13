@@ -1,7 +1,5 @@
 ---
 env: development
-raspberry_default_user: pi
-raspberry_default_pass: raspberry
 
 remote_user: upri
 sudo_group: upriusers
@@ -11,7 +9,7 @@ remote_user_login_shell: /bin/bash
 apt_cache_time: 3600
 apt_target_state: installed
 
-ansible_pip_version: 1.9.2
+ansible_pip_version: 1.9.6
 ansible_uwsgi_version: 1.9.2
 
 django_settings_file: settings_dev
@@ -28,7 +26,7 @@ default_settings:
     db: '/usr/share/nginx/www-upri-interface/db.sqlite3'
   tor:
     general:
-      enabled: 'yes'
+      enabled: 'no'
   ssh:
     general:
       enabled: 'yes'

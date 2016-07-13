@@ -36,8 +36,8 @@
 - name: create directory for uwsgi
   file: path=/etc/uwsgi/ state=directory
   
-- name: install uwsgi to init.d
-  template: src=etc_init.d_uwsgi dest=/etc/init.d/uwsgi mode="755"
+- name: install django-uwsgi systemd service
+  copy: src=django-uwsgi.service dest=/etc/systemd/system/ mode="644"
   notify: restart uwsgi
   register: res
 
@@ -45,10 +45,10 @@
   file: path=/var/log/uwsgi.log state=absent
   when: res|changed
 
-- name: remove uwsgi log files from other environment
-  file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
-  with_dict: "{{other_env.default_settings.log.uwsgi.logfiles}}"
-  when: res|changed
+#- name: remove uwsgi log files from other environment
+#  file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
+#  with_dict: "{{other_env.default_settings.log.uwsgi.logfiles}}"
+#  when: res|changed
   
 - name: add uwsgi vasall
   template: src=upri_uwsgi.j2 dest=/etc/uwsgi/upri_uwsgi.ini
@@ -58,8 +58,8 @@
 - name: create directory for django database
   file: path=/var/upribox-interface/ state=directory mode=755 owner=www-data group=www-data
   
-- name: enable uwsgi service
-  service: name=uwsgi enabled=yes
+- name: enable uwsgi django service
+  service: name=django-uwsgi enabled=yes
   
 - name: delete development database
   file: path=/usr/share/nginx/www-upri-interface/db.sqlite3 state=absent

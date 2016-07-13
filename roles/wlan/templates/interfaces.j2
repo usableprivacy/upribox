@@ -1,15 +1,14 @@
 auto lo
 iface lo inet loopback
 
-{% if ansible_local is defined and ansible_local.interfaces is defined and ansible_local.interfaces.general is defined 
-and ansible_local.interfaces.general.mode | default(default_settings.interfaces.general.mode) == "static" and ansible_local.interfaces.static is defined %}
+{% if ansible_local is defined and ansible_local.interfaces is defined and ansible_local.interfaces.general is defined and ansible_local.interfaces.general.mode | default(default_settings.interfaces.general.mode) == "static" and ansible_local.interfaces.static is defined %}
 iface eth0 inet static
-    address {{ ansible_local.interfaces.static.ip | default(default_settings.interfaces.static.ip) }}
-    netmask {{ ansible_local.interfaces.static.netmask | default(default_settings.interfaces.static.netmask) }}
-    gateway {{ ansible_local.interfaces.static.gateway | default(default_settings.interfaces.static.gateway) }}
-    {% if ansible_local.interfaces.static.dns is defined %}
-    dns-nameservers {{ ansible_local.interfaces.static.dns | default(default_settings.interfaces.static.dns) }}
-    {% endif %}
+  address {{ ansible_local.interfaces.static.ip | default(default_settings.interfaces.static.ip) }}
+  netmask {{ ansible_local.interfaces.static.netmask | default(default_settings.interfaces.static.netmask) }}
+  gateway {{ ansible_local.interfaces.static.gateway | default(default_settings.interfaces.static.gateway) }}
+{% if ansible_local.interfaces.static.dns is defined %}
+  dns-nameservers {{ ansible_local.interfaces.static.dns | default(default_settings.interfaces.static.dns) }}
+{% endif %}
 {% else %}
 iface eth0 inet dhcp
 {% endif %}
@@ -21,7 +20,7 @@ iface wlan0 inet static
   netmask 255.255.255.0
   #pre-up ifconfig wlan0 hw ether {{ ansible_wlan0.macaddress | regex_replace('^..', magic_mac_prefix) | regex_replace('..$', magic_mac_postfix) }} 
   hwaddress ether {{ ansible_wlan0.macaddress | regex_replace('^..', magic_mac_prefix) | regex_replace('..$', magic_mac_postfix) }}
-  up iptables-restore < /etc/iptables.upribox.ipv4
+  #pre-up iptables-restore < /etc/iptables.upribox.ipv4
 
 {% if tor|bool %}
 auto wlan0_0
@@ -29,5 +28,5 @@ allow-hotplug wlan0_0
 iface wlan0_0 inet static
   address 192.168.56.254
   netmask 255.255.255.0
-  up iptables-restore < /etc/iptables.upribox.ipv4
+  #pre-up iptables-restore < /etc/iptables.upribox.ipv4
 {% endif %}

@@ -1,0 +1,16 @@
+---
+env: init
+raspberry_default_user: pi
+raspberry_default_pass: raspberry
+
+ansible_connection: ssh
+
+remote_user: upri
+sudo_group: upriusers
+hostname: upribox
+remote_user_login_shell: /bin/bash
+
+apt_cache_time: 3600
+apt_target_state: installed
+
+ansible_pip_version: 1.9.2

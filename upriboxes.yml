@@ -9,12 +9,12 @@
     - { role: unattended_upgrades, tags: ["unattended_upgrades"] }
     - { role: django, tags: ["django"] }
     - { role: wlan, tags: ["wlan"] }
-    - { role: dns, tags: ["dns"] }
     - { role: vpn, tags: ["vpn"] }
     - { role: privoxy, tags: ["privoxy"] }
     - { role: tor, tags: ["tor"] }
     - { role: dns_ninja, tags: ["dns_ninja"] }
     - { role: nginx, tags: ["nginx"] }
     - { role: arp, tags: ["arp"] }
+    - { role: dns, tags: ["dns"] }
   post_tasks:
     - include: roles/ssh/main.yml tags=toggle_ssh

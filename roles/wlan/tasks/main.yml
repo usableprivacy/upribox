@@ -1,36 +1,66 @@
 ---
-- include: ../../tor/tasks/tor_state.yml tags=ssid,toggle_tor
+- include: ../../tor/tasks/tor_state.yml tags=ssid,toggle_tor,network_config
 
-- name: install services
+- name: install required packages
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
   with_items:
-    - resolvconf
-    - dnsmasq
-
-- name: install hostapd
-  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }} default_release=jessie
-  with_items:
     - hostapd
-    
-- name: fix locales
-  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }} default_release=jessie
-  with_items:
-    - locales
+    - wireless-regdb
+    - crda
+    - iw
+    - ifplugd
+    - isc-dhcp-server
+    - rng-tools
+
+#- name: fix locales
+#  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }} default_release=jessie
+#  with_items:
+#    - locales
 # due to broken dependencies (glibc)
 
-- name: enable services
-  service: name={{ item }} enabled=yes
-  with_items:
-    - hostapd
-    - dnsmasq
-    
+- name: create systemd directory for hostapd
+  file: path=/etc/systemd/system/hostapd.service.d state=directory
+
+- name: override hostapd systemd dependencies
+  copy: src=hostapd-systemd-override dest=/etc/systemd/system/hostapd.service.d/override.conf owner=root group=root mode=644
+
 - name: enable ip forwarding
   sysctl: name=net.ipv4.ip_forward value=1 state=present
-        
+
 - name: configure interfaces
   template: src=interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=644
+  register: interfaces
   tags:
     - toggle_tor
+    - network_config
+
+- name: check if static ip setup is enabled
+  set_fact:
+    static_ip_setup: True
+  when:
+   (ansible_local is defined) and
+   (ansible_local.interfaces is defined) and
+   (ansible_local.interfaces.general is defined) and
+   (ansible_local.interfaces.general.mode is defined) and
+   (ansible_local.interfaces.general.mode == "static") and
+   (ansible_local.interfaces.static is defined)
+  tags:
+    - toggle_tor
+    - network_config
+
+- name: disable dhcpcd on eth0 for static config
+  lineinfile: dest=/etc/dhcpcd.conf regexp=^denyinterfaces\ eth0 line="denyinterfaces eth0" state=present
+  when: static_ip_setup is defined
+  tags:
+    - toggle_tor
+    - network_config
+
+- name: re-enable dhcpcd on eth0
+  lineinfile: dest=/etc/dhcpcd.conf regexp=^denyinterfaces\ eth0 line="denyinterfaces eth0" state=absent
+  when: static_ip_setup is not defined
+  tags:
+    - toggle_tor
+    - network_config
 
 - name: configure ifplugd
   copy: src=ifplugd dest=/etc/default/ifplugd owner=root group=root mode=644
@@ -45,13 +75,7 @@
   register: res
   failed_when: res.rc != 0 and res.rc != 6
   when: result|changed
-  
-#- name: configure dnsmasq
-#  template: src=dnsmasq.j2 dest=/etc/dnsmasq.conf owner=root group=root mode=644
-#  notify: restart dnsmasq
-#  tags:
-#    - toggle_tor
-  
+
 - name: configure hostapd
   template: src=hostapd.j2 dest=/etc/hostapd/hostapd.conf owner=root group=root mode=644
   notify: restart hostapd
@@ -59,7 +83,35 @@
   tags:
     - ssid
     - toggle_tor
-  
+
 - name: configure hostapd config file path
   template: src=hostapd_default.j2 dest=/etc/default/hostapd owner=root group=root mode=644
   notify: restart hostapd
+
+- name: create systemd directory for isc-dhcp-server
+  file: path=/etc/systemd/system/isc-dhcp-server.service.d state=directory
+
+- name: override isc-dhcp-server systemd dependencies
+  copy: src=isc-dhcp-systemd-override dest=/etc/systemd/system/isc-dhcp-server.service.d/override.conf owner=root group=root mode=644
+
+- name: set dhcp network interfaces
+  template: src=isc-dhcp-server.j2 dest=/etc/default/isc-dhcp-server owner=root group=root mode=644
+  notify: restart isc-dhcp-server
+  tags:
+    - toggle_tor
+
+- name: set dhcp ip ranges
+  template: src=dhcpd.conf.j2 dest=/etc/dhcp/dhcpd.conf owner=root group=root mode=644
+  tags:
+    - toggle_tor
+
+- name: enable services
+  service: name={{ item }} enabled=yes
+  with_items:
+    - hostapd
+    - isc-dhcp-server
+
+- name: start services
+  service: name={{ item }} state=started
+  with_items:
+    - hostapd

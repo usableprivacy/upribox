@@ -1,59 +1,29 @@
 ---
-- include: init.yml
-- include: ../../common/tasks/other_env.yml 
-  
-  # we use this to determine if the script is running for the first time -> user pi gets deleted on first run
-- name: check if default user exists
-  shell: /usr/bin/getent passwd "{{ raspberry_default_user }}" | /usr/bin/wc -l | /usr/bin/tr -d ' '
-  register: user_exist
-  changed_when: false
-  
-- name: copy apt sources
-  copy: src=apt_sources/{{ item.src }} dest=/etc/apt/{{ item.dest }} owner=root group=root mode=644 
-  with_items:
-    - { src: 'preferences', dest: 'preferences' }
-    - { src: 'sources.list', dest: 'sources.list' }
-    - { src: 'raspi.list', dest: 'sources.list.d/raspi.list' }
-  
-- name: upgrade raspberrypi-bootloader
-  apt: name={{ item }} state=latest force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
-  with_items:
-    - raspberrypi-bootloader
-  when: user_exist.stdout == "1"
+- include: ../../common/tasks/other_env.yml
 
-- name: expand disk space
-  shell: raspi-config --expand-rootfs
-  when: user_exist.stdout == "1"
+- name: Stop update process if master is pulled from old wheezy image
+  fail: msg="You are running the outdated wheezy image, update process stoped."
+  when: ansible_distribution_release == "wheezy"
 
-# Disable raspi-config at startup
-- stat: path=/etc/profile.d/raspi-config.sh
-  register: raspi_config
-
-- name: disable raspi config in profile
-  file: path=/etc/profile.d/raspi-config.sh state=absent
-  when: raspi_config.stat.exists
-
-- name: disable raspi config at boot
-  shell: sed -i /etc/inittab -e "s/^#\(.*\)#\s*RPICFG_TO_ENABLE\s*/\1/" -e "/#\s*RPICFG_TO_DISABLE/d"
-  when: raspi_config.stat.exists
+- name: configure hosts
+  copy: src=hosts dest=/etc/hosts owner=root group=root mode=644
 
 - name: create group for logging users
   group: name="tmp-logger" state=present
 
 - name: create directory /var/tmp/log
-  file: path=/var/tmp/log state=directory recurse=yes 
-  
+  file: path=/var/tmp/log state=directory recurse=yes
+
 - name: create logging directory /var/log/log for development
   file: path=/var/log/log state=directory recurse=yes owner=root group=tmp-logger mode=0771
   when: env == "development"
-  
+
 - name: create tmpfs for logging
   lineinfile:
     dest: /etc/fstab
     state: present
     insertafter: EOF
     line: "tmpfs	/var/tmp/log	tmpfs	nosuid,size=15%,uid=root,gid=tmp-logger,mode=0771	0	0"
-  when: user_exist.stdout == "1"
   register: fstab
 
 - name: update rsyslog config for logging to desired logging directory
@@ -93,57 +63,34 @@
 - name: modify logrotate.d entry
   template: src=logrotate_rsyslog dest=/etc/logrotate.d/rsyslog mode=0644
 
-# mount tmpfs without reboot
-
-#- name: mount tmpfs for logging
-#  shell: "sudo mount -a"
-#  when: fstab|changed
-  
-- name: reboot
-  command: shutdown -r now "ansible reboot"
-  async: 0
-  poll: 0
-  ignore_errors: true
-  when: user_exist.stdout == "1"
-  
-- name: wait for reboot
-  local_action: wait_for host={{ inventory_hostname }}
-                state=started
-  become: false
-  when: user_exist.stdout == "1"
-  
-- name: kill default user processes
-  remote_user: "{{ remote_user }}"
-  shell: killall -u "{{ raspberry_default_user }}"
-  when: user_exist.stdout == "1"
-  register: kill_result
-  failed_when: kill_result.rc != 0 and kill_result.rc != 1 # killall returns 1 if no process was killed
-  
-- name: remove default user
-  user: name="{{ raspberry_default_user }}" state=absent remove=yes
-  
 - name: install dependencies
   apt: name={{ item }} state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
   with_items:
+    - libssl-dev
     - python-pip
     - python-dev
     - libffi-dev
+    - git
+    - psmisc
 
 - name: install ansible via pip
   pip: name=ansible state=present version="{{ansible_pip_version}}"
-  
+
 - name: add github to known hosts for pulling
   known_hosts: path='/etc/ssh/ssh_known_hosts'
                host="{{ pull_git_host }}"
                key="{{ pull_git_sshkey }}"
+
+#- name: create directory /root/.ssh if not exists
+#  file: path=/root/.ssh state=directory recurse=yes owner=root group=root mode=600
   
-- name: create directory /root/.ssh if not exists
-  file: path=/root/.ssh state=directory recurse=yes owner=root group=root mode=600
-  
+- name: create root ssh directory
+  file: path=/root/.ssh state=directory
+
 - name: copy git deployment key
   copy: src=id_upribox_deployement-github dest=/root/.ssh/id_rsa_git owner=root group=root mode=0600
   when: pull_deployment is not defined
-  
+
 - name: configure root to use git deployment key
   template: src=ssh_config.j2 dest=/root/.ssh/config owner=root group=root mode=0644
 
@@ -151,7 +98,7 @@
   template: src=etc_cron.d_ansible-pull.j2 dest=/etc/cron.d/ansible-pull owner=root group=root mode=0644
   when: env == "production"
   notify: touch crontab
-  
+
 - name: add ansible cronupdate script
   template: src=usr_local_bin_ansible-cron.j2 dest=/usr/local/bin/ansible-cron owner=root group=root mode=0755
   when: env == "production"
@@ -159,14 +106,14 @@
 - name: update upribox git repo
   git: repo="{{ pull_repo_url }}" version="{{ pull_branch }}" dest="{{ pull_workdir }}" clone=yes update=yes
   when: pull_deployment is not defined
-  
+
 - name: create logrotate entry for ansible-pull.log
   template: src=etc_logrotate.d_ansible-pull.j2 dest=/etc/logrotate.d/ansible-pull owner=root group=root mode=0644
   when: env == "production"
-  
+
 - set_fact:
     ansible_pull_log: "{{ {} if not (other_env.default_settings.log.ansible_pull is defined) else other_env.default_settings.log.ansible_pull.logfiles | default({}) }}"
-  
+
 - name: remove ansible-pull logfile if environment is development
   file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
   when: env == "development"
@@ -178,27 +125,27 @@
     - /etc/cron.d/ansible-pull
     - /etc/logrotate.d/ansible-pull
   when: env == "development"
-  
+
 - name: create directory for local facts
   file: path=/etc/ansible/facts.d state=directory recurse=yes owner=root group=root
-  
+
 - name: copy ansible.cfg
   copy: src=ansible.cfg dest=/etc/ansible/ansible.cfg owner=root group=root mode=644
-  
+
 - name: write default settings
   template: src=default_settings.j2 dest=/etc/ansible/default_settings.json owner=root group=www-data mode=0640
   tags:
     - settings
-  
+
 - name: install dependencies via pip
   pip: name="{{ item }}" state=present
   with_items:
     - requests
     - requests[security]
-    
+
 - name: copy filter update script
   copy: src=upri-filter-update.py dest=/usr/local/bin/upri-filter-update.py owner=root group=root mode=755
-  
+
 - name: copy filter update config
   copy: src=etc_upri-filter-update/ dest=/usr/local/etc/upri-filter-update owner=root group=root mode=644
 
@@ -207,7 +154,7 @@
 
 - name: create dnsmasq ninja directory for dnsblacklist rules
   file: path=/etc/dnsmasq.d.ninja/ state=directory owner=root group=root
-  
+
 - name: update filter rules
   shell: "/usr/local/bin/upri-filter-update.py"
   register: update_result

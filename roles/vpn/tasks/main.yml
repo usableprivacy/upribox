@@ -44,7 +44,7 @@
 #  with_items:
 #    - openvpn
 
-- name: create User openvpn
+- name: create user openvpn
   user: name=openvpn shell=/bin/false home=/var/lib/openvpn groups="tmp-logger" append=yes
     
 - name: copy openssl.cnf file
