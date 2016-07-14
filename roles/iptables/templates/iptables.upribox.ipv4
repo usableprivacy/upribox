@@ -8,8 +8,8 @@
 {% if tor|bool%}
 -A PREROUTING -i wlan0_0 -p udp -m udp --dport 53 -j REDIRECT --to-ports 5300
 -A PREROUTING ! -d 192.168.0.0/16 -i wlan0_0 -p tcp -m tcp --dport 443 -j REDIRECT --to-ports 9040
--A PREROUTING -i eth0 -p udp -m udp --dport 53 -j REDIRECT --to-ports 53
 {% endif %}
+-A PREROUTING -i eth0 -p udp -m udp --dport 53 -j REDIRECT --to-ports 53
 -A POSTROUTING -o eth0 -j MASQUERADE
 COMMIT
 # Completed on Thu Oct 21 2015

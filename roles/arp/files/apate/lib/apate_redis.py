@@ -34,7 +34,7 @@ class ApateRedis(object):
 
             res = zip(devs, vals)
 
-            return res if not filter else [x for x in res if x[1]]  # filter(None, res)
+            return res if not filter else [x for x in res if x[1] and x[1] != str(None)]  # filter(None, res)
 
     def _add_entry(self, key, value):
         return self.redis.set(key, value)
