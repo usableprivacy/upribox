@@ -18,3 +18,7 @@ def get_mac(ip, interface):
 
 def get_device_ip(redis_device):
     return redis_device.rsplit(":", 1)[-1]
+
+
+def get_device_net(redis_device):
+    return redis_device.split(":", 3)[2]

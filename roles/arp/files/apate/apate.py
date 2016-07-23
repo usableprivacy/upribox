@@ -9,7 +9,7 @@ import os
 import json
 
 CONFIG_FILE = "/etc/apate/config.json"
-CONFIG_OPTIONS = ('logfile', 'pidfile', 'interface', 'stderr', 'stdout')
+CONFIG_OPTIONS = ('logfile', 'pidfile', 'interface', 'stderr', 'stdout', 'mode')
 
 
 def main():
@@ -46,8 +46,11 @@ def main():
 
     # catch error which could arise during initialisation
     try:
-        # dapp = daemon_app.HolisticDaemonApp(logger, str(data['interface']), data['pidfile'], data['stdout'], data['stderr'])
-        dapp = daemon_app.SelectiveDaemonApp(logger, str(data['interface']), data['pidfile'], data['stdout'], data['stderr'])
+        if data['mode'] == "holistic":
+            dapp = daemon_app.HolisticDaemonApp(logger, str(data['interface']), data['pidfile'], data['stdout'], data['stderr'])
+        else:
+            # selective mode is default
+            dapp = daemon_app.SelectiveDaemonApp(logger, str(data['interface']), data['pidfile'], data['stdout'], data['stderr'])
     except Exception as e:
         logger.error("An error happened during initialsising the daemon process - terminating process")
         logger.exception(e)

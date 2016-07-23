@@ -3,5 +3,6 @@
     "logfile": "{{ default_settings.log.general.path }}/{{ default_settings.log.apate.subdir }}/{{ default_settings.log.apate.logfiles.logname }}",
     "interface": "eth0",
     "stdout": "{{ default_settings.log.general.path }}/{{ default_settings.log.apate.subdir }}/{{ default_settings.log.apate.logfiles.stdout }}",
-    "stderr": "{{ default_settings.log.general.path }}/{{ default_settings.log.apate.subdir }}/{{ default_settings.log.apate.logfiles.stderr }}"
+    "stderr": "{{ default_settings.log.general.path }}/{{ default_settings.log.apate.subdir }}/{{ default_settings.log.apate.logfiles.stderr }}",
+    "mode": "{{ default_settings.apate.mode }}"
 }

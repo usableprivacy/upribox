@@ -134,7 +134,7 @@ class SelectiveDaemonApp(_DaemonApp):
 
     def __init__(self, logger, interface, pidfile, stdout, stderr):
         super(self.__class__, self).__init__(logger, interface, pidfile, stdout, stderr)
-        self.redis = ApateRedis(self.network)
+        self.redis = ApateRedis(self.network, logger)
 
         # TODO change
         # self.t1 = HolisticSniffThread(self.interface, self.gateway, self.mac, self.gateMAC)
@@ -165,6 +165,8 @@ class SelectiveDaemonApp(_DaemonApp):
     def run(self):
         # TODO
         # start threads (listener and host discovery)
+        # TODO sleep for redis pubsub
+        # time.sleep(3)
         self.t1.start()
 
         DiscoveryThread(self.gateway, self.network).start()
@@ -204,7 +206,7 @@ class DiscoveryThread(threading.Thread):
         # self.gateMAC = gateMAC
 
     def run(self):
-        sendp(Ether(dst=ETHER_BROADCAST)/ARP(op=1, psrc=self.gateway, pdst=str(self.network)))
+        sendp(Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=str(self.network)))
 
     def stop(self):
         thread.exit()

@@ -1,5 +1,6 @@
 import redis
 from netaddr import IPNetwork
+import util
 
 
 class ApateRedis(object):
@@ -8,10 +9,15 @@ class ApateRedis(object):
     __IP = "ip"
     __NETWORK = "net"
     __DB = 5
+    __TTL = 259200
 
-    def __init__(self, network):
+    def __init__(self, network, logger):
         self.redis = redis.StrictRedis(host="localhost", port=6379, db=self.__DB)
         self.network = network
+        self.logger = logger
+        # p = self.redis.pubsub(ignore_subscribe_messages=True)
+        # p.subscribe(**{"__keyevent@5__:expired": self._expired_handler})
+        # p.run_in_thread(sleep_time=0.1)
 
     def add_device(self, ip, mac, network=None, enabled=True):
         self._add_device_to_network(ip, network or self.network.network)
@@ -36,8 +42,13 @@ class ApateRedis(object):
 
             return res if not filter else [x for x in res if x[1] and x[1] != str(None)]  # filter(None, res)
 
+    # def _expired_handler(self, message):
+    #     self.logger.error("expired")
+    #     self._del_device_from_network(util.get_device_ip(message['data']), util.get_device_net(message['data']))
+    #     print "expired"
+
     def _add_entry(self, key, value):
-        return self.redis.set(key, value)
+        return self.redis.set(key, value, ApateRedis.__TTL)
 
     def _del_device(self, device):
         return self.redis.delete(device)

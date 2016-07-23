@@ -1,5 +1,6 @@
 ---
 - include: ../../common/tasks/other_env.yml
+- include: apate_state.yml tags=toggle_apate
 
 - name: create working directory for apate daemon
   file: path=/opt/apate state=directory recurse=yes mode=0771 owner=root group=root
@@ -11,6 +12,15 @@
 - name: copy apate init script
   template: src=init/apate dest=/etc/init.d/apate owner=root group=root mode=0755
   notify: restart apate
+
+- name: copy apate service file
+  template: src=init/apate.service dest=/etc/systemd/system/apate.service owner=root group=root mode=0755
+  notify: restart apate
+  register: service_file
+
+- name: systemctl daemon-reload
+  shell: systemctl daemon-reload
+  when: service_file.changed
 
 - name: create apate config dir
   file: path=/etc/apate state=directory recurse=yes mode=0771 owner=root group=root
@@ -35,5 +45,7 @@
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/apate mode=0644
 
-- name: enable apate service
-  service: name=apate enabled=yes
+- name: configure apate service
+  service: name=apate state='{{ "started" if apate_enabled|bool else "stopped" }}' enabled='{{ apate_enabled|bool }}'
+  tags:
+    - toggle_apate

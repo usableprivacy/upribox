@@ -25,6 +25,10 @@ django_settings_file: settings_prod
 
 default_settings:
   apate:
+    general:
+      enabled: 'yes'
+    # modes: selective, holistic
+    mode: 'selective'
     pid:
       dir: '/var/run/apate'
       file: 'apate.pid'

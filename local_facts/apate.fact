@@ -1,0 +1,10 @@
+{
+    "general": {
+        "enable": "yes"
+    },
+    "mode": "selective",
+    "pid": {
+        "dir": "/var/run/apate",
+        "file": "apate.pid"
+    }
+}
