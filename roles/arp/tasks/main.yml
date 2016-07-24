@@ -49,3 +49,10 @@
   service: name=apate state='{{ "started" if apate_enabled|bool else "stopped" }}' enabled='{{ apate_enabled|bool }}'
   tags:
     - toggle_apate
+
+- name: change keyspace event notification of redis-sever
+  lineinfile:
+    dest: /etc/redis/redis.conf
+    regexp: '^notify-keyspace-events'
+    line: 'notify-keyspace-events "Ex"'
+  notify: restart redis

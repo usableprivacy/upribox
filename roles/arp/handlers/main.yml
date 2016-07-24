@@ -3,3 +3,6 @@
 
 - name: restart apate
   service: name=apate state={{"restarted" if apate_enabled|bool else "stopped"}}
+
+- name: restart redis
+  service: name=redis-server state=restarted
