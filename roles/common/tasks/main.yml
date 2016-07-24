@@ -127,7 +127,7 @@
 
 # copy module is very slow for many files
 - name: copy upribox git repo from local
-  synchronize: src="{{ pwd.stdout }}/" dest="{{ pull_workdir }}" checksum=yes
+  synchronize: src="{{ pwd.stdout }}/" dest="{{ pull_workdir }}" checksum=yes owner=no group=no
   when: pull_deployment is not defined and env == "development"
   tags:
     - copy-local

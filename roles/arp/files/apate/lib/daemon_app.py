@@ -86,7 +86,7 @@ class _DaemonApp(object):
     def exit(self, signal_number, stack_frame):
         self.__return_to_normal()
         # TODO check if thread is alive (active)
-        # self.t1.stop()
+        # self.sniffthread.stop()
         raise SystemExit()
 
     def run(self):
@@ -98,8 +98,8 @@ class HolisticDaemonApp(_DaemonApp):
     def __init__(self, logger, interface, pidfile, stdout, stderr):
         super(self.__class__, self).__init__(logger, interface, pidfile, stdout, stderr)
 
-        self.t1 = HolisticSniffThread(self.interface, self.gateway, self.mac, self.gateMAC)
-        self.t1.daemon = True
+        self.sniffthread = HolisticSniffThread(self.interface, self.gateway, self.mac, self.gateMAC)
+        self.sniffthread.daemon = True
 
     def __return_to_normal(self):
         # clients gratutious arp
@@ -112,12 +112,12 @@ class HolisticDaemonApp(_DaemonApp):
     def exit(self, signal_number, stack_frame):
         self.__return_to_normal()
         # TODO check if thread is alive (active)
-        self.t1.stop()
+        self.sniffthread.stop()
         raise SystemExit()
 
     def run(self):
         # start sniffing thread
-        self.t1.start()
+        self.sniffthread.start()
 
         # this updates existing entries in the arp table of the gateway
         packets = [Ether(dst=self.gateMAC) / ARP(op=1, psrc=str(x), pdst=str(x)) for x in self.ip_range]
@@ -136,11 +136,12 @@ class SelectiveDaemonApp(_DaemonApp):
         super(self.__class__, self).__init__(logger, interface, pidfile, stdout, stderr)
         self.redis = ApateRedis(self.network, logger)
 
-        # TODO change
-        # self.t1 = HolisticSniffThread(self.interface, self.gateway, self.mac, self.gateMAC)
-        # self.t1.daemon = True
-        self.t1 = SelectiveSniffThread(self.interface, self.gateway, self.mac, self.gateMAC, self.redis)
-        self.t1.daemon = True
+        self.sniffthread = SelectiveSniffThread(self.interface, self.gateway, self.mac, self.gateMAC, self.redis)
+        self.sniffthread.daemon = True
+        self.psthread = PubSubThread(self.redis, self.logger)
+        self.psthread.daemon = True
+        self.dt = DiscoveryThread(self.gateway, self.network)
+        self.dt.daemon = True
 
     def __return_to_normal(self):
 
@@ -159,7 +160,8 @@ class SelectiveDaemonApp(_DaemonApp):
     def exit(self, signal_number, stack_frame):
         self.__return_to_normal()
         # TODO check if thread is alive (active)
-        self.t1.stop()
+        self.sniffthread.stop()
+        self.psthread.stop()
         raise SystemExit()
 
     def run(self):
@@ -167,9 +169,9 @@ class SelectiveDaemonApp(_DaemonApp):
         # start threads (listener and host discovery)
         # TODO sleep for redis pubsub
         # time.sleep(3)
-        self.t1.start()
-
-        DiscoveryThread(self.gateway, self.network).start()
+        self.sniffthread.start()
+        self.dt.start()
+        self.psthread.start()
 
         # spoof clients
         p1 = lambda dev: Ether(dst=dev[1]) / ARP(op=2, psrc=self.gateway, pdst=dev[0], hwdst=dev[1])
@@ -199,14 +201,30 @@ class DiscoveryThread(threading.Thread):
     def __init__(self, gateway, network):
         threading.Thread.__init__(self)
         # super(self.__class__, self).__init__()
-        # self.interface = interface
         self.gateway = gateway
         self.network = network
-        # self.mac = mac
-        # self.gateMAC = gateMAC
 
     def run(self):
         sendp(Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=str(self.network)))
+
+    def stop(self):
+        thread.exit()
+
+
+class PubSubThread(threading.Thread):
+
+    def __init__(self, redis, logger):
+        threading.Thread.__init__(self)
+        # super(self.__class__, self).__init__()
+        self.redis = redis
+        self.logger = logger
+
+    def run(self):
+        p = self.redis.get_pubsub()
+        p.subscribe("__keyevent@5__:expired")  # **{"__keyevent@5__:expired": self._expired_handler})
+        for message in p.listen():
+            self.logger.debug("Removed expired device {} from network {}".format(util.get_device_ip(message['data']), util.get_device_net(message['data'])))
+            self.redis._del_device_from_network(util.get_device_ip(message['data']), util.get_device_net(message['data']))
 
     def stop(self):
         thread.exit()

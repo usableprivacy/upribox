@@ -16,8 +16,12 @@ def get_mac(ip, interface):
         return rcv.sprintf(r"%Ether.src%")
 
 
-def get_device_ip(redis_device):
+def get_device_enabled(redis_device):
     return redis_device.rsplit(":", 1)[-1]
+
+
+def get_device_ip(redis_device):
+    return redis_device.rsplit(":", 2)[-2]
 
 
 def get_device_net(redis_device):
