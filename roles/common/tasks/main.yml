@@ -83,7 +83,7 @@
 
 #- name: create directory /root/.ssh if not exists
 #  file: path=/root/.ssh state=directory recurse=yes owner=root group=root mode=600
-  
+
 - name: create root ssh directory
   file: path=/root/.ssh state=directory
 
@@ -105,7 +105,32 @@
 
 - name: update upribox git repo
   git: repo="{{ pull_repo_url }}" version="{{ pull_branch }}" dest="{{ pull_workdir }}" clone=yes update=yes
-  when: pull_deployment is not defined
+  when: pull_deployment is not defined and env == "production"
+
+- name: get local working dir
+  local_action: command pwd
+  when: pull_deployment is not defined and env == "development"
+  register: pwd
+  sudo: no
+  tags:
+    - copy-local
+
+# - debug: msg="pwd {{pwd.stdout}}"
+#   tags:
+#     - copy-local
+
+# - name: remove old git repo
+#   file: path={{ pull_workdir }} state=absent
+#   when: pull_deployment is not defined and env == "development"
+#   tags:
+#     - copy-local
+
+# copy module is very slow for many files
+- name: copy upribox git repo from local
+  synchronize: src="{{ pwd.stdout }}/" dest="{{ pull_workdir }}" checksum=yes
+  when: pull_deployment is not defined and env == "development"
+  tags:
+    - copy-local
 
 - name: create logrotate entry for ansible-pull.log
   template: src=etc_logrotate.d_ansible-pull.j2 dest=/etc/logrotate.d/ansible-pull owner=root group=root mode=0644

@@ -6,7 +6,7 @@ from jsonmerge import merge
 from os import path
 import sys
 sys.path.insert(0, "/usr/share/nginx/www-upri-interface/lib/")
-import passwd 
+import passwd
 import ssid
 import domain
 import re
@@ -24,7 +24,7 @@ ANSIBLE_INVENTORY = "/var/lib/ansible/local/environments/production/inventory_pu
 # path to the used playbook
 ANSIBLE_PLAY = "/var/lib/ansible/local/local.yml"
 # path to the openvpn client config template
-CLIENT_TEMPLATE = "/etc/openvpn/client_template" 
+CLIENT_TEMPLATE = "/etc/openvpn/client_template"
 
 #
 # revokes previously generated openvpn client certificates
@@ -33,10 +33,10 @@ CLIENT_TEMPLATE = "/etc/openvpn/client_template"
 def action_delete_profile(slug):
     try:
         filename = os.path.basename(slug)
-        
+
         rc = subprocess.call(['/usr/bin/openssl', 'ca', '-revoke', '/etc/openvpn/ca/%sCert.pem' % filename])
         rc = subprocess.call(['/usr/bin/openssl', 'ca', '-gencrl', '-crlhours', '1', '-out', '/etc/openssl/demoCA/crl.pem'])
-        
+
         #os.remove('/etc/openvpn/ca/%sKey.pem' % filename)
         #os.remove('/etc/openvpn/ca/%sCert.pem' % filename)
 
@@ -44,11 +44,11 @@ def action_delete_profile(slug):
         print "failed to delete client files"
         print str(e)
         return 26
-    
+
     return 0
 
 #
-# generate openvpn client certificates and saves the 
+# generate openvpn client certificates and saves the
 # generated openvpn client config into the database
 # return values:
 # 16: database error
@@ -59,9 +59,9 @@ def action_delete_profile(slug):
 def action_generate_profile(profile_id):
     with open('/etc/ansible/default_settings.json', 'r') as f:
         config = json.load(f)
-    
+
     dbfile = config['django']['db']
-    
+
     try:
         conn = sqlite3.connect(dbfile)
         c = conn.cursor()
@@ -74,41 +74,41 @@ def action_generate_profile(profile_id):
 
         slug = data[0]
         dyndomain = data[1]
-        
+
         if not check_domain(dyndomain):
             return 24
-        
+
         dyndomain = domain.Domain(data[1]).get_match()
-        
+
         filename = os.path.basename(slug)
-        
+
         rc = subprocess.call(['/usr/bin/openssl', 'req', '-newkey', 'rsa:2048', '-nodes', '-subj', "/C=AT/ST=Austria/L=Vienna/O=Usable Privacy Box/OU=VPN/CN=%s" % filename, '-keyout', '/etc/openvpn/ca/%sKey.pem' % filename, '-out', '/etc/openvpn/ca/%sReq.pem' % filename])
 
         if rc != 0:
             print "error while creating client certificate reques"
             return 23
-        
+
         subprocess.call(['/usr/bin/openssl', 'ca', '-in', '/etc/openvpn/ca/%sReq.pem' % filename, '-days', '730', '-batch', '-out', '/etc/openvpn/ca/%sCert.pem' % filename, '-notext', '-cert', '/etc/openvpn/ca/caCert.pem', '-keyfile', '/etc/openvpn/ca/caKey.pem'])
-        
+
         if rc != 0:
             print "error while creating client certificate"
             return 23
-        
+
         os.remove('/etc/openvpn/ca/%sReq.pem' % filename)
-        
+
         if os.path.isfile(CLIENT_TEMPLATE):
             with open(CLIENT_TEMPLATE, 'r') as template, open('/etc/openvpn/ca/%sKey.pem' % filename, 'r') as client_key, open('/etc/openvpn/ca/%sCert.pem' % filename, 'r') as client_cert:
                 temp = template.read()
                 temp = temp.replace("#CLIENT_KEY", client_key.read())
                 temp = temp.replace("#CLIENT_CERT", client_cert.read())
                 temp = temp.replace("<IP-ADRESS>", dyndomain)
-                
+
                 c.execute("UPDATE vpn_vpnprofile SET config=? where id=?", (temp, profile_id))
                 conn.commit()
         else:
             print "client template is missing"
             return 22
-    
+
         conn.close()
     except Exception as e:
         print "failed to write to database"
@@ -123,10 +123,10 @@ def action_generate_profile(profile_id):
 # 20: new entries have been added
 def action_parse_logs(arg):
     rlog = re.compile('(\d{4}-\d{2}-\d{2} (\d{2}:?){3}).\d{3} [a-z0-9]{8} Crunch: Blocked: (.*)')
-    
+
     with open('/etc/ansible/default_settings.json', 'r') as f:
         config = json.load(f)
-        
+
     dbfile = config['django']['db']
     logfile = os.path.join(config['log']['general']['path'], config['log']['privoxy']['subdir'], config['log']['privoxy']['logfiles']['logname'])
 
@@ -146,7 +146,7 @@ def action_parse_logs(arg):
                         print "found new block: [%s] %s" % (sdate,psite)
                 except Exception as e:
                     print "failed to parse line \"%s\": %s" % (line, e.message)
-                    
+
         #write updates into db
         if len(logentries) > 0:
             try:
@@ -164,12 +164,12 @@ def action_parse_logs(arg):
                 print "failed to write to database"
                 return 16
             return 20
-    
+
     else:
         print "failed to parse privoxy logfile %s: file not found" % logfile
         return 0
-        
-# 
+
+#
 # set a new ssid for the upribox "silent" wlan
 # return values:
 # 12: ssid does not meet policy
@@ -209,7 +209,7 @@ def action_set_tor_password(arg):
         return 11
     passwd = { "ninja": { "passwd": arg } }
     write_role('wlan', passwd)
-    
+
 def action_restart_wlan(arg):
     print 'restarting wlan...'
     return call_ansible('ssid')
@@ -223,7 +223,7 @@ def action_set_tor(arg):
     print 'tor enabled: %s' % arg
     passwd = { "general": { "enabled": arg } }
     write_role('tor', passwd)
-    
+
 def action_restart_tor(arg):
     print 'restarting tor...'
     return call_ansible('toggle_tor')
@@ -253,11 +253,25 @@ def action_set_ssh(arg):
     print 'ssh enabled: %s' % arg
     en = { "general": { "enabled": arg } }
     write_role('ssh', en)
-    
+
 def action_restart_ssh(arg):
     print 'restarting ssh...'
     return call_ansible('toggle_ssh')
-    
+
+# return values:
+# 10: invalid argument
+def action_set_apate(arg):
+    if arg not in ['yes', 'no']:
+        print 'error: only "yes" and "no" are allowed'
+        return 10
+    print 'apate enabled: %s' % arg
+    en = { "general": { "enabled": arg } }
+    write_role('apate', en)
+
+def action_restart_apate(arg):
+    print 'restarting apate...'
+    return call_ansible('toggle_apate')
+
 def check_passwd(arg):
     pw = passwd.Password(arg)
     if not pw.is_valid():
@@ -273,11 +287,11 @@ def check_passwd(arg):
             print 'the password must be between 8 to 63 characters long'
         if not pw.has_only_allowed_chars():
             print 'the password must only contain following special characters: %s' % pw.get_allowed_chars()
-            
+
         return False
     else:
         return True
-    
+
 def check_ssid(arg):
     ssid_value = ssid.SSID(arg)
     if not ssid_value.is_valid():
@@ -285,11 +299,11 @@ def check_ssid(arg):
              print 'the password must be between 1 to 32 characters long'
         if not ssid_value.has_only_allowed_chars():
             print 'the ssid must only contain following special characters: %s' % ssid_value.get_allowed_chars()
-            
+
         return False
     else:
         return True
-    
+
 def check_domain(arg):
     domain_value = domain.Domain(arg)
     if not domain_value.is_valid():
@@ -297,7 +311,7 @@ def check_domain(arg):
              print 'the password can only contain up to 255 characters'
         if not domain_value.has_only_allowed_chars():
             print 'the domain must only contain following special characters: %s' % domain_value.get_allowed_chars()
-            
+
         return False
     else:
         return True
@@ -306,7 +320,7 @@ def action_restart_network(arg):
     print 'restarting network...'
     #return 0 # TODO implement
     return call_ansible('network_config')
-    
+
 # add your custom actions here
 ALLOWED_ACTIONS = {
     'set_ssid': action_set_ssid,
@@ -320,6 +334,8 @@ ALLOWED_ACTIONS = {
     'restart_vpn': action_restart_vpn,
     'enable_ssh': action_set_ssh,
     'restart_ssh': action_restart_ssh,
+    'enable_apate': action_set_apate,
+    'restart_apate': action_restart_apate,
     'parse_logs': action_parse_logs,
     'generate_profile': action_generate_profile,
     'delete_profile': action_delete_profile,
@@ -332,7 +348,7 @@ ALLOWED_ACTIONS = {
 def call_ansible(tag):
     return subprocess.call([ANSIBLE_COMMAND, '-i', ANSIBLE_INVENTORY, ANSIBLE_PLAY, "--tags", tag, "--connection=local"])
 
-# 
+#
 # write the custom json "data" to the fact with the given name "rolename"
 #
 def write_role(rolename, data):
@@ -356,7 +372,7 @@ def main():
     # append empty second parameter if none given
     if len(sys.argv) == 2:
         sys.argv.append('')
-        
+
     if len(sys.argv) !=3:
         usage(2)
 

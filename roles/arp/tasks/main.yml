@@ -19,7 +19,7 @@
   register: service_file
 
 - name: systemctl daemon-reload
-  shell: systemctl daemon-reload
+  shell: /bin/systemctl daemon-reload
   when: service_file.changed
 
 - name: create apate config dir
