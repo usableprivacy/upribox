@@ -11,4 +11,4 @@
 
 - name: restart supervisor
   #service: name=supervisor state=restarted
-  command: /etc/init.d/supervisor restart
+  shell: /etc/init.d/supervisor force-stop && /etc/init.d/supervisor restart
