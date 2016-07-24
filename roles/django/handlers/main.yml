@@ -1,12 +1,14 @@
 ---
 - name: restart uwsgi
   # service module appears to be buggy for uwsgi, use "command" instead
-  service: name=django-uwsgi state=restarted
-  #command: /usr/sbin/service uwsgi restart
+  #service: name=django-uwsgi state=restarted
+  command: /usr/sbin/service uwsgi restart
   
 - name: reload uwsgi
   #touching of the config file is enough for uwsgi to reload it
-  shell: touch /etc/uwsgi/upri_uwsgi.ini
+  #shell: touch /etc/uwsgi/upri_uwsgi.ini
+  file: path=/etc/uwsgi/upri_uwsgi.ini state=touch
   
 - name: restart supervisor
-  service: name=supervisor state=restarted
+  #service: name=supervisor state=restarted
+  command: /etc/init.d/supervisor restart

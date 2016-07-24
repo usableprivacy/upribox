@@ -252,9 +252,6 @@
   #when: not vpn|bool
   tags:
     - toggle_vpn
-  notify:
-    - restart openvpn
-    - restart openvpn-su
 
 #- name: enable openvpn-su service
 #  service: name=openvpn-su enabled=no
