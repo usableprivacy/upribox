@@ -5,6 +5,7 @@ from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from lib import jobs
+from lib.info import UpdateStatus
 from .forms import AdminForm
 import logging
 from django.contrib.auth.models import User
@@ -49,9 +50,15 @@ def more_config(request):
     else:
         form = AdminForm(request)
 
+    update_status = UpdateStatus()
+
     context.push({
         'form': form,
-        'messagestore': jobs.get_messages()})
+        'messagestore': jobs.get_messages(),
+        'update_time': update_status.update_utc_time,
+        'branch': update_status.branch,
+        'commit': update_status.last_commit_short,
+    })
 
     return render_to_response("more.html", context)
 

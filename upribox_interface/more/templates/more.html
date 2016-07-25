@@ -60,4 +60,9 @@
             {% endif %}
         </fieldset>
     </form>
+
+     <h2>{% trans "upribox Software" %}</h2>
+    <p>{% trans "Letztes update: " %} {{ update_time|date:"SHORT_DATETIME_FORMAT" }}</p>
+    <p>Version: {{ branch }}/{{ commit }}</p>
+
 {% endblock %}

@@ -10,5 +10,4 @@
   file: path=/etc/uwsgi/upri_uwsgi.ini state=touch
 
 - name: restart supervisor
-  #service: name=supervisor state=restarted
-  shell: /etc/init.d/supervisor force-stop && /etc/init.d/supervisor restart
+  service: name=supervisor state=restarted sleep=5

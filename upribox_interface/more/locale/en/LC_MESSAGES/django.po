@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-03 14:02+0000\n"
+"POT-Creation-Date: 2016-07-25 14:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -106,3 +106,11 @@ msgstr "SSH is deactivated"
 #: more/templates/more.html:36
 msgid "Einschalten"
 msgstr "switch On"
+
+#: more/templates/more.html:42
+msgid "Software Version"
+msgstr ""
+
+#: more/templates/more.html:43
+msgid "Letztes update: "
+msgstr "Last update: "
