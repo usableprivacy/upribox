@@ -89,16 +89,25 @@
 - name: install supervisor for rqworker
   apt: name=supervisor state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
 
+- name: install supervisor systemd service
+  copy: src=supervisor.service dest=/etc/systemd/system/ mode="644"
+  register: srvchanged
+
+- name: reload systemd services
+  command: systemctl daemon-reload
+  when: srvchanged |changed
+  notify: restart supervisor
+
 - name: enable supervisord
   service: name=supervisor enabled=yes
 
-- name: modify logdir in supervisor init script
-  lineinfile:
-    dest: /etc/init.d/supervisor
-    regexp: "^LOGDIR="
-    line: "LOGDIR={{default_settings.log.general.path}}"
-  notify: restart supervisor
-  register: res1
+#- name: modify logdir in supervisor init script
+#  lineinfile:
+#    dest: /etc/init.d/supervisor
+#    regexp: "^LOGDIR="
+#    line: "LOGDIR={{default_settings.log.general.path}}"
+#  notify: restart supervisor
+#  register: res1
 
 - name: change logdir of supervisor
   lineinfile:
@@ -128,12 +137,14 @@
 - name: remove supervisor log files from other environment
   file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
   with_dict: "{{other_env.default_settings.log.supervisor.logfiles}}"
-  when: res1 |changed or res2 |changed or res3 |changed or sv_config |changed
+#  when: res1 |changed or res2 |changed or res3 |changed or sv_config |changed
+  when: res2 |changed or res3 |changed or sv_config |changed
   
 - name: remove rqworker log files from other environment
   file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
   with_dict: "{{other_env.default_settings.log.rqworker.logfiles}}"
-  when: res1 |changed or res2 |changed or res3 |changed or sv_config |changed
+# when: res1 |changed or res2 |changed or res3 |changed or sv_config |changed
+  when: res2 |changed or res3 |changed or sv_config |changed
   
 - name: restart supervisor myworker task
   shell: "supervisorctl restart myworker"
