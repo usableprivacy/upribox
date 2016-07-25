@@ -1,12 +1,13 @@
-from lib import daemon_app
-from daemon import runner
-
 import logging
 import sys
 import signal
-import lockfile
 import os
 import json
+import lockfile
+
+from daemon import runner
+
+from lib import daemon_app
 
 CONFIG_FILE = "/etc/apate/config.json"
 CONFIG_OPTIONS = ('logfile', 'pidfile', 'interface', 'stderr', 'stdout', 'mode')

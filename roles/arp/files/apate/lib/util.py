@@ -6,8 +6,8 @@ logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 from scapy.all import conf, srp, ARP, Ether, ETHER_BROADCAST
 
 
-def hex2str_mac(hex):
-    return ':'.join(["{:02x}".format(ord(x)) for x in hex])
+def hex2str_mac(hex_val):
+    return ':'.join(["{:02x}".format(ord(x)) for x in hex_val])
 
 
 def get_mac(ip, interface):

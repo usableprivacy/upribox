@@ -1,19 +1,15 @@
-# import sys
 import os
-# import thread
+import thread
 import logging
 import time
-import netifaces as ni
 import threading
-# import socket
-# import struct
-# import binascii
+import netifaces as ni
+from netaddr import IPAddress, IPNetwork, AddrFormatError
 
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 # suppresses following message
 # WARNING: No route found for IPv6 destination :: (no default route?)
-from scapy.all import conf, sendp, srp, ARP, Ether, ETHER_BROADCAST, sniff
-from netaddr import IPAddress, IPNetwork, AddrFormatError
+from scapy.all import conf, sendp, ARP, Ether, ETHER_BROADCAST
 
 import util
 from sniff_thread import HolisticSniffThread, SelectiveSniffThread
@@ -75,7 +71,7 @@ class _DaemonApp(object):
 
         try:
             # get MAC address of gateway
-            self.gateMAC = util.get_mac(self.gateway, self.interface)
+            self.gate_mac = util.get_mac(self.gateway, self.interface)
         except Exception:
             self.logger.error("Unable to get MAC address of Gateway")
             raise DaemonError()
@@ -98,16 +94,16 @@ class HolisticDaemonApp(_DaemonApp):
     def __init__(self, logger, interface, pidfile, stdout, stderr):
         super(self.__class__, self).__init__(logger, interface, pidfile, stdout, stderr)
 
-        self.sniffthread = HolisticSniffThread(self.interface, self.gateway, self.mac, self.gateMAC)
+        self.sniffthread = HolisticSniffThread(self.interface, self.gateway, self.mac, self.gate_mac)
         self.sniffthread.daemon = True
 
     def __return_to_normal(self):
         # clients gratutious arp
         sendp(
             Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=self.gateway, hwdst=ETHER_BROADCAST,
-                                             hwsrc=self.gateMAC))
+                                             hwsrc=self.gate_mac))
         # to clients so that they send and arp reply to the gateway
-        sendp(Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=str(self.network), hwsrc=self.gateMAC))
+        sendp(Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=str(self.network), hwsrc=self.gate_mac))
 
     def exit(self, signal_number, stack_frame):
         self.__return_to_normal()
@@ -120,7 +116,7 @@ class HolisticDaemonApp(_DaemonApp):
         self.sniffthread.start()
 
         # this updates existing entries in the arp table of the gateway
-        packets = [Ether(dst=self.gateMAC) / ARP(op=1, psrc=str(x), pdst=str(x)) for x in self.ip_range]
+        packets = [Ether(dst=self.gate_mac) / ARP(op=1, psrc=str(x), pdst=str(x)) for x in self.ip_range]
         # gratuitous arp to clients
         packets.append(Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=self.gateway,
                                                         hwdst=ETHER_BROADCAST))
@@ -136,7 +132,7 @@ class SelectiveDaemonApp(_DaemonApp):
         super(self.__class__, self).__init__(logger, interface, pidfile, stdout, stderr)
         self.redis = ApateRedis(self.network, logger)
 
-        self.sniffthread = SelectiveSniffThread(self.interface, self.gateway, self.mac, self.gateMAC, self.redis)
+        self.sniffthread = SelectiveSniffThread(self.interface, self.gateway, self.mac, self.gate_mac, self.redis)
         self.sniffthread.daemon = True
         self.psthread = PubSubThread(self.redis, self.logger)
         self.psthread.daemon = True
@@ -148,12 +144,12 @@ class SelectiveDaemonApp(_DaemonApp):
         # spoof clients
         sendp(
             Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=self.gateway, hwdst=ETHER_BROADCAST,
-                                             hwsrc=self.gateMAC))
+                                             hwsrc=self.gate_mac))
 
-        # packets = [Ether(dst=dev[1]) / ARP(op=1, psrc=self.gateway, pdst=dev[0].rsplit(":", 1)[-1], hwsrc=self.gateMAC) for dev in self.redis.get_devices_values(filter=True)]
+        # packets = [Ether(dst=dev[1]) / ARP(op=1, psrc=self.gateway, pdst=dev[0].rsplit(":", 1)[-1], hwsrc=self.gate_mac) for dev in self.redis.get_devices_values(filter=True)]
 
         # spoof the gateway
-        packets = [Ether(dst=self.gateMAC) / ARP(op=2, psrc=dev[0], pdst=self.gateway, hwsrc=dev[1]) for dev in self.redis.get_devices_values(filter=True)]
+        packets = [Ether(dst=self.gate_mac) / ARP(op=2, psrc=dev[0], pdst=self.gateway, hwsrc=dev[1]) for dev in self.redis.get_devices_values(filter_values=True)]
 
         sendp(packets)
 
@@ -165,10 +161,6 @@ class SelectiveDaemonApp(_DaemonApp):
         raise SystemExit()
 
     def run(self):
-        # TODO
-        # start threads (listener and host discovery)
-        # TODO sleep for redis pubsub
-        # time.sleep(3)
         self.sniffthread.start()
         self.dt.start()
         self.psthread.start()
@@ -177,16 +169,16 @@ class SelectiveDaemonApp(_DaemonApp):
         p1 = lambda dev: Ether(dst=dev[1]) / ARP(op=2, psrc=self.gateway, pdst=dev[0], hwdst=dev[1])
 
         # spoof gateway
-        p2 = lambda dev: Ether(dst=self.gateMAC) / ARP(op=2, psrc=dev[0], pdst=self.gateway, hwdst=self.gateMAC)
+        p2 = lambda dev: Ether(dst=self.gate_mac) / ARP(op=2, psrc=dev[0], pdst=self.gateway, hwdst=self.gate_mac)
 
-        while(True):
-            packets = [p(dev) for dev in self.redis.get_devices_values(filter=True) for p in (p1, p2)]
+        while True:
+            packets = [p(dev) for dev in self.redis.get_devices_values(filter_values=True) for p in (p1, p2)]
 
             # # spoof clients
             # packets = [Ether(dst=dev[1]) / ARP(op=2, psrc=self.gateway, pdst=util.get_device_ip(dev[0]), hwdst=dev[1]) for dev in self.redis.get_devices_values(filter=True)]
             #
             # # spoof gateway
-            # packets += [Ether(dst=self.gateMAC) / ARP(op=2, psrc=util.get_device_ip(dev[0], pdst=self.gateway, hwdst=self.gateMAC)) for dev in]
+            # packets += [Ether(dst=self.gate_mac) / ARP(op=2, psrc=util.get_device_ip(dev[0], pdst=self.gateway, hwdst=self.gate_mac)) for dev in]
 
             sendp(packets)
             time.sleep(5)
@@ -207,7 +199,8 @@ class DiscoveryThread(threading.Thread):
     def run(self):
         sendp(Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=str(self.network)))
 
-    def stop(self):
+    @staticmethod
+    def stop():
         thread.exit()
 
 
@@ -226,5 +219,6 @@ class PubSubThread(threading.Thread):
             self.logger.debug("Removed expired device {} from network {}".format(util.get_device_ip(message['data']), util.get_device_net(message['data'])))
             self.redis._del_device_from_network(util.get_device_ip(message['data']), util.get_device_net(message['data']))
 
-    def stop(self):
+    @staticmethod
+    def stop():
         thread.exit()
