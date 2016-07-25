@@ -47,8 +47,14 @@ class HardwareInfo:
         else:
             return None
 
+    def runs_on_pi3(self):
+        if self.model.contains('Pi 3'):
+            return True
+        else:
+            return False
+
     def pi3_builtin_wifi_only(self):
-        if self.model.contains('Pi 3') and len(self.wifi_devices) == 1:
+        if self.runs_on_pi3() and len(self.wifi_devices) == 1:
             return True
         else:
             return False
@@ -96,11 +102,6 @@ class UpdateStatus:
         except:
             pass
 
-        """
-               PLAY RECAP ********************************************************************\
-               127.0.0.1                  : ok=168  changed=7    unreachable=0    failed=0'
-        """
-
     def get_upgrade_status(self):
         with open(self.ANSIBLE_PULL_LOG_FILE) as pull_log_file:
             pull_log = '\n'.join(pull_log_file.readlines())
@@ -109,5 +110,3 @@ class UpdateStatus:
             failed_num = int(pull_log[fail_index + len(search_term)])
             if failed_num == 0:
                 self.upgrade_successful = True
-            else:
-                print failed_num
