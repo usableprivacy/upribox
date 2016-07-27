@@ -1,5 +1,6 @@
 import subprocess
 import json
+import os
 
 
 class HardwareInfo:
@@ -63,6 +64,30 @@ class HardwareInfo:
 
     def __str__(self):
         return '\n'.join((self.model, str(self.wifi_devices)))
+
+
+class ModelInfo:
+
+    MODEL_PATH = '/proc/device-tree/model'
+
+    def __init__(self):
+        self.model = self.get_model_str()
+
+    def get_model_str(self):
+        if not os.path.exists(self.MODEL_PATH):
+            return None
+
+        with open(self.MODEL_PATH) as model_file:
+            model = model_file.read().strip()
+            return model
+
+    def runs_on_pi3(self):
+        if not self.model:
+            return False
+        elif u'Pi 3' in self.model:
+            return True
+        else:
+            return False
 
 
 class UpdateStatus:

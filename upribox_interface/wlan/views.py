@@ -10,7 +10,7 @@ from lib import jobs
 from wlan import jobs as wlanjobs
 from django.core.urlresolvers import reverse
 from lib import utils
-from lib.info import HardwareInfo
+from lib.info import HardwareInfo, ModelInfo
 from django.http import HttpResponse
 
 # Get an instance of a logger
@@ -36,9 +36,13 @@ def ninja(request):
     else:
         form = WlanForm(utils.get_fact('wlan','ninja','ssid'))
 
+    model_info = ModelInfo()
+    pi3 = model_info.runs_on_pi3()
+
     context.push({
         'form': form,
-        'messagestore': jobs.get_messages()})
+        'messagestore': jobs.get_messages(),
+        'pi3': pi3})
 
     return render_to_response("ninja.html", context)
 

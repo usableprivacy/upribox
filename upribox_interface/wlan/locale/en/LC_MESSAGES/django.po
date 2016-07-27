@@ -133,7 +133,7 @@ msgstr ""
 
 #: wlan/templates/ninja.html:39
 msgid "Das Ninja WiFi kann auf dem Raspberry Pi 3 nicht aktiviert werden."
-msgstr "The Ninja WiFi can not be aktived on the Raspberry Pi 3."
+msgstr "The Ninja WiFi can not be activated on the Raspberry Pi 3."
 
 #: wlan/templates/ninja.html:54 wlan/templates/silent.html:18
 msgid "Ein-/Ausschalten"
