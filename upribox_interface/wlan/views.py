@@ -10,9 +10,12 @@ from lib import jobs
 from wlan import jobs as wlanjobs
 from django.core.urlresolvers import reverse
 from lib import utils
+from lib.info import HardwareInfo
+from django.http import HttpResponse
 
 # Get an instance of a logger
 logger = logging.getLogger('uprilogger')
+
 
 @login_required
 def ninja(request):
@@ -38,6 +41,7 @@ def ninja(request):
         'messagestore': jobs.get_messages()})
 
     return render_to_response("ninja.html", context)
+
 
 @login_required
 def ninja_toggle(request):
@@ -71,3 +75,12 @@ def silent(request):
     context.push({'form': form})
     context.push({'messagestore': jobs.get_messages()})
     return render_to_response("silent.html", context)
+
+
+@login_required
+def check_pi3(request):
+    hw = HardwareInfo()
+    if hw.runs_on_pi3():
+        return HttpResponse('{"pi3": "yes"}')
+    else:
+        return HttpResponse('{"pi3": "no"}')

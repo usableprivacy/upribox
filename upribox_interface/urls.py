@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^silent/$', "wlan.views.silent", name="upri_silent"),
     url(r'^ninja/$', "wlan.views.ninja", name="upri_ninja"),
     url(r'^ninja/toggle/$', "wlan.views.ninja_toggle", name="upri_ninja_toggle"),
+    url(r'^ninja/check_pi3/$', "wlan.views.check_pi3", name="upri_check_pi3"),
     url(r'^jobstatus/$', "www.views.jobstatus", name="upri_jobstatus"),
     url(r'^jobstatus/clear/$', "www.views.clear_jobstatus", name="upri_clear_jobstatus"),
 

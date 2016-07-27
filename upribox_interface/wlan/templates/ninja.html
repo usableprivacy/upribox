@@ -16,7 +16,34 @@
         Wir empfehlen die Nutzung des Tor-Browser-Bundle (Download f&uuml;r <a href="{{ windows }}">Windows</a>, <a href="{{ macos }}">Mac OS</a> oder <a href="{{ linux }}">Linux</a>). Sollten Sie keine M&ouml;glichkeit haben, den Tor-Browser zu nutzen, k&ouml;nnen Sie als Alternative den Ninja Modus einschalten. Dieser gew&auml;hrleistet aber nicht das volle Surferlebnis (etwa durch langsame Geschwindigkeit und Webseiten in fremder Sprache).
     {% endblocktrans %}</strong></p>
 
-    <div class="row clearfix">
+             <script>
+                    function getCookie(name) {
+                      var value = "; " + document.cookie;
+                      var parts = value.split("; " + name + "=");
+                      if (parts.length == 2) return parts.pop().split(";").shift();
+                    }
+                    var http = new XMLHttpRequest();
+                    var url = "{% url 'upri_check_pi3' %}"
+                    http.open("POST", url, true);
+
+                    //Send the proper header information along with the request
+                    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    http.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                    http.setRequestHeader("Connection", "close");
+
+                    http.onreadystatechange = function() {//Call a function when the state changes.
+                        if(http.readyState == 4 && http.status == 200) {
+                            result = JSON.parse(http.responseText);
+                            if (result['pi3'].localeCompare("yes") == 0) {
+                                document.getElementById("ninja_toggle").innerHTML = '<h2 class="warning-message">{% trans "Das Ninja WiFi kann auf dem Raspberry Pi 3 nicht aktiviert werden." %}</h2>';
+                            }
+                    }
+                    }
+                    http.send('');
+
+                </script>
+
+    <div class="row clearfix" id="ninja_toggle">
         <div class="col-2 col-2-main js-col-2-main">
 
             <form>
