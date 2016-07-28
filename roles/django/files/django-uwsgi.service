@@ -3,8 +3,7 @@ Description=uWSGI Django Emperor
 After=syslog.target
 
 [Service]
-ExecStart=/usr/local/bin/uwsgi --ini /etc/uwsgi/upri_uwsgi.ini
-# Requires systemd version 211 or newer
+ExecStart=/usr/local/bin/uwsgi --ini /etc/uwsgi/upri_uwsgi.ini --touch-reload /etc/uwsgi/upri_uwsgi.ini
 RuntimeDirectory=uwsgi
 Restart=always
 KillSignal=SIGQUIT

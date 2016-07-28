@@ -56,8 +56,7 @@ def more_config(request):
         'form': form,
         'messagestore': jobs.get_messages(),
         'update_time': update_status.update_utc_time,
-        'branch': update_status.branch,
-        'commit': update_status.last_commit_short,
+        'version': update_status.get_version()
     })
 
     return render_to_response("more.html", context)

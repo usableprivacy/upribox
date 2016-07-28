@@ -16,7 +16,15 @@
         Wir empfehlen die Nutzung des Tor-Browser-Bundle (Download f&uuml;r <a href="{{ windows }}">Windows</a>, <a href="{{ macos }}">Mac OS</a> oder <a href="{{ linux }}">Linux</a>). Sollten Sie keine M&ouml;glichkeit haben, den Tor-Browser zu nutzen, k&ouml;nnen Sie als Alternative den Ninja Modus einschalten. Dieser gew&auml;hrleistet aber nicht das volle Surferlebnis (etwa durch langsame Geschwindigkeit und Webseiten in fremder Sprache).
     {% endblocktrans %}</strong></p>
 
+
     <div class="row clearfix">
+        {% if pi3 %}
+
+        <h2 class="warning-message">{% trans "Das Ninja WiFi kann auf dem Raspberry Pi 3 nicht aktiviert werden." %}</h2>
+
+        {% else %}
+
+
         <div class="col-2 col-2-main js-col-2-main">
 
             <form>
@@ -61,5 +69,6 @@
                 <a href="#" title="{% trans "Information ausblenden" %}" class="info-out i-arrow js-info-trigger">{% trans "Information ausblenden" %}</a>
             </aside>
         </div>
+    {% endif %}
     </div>
 {% endblock %}

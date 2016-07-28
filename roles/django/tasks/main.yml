@@ -44,6 +44,10 @@
   notify: restart uwsgi
   register: res
 
+- name: reload systemd services
+  command: systemctl daemon-reload
+  when: res|changed
+
 - name: remove default logfiles
   file: path=/var/log/uwsgi.log state=absent
   when: res|changed
