@@ -213,14 +213,14 @@ class SelectiveDaemonApp(_DaemonApp):
             DaemonError: Signalises the failure of the daemon.
         """
         super(self.__class__, self).__init__(logger, interface, pidfile, stdout, stderr)
-        self.redis = ApateRedis(self.network.network, logger)
+        self.redis = ApateRedis(str(self.network.network), logger)
 
         # Initialise threads
         self.sniffthread = SelectiveSniffThread(self.interface, self.gateway, self.mac, self.gate_mac, self.redis)
         self.sniffthread.daemon = True
         self.psthread = PubSubThread(self.redis, self.logger)
         self.psthread.daemon = True
-        self.discoverythread = DiscoveryThread(self.gateway, self.network.network)
+        self.discoverythread = DiscoveryThread(self.gateway, str(self.network.network))
         self.discoverythread.daemon = True
 
     def __return_to_normal(self):
