@@ -58,7 +58,7 @@ class _SniffThread(threading.Thread):
 
     @staticmethod
     def stop():
-        """Kills the thread, because there is no gentle way to stop scapy's sniffing."""
+        """May be used to kill the thread, if it is not a daemon thread."""
         thread.exit()
 
 
@@ -107,8 +107,9 @@ class HolisticSniffThread(_SniffThread):
                     # send arp request if destination was not the gateway
                     dest = util.get_mac(pkt[ARP].pdst, self.interface)
 
-                # spoof receiver
-                packets.append(Ether(dst=dest) / ARP(op=2, psrc=pkt[ARP].psrc, hwsrc=self.mac, pdst=pkt[ARP].pdst, hwdst=dest))
+                if dest:
+                    # spoof receiver
+                    packets.append(Ether(dst=dest) / ARP(op=2, psrc=pkt[ARP].psrc, hwsrc=self.mac, pdst=pkt[ARP].pdst, hwdst=dest))
 
                 # some os didn't accept an answer immediately (after sending the first ARP request after boot
                 # so, send packets after some delay
@@ -164,8 +165,9 @@ class SelectiveSniffThread(_SniffThread):
                     # send arp request if destination was not the gateway
                     dest = util.get_mac(pkt[ARP].pdst, self.interface)
 
-                # spoof receiver
-                packets.append(Ether(dst=dest) / ARP(op=2, psrc=pkt[ARP].psrc, hwsrc=self.mac, pdst=pkt[ARP].pdst, hwdst=dest))
+                if dest:
+                    # spoof receiver
+                    packets.append(Ether(dst=dest) / ARP(op=2, psrc=pkt[ARP].psrc, hwsrc=self.mac, pdst=pkt[ARP].pdst, hwdst=dest))
 
                 # add transmitting device to redis db
                 self.redis.add_device(pkt[ARP].psrc, pkt[ARP].hwsrc)

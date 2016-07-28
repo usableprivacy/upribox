@@ -97,6 +97,8 @@ class _DaemonApp(object):
         try:
             # get MAC address of gateway
             self.gate_mac = util.get_mac(self.gateway, self.interface)
+            if not self.gate_mac:
+                raise DaemonError()
         except Exception:
             self.logger.error("Unable to get MAC address of Gateway")
             raise DaemonError()
@@ -159,8 +161,6 @@ class HolisticDaemonApp(_DaemonApp):
         Threads are stopped and clients are despoofed via __return_to_normal().
         """
         self.__return_to_normal()
-        if self.sniffthread.isAlive():
-            self.sniffthread.stop()
         raise SystemExit()
 
     def run(self):
@@ -242,9 +242,6 @@ class SelectiveDaemonApp(_DaemonApp):
         Threads are stopped and clients are despoofed via __return_to_normal().
         """
         self.__return_to_normal()
-        if self.sniffthread.isAlive():
-            self.sniffthread.stop()
-        self.psthread.stop()
         raise SystemExit()
 
     def run(self):
