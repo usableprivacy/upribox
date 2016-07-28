@@ -7,6 +7,5 @@ netaddr==0.7.18
 netifaces==0.10.4
 python-daemon==2.1.1
 redis==2.10.5
-redisco==0.1.4
 scapy==2.3.2
 wsgiref==0.1.2
