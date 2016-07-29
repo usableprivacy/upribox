@@ -6,14 +6,11 @@ Classes:
     HolisticDaemonApp: Inherits _DaemonApp and implements the holistist spoofing mode.
     SelectiveDaemonApp: Inherits _DaemonApp and implements the selective spoofing mode.
     DaemonError: Error that indicates the daemon's failure.
-    DiscoveryThread: Discovers clients on the network by sending out ARP request.
-    PubSubThread: Listens for redis expiry messages and removes expired devices.
 
 """
 import os
 import logging
 import time
-import threading
 import netifaces as ni
 from netaddr import IPAddress, IPNetwork, AddrFormatError
 
@@ -25,6 +22,7 @@ from scapy.all import conf, sendp, ARP, Ether, ETHER_BROADCAST
 import util
 from sniff_thread import HolisticSniffThread, SelectiveSniffThread
 from apate_redis import ApateRedis
+from misc_thread import ARPDiscoveryThread, IGMPDiscoveryThread, PubSubThread
 
 
 class _DaemonApp(object):
@@ -220,8 +218,10 @@ class SelectiveDaemonApp(_DaemonApp):
         self.sniffthread.daemon = True
         self.psthread = PubSubThread(self.redis, self.logger)
         self.psthread.daemon = True
-        self.discoverythread = DiscoveryThread(self.gateway, str(self.network.network))
-        self.discoverythread.daemon = True
+        self.arpthread = ARPDiscoveryThread(self.gateway, str(self.network.network))
+        self.arpthread.daemon = True
+        self.igmpthread = IGMPDiscoveryThread(self.gateway, str(self.network.network), self.ip, self.mac)
+        self.igmpthread.daemon = True
 
     def __return_to_normal(self):
         """This method is called when the daemon is stopping.
@@ -251,7 +251,7 @@ class SelectiveDaemonApp(_DaemonApp):
 
         Threads:
             A SniffThread, which sniffs for incoming ARP packets and adds new devices to the redis db.
-            A HostDiscoveryThread, which is searching for existing devices on the network.
+            Two HostDiscoveryThread, which are searching for existing devices on the network.
             A PubSubThread, which is listening for redis expiry messages.
 
         Note:
@@ -261,8 +261,9 @@ class SelectiveDaemonApp(_DaemonApp):
 
         """
         self.sniffthread.start()
-        self.discoverythread.start()
+        self.arpthread.start()
         self.psthread.start()
+        self.igmpthread.start()
 
         # lamda expression to generate arp replies to spoof the clients
         exp1 = lambda dev: Ether(dst=dev[1]) / ARP(op=2, psrc=self.gateway, pdst=dev[0], hwdst=dev[1])
@@ -283,57 +284,3 @@ class SelectiveDaemonApp(_DaemonApp):
 class DaemonError(Exception):
     """This error class indicates, that the daemon has failed."""
     pass
-
-
-class DiscoveryThread(threading.Thread):
-    """This thread is used to discovery clients on the network by sending ARP requests."""
-
-    def __init__(self, gateway, network):
-        """Initialises the thread.
-
-        Args:
-            gateway (str): The gateways IP address.
-            network (str): The network IP address.s
-
-        """
-        threading.Thread.__init__(self)
-        self.gateway = gateway
-        self.network = network
-
-    def run(self):
-        """Sends broadcast ARP requests for every possible client of the network.
-        Received ARP replies are processed by a SniffThread.
-        """
-        sendp(Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=self.network))
-
-
-class PubSubThread(threading.Thread):
-    """This thread is used to listen for redis expiry keyspace event messages."""
-
-    __SUBSCRIBE_TO = "__keyevent@5__:expired"
-    """Used to subscribe to the keyspace event expired."""
-
-    def __init__(self, redis, logger):
-        """Initialises the thread.
-
-        Args:
-            redis (apate_redis.ApateRedis): Used for obtaining the required PubSub object.
-            logger (logging.Logger): Used to log messages.
-
-        """
-        threading.Thread.__init__(self)
-        self.redis = redis
-        self.logger = logger
-        self.pubsub = self.redis.get_pubsub()
-
-    def run(self):
-        """Subscribes to redis expiry keyspace events and removes the ip address of the expired device from the network set."""
-        self.pubsub.subscribe(self.__SUBSCRIBE_TO)
-        for message in self.pubsub.listen():
-            self.logger.debug("Removed expired device {} from network {}".format(util.get_device_ip(message['data']), util.get_device_net(message['data'])))
-            # removes the ip of the expired device (the removed device entry) from the network set
-            self.redis._del_device_from_network(util.get_device_ip(message['data']), util.get_device_net(message['data']))
-
-    def stop(self):
-        """Closes the connection of the PubSub object."""
-        self.pubsub.close()

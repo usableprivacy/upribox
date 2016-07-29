@@ -15,7 +15,8 @@ import threading
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 # suppresses following message
 # WARNING: No route found for IPv6 destination :: (no default route?)
-from scapy.all import sendp, ARP, Ether, ETHER_BROADCAST, sniff
+from scapy.all import sendp, ARP, Ether, IP, ETHER_BROADCAST, sniff
+from scapy.contrib.igmp import IGMP
 
 import util
 
@@ -26,6 +27,10 @@ class _SniffThread(threading.Thread):
 
     _DELAY = 7.0
     """float: Delay after which packets are sent."""
+    _SNIFF_FILTER = "arp and inbound"
+    """str: tcpdump filter used for scapy's sniff function."""
+    _LFILTER = staticmethod(lambda x: x.haslayer(ARP))
+    """function: lambda filter used for scapy's sniff function."""
 
     def __init__(self, interface, gateway, mac, gate_mac):
         """Initialises several things needed to define the thread's behaviour.
@@ -45,14 +50,14 @@ class _SniffThread(threading.Thread):
 
     def run(self):
         """Starts sniffing for incoming ARP packets with scapy.
-        Actions after receiving a packet ar defines via _arp_handler.
+        Actions after receiving a packet ar defines via _packet_handler.
         """
         # the filter argument in scapy's sniff function seems to be applied too late
         # therefore some unwanted packets are processed (e.g. tcp packets of ssh session)
         # but it still decreases the number of packets that need to be processed by the lfilter function
-        sniff(prn=self._arp_handler, filter="arp and inbound", lfilter=lambda x: x.haslayer(ARP), store=0, iface=self.interface)
+        sniff(prn=self._packet_handler, filter=self._SNIFF_FILTER, lfilter=self._LFILTER, store=0, iface=self.interface)
 
-    def _arp_handler(self, pkt):
+    def _packet_handler(self, pkt):
         """This method should be overriden to define the thread's behaviour."""
         pass
 
@@ -79,7 +84,7 @@ class HolisticSniffThread(_SniffThread):
         """
         super(self.__class__, self).__init__(interface, gateway, mac, gate_mac)
 
-    def _arp_handler(self, pkt):
+    def _packet_handler(self, pkt):
         """This method is called for each packet received through scapy's sniff function.
         Incoming ARP requests are used to spoof involved devices.
 
@@ -121,6 +126,11 @@ class SelectiveSniffThread(_SniffThread):
     the listener of the selective spoofing mode of Apate.
     """
 
+    _SNIFF_FILTER = "(arp or igmp) and inbound"
+    """str: tcpdump filter used for scapy's sniff function."""
+    _LFILTER = staticmethod(lambda x: any([x.haslayer(layer) for layer in (ARP, IGMP)]))
+    """function: lambda filter used for scapy's sniff function."""
+
     def __init__(self, interface, gateway, mac, gate_mac, redis):
         """Initialises several things needed to define the thread's behaviour.
 
@@ -135,8 +145,20 @@ class SelectiveSniffThread(_SniffThread):
         super(self.__class__, self).__init__(interface, gateway, mac, gate_mac)
         self.redis = redis
 
-    def _arp_handler(self, pkt):
+    def _packet_handler(self, pkt):
         """This method is called for each packet received through scapy's sniff function.
+
+        Args:
+            pkt (str): Received packet via scapy's sniff (through socket.recv).
+        """
+
+        if pkt.haslayer(ARP):
+            self._arp_handler(pkt)
+        elif pkt.haslayer(IGMP):
+            self._igmp_handler(pkt)
+
+    def _arp_handler(self, pkt):
+        """"This method is called for each incoming ARP packet received through scapy's sniff function.
         Incoming ARP requests are used to spoof involved devices and add new devices
         to the redis db. New devices are also added if ARP replies are received.
 
@@ -181,3 +203,16 @@ class SelectiveSniffThread(_SniffThread):
             # ARP reply
             # add transmitting device to redis db
             self.redis.add_device(pkt[ARP].psrc, pkt[ARP].hwsrc)
+
+    def _igmp_handler(self, pkt):
+        """"This method is called for each IGMP packet received through scapy's sniff function.
+        Incoming IGMP answers are used to spoof involved devices and add new devices
+        to the redis db.
+
+        Args:
+            pkt (str): Received packet via scapy's sniff (through socket.recv).
+        """
+        # if util.get_mac(pkt[IP].src,self.interface):
+        self.redis.add_device(pkt[IP].src, pkt[Ether].src)
+        sendp([Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=self.gateway, pdst=pkt[IP].src, hwdst=pkt[Ether].src),
+               Ether(dst=self.gate_mac) / ARP(op=2, psrc=pkt[IP].src, pdst=self.gateway, hwdst=self.gate_mac)])
