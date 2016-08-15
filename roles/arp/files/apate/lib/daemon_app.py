@@ -101,13 +101,13 @@ class _DaemonApp(object):
             self.logger.error("Unable to get MAC address of Gateway")
             raise DaemonError()
 
-    def __return_to_normal(self):
+    def _return_to_normal(self):
         """This method should be overriden to define the actions to be done when stopping the daemon."""
         pass
 
     def exit(self, signal_number, stack_frame):
         """This method is called if the daemon stops."""
-        self.__return_to_normal()
+        self._return_to_normal()
         raise SystemExit()
 
     def run(self):
@@ -142,7 +142,7 @@ class HolisticDaemonApp(_DaemonApp):
         self.sniffthread = HolisticSniffThread(self.interface, self.gateway, self.mac, self.gate_mac)
         self.sniffthread.daemon = True
 
-    def __return_to_normal(self):
+    def _return_to_normal(self):
         """This method is called when the daemon is stopping.
         First, sends a GARP broadcast request to all clients to tell them the real gateway.
         Then an ARP request is sent to every client, so that they answer the real gateway and update its ARP cache.
@@ -156,9 +156,9 @@ class HolisticDaemonApp(_DaemonApp):
 
     def exit(self, signal_number, stack_frame):
         """This method is called from the python-daemon when the daemon is stopping.
-        Threads are stopped and clients are despoofed via __return_to_normal().
+        Threads are stopped and clients are despoofed via _return_to_normal().
         """
-        self.__return_to_normal()
+        self._return_to_normal()
         raise SystemExit()
 
     def run(self):
@@ -223,7 +223,7 @@ class SelectiveDaemonApp(_DaemonApp):
         self.igmpthread = IGMPDiscoveryThread(self.gateway, str(self.network.network), self.ip, self.mac)
         self.igmpthread.daemon = True
 
-    def __return_to_normal(self):
+    def _return_to_normal(self):
         """This method is called when the daemon is stopping.
         First, sends a GARP broadcast request to all clients to tell them the real gateway.
         Then ARP replies for existing clients are sent to the gateway.
@@ -239,9 +239,9 @@ class SelectiveDaemonApp(_DaemonApp):
 
     def exit(self, signal_number, stack_frame):
         """This method is called from the python-daemon when the daemon is stopping.
-        Threads are stopped and clients are despoofed via __return_to_normal().
+        Threads are stopped and clients are despoofed via _return_to_normal().
         """
-        self.__return_to_normal()
+        self._return_to_normal()
         raise SystemExit()
 
     def run(self):

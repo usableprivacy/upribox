@@ -89,7 +89,7 @@ class IGMPDiscoveryThread(threading.Thread):
 class PubSubThread(threading.Thread):
     """This thread is used to listen for redis expiry keyspace event messages."""
 
-    __SUBSCRIBE_TO = "__keyevent@5__:expired"
+    __SUBSCRIBE_TO = "__keyevent@{}__:expired"
     """Used to subscribe to the keyspace event expired."""
 
     def __init__(self, redis, logger):
@@ -107,7 +107,7 @@ class PubSubThread(threading.Thread):
 
     def run(self):
         """Subscribes to redis expiry keyspace events and removes the ip address of the expired device from the network set."""
-        self.pubsub.subscribe(self.__SUBSCRIBE_TO)
+        self.pubsub.subscribe(self.__SUBSCRIBE_TO.format(self.redis.get_database()))
         for message in self.pubsub.listen():
             self.logger.debug("Removed expired device {} from network {}".format(util.get_device_ip(message['data']), util.get_device_net(message['data'])))
             # removes the ip of the expired device (the removed device entry) from the network set

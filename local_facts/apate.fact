@@ -1,6 +1,7 @@
 {
     "general": {
-        "enable": "yes"
+        "enabled": "yes",
+        "interface": "eth0"
     },
     "mode": "selective",
     "pid": {

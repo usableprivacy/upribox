@@ -34,6 +34,7 @@
   with_items:
     - python-virtualenv
     - tcpdump
+    - redis-server
 
 - name: install requirements to virtualenv
   pip: requirements=/opt/apate/requirements.txt virtualenv=/opt/apate/venv
@@ -56,3 +57,6 @@
     regexp: '^notify-keyspace-events'
     line: 'notify-keyspace-events "Ex"'
   notify: restart redis
+
+- name: enable redis server
+  service: name=redis-server enabled=yes

@@ -156,6 +156,15 @@ class ApateRedis(object):
         """
         self._toggle_device(ip, network or self.network, enabled=True)
 
+    def get_database(self):
+        """Returns the currently selected redis database.
+
+        Return:
+            int: number of selected database
+
+        """
+        return self.__DB
+
     def _add_entry(self, key, value):
         # inserted keys expire after __TTL
         return self.redis.set(key, value, ApateRedis.__TTL)

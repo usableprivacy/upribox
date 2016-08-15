@@ -1,5 +1,4 @@
 argparse==1.2.1
-distribute==0.6.24
 docutils==0.12
 hiredis==0.2.0
 lockfile==0.12.2

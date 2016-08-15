@@ -27,6 +27,7 @@ default_settings:
   apate:
     general:
       enabled: 'yes'
+      interface: 'eth0'
     # modes: selective, holistic
     mode: 'selective'
     pid:
