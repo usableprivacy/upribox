@@ -26,7 +26,7 @@ django_settings_file: settings_prod
 default_settings:
   apate:
     general:
-      enabled: 'yes'
+      enabled: 'no'
       interface: 'eth0'
     # modes: selective, holistic
     mode: 'selective'
