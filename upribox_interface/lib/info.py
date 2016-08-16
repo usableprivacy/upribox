@@ -144,10 +144,10 @@ class UpdateStatus:
             pass
 
     def get_upgrade_status(self):
-        with open(self.ANSIBLE_PULL_LOG_FILE) as pull_log_file:
-            pull_log = '\n'.join(pull_log_file.readlines())
-            search_term = 'failed='
-            fail_index = pull_log.rfind(search_term)
-            failed_num = int(pull_log[fail_index + len(search_term)])
-            if failed_num == 0:
-                self.upgrade_successful = True
+        try:
+            with open(self.ANSIBLE_PULL_LOG_FILE) as pull_log_file:
+                pull_log = '\n'.join(pull_log_file.readlines())
+                if '"failed": true' not in pull_log:
+                    self.upgrade_successful = True
+        except:
+            pass
