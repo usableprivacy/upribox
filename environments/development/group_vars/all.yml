@@ -15,6 +15,15 @@ ansible_uwsgi_version: 1.9.2
 django_settings_file: settings_dev
 
 default_settings:
+  apate:
+    general:
+      enabled: 'no'
+      interface: 'eth0'
+    # modes: selective, holistic
+    mode: 'selective'
+    pid:
+      dir: '/var/run/apate'
+      file: 'apate.pid'
   django:
     # this path is for "upri-config.py parse_logs"
     # if you want to change the path, you will also have to
@@ -36,6 +45,12 @@ default_settings:
       subdir: 'privoxy'
       logfiles:
         logname: 'privoxy.log'
+    apate:
+      subdir: 'apate'
+      logfiles:
+        logname: apate.log
+        stdout: stdout.log
+        stderr: stderr.log
     tor:
       subdir: 'tor'
       logfiles:
@@ -89,7 +104,7 @@ default_settings:
           news_notice: 'news.notice'
           debug: 'debug'
           messages: 'messages'
-      
+
 # variables for pull updates in development mode
 pull_cron_schedule: '0 */4 * * *'
 pull_cron_user: root

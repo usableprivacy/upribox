@@ -14,6 +14,7 @@
     - { role: privoxy, tags: ["privoxy"] }
     - { role: tor, tags: ["tor"] }
     - { role: dns_ninja, tags: ["dns_ninja"] }
+    - { role: arp, tags: ["arp"] }
     - { role: nginx, tags: ["nginx"] }
   post_tasks:
     - include: roles/ssh/main.yml tags=toggle_ssh

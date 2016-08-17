@@ -6,15 +6,15 @@
 #- name: copy uwsgi ini file
 #  copy: src=webapp/upri_uwsgi.ini dest=/usr/share/nginx/www-upri-interface/upri_uwsgi.ini
 #  notify: restart uwsgi
-  
+
 - name: copy django webapp
   copy: src=upribox_interface/ dest=/usr/share/nginx/www-upri-interface owner="{{'www-data' if env == 'development' else 'root' }}" group="{{'www-data' if env == 'development' else 'root' }}"
   register: copy_django
   notify: reload uwsgi
-  
+
 - name: set django webapp permissions
   file: path=/usr/share/nginx/www-upri-interface recurse=yes owner="{{'www-data' if env == 'development' else 'root' }}" group="{{'www-data' if env == 'development' else 'root' }}" state=directory
-  
+
 - name: install redis server
   apt: name=redis-server state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
 
@@ -23,22 +23,22 @@
 
 - name: enable redis server
   service: name=redis-server enabled=yes
-  
+
 - name: install virtualenv
   apt: name=python-virtualenv state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
   notify: restart uwsgi
-  
+
 - name: install requirements to virtualenv
   pip: requirements=/usr/share/nginx/www-upri-interface/requirements.txt virtualenv=/var/webapp-virtualenv/
   notify: reload uwsgi
-  
+
 - name: install uWSGI
   pip: name=uwsgi state=present version="{{ansible_uwsgi_version}}"
   notify: restart uwsgi
-  
+
 - name: create directory for uwsgi
   file: path=/etc/uwsgi/ state=directory
-  
+
 - name: install django-uwsgi systemd service
   copy: src=django-uwsgi.service dest=/etc/systemd/system/ mode="644"
   notify: restart uwsgi
@@ -56,7 +56,7 @@
 #  file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
 #  with_dict: "{{other_env.default_settings.log.uwsgi.logfiles}}"
 #  when: res|changed
-  
+
 - name: add uwsgi vasall
   template: src=upri_uwsgi.j2 dest=/etc/uwsgi/upri_uwsgi.ini
   notify:
@@ -64,14 +64,14 @@
 
 - name: create directory for django database
   file: path=/var/upribox-interface/ state=directory mode=755 owner=www-data group=www-data
-  
+
 - name: enable uwsgi django service
   service: name=django-uwsgi enabled=yes
-  
+
 - name: delete development database
   file: path=/usr/share/nginx/www-upri-interface/db.sqlite3 state=absent
   when: env == "production"
-  
+
 - name: migrate django database
   django_manage: settings="{{ django_settings_file }}" command=migrate app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
   become_user: www-data
@@ -80,10 +80,10 @@
   django_manage: settings="{{ django_settings_file }}" command=loaddata fixtures=dev_user.json app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
   become_user: www-data
   when: env == "development"
-      
+
 - name: collect static
   django_manage: settings="{{ django_settings_file }}" command=collectstatic app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
-  
+
 - name: install dependency for management script via pip
   pip: name="{{ item }}" state=present
   with_items:
@@ -133,7 +133,7 @@
   template: src=rqworker.conf dest=/etc/supervisor/conf.d/rqworker.conf owner=root group=root mode=755
   register: sv_config
   notify: restart supervisor
-  
+
 - name: remove default logfiles
   file: path=/var/log/supervisor state=absent
   #when: res1 |changed or res2 |changed or res3 |changed or sv_config |changed
@@ -143,30 +143,30 @@
   with_dict: "{{other_env.default_settings.log.supervisor.logfiles}}"
 #  when: res1 |changed or res2 |changed or res3 |changed or sv_config |changed
   when: res2 |changed or res3 |changed or sv_config |changed
-  
+
 - name: remove rqworker log files from other environment
   file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
   with_dict: "{{other_env.default_settings.log.rqworker.logfiles}}"
 # when: res1 |changed or res2 |changed or res3 |changed or sv_config |changed
   when: res2 |changed or res3 |changed or sv_config |changed
-  
+
 - name: restart supervisor myworker task
   shell: "supervisorctl restart myworker"
   when:  copy_django is defined and copy_django|changed and sv_config is defined and not sv_config|changed
-  
+
 - name: copy management scripts
   copy: src=upri-config.py dest=/usr/local/bin/upri-config.py owner=root group=root mode=755
   tags:
     - upri_config
-  
+
 - name: update block statistics
   shell: "/usr/local/bin/upri-config.py parse_logs"
   register: update_result
   changed_when: "update_result.rc == 20"
   failed_when: "update_result.rc != 0 and update_result.rc != 20"
-  
+
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/supervisor mode=0644
-  
+
 - name: modify logrotate.d entry
   template: src=logrotate_uwsgi.j2 dest=/etc/logrotate.d/uwsgi mode=0644

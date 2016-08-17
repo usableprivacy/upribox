@@ -70,3 +70,13 @@ def ssh_toggle(request):
     jobs.queue_job(sshjobs.toggle_ssh, (state,))
 
     return render_to_response("modal.html", {"message": True, "refresh_url": reverse('upri_more')})
+
+@login_required
+def apate_toggle(request):
+    if request.method != 'POST':
+        raise Http404()
+
+    state = request.POST['enabled']
+    jobs.queue_job(sshjobs.toggle_apate, (state,))
+
+    return render_to_response("modal.html", {"message": True, "refresh_url": reverse('upri_more')})

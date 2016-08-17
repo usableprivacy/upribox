@@ -1,0 +1,8 @@
+{
+    "pidfile": "{{ default_settings.apate.pid.dir if not (ansible_local is defined and ansible_local.apate is defined and ansible_local.apate.pid is defined) else ansible_local.apate.pid.dir | default(default_settings.apate.pid.dir) }}/{{ default_settings.apate.pid.file if not (ansible_local is defined and ansible_local.apate is defined and ansible_local.apate.pid is defined) else ansible_local.apate.pid.file | default(default_settings.apate.pid.file) }}",
+    "logfile": "{{ default_settings.log.general.path }}/{{ default_settings.log.apate.subdir }}/{{ default_settings.log.apate.logfiles.logname }}",
+    "interface": "{{ default_settings.apate.general.interface if not (ansible_local is defined and ansible_local.apate is defined and ansible_local.apate.general) else ansible_local.apate.general.interface | default(default_settings.apate.general.interface) }}",
+    "stdout": "{{ default_settings.log.general.path }}/{{ default_settings.log.apate.subdir }}/{{ default_settings.log.apate.logfiles.stdout }}",
+    "stderr": "{{ default_settings.log.general.path }}/{{ default_settings.log.apate.subdir }}/{{ default_settings.log.apate.logfiles.stderr }}",
+    "mode": "{{ default_settings.apate.mode if not (ansible_local is defined and ansible_local.apate is defined) else ansible_local.apate.mode | default(default_settings.apate.mode) }}"
+}

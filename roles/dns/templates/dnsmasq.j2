@@ -25,14 +25,15 @@ resolv-file=/etc/dnsmasq-resolv.conf
 #interface=wlan0_0
 # Or you can specify which interface _not_ to listen on
 #except-interface=lo
-except-interface=eth0
+#except-interface=eth0
 # Or which to listen on by address (remember to include 127.0.0.1 if
 # you use this.)
 #listen-address=
 # If you want dnsmasq to provide only DNS service on an interface,
 # configure it as shown above, and then use the following line to
 # disable DHCP and TFTP on it.
-#no-dhcp-interface=
+no-dhcp-interface=eth0
+local-service
 
 # On systems which support it, dnsmasq binds the wildcard address,
 # even when it is listening on only some interfaces. It then discards

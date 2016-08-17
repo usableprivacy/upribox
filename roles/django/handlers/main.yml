@@ -7,4 +7,3 @@
 
 - name: restart supervisor
   service: name=supervisor state=restarted sleep=5
-

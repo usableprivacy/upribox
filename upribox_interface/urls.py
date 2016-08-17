@@ -25,6 +25,7 @@ urlpatterns = [
     # more config
     url(r'^more/$', "more.views.more_config", name="upri_more"),
     url(r'^more/ssh/toggle$', "more.views.ssh_toggle", name="upri_ssh_toggle"),
+    url(r'^more/apate/toggle$', "more.views.apate_toggle", name="upri_apate_toggle"),
 
     # Auth config
     url(r'^login/$', auth_views.login, {"template_name": "login.html"}, name="upri_login"),

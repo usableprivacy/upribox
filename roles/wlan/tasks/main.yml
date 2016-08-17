@@ -7,20 +7,26 @@
     - hostapd
     - wireless-regdb
     - crda
-    - iw 
+    - iw
     - ifplugd
     - isc-dhcp-server
     - rng-tools
+
+#- name: fix locales
+#  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }} default_release=jessie
+#  with_items:
+#    - locales
+# due to broken dependencies (glibc)
 
 - name: create systemd directory for hostapd
   file: path=/etc/systemd/system/hostapd.service.d state=directory
 
 - name: override hostapd systemd dependencies
   copy: src=hostapd-systemd-override dest=/etc/systemd/system/hostapd.service.d/override.conf owner=root group=root mode=644
-    
+
 - name: enable ip forwarding
   sysctl: name=net.ipv4.ip_forward value=1 state=present
-        
+
 - name: configure interfaces
   template: src=interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=644
   register: interfaces
@@ -31,12 +37,12 @@
 - name: check if static ip setup is enabled
   set_fact:
     static_ip_setup: True
-  when: 
+  when:
    (ansible_local is defined) and
-   (ansible_local.interfaces is defined) and 
-   (ansible_local.interfaces.general is defined) and 
-   (ansible_local.interfaces.general.mode is defined) and 
-   (ansible_local.interfaces.general.mode == "static") and 
+   (ansible_local.interfaces is defined) and
+   (ansible_local.interfaces.general is defined) and
+   (ansible_local.interfaces.general.mode is defined) and
+   (ansible_local.interfaces.general.mode == "static") and
    (ansible_local.interfaces.static is defined)
   tags:
     - toggle_tor
@@ -69,7 +75,7 @@
   register: res
   failed_when: res.rc != 0 and res.rc != 6
   when: result|changed
-  
+
 - name: configure hostapd
   template: src=hostapd.j2 dest=/etc/hostapd/hostapd.conf owner=root group=root mode=644
   notify: restart hostapd
@@ -77,7 +83,7 @@
   tags:
     - ssid
     - toggle_tor
-  
+
 - name: configure hostapd config file path
   template: src=hostapd_default.j2 dest=/etc/default/hostapd owner=root group=root mode=644
   notify: restart hostapd

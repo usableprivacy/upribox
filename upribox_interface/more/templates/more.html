@@ -39,9 +39,30 @@
         </fieldset>
     </form>
 
+    <h2>{% trans "Apate" %}</h2>
+    <p>{% trans "Mithilfe dieser Funktion können erfahrene Benutzer den Apate ARP Spoofing Daemon konfigurieren." %}</p>
+    <form>
+        <fieldset>
+            <legend>{% trans "Ein-/Ausschalten" %}</legend>
+
+            {% get_fact 'apate' 'general' 'enabled' as apateenabled%}
+
+            {% if apateenabled == 'yes'%}
+                <div class="switch icon i-on">
+                    <p>{% trans "Apate ist aktiviert" %}</p>
+                    <button class="js-toggle-button" data-state-enabled="no" href="{% url 'upri_apate_toggle' %}">{% trans "Ausschalten" %}</button>
+                </div>
+            {% else %}
+                <div class="switch icon i-off">
+                    <p>{% trans "Apate ist deaktiviert" %}</p>
+                    <button class="js-toggle-button" data-state-enabled="yes" href="{% url 'upri_apate_toggle' %}">{% trans "Einschalten" %}</button>
+                </div>
+            {% endif %}
+        </fieldset>
+    </form>
+
      <h2>{% trans "upribox Software" %}</h2>
     <p>{% trans "Letztes update: " %} {{ update_time|date:"SHORT_DATETIME_FORMAT" }} (UTC)</p>
     <p>Version: {{ version }}</p>
-
 
 {% endblock %}

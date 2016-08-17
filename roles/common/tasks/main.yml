@@ -1,5 +1,5 @@
 ---
-- include: ../../common/tasks/other_env.yml 
+- include: ../../common/tasks/other_env.yml
 
 - name: Stop update process if master is pulled from old wheezy image
   fail: msg="You are running the outdated wheezy image, update process stoped."
@@ -12,12 +12,12 @@
   group: name="tmp-logger" state=present
 
 - name: create directory /var/tmp/log
-  file: path=/var/tmp/log state=directory recurse=yes 
-  
+  file: path=/var/tmp/log state=directory recurse=yes
+
 - name: create logging directory /var/log/log for development
   file: path=/var/log/log state=directory recurse=yes owner=root group=tmp-logger mode=0771
   when: env == "development"
-  
+
 - name: create tmpfs for logging
   lineinfile:
     dest: /etc/fstab
@@ -62,7 +62,7 @@
 
 - name: modify logrotate.d entry
   template: src=logrotate_rsyslog dest=/etc/logrotate.d/rsyslog mode=0644
-  
+
 - name: install dependencies
   apt: name={{ item }} state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
   with_items:
@@ -75,19 +75,22 @@
 
 - name: install ansible via pip
   pip: name=ansible state=present version="{{ansible_pip_version}}"
-  
+
 - name: add github to known hosts for pulling
   known_hosts: path='/etc/ssh/ssh_known_hosts'
                host="{{ pull_git_host }}"
                key="{{ pull_git_sshkey }}"
-  
+
+#- name: create directory /root/.ssh if not exists
+#  file: path=/root/.ssh state=directory recurse=yes owner=root group=root mode=600
+
 - name: create root ssh directory
   file: path=/root/.ssh state=directory
 
 - name: copy git deployment key
   copy: src=id_upribox_deployement-github dest=/root/.ssh/id_rsa_git owner=root group=root mode=0600
   when: pull_deployment is not defined
-  
+
 - name: configure root to use git deployment key
   template: src=ssh_config.j2 dest=/root/.ssh/config owner=root group=root mode=0644
 
@@ -95,22 +98,47 @@
   template: src=etc_cron.d_ansible-pull.j2 dest=/etc/cron.d/ansible-pull owner=root group=root mode=0644
   when: env == "production"
   notify: touch crontab
-  
+
 - name: add ansible cronupdate script
   template: src=usr_local_bin_ansible-cron.j2 dest=/usr/local/bin/ansible-cron owner=root group=root mode=0755
   when: env == "production"
 
 - name: update upribox git repo
   git: repo="{{ pull_repo_url }}" version="{{ pull_branch }}" dest="{{ pull_workdir }}" clone=yes update=yes
-  when: pull_deployment is not defined
-  
+  when: pull_deployment is not defined and env == "production"
+
+- name: get local working dir
+  local_action: command pwd
+  when: pull_deployment is not defined and env == "development"
+  register: pwd
+  sudo: no
+  tags:
+    - copy-local
+
+# - debug: msg="pwd {{pwd.stdout}}"
+#   tags:
+#     - copy-local
+
+# - name: remove old git repo
+#   file: path={{ pull_workdir }} state=absent
+#   when: pull_deployment is not defined and env == "development"
+#   tags:
+#     - copy-local
+
+# copy module is very slow for many files
+- name: copy upribox git repo from local
+  synchronize: src="{{ pwd.stdout }}/" dest="{{ pull_workdir }}" checksum=yes owner=no group=no
+  when: pull_deployment is not defined and env == "development"
+  tags:
+    - copy-local
+
 - name: create logrotate entry for ansible-pull.log
   template: src=etc_logrotate.d_ansible-pull.j2 dest=/etc/logrotate.d/ansible-pull owner=root group=root mode=0644
   when: env == "production"
-  
+
 - set_fact:
     ansible_pull_log: "{{ {} if not (other_env.default_settings.log.ansible_pull is defined) else other_env.default_settings.log.ansible_pull.logfiles | default({}) }}"
-  
+
 - name: remove ansible-pull logfile if environment is development
   file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
   when: env == "development"
@@ -122,27 +150,27 @@
     - /etc/cron.d/ansible-pull
     - /etc/logrotate.d/ansible-pull
   when: env == "development"
-  
+
 - name: create directory for local facts
   file: path=/etc/ansible/facts.d state=directory recurse=yes owner=root group=root
-  
+
 - name: copy ansible.cfg
   copy: src=ansible.cfg dest=/etc/ansible/ansible.cfg owner=root group=root mode=644
-  
+
 - name: write default settings
   template: src=default_settings.j2 dest=/etc/ansible/default_settings.json owner=root group=www-data mode=0640
   tags:
     - settings
-  
+
 - name: install dependencies via pip
   pip: name="{{ item }}" state=present
   with_items:
     - requests
     - requests[security]
-    
+
 - name: copy filter update script
   copy: src=upri-filter-update.py dest=/usr/local/bin/upri-filter-update.py owner=root group=root mode=755
-  
+
 - name: copy filter update config
   copy: src=etc_upri-filter-update/ dest=/usr/local/etc/upri-filter-update owner=root group=root mode=644
 
@@ -151,7 +179,7 @@
 
 - name: create dnsmasq ninja directory for dnsblacklist rules
   file: path=/etc/dnsmasq.d.ninja/ state=directory owner=root group=root
-  
+
 - name: update filter rules
   shell: "/usr/local/bin/upri-filter-update.py"
   register: update_result
