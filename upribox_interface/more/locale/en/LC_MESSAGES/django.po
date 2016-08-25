@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-27 11:13+0000\n"
+"POT-Creation-Date: 2016-08-25 13:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -57,9 +57,29 @@ msgstr "starting of SSH failed."
 msgid "Stoppen von SSH fehlgeschlagen."
 msgstr "stopping of SSH failed."
 
-#: more/jobs.py:31
+#: more/jobs.py:31 more/jobs.py:54
 msgid "Es ist ein unbekannter Fehler aufgetreten."
 msgstr "unknown error occured."
+
+#: more/jobs.py:38
+msgid "Apate ARP Spoofing Daemon wird gestartet..."
+msgstr ""
+
+#: more/jobs.py:40
+msgid "Apate ARP Spoofing Daemon wird gestoppt..."
+msgstr ""
+
+#: more/jobs.py:45
+msgid "Konfiguration von Apate ARP Spoofing Daemon erfolgreich."
+msgstr "configuration of Apate ARP Spoofing daemon successful."
+
+#: more/jobs.py:50
+msgid "Starten von Apate ARP Spoofing Daemon fehlgeschlagen."
+msgstr "Failed to start Apate ARP Spoofing daemon."
+
+#: more/jobs.py:52
+msgid "Stoppen von Apate ARP Spoofing Daemon fehlgeschlagen."
+msgstr "Failed to stop Apate ARP Spoofing daemon."
 
 #: more/templates/more.html:7
 msgid "Admin - upribox"
@@ -87,7 +107,7 @@ msgid ""
 "konfigurieren."
 msgstr "This function should be used by experts to configure their upribox."
 
-#: more/templates/more.html:24
+#: more/templates/more.html:24 more/templates/more.html.py:46
 msgid "Ein-/Ausschalten"
 msgstr "switch On/Off"
 
@@ -95,7 +115,7 @@ msgstr "switch On/Off"
 msgid "SSH ist aktiviert"
 msgstr "SSH is activated"
 
-#: more/templates/more.html:31
+#: more/templates/more.html:31 more/templates/more.html.py:53
 msgid "Ausschalten"
 msgstr "switch off"
 
@@ -103,14 +123,32 @@ msgstr "switch off"
 msgid "SSH ist deaktiviert"
 msgstr "SSH is deactivated"
 
-#: more/templates/more.html:36
+#: more/templates/more.html:36 more/templates/more.html.py:58
 msgid "Einschalten"
 msgstr "switch On"
 
 #: more/templates/more.html:42
-msgid "upribox Software"
+msgid "Apate"
 msgstr ""
 
 #: more/templates/more.html:43
+msgid ""
+"Mithilfe dieser Funktion kann der Apate ARP Spoofing Daemon konfiguriert "
+"werden."
+msgstr "This function can be used to configure the Apate ARP Spoofing daemon"
+
+#: more/templates/more.html:52
+msgid "Apate ist aktiviert"
+msgstr "Apate is activated"
+
+#: more/templates/more.html:57
+msgid "Apate ist deaktiviert"
+msgstr "Apate is deactivated"
+
+#: more/templates/more.html:64
+msgid "upribox Software"
+msgstr ""
+
+#: more/templates/more.html:65
 msgid "Letztes update: "
 msgstr "Last update: "
