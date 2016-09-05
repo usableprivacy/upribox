@@ -26,18 +26,34 @@ msgid "Statistik"
 msgstr "statistics"
 
 #: statistics/templates/statistics.html:9
-msgid "Geblockete Inhalte."
-msgstr "overview on blocked content"
+msgid "Geblockete Domains und gefilterte Inhalte."
+msgstr "overview on blocked domains and filtered content."
 
 #: statistics/templates/statistics.html:13
 msgid ""
-"Die Statistiken liefern einen &Uuml;berblick &uuml;ber geblockte Webinhalte."
-msgstr "Statistics offer an overview on blocked web content."
+"Die Statistiken liefern einen &Uuml;berblick &uuml;ber geblockte Domains und gefilterte Webinhalte."
+msgstr "Statistics offer an overview on blocked domains and filtered web content."
 
 #: statistics/templates/statistics.html:17
 #: statistics/templates/statistics.html:22
-msgid "Geblockte Inhalte"
-msgstr "blocked content"
+msgid "Gefilterte Inhalte"
+msgstr "filtered content"
+
+msgid "Geblockte Domains"
+msgstr "blocked domains"
+
+msgid "Top gefilterte Inhalte"
+msgstr "most filtered contents"
+
+msgid "Anzahl der geblockten (rosa) vs. werbefreien (rot) Domains"
+msgstr "amount of blocked (lightred) vs. ad free (red) domains"
+
+msgid "in den letzten 6 Monaten"
+msgstr "last 6 months"
+
+msgid "heute"
+msgstr "today"
+
 
 #~ msgid "Besuchte Webseiten"
 #~ msgstr "visited websites"

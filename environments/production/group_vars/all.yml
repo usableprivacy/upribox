@@ -79,6 +79,7 @@ default_settings:
       logfiles:
         logname: 'uwsgi.log'
     dnsmasq:
+      subdir: 'dnsmasq'
       logfiles:
         logname: 'dnsmasq.log'
     dnsmasq_ninja:

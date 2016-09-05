@@ -161,7 +161,7 @@ domain=ninja.upri.box,192.168.56.0/24
 
 # For debugging purposes, log each DNS query as it passes through
 # dnsmasq.
-#log-queries
+log-queries
 
 # Log lots of extra information about DHCP transactions.
 #log-dhcp
@@ -173,4 +173,4 @@ localise-queries
 #conf-file=/etc/dnsmasq.more.conf
 conf-dir=/etc/dnsmasq.d
 
-log-facility={{default_settings.log.general.path}}/{{default_settings.log.dnsmasq.logfiles.logname}}
+log-facility={{default_settings.log.general.path}}/{{default_settings.log.dnsmasq.subdir}}/{{default_settings.log.dnsmasq.logfiles.logname}}

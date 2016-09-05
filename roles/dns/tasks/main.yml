@@ -28,8 +28,11 @@
 #  file: path=/var/log/dnsmasq.log state=absent
 #  when: res|changed
 
+- name: create dnsmasq log dir
+  file: path={{default_settings.log.general.path}}/{{default_settings.log.dnsmasq.subdir}} state=directory mode=0755 owner=dnsmasq
+
 - name: remove dnsmasq log files from other environment
-  file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
+  file: path={{other_env.default_settings.log.general.path}}/{{other_env.default_settings.log.dnsmasq.subdir}}/{{item.value}} state=absent
   with_dict: "{{other_env.default_settings.log.dnsmasq.logfiles}}"
   when: res|changed
   tags:

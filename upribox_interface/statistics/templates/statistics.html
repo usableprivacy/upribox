@@ -6,23 +6,32 @@
 
 {% block header %}
     <h1>{% trans "Statistik" %}</h1>
-    <p>{% trans "Geblockete Inhalte." %}</p>
+    <p>{% trans "Geblockete Domains und gefilterte Inhalte." %}</p>
 {% endblock %}
 
 {% block content %}
-    <p><strong>{% trans "Die Statistiken liefern einen &Uuml;berblick &uuml;ber geblockte Webinhalte." %}</strong></p>
+    <p><strong>{% trans "Die Statistiken liefern einen &Uuml;berblick &uuml;ber geblockte Domains und gefilterte Webinhalte." %}</strong></p>
 
-    <p>
-        {#  <span class="legend-filtered-websites"></span>{% trans "Gefilterte Inhalte" %}<br/> #}
-        <span class="legend-blocked-websites"></span>{% trans "Geblockte Inhalte" %}</p>
+    <div class="ct-pies">
+        <p>{% trans "Anzahl der geblockten (rosa) vs. werbefreien (rot) Domains" %}</p>
+        <div class="ct-pie1 ct-perfect-fourth"></div>
+        <div class="ct-pie1-label-mobile">{% trans "in den letzten 6 Monaten" %}</div>
+        <div class="ct-pie2 ct-perfect-fourth"></div>
+        <div class="ct-pie1-label">{% trans "in den letzten 6 Monaten" %}</div>
+        <div class="ct-pie2-label">{% trans "heute" %}</div>
+    </div>
 
     <div class="ct-chart ct-perfect-fourth"></div>
+    <p class="legend">
+        <span class="legend-filtered-content"></span>{% trans "Gefilterte Inhalte" %}<br/>
+        <span class="legend-blocked-domains"></span>{% trans "Geblockte Domains" %}
+    </p>
 
     <div class="row">
-        <div class="column column-4 statistics js-blocked-sites"><p class="icon i-ugly">{% trans "Geblockte Inhalte" %}</p>
+        <div class="column column-4 statistics js-filtered-sites"><p class="icon i-ugly">{% trans "Top gefilterte Inhalte" %}</p>
             <ol></ol>
         </div>
-{#        <div class="column column-4 statistics js-blocked-sites"><p class="icon i-good">{% trans "Good" %}</p>#}
+{#        <div class="column column-4 statistics js-filtered-sites"><p class="icon i-good">{% trans "Good" %}</p>#}
 {#        {% comment %} {% blocktrans with name=page.name count=page.count %}{{ name }} - {{ count }} geblockte Inhalte{% endblocktrans %}{% endcomment %}#}
 {#        {% comment %} TODO: Translation der li-Bloecke an den Aufbau der Views anpassen (auf Vars zugreifen + for + etc.) {% endcomment %}#}
 {#        <ol><li>{% blocktrans with name="orf.at" count="200 000" %}{{ name }} - {{ count }} geblockte Inhalte{% endblocktrans %}</li>#}
