@@ -185,21 +185,19 @@ UPRIBOX.Main = (function($) {
                     var chart_str = JSON.stringify(chartdata, null, 4);
                     console.log(chart_str);
 
-                    // DNS Infos
-                    //$('.total_queries').text('Total Queries: ');
-                    //$('.blocked_queries').text('Blocked Queries: ');
-                    //$('.ad_percentage').text('Pecentage of ads: ');
-                    //$('.total_queries').text(chartdata.total_queries);
-                    //$('.blocked_queries').text(chartdata.total_blocked_queries);
-                    //var percentage = Math.round((chartdata.total_blocked_queries/chartdata.total_queries * 100) * 100) / 100;
-                    //$('.ad_percentage').text(percentage);
-
                     drawChart(chartdata);
                     var ol = $('.js-filtered-sites').find('ol');
                     ol.empty();
                     for(var i=0;i<chartdata.filtered_pages.length;i++){
                         var li = $('<li></li>');
                         li.text(chartdata.filtered_pages[i]['url'] + ' - ' + chartdata.filtered_pages[i]['count']);
+                        ol.append(li);
+                    }
+                    var ol = $('.js-blocked-sites').find('ol');
+                    ol.empty();
+                    for(var i=0;i<chartdata.blocked_pages.length;i++){
+                        var li = $('<li></li>');
+                        li.text(chartdata.blocked_pages[i]['url'] + ' - ' + chartdata.blocked_pages[i]['count']);
                         ol.append(li);
                     }
 

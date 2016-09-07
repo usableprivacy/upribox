@@ -61,5 +61,9 @@ msgstr "blocked domains"
 msgid "Top gefilterte Inhalte"
 msgstr "most filtered contents"
 
+#: statistics/templates/statistics.html:60
+msgid "Top geblockte Domains"
+msgstr "most blocked domains"
+
 #~ msgid "Besuchte Webseiten"
 #~ msgstr "visited websites"

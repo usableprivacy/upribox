@@ -50,10 +50,15 @@ def json_statistics(request):
 
     privoxy_log = PrivoxyLogEntry.objects.values('url').annotate(Count('pk')).order_by('-pk__count')
     filtered_pages = list()
+    dnsmasq_log = DnsmasqBlockedLogEntry.objects.values('url').annotate(Count('pk')).order_by('-pk__count')
+    blocked_pages = list()
 
     for entry in privoxy_log[0:5]:
         #print entry
         filtered_pages.append({"url": entry['url'], "count": entry['pk__count']})
+    for entry in dnsmasq_log[0:5]:
+        #print entry
+        blocked_pages.append({"url": entry['url'], "count": entry['pk__count']})
 
     today = datetime.now().date()
     total_blocked_queries = DnsmasqBlockedLogEntry.objects.count()
@@ -68,6 +73,7 @@ def json_statistics(request):
                                         'series': pie2_data
                                     },
                                     'filtered_pages': filtered_pages,
+                                    'blocked_pages': blocked_pages,
                                     'bar_data': {
                                         'labels': months,
                                         'series': monthly
