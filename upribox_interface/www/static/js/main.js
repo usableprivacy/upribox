@@ -181,14 +181,23 @@ UPRIBOX.Main = (function($) {
                 data: {'csrfmiddlewaretoken': Cookies.get('csrftoken')},
                 type: 'post',
 
-                success: function (chart) {
-                    console.log("chart " + href + " data: " + chart);
-                    drawChart(chart.data);
+                success: function (chartdata) {
+                    var chart_str = JSON.stringify(chartdata, null, 4);
+                    console.log(chart_str);
+
+                    drawChart(chartdata);
+                    var ol = $('.js-filtered-sites').find('ol');
+                    ol.empty();
+                    for(var i=0;i<chartdata.filtered_pages.length;i++){
+                        var li = $('<li></li>');
+                        li.text(chartdata.filtered_pages[i]['url'] + ' - ' + chartdata.filtered_pages[i]['count']);
+                        ol.append(li);
+                    }
                     var ol = $('.js-blocked-sites').find('ol');
                     ol.empty();
-                    for(var i=0;i<chart.blocked_sites.length;i++){
+                    for(var i=0;i<chartdata.blocked_pages.length;i++){
                         var li = $('<li></li>');
-                        li.text(chart.blocked_sites[i]['url'] + ' - ' + chart.blocked_sites[i]['count']);
+                        li.text(chartdata.blocked_pages[i]['url'] + ' - ' + chartdata.blocked_pages[i]['count']);
                         ol.append(li);
                     }
 
@@ -201,7 +210,7 @@ UPRIBOX.Main = (function($) {
      * Draw Chartist chart
      * @param data
      */
-    function drawChart(data) {
+    function drawChart(chartdata) {
         /** upribox statistics sample code  **/
         //Chartist js-library (https://gionkunz.github.io/chartist-js/)
 
@@ -216,18 +225,86 @@ UPRIBOX.Main = (function($) {
         //        [2382, 2392, 2933, 3238, 3448]
         //    ]
         //};
-        var options = {
-            scaleMinSpace: 1000,
-            showPoint: false,
-            lineSmooth: false,
-            axisX: {
-                showGrid: true,
-                showLabel: true
-            },
-            axisY: {}
+        // var data = {
+        //     labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8', 'W9', 'W10'],
+        //     series: [
+        //         [1, 2, 4, 8, 6, -2, -1, -4, -6, -2]
+        //     ]
+        // };
+
+        var bar_options = {
+            stackBars: true,
+            axisY: {
+                onlyInteger: true
+            }
         };
-        new Chartist.Line('.ct-chart', data, options);
+
+        new Chartist.Bar('.ct-chart', chartdata.bar_data, bar_options);
+
+        
+        var pie1_percentage = Math.round((chartdata.pie1_data.series[1] / (chartdata.pie1_data.series[0] + chartdata.pie1_data.series[1]) * 100) * 100) / 100;
+        var pie2_percentage = Math.round((chartdata.pie2_data.series[1] / (chartdata.pie2_data.series[0] + chartdata.pie2_data.series[1]) * 100) * 100) / 100;
+
+        var pie1_options = {
+            donut: true,
+            donutWidth: 60,
+            width: '300px',
+            hight: '300px',
+            labelInterpolationFnc: function(value) {
+                return value;
+            },
+            plugins: [
+                Chartist.plugins.fillDonut({
+                    items: [{
+                        content: '<i class="fa fa-tachometer"></i>',
+                        position: 'bottom',
+                        offsetY : 10,
+                        offsetX: -2
+                    }, {
+                        content: '<h3>' + pie1_percentage + '%<br><span class="small">blocked</span></h3>'
+                    }]
+                })
+            ],
+        };
+
+        var pie2_options = {
+            donut: true,
+            donutWidth: 60,
+            width: '300px',
+            hight: '300px',
+            labelInterpolationFnc: function(value) {
+                return value;
+            },
+            plugins: [
+                Chartist.plugins.fillDonut({
+                    items: [{
+                        content: '<i class="fa fa-tachometer"></i>',
+                        position: 'bottom',
+                        offsetY : 10,
+                        offsetX: -2
+                    }, {
+                        content: '<h3>' + pie2_percentage + '%<br><span class="small">blocked</span></h3>'
+                    }]
+                })
+            ],
+        };
+
+        new Chartist.Pie('.ct-pie1', chartdata.pie1_data, pie1_options);
+        new Chartist.Pie('.ct-pie2', chartdata.pie2_data, pie2_options);
+
+        // var options = {
+        //     scaleMinSpace: 1000,
+        //     showPoint: false,
+        //     lineSmooth: false,
+        //     axisX: {
+        //         showGrid: true,
+        //         showLabel: true
+        //     },
+        //     axisY: {}
+        // };
+        // new Chartist.Line('.ct-chart', data, options);
     }
+
     /**
      * Enables or disables a service
      * @param url

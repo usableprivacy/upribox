@@ -984,23 +984,27 @@ article p strong {
     background-position: -55px -385px;
 }
 
-.legend-blocked-websites {
+.legend {
+    margin-bottom: 40px;
+}
+
+.legend-blocked-domains {
     float: left;
     width: 60px;
-    height: 1px;
+    height: 0px;
     margin-top: 15px;
     margin-right: 10px;
-    border-bottom: 3px solid #fa2200;
+    border: 5px solid #d70206;
 
 
 }
 .legend-filtered-content {
     float: left;
     width: 60px;
-    height: 1px;
+    height: 0px;
     margin-top: 15px;
     margin-right: 10px;
-    border-bottom: 3px dotted #fa2200;
+    border: 5px solid #f4c63d;
 }
 
 .hidden {
@@ -1016,7 +1020,107 @@ article p strong {
 /** Chartist Styling **/
 .ct-chart {
     background-color: #f4f4f4;
+}
 
+.ct-chart .ct-bar {
+    stroke-width: 60px;
+}
+
+.ct-pies {
+    width: 650px;
+    height: 300px;
+    margin-bottom: 40px;
+}
+
+.ct-label {
+  text-anchor: middle;
+  alignment-baseline: middle;
+  font-size: 20px;
+}
+
+.ct-pie1, .ct-pie1-label {
+    width: 300px;
+    float: left;
+    text-align: center;
+}
+
+.ct-pie2, .ct-pie2-label {
+    width: 300px;
+    float: right;
+    text-align: center;
+}
+
+.ct-series-b .ct-bar {
+    stroke: #f4c63d
+}
+
+.ct-pie1-label-mobile {
+        display: none;
+    }
+
+.small {
+    font-size: 70%;
+}
+
+.lists {
+    width: 650px;
+    height: 300px;
+}
+
+/*.statistics {*/
+    /*display: inline-block;*/
+/*}*/
+
+.js-filtered-sites {
+    width: 300px;
+    float: left;
+}
+
+.js-blocked-sites {
+    width: 300px;
+    float: left;
+}
+
+@media only screen and (max-width: 650px) {
+    .ct-chart .ct-bar {
+        stroke-width: 30px;
+    }
+
+    .ct-pie1-label-mobile {
+        display: block;
+        text-align: center;
+    }
+
+    .ct-pie1-label {
+        display: none;
+    }
+
+    .ct-pies {
+        width: auto;
+        height: 650px;
+    }
+
+    .ct-pie1, .ct-pie1-label-mobile {
+        float: none;
+        width: auto;
+    }
+
+    .ct-pie1-label {
+        margin-bottom: 10px;
+    }
+
+    .ct-pie2, .ct-pie2-label {
+        float: none;
+        width: auto;
+    }
+
+    .js-filtered-sites {
+        float: none;
+    }
+
+    .js-blocked-sites {
+        float: none;
+    }
 }
 
 .error-message {

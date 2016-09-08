@@ -52,6 +52,6 @@ urlpatterns = [
 
     # statistics config
     url(r'^statistics/$', "statistics.views.get_statistics", name="upri_statistics"),
-    url(r'^statistics/get$', "statistics.views.json_statistics", name="upri_get_statistics"),
+    url(r'^statistics/get$', "statistics.views.json_statistics", name="upri_get_statistics")
 
 ]
