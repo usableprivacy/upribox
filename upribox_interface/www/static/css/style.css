@@ -1062,6 +1062,25 @@ article p strong {
     font-size: 70%;
 }
 
+.lists {
+    width: 650px;
+    height: 300px;
+}
+
+/*.statistics {*/
+    /*display: inline-block;*/
+/*}*/
+
+.js-filtered-sites {
+    width: 300px;
+    float: left;
+}
+
+.js-blocked-sites {
+    width: 300px;
+    float: left;
+}
+
 @media only screen and (max-width: 650px) {
     .ct-chart .ct-bar {
         stroke-width: 30px;
@@ -1093,6 +1112,14 @@ article p strong {
     .ct-pie2, .ct-pie2-label {
         float: none;
         width: auto;
+    }
+
+    .js-filtered-sites {
+        float: none;
+    }
+
+    .js-blocked-sites {
+        float: none;
     }
 }
 

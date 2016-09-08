@@ -255,8 +255,6 @@ def parse_dnsmasq_logs(arg):
             try:
                 conn = sqlite3.connect(dbfile)
                 c = conn.cursor()
-                # c.execute("DELETE FROM statistics_dnsmasqquerylogentry WHERE url <= date('now')")
-                # c.execute("DELETE FROM statistics_dnsmasqblockedlogentry WHERE url <= date('now')")
                 c.executemany("INSERT INTO statistics_dnsmasqquerylogentry(url,log_date) VALUES (?,?)", querylogentries)
                 c.execute("DELETE FROM statistics_dnsmasqquerylogentry WHERE log_date <= date('now','-6 month')")
                 c.executemany("INSERT INTO statistics_dnsmasqblockedlogentry(url,log_date) VALUES (?,?)", blockedlogentries)
