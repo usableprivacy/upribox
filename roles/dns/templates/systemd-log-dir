@@ -1,0 +1,1 @@
+d	{{default_settings.log.general.path}}/{{default_settings.log.dnsmasq.subdir}}	0755	dnsmasq	root	-	-
