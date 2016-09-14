@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-06 10:18+0000\n"
+"POT-Creation-Date: 2016-09-14 13:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -104,7 +104,7 @@ msgstr ""
 
 #: www/templates/faq.html:20
 msgid "Kontakt"
-msgstr "contact"
+msgstr "Contact"
 
 #: www/templates/faq.html:21
 #, python-format
@@ -116,7 +116,7 @@ msgid ""
 msgstr ""
 "\n"
 "Do you have additional questions regarding the upribox? Get in touch with "
-"the upribox developers!. Drop us an E-mail: <a href=\"mailto:%(email)s\">"
+"the upribox developers! Drop us an E-mail: <a href=\"mailto:%(email)s\">"
 "%(email)s</a>."
 
 #: www/templates/form.html:6

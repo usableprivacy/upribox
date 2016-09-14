@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-06 10:18+0000\n"
+"POT-Creation-Date: 2016-09-14 13:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -57,7 +57,7 @@ msgstr "filtered content"
 msgid "Geblockte Domains"
 msgstr "blocked domains"
 
-#: statistics/templates/statistics.html:31
+#: statistics/templates/statistics.html:32
 msgid "Top gefilterte Inhalte"
 msgstr "most filtered contents"
 
