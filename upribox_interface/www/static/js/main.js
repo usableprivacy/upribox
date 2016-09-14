@@ -175,6 +175,12 @@ UPRIBOX.Main = (function($) {
         if($('.ct-chart').length ) {
             var href = '/statistics/get';
 
+            $(".loading").show();
+            $(".ct-pies").hide();
+            $(".ct-chart").hide();
+            $(".legend").hide();
+            $(".lists").hide();
+
             $.ajax({
                 url: href,
                 dataType: 'json',
@@ -200,6 +206,12 @@ UPRIBOX.Main = (function($) {
                         li.text(chartdata.blocked_pages[i]['url'] + ' - ' + chartdata.blocked_pages[i]['count']);
                         ol.append(li);
                     }
+
+                    $(".loading").hide();
+                    $(".ct-pies").fadeIn();
+                    $(".ct-chart").fadeIn();
+                    $(".legend").fadeIn();
+                    $(".lists").fadeIn();
 
                 }
 
