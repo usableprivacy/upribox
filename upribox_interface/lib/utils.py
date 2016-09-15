@@ -62,7 +62,8 @@ def exec_upri_config(action, arg=''):
     else:
         rc = subprocess.call(['/usr/bin/sudo', '/usr/local/bin/upri-config.py', action, arg])
 
-        if rc != 0:
+        # action_parse_logs returns code 1 if new entries have been added
+        if rc > 1:
             raise AnsibleError('failed to execute action "%s" with argument "%s"' % (action, arg), rc)
 
         return rc
