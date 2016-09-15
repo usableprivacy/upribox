@@ -12,6 +12,7 @@
 {% block content %}
     <p><strong>{% trans "Die Statistiken liefern einen &Uuml;berblick &uuml;ber geblockte Domains und gefilterte Webinhalte." %}</strong></p>
 
+    <div class="loading"></div>
     <div class="ct-pies">
         <p>{% trans "Anzahl der geblockten (rosa) vs. werbefreien (rot) Domains" %}</p>
         <div class="ct-pie1 ct-perfect-fourth"></div>
@@ -29,7 +30,7 @@
 
     <div class="lists">
 
-        <div class="column column-4 statistics js-filtered-sites"><p class="icon i-ugly">{% trans "Top gefilterte Inhalte" %}</p>
+        <div class="column column-4 statistics js-filtered-sites"><p class="icon i-bad">{% trans "Top gefilterte Inhalte" %}</p>
             <ol></ol>
         </div>
 
@@ -57,7 +58,7 @@
 {#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
 {#        <li>orf.at - 200 000 geblockte Inhalte</li></ol></div>#}
 
-        <div class="column column-4 statistics js-blocked-sites"><p class="icon i-bad">{% trans "Top geblockte Domains" %}</p>
+        <div class="column column-4 statistics js-blocked-sites"><p class="icon i-ugly">{% trans "Top geblockte Domains" %}</p>
             <ol></ol>
         </div>
 {#        <div class="column column-4 statistics js-blocked-sites"><p class="icon i-good">{% trans "Good" %}</p>#}

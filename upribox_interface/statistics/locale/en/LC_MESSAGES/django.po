@@ -59,7 +59,7 @@ msgstr "blocked domains"
 
 #: statistics/templates/statistics.html:32
 msgid "Top gefilterte Inhalte"
-msgstr "most filtered contents"
+msgstr "most filtered content"
 
 #: statistics/templates/statistics.html:60
 msgid "Top geblockte Domains"

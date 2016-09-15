@@ -120,23 +120,25 @@ def action_generate_profile(profile_id):
 #
 # parse the privoxy and dnsmasq logfiles and insert data into django db
 # return values:
-# 16: database error
-# 20: new entries have been added
+# 16: error
+# 1: new entries have been added
+# 0: no changes
 def action_parse_logs(arg):
     dnsmasq_val = parse_dnsmasq_logs(arg)
     privoxy_val = parse_privoxy_logs(arg)
-    if privoxy_val == dnsmasq_val:
-        return privoxy_val
-    elif privoxy_val > dnsmasq_val:
-        return privoxy_val
+    if 16 in (privoxy_val, dnsmasq_val):
+        return 16
+    elif 1 in (privoxy_val, dnsmasq_val):
+        return 1
     else:
-        return dnsmasq_val
+        return 0
 
 #
 # parse the privoxy logfiles and insert data into django db
 # return values:
-# 16: database error
-# 20: new entries have been added
+# 16: error
+# 1: new entries have been added
+# 0: no changes
 def parse_privoxy_logs(arg):
     rlog = re.compile('(\d{4}-\d{2}-\d{2} (\d{2}:?){3}).\d{3} [a-z0-9]{8} Crunch: Blocked: (.*)')
 
@@ -184,6 +186,7 @@ def parse_privoxy_logs(arg):
                 print
                 "failed to write to database"
                 return 16
+            return 1
 
 
     else:
@@ -199,8 +202,9 @@ def parse_privoxy_logs(arg):
 # DnsmasqQueryLogEntry contains all queries (blocked and unblocked)
 # DnsmasqFilteredLogEntry contains only blocked queries
 # return values:
-# 16: database error
-# 20: new entries have been added
+# 16: error
+# 1: new entries have been added
+# 0: no changes
 def parse_dnsmasq_logs(arg):
     queryPattern = re.compile('([a-zA-Z]{3} ? \d{1,2} (\d{2}:?){3}) dnsmasq\[[0-9]*\]: query\[[A-Z]*\] (.*) from ([0-9]+.?){4}')
     blockedPattern = re.compile('([a-zA-Z]{3} ? \d{1,2} (\d{2}:?){3}) dnsmasq\[[0-9]*\]: config (.*) is 192.168.55.254')
@@ -269,6 +273,7 @@ def parse_dnsmasq_logs(arg):
                 print
                 "failed to write to database"
                 return 16
+            return 1
 
     else:
         print

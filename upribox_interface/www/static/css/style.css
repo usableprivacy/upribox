@@ -1184,3 +1184,10 @@ article p strong {
   stroke-dasharray: 7px 7px;
 
 }
+
+
+.loading {
+    height:     350px;
+    width:      100%;
+    background: url('../img/loading_132.gif') no-repeat center;
+}

@@ -159,12 +159,11 @@
   tags:
     - upri_config
 
-# not needed anymore: statistics are updated on page load
-#- name: update block statistics
-#  shell: "/usr/local/bin/upri-config.py parse_logs"
-#  register: update_result
-#  changed_when: "update_result.rc == 20"
-#  failed_when: "update_result.rc != 0 and update_result.rc != 20"
+- name: update block statistics
+  shell: "/usr/local/bin/upri-config.py parse_logs"
+  register: update_result
+  changed_when: "update_result.rc == 1"
+  failed_when: "update_result.rc != 0 and update_result.rc != 1"
 
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/supervisor mode=0644
