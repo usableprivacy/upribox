@@ -11,8 +11,8 @@ The [upribox](https://upribox.org) software is used to create Raspberry Pi image
 See the [official Raspberry Pi documentation](https://www.raspberrypi.org/documentation/installation/installing-images/) for pointers on how to install the upribox image on the SD card. Upon the first boot the SSH/VPN keys are automatically re-generated (this will take a couple of minutes), and the system partitions are resized to use the entire size of the SD card.
 In the following you also find a list of required (and tested hardware) for the upribox software. Make sure that you use a compatible USB WiFi dongle!
 
-### [upribox-image-v0_5.zip](https://s3-us-west-2.amazonaws.com/usableprivacy/upribox-image-v0_5.zip) (May 2016)
-*SHA1Sum: c48c4a7e620fad18e58f306003a0c83346bf94d2*
+### [upribox-image-v0_7.zip](https://github.com/usableprivacy/upribox/releases/download/v0.7/upribox-image-v0_7.zip) (Sep 2016)
+*SHA256: 455851bc4309f2cdcec0e2b66e6845f8fe06efaa88d2c0248a4890891ab893e0*
 
 #### Default passwords
 * **Silent WiFi** (SSID: *upribox* ), **Ninja WiFi** (SSID: *upribox-ninja*), password: *changeme*
