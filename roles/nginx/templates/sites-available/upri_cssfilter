@@ -17,6 +17,13 @@ server {
         rewrite_by_lua '
             local cssdomain = string.match(ngx.var.uri, "(%w+%.%w+)/")
             local css = require "css"
+
+            local whitelisted = css.is_whitelisted(cssdomain)
+
+            if whitelisted then
+                return ngx.redirect("/whitelist.css")
+            end
+
             local special = css.is_special(cssdomain)
 
             if special then
@@ -46,5 +53,9 @@ server {
             ngx.header["Cache-Control"] = "max-age=86400"
             ngx.print(csscontent)
         ';
+    }
+
+    location ~ ^/whitelist.css {
+        return 204;
     }
 }
