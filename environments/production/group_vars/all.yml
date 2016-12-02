@@ -99,6 +99,9 @@ default_settings:
       logfiles:
         logname: 'openvpn.log'
         status: 'openvpn-status.log'
+      connection:
+        port: 1194
+        protocol: 'TCP'
     rsyslog:
       subdir: 'rsyslog'
       logfiles:
