@@ -16,11 +16,12 @@ PORT = {{vpn_port}}
 PUB_IP_REGEX = r'\bPublic IP address : (?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b'
 IPV4_REGEX = r'\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b'
 
+debug = False
+
 # Comparison of public IP with saved one, if new is found, update dns
 # return values:
 # 1: error in file handling(read/write) 
-def cmp_ip(pub_ip):
-
+def update_public_ip(pub_ip):
     # Load saved public IP
     try:
         if debug:
@@ -71,109 +72,157 @@ def dns_update():
 
     return 0
 
-debug = False
-if len(sys.argv) > 1:
-    debug = sys.argv[1] == '--debug'
 
-### Check if UPNP is available and set port forwarding
-upnpc = miniupnpc.UPnP()
+def get_upnp_devices():
+    ### Check if UPNP is available and set port forwarding
+    upnpc = miniupnpc.UPnP()
 
-# Discover UPNP devices
-upnpc.discoverdelay = 200
+    # Discover UPNP devices
+    upnpc.discoverdelay = 200
 
-if debug:
-    print 'Check UPNP Support'
-
-pub_ip = None
-try:
-    ndevices = upnpc.discover()
     if debug:
-        print ' %d UPNP device(s) detected' % (ndevices)
+        print 'Check UPNP Support'
 
-    if ndevices:
-        upnpc.selectigd()
-        pub_ip = upnpc.externalipaddress() 
-except Exception:
-    if debug:
-        print ' No appropriate UPNP device available' 
-
-# If UPNP device with public IP is found activate port forwarding  
-if pub_ip:
-    if debug:
-        print ' internal ip: ', upnpc.lanaddr
-        print ' external ip: ', pub_ip
-        print ' status: %s, connection type: %s' % (upnpc.statusinfo(), upnpc.connectiontype())
-
-    # Check current port mapping status
     try:
-        r = upnpc.getspecificportmapping(PORT, 'UDP')
+        ndevices = upnpc.discover()
+        if debug:
+            print ' %d UPNP device(s) detected' % (ndevices)
 
-        if r is None:
-            if debug:
-                print ' Enable port forwarding with UPNP'
-            s = upnpc.addportmapping(PORT, 'UDP', upnpc.lanaddr, PORT, 'upri.box OpenVPN port', '')
-    
+        if ndevices:
+            upnpc.selectigd()
+            return upnpc
+    except Exception:
+        if debug:
+            print ' No appropriate UPNP device available'
+        return None
+
+
+def get_upnp_public_ip(upnp_devices):
+    public_ip = None
+    try:
+        public_ip = upnp_devices.externalipaddress()
+    except:
+        if debug:
+            print "Could not get public IP via upnp."
+    # If UPNP device with public IP is found activate port forwarding
+    if public_ip and debug:
+        print ' internal ip: ', upnp_devices.lanaddr
+        print ' external ip: ', public_ip
+        print ' status: %s, connection type: %s' % (upnp_devices.statusinfo(), upnp_devices.connectiontype())
+    return public_ip
+
+
+def set_upnp_port_mapping(upnp_devices):
+    # Check current port mapping status
+    port_available = False
+    port_response = None
+    port_already_mapped = False
+
+    try:
+        port_response = upnp_devices.getspecificportmapping(PORT, 'UDP')
+        if port_response is None:
+            port_available = True
+        else:
+            if 'upri.box OpenVPN port' in port_response[2]:
+                if debug:
+                    print ' upri.box OpenVPN port already mapped!'
+                port_already_mapped = True
+                return True
+            elif debug:
+                print ' Port already in use by other application!', port_response
+    except:
+        print "Could probe if upnp port is available"
+
+    if debug:
+        print ' Enable port forwarding with UPNP'
+
+    if port_available and not port_already_mapped:
+        try:
+            s = upnp_devices.addportmapping(PORT, 'UDP', upnp_devices.lanaddr, PORT, 'upri.box OpenVPN port', '')
             if s:
                 if debug:
-                    print ' Successful port mapping,  %s:%s - %s:%s' % ( upnpc.lanaddr, PORT, upnpc.externalipaddress(), PORT) 
-                cmp_ip(pub_ip)
-            
-            elif debug: 
-                print ' Error: Unable to map port'
-     
-        else:
-            if 'upri.box OpenVPN port' in r[2]:
-                if debug: 
-                    print ' upri.box OpenVPN port already mapped!'    
-                cmp_ip(pub_ip)
-            elif debug:
-                print ' Port already in use by other application!', r
-    except Exception:
-         if debug:
-            print ' Execption: Adding port mapping not possible'
-    
-### Check NATPMP support     
-else:
-    try:    
+                    print 'Successful port mapping,  %s:%s - %s:%s' % (upnp_devices.lanaddr, PORT, upnp_devices.externalipaddress(), PORT)
+                    return True
+        except:
+            return False
+    if debug:
+        print ' Execption: Adding port mapping not possible'
+
+    return False
+
+
+def check_natpmp_support():
+    natpmp_chk = 'natpmpc'
+
+    p = subprocess.Popen(natpmp_chk, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = p.communicate()
+    return_code = p.returncode
+
+    if return_code == 0:
         if debug:
-            print 'Check NATPMP Support'
+            print 'NATPMP supported.'
+        return True
+    elif debug:
+        print "NATPMP not supported: " + stderr
 
-        natpmp_chk = 'natpmpc'
-        p = subprocess.Popen(natpmp_chk, stdout=subprocess.PIPE, stderr=None)
-        retcode = p.wait()
-        status = p.communicate()[0]
-
-        if debug:
-            print ' NATPMP Status:'
-            print status
+    return False
 
 
-        # If NATPMP avaiable - enable port forwarding
-        if ('readnatpmpresponseorretry returned 0' in status) :    
+def set_natpmp_mapping():
+    natpmp_en = ['natpmpc', '-a', str(PORT), str(PORT), 'udp', '86400']
+    p = subprocess.Popen(natpmp_en, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = p.communicate()
+    return_code = p.returncode
+
+    if debug:
+        print stdout, stderr
+
+    if return_code != 0:
+        return False
+
+    for line in stdout:
+        if re.match(PUB_IP_REGEX, line):
+            pub_ip_natpmp = line
+            public_ip = re.findall(IPV4_REGEX, pub_ip_natpmp)
             if debug:
-                print ' Enable port forwarding with NATPMP'
+                print ' public IP: ', public_ip
+            update_public_ip(public_ip)
 
-            natpmp_en = ['natpmpc', '-a', str(PORT), str(PORT), 'udp', '86400']
-            p = subprocess.Popen(natpmp_en, stdout=subprocess.PIPE, stderr=None)
-            retcode = p.wait()
-            status = p.communicate()[0]
+    return True
 
-            if debug:
-                print status
 
-        for line in status:
-            if re.match(PUB_IP_REGEX, line):
-                pub_ip_natpmp = line
+def main():
 
-                pub_ip = re.findall(IPV4_REGEX,pub_ip_natpmp)
-                if debug:
-                    print ' public IP: ', pub_ip
-                cmp_ip(pub_ip)
+    if len(sys.argv) > 1 and sys.argv[1] == '--debug':
+        global debug
+        debug = True
 
-    except Exception, e:
-        if debug:
-            print ' Exception :', e
+    public_ip = None
+    upnpn_mapping_successful = False
+    natpmp_mapping_successful = False
 
-    # Perform DNS update in case UPNP and NATPMP aren't available
-    else:
-        dns_update()
+    upnp_devices = get_upnp_devices()
+
+    if upnp_devices:
+        public_ip = get_upnp_public_ip(upnp_devices)
+        upnpn_mapping_successful = set_upnp_port_mapping(upnp_devices)
+    elif debug:
+        print "UPNP not supported."
+
+    if public_ip is not None and upnpn_mapping_successful:
+        update_public_ip(public_ip)
+        sys.exit(0)
+
+    if check_natpmp_support():
+        natpmp_mapping_successful = set_natpmp_mapping()
+    elif debug:
+        print "NATPMP not supported."
+
+    if natpmp_mapping_successful:
+        sys.exit(0)
+
+    dns_update()
+
+
+if __name__ == "__main__":
+    main()
