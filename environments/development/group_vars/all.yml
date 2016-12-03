@@ -38,6 +38,9 @@ default_settings:
   vpn:
     general:
       enabled: 'yes'
+    connection:
+      port: 1194
+      protocol: 'UDP'
   log:
     general:
       path: '/var/log/log'
@@ -86,9 +89,6 @@ default_settings:
       logfiles:
         logname: 'openvpn.log'
         status: 'openvpn-status.log'
-      connection:
-        port: 1194
-        protocol: 'TCP'
     rsyslog:
       subdir: 'rsyslog'
       logfiles:
