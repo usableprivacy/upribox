@@ -11,6 +11,7 @@ from os.path import exists
 
 # Port for OpenVPN
 PORT = {{vpn_port}}
+PROTOCOL = '{{vpn_protocol}}'
 
 # Regex for parsing NATPMP output
 PUB_IP_REGEX = r'\bPublic IP address : (?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b'
@@ -119,7 +120,7 @@ def set_upnp_port_mapping(upnp_devices):
     port_already_mapped = False
 
     try:
-        port_response = upnp_devices.getspecificportmapping(PORT, 'UDP')
+        port_response = upnp_devices.getspecificportmapping(PORT, str(PROTOCOL))
         if port_response is None:
             port_available = True
         else:
@@ -138,7 +139,7 @@ def set_upnp_port_mapping(upnp_devices):
 
     if port_available and not port_already_mapped:
         try:
-            s = upnp_devices.addportmapping(PORT, 'UDP', upnp_devices.lanaddr, PORT, 'upri.box OpenVPN port', '')
+            s = upnp_devices.addportmapping(PORT, str(PROTOCOL), upnp_devices.lanaddr, PORT, 'upri.box OpenVPN port', '')
             if s:
                 if debug:
                     print 'Successful port mapping,  %s:%s - %s:%s' % (upnp_devices.lanaddr, PORT, upnp_devices.externalipaddress(), PORT)
@@ -169,7 +170,7 @@ def check_natpmp_support():
 
 
 def set_natpmp_mapping():
-    natpmp_en = ['natpmpc', '-a', str(PORT), str(PORT), 'udp', '86400']
+    natpmp_en = ['natpmpc', '-a', str(PORT), str(PORT), str(PROTOCOL), '86400']
     p = subprocess.Popen(natpmp_en, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = p.communicate()
     return_code = p.returncode

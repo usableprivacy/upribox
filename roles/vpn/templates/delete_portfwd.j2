@@ -8,6 +8,7 @@ import subprocess
 
 # Port for OpenVPN
 PORT = {{vpn_port}}
+PROTOCOL = '{{vpn_protocol}}'
 
 debug = False
 if len(sys.argv) > 1:
@@ -45,13 +46,13 @@ if pub_ip:
 
 	# Check current port mapping status
     try:
-        r = upnpc.getspecificportmapping(PORT, 'UDP')
+        r = upnpc.getspecificportmapping(PORT, PROTOCOL)
 
         if 'upri.box OpenVPN port' in r[2]:
             if debug:
                 print ' Delete port forwarding with UPNP'
 
-            r = upnpc.deleteportmapping(PORT, 'UDP')
+            r = upnpc.deleteportmapping(PORT, PROTOCOL)
             if debug:
                 if r is None:
                     print ' Successful deleted'
@@ -78,7 +79,7 @@ else:
         if ('readnatpmpresponseorretry returned 0' in status) :	
             if debug:
                 print ' Delete port forwarding with NATPMP'
-            natpmp_en = ['natpmpc', '-a', str(PORT), str(PORT), 'udp', '0']
+            natpmp_en = ['natpmpc', '-a', str(PORT), str(PORT), PROTOCOL, '0']
 
             p = subprocess.Popen(natpmp_en, stdout=subprocess.PIPE, stderr=None)
             retcode = p.wait()
