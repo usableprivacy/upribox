@@ -21,7 +21,8 @@ COMMIT
 -A INPUT -i lo -j ACCEPT
 -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
 -A OUTPUT -p icmp --icmp-type echo-reply -j ACCEPT
--A INPUT -p tcp -j REJECT --dport 443 --reject-with tcp-reset
+-A INPUT -p tcp -d 192.168.55.254 -j REJECT --dport 443 --reject-with tcp-reset
+-A INPUT -p tcp -d 192.168.155.254 -j REJECT --dport 443 --reject-with tcp-reset
 -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
 -A INPUT -p udp -m udp --dport 53 -j ACCEPT
 -A INPUT -p udp -m udp --sport 67:68 --dport 67:68 -j ACCEPT
