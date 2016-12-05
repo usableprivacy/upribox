@@ -358,9 +358,11 @@ def action_set_vpn(arg):
 def action_set_vpn_connection(arg):
     '1194/udp'
     port, protocol = arg.split('/')
-    protocol.upper()
-    if not int(port) in range(1,65535) or protocol not in ['UDP', 'TCP']:
+    protocol = protocol.upper()
+    if not int(port) in range(1025,65535) or protocol not in ['UDP', 'TCP']:
         print 'error: only valid "port/protocol" combinations are allowed e.g. "1194/UDP"'
+        print 'port must be unprivileged: 1025 - 65535'
+        print 'protocol can be either UDP or TCP'
         return 10
     print 'vpn connection: %s' % arg
     vpn_connection = {"connection": {"port": port, "protocol": protocol}}
