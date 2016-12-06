@@ -186,10 +186,14 @@
 - name: get tls-auth content
   shell: "cat /etc/openvpn/ca/tls-auth.key"
   register: tls_auth
+  tags:
+    - toggle_vpn
 
 - name: get ca cert content
   shell: "cat /etc/openvpn/ca/caCert.pem"
   register: ca_cert
+  tags:
+    - toggle_vpn
 
 - name: copy client config template
   template: src=client_template dest=/etc/openvpn/client_template mode=640 owner=root group=root
