@@ -26,13 +26,16 @@
                     <p>{% trans "VPN läuft" %}</p>
                     <button class="js-toggle-button" data-state-enabled="no" href="{% url 'upri_vpn_toggle' %}">{% trans "Ausschalten" %}</button>
                 </div>
+            {% get_fact 'vpn' 'connection' 'port' as vpn_port%}
+            {% get_fact 'vpn' 'connection' 'protocol' as vpn_protocol%}
                 <div class="switch icon i-bad" id="vpn_connection_button">
                     <p id="vpn_connection_text">{% trans "VPN Verbindung wird getestet..." %}</p>
                 </div>
                 <div id="vpn_connection_help" style="display:none">{% trans "Ihre upribox ist nicht aus dem Internet erreichbar. Ermöglichen Sie den Zugriff indem Sie:" %}
                 <ul>
                     <li>{% trans "UPnP oder NAT-PMP auf Ihrem Router (Gateway) aktivieren, oder" %}</li>
-                    <li>{% trans "eine Port-Weiterleitung auf Ihrem Router für UDP-Port 1194 zu Ihrer upribox konfigurieren!" %}</li>
+                    <li>{% blocktrans %}eine Port-Weiterleitung auf Ihrem Router für {{vpn_protocol}}-Port {{vpn_port}} zu Ihrer upribox konfigurieren!{% endblocktrans %}</li>
+
                 </ul>
                 </div>
                 <script>

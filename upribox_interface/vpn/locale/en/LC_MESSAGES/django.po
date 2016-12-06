@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-14 13:09+0000\n"
+"POT-Creation-Date: 2016-12-06 19:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,8 +75,6 @@ msgid "Generieren des VPN Profiles erfolgreich."
 msgstr "VPN profile successfully generated."
 
 #: vpn/jobs.py:45
-#, fuzzy
-#| msgid "Generieren des VP Profiles fehlgeschlagen."
 msgid "Generieren des VPN Profiles fehlgeschlagen."
 msgstr "generation of VPN profile failed."
 
@@ -89,8 +87,6 @@ msgid "Entfernen des VPN Profiles erfolgreich."
 msgstr "VPN profile sucessfully removed."
 
 #: vpn/jobs.py:58
-#, fuzzy
-#| msgid "Entfernen des VP Profiles fehlgeschlagen."
 msgid "Entfernen des VPN Profiles fehlgeschlagen."
 msgstr "Removal of VPN profile failed."
 
@@ -129,58 +125,58 @@ msgstr "VPN actived"
 msgid "Ausschalten"
 msgstr "disable"
 
-#: vpn/templates/vpn.html:30
+#: vpn/templates/vpn.html:32
 msgid "VPN Verbindung wird getestet..."
 msgstr "testing VPN connection..."
 
-#: vpn/templates/vpn.html:32
+#: vpn/templates/vpn.html:34
 msgid ""
 "Ihre upribox ist nicht aus dem Internet erreichbar. Ermöglichen Sie den "
 "Zugriff indem Sie:"
 msgstr ""
 "Your upribox is not accessible via the Internet. Try one of the following:"
 
-#: vpn/templates/vpn.html:34
+#: vpn/templates/vpn.html:36
 msgid "UPnP oder NAT-PMP auf Ihrem Router (Gateway) aktivieren, oder"
 msgstr "activate UPnP or NAT-PMP on your router/modem, or"
 
-#: vpn/templates/vpn.html:35
+#: vpn/templates/vpn.html:37
 msgid ""
-"eine Port-Weiterleitung auf Ihrem Router für UDP-Port 1194 zu Ihrer upribox "
-"konfigurieren!"
+"eine Port-Weiterleitung auf Ihrem Router für %(vpn_protocol)s-Port "
+"%(vpn_port)s zu Ihrer upribox konfigurieren!"
 msgstr ""
-"configure a port-forwarding rule from your router to UDP port 1194 of your "
-"upribox."
+"configure a port-forwarding rule from your router to %(vpn_protocol) port "
+"%(vpn_port) of your upribox."
 
-#: vpn/templates/vpn.html:58
+#: vpn/templates/vpn.html:61
 msgid "\"Die upribox ist nicht erreichbar.\""
 msgstr "\"upribox is not reachable.\""
 
-#: vpn/templates/vpn.html:62
+#: vpn/templates/vpn.html:65
 msgid "\"Die upribox ist erreichbar.\""
 msgstr "\"upribox is reachable.\""
 
-#: vpn/templates/vpn.html:65
+#: vpn/templates/vpn.html:68
 msgid "\"Fehler beim Testen der Verbindung: \""
 msgstr "\"error testing connectivity: \""
 
-#: vpn/templates/vpn.html:74
+#: vpn/templates/vpn.html:77
 msgid "VPN läuft nicht"
 msgstr "VPN deactivated"
 
-#: vpn/templates/vpn.html:75
+#: vpn/templates/vpn.html:78
 msgid "Einschalten"
 msgstr "enable"
 
-#: vpn/templates/vpn.html:85
+#: vpn/templates/vpn.html:88
 msgid "Information einklappen"
 msgstr "hide information"
 
-#: vpn/templates/vpn.html:85
+#: vpn/templates/vpn.html:88
 msgid "Wie funktioniert VPN?"
 msgstr "How does VPN work?"
 
-#: vpn/templates/vpn.html:87
+#: vpn/templates/vpn.html:90
 msgid ""
 "Mit Hilfe von VPN (Virtual Private Network) surfen sie unterwegs &uuml;ber "
 "ihre upribox. Um den Zugriff auf ihre upribox zu sch&uuml;tzen, erfordern "
@@ -191,11 +187,11 @@ msgstr ""
 "while on the road. Access to your upribox is protected via VPN user "
 "profiles. Create a VPN profile and download it to e.g. your smartphone."
 
-#: vpn/templates/vpn.html:89
+#: vpn/templates/vpn.html:92
 msgid "Das upribox-VPN blockiert Werbung automatisch."
 msgstr "upribox-VPN blocks advertisement automatically."
 
-#: vpn/templates/vpn.html:91
+#: vpn/templates/vpn.html:94
 #, python-format
 msgid ""
 "H&auml;ufig gestellte Fragen zur upribox finden Sie unter <a href="
@@ -204,19 +200,19 @@ msgstr ""
 "Answers to frequently asked questions (FAQ) can be found here: <a href="
 "\"%(faq_url)s\" title=\"FAQ\">Help</a>."
 
-#: vpn/templates/vpn.html:92
+#: vpn/templates/vpn.html:95
 msgid "Information ausblenden"
 msgstr "hide information"
 
-#: vpn/templates/vpn.html:97
+#: vpn/templates/vpn.html:100
 msgid "VPN-Profile"
 msgstr "VPN profile"
 
-#: vpn/templates/vpn.html:99
+#: vpn/templates/vpn.html:102
 msgid "Noch kein Profil erstellt. Erstellen Sie gleich ein Profil!"
 msgstr "No profiles found. Go ahead and create one!"
 
-#: vpn/templates/vpn.html:101
+#: vpn/templates/vpn.html:104
 #, python-format
 msgid ""
 "\n"
@@ -236,11 +232,11 @@ msgstr ""
 "\">Tunnelblick for Mac OS</a> or <a href=\"%(windows)s \">OpenVPN GUI for "
 "Windows</a>."
 
-#: vpn/templates/vpn.html:113
+#: vpn/templates/vpn.html:116
 msgid "Neues Profil erstellen"
 msgstr "create new profile"
 
-#: vpn/templates/vpn.html:127
+#: vpn/templates/vpn.html:130
 msgid "Generieren"
 msgstr "generate"
 
