@@ -193,6 +193,8 @@
 
 - name: copy client config template
   template: src=client_template dest=/etc/openvpn/client_template mode=640 owner=root group=root
+  tags:
+    - toggle_vpn
 
 - name: check if crl exists
   stat: path="/etc/openssl/demoCA/crl.pem"
@@ -213,6 +215,8 @@
     - restart openvpn
     - restart openvpn-su
   register: res
+  tags:
+    - toggle_vpn
   
 - name: remove log files from other environment
   file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
