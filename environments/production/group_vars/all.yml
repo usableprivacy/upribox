@@ -47,6 +47,9 @@ default_settings:
   vpn:
     general:
       enabled: 'no'
+    connection:
+      port: 1194
+      protocol: 'UDP'
   log:
     general:
       path: '/var/tmp/log'

@@ -9,5 +9,6 @@ ssl_pinning_path: "/usr/local/etc/upri-filter-update/update-server.pem"
 # client cert for DNS updates
 cert_dns_path: "/usr/local/etc/credentials.pem"
 
-# port for openvpn server
-vpn_port: 1194
+# port and protocol for openvpn server
+vpn_port: "{{ default_settings.vpn.connection.port if not (ansible_local is defined and ansible_local.vpn is defined and ansible_local.vpn.connection is defined) else ansible_local.vpn.connection.port | default(default_settings.vpn.connection.port) }}"
+vpn_protocol: "{{ default_settings.vpn.connection.protocol if not (ansible_local is defined and ansible_local.vpn is defined and ansible_local.vpn.connection is defined) else ansible_local.vpn.connection.protocol | default(default_settings.vpn.connection.protocol) }}"

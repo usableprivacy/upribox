@@ -353,6 +353,22 @@ def action_set_vpn(arg):
     write_role('vpn', vpn)
     return 0
 
+# return values:
+# 10: invalid argument
+def action_set_vpn_connection(arg):
+    '1194/udp'
+    port, protocol = arg.split('/')
+    protocol = protocol.upper()
+    if not int(port) in range(1025,65535) or protocol not in ['UDP', 'TCP']:
+        print 'error: only valid "port/protocol" combinations are allowed e.g. "1194/UDP"'
+        print 'port must be unprivileged: 1025 - 65535'
+        print 'protocol can be either UDP or TCP'
+        return 10
+    print 'vpn connection: %s' % arg
+    vpn_connection = {"connection": {"port": port, "protocol": protocol}}
+    write_role('vpn', vpn_connection)
+    return 0
+
 def action_restart_vpn(arg):
     print 'restarting vpn...'
     #return 0 # TODO implement
@@ -445,6 +461,7 @@ ALLOWED_ACTIONS = {
     'enable_tor': action_set_tor,
     'restart_tor': action_restart_tor,
     'enable_vpn': action_set_vpn,
+    'set_vpn_connection': action_set_vpn_connection,
     'restart_vpn': action_restart_vpn,
     'enable_ssh': action_set_ssh,
     'restart_ssh': action_restart_ssh,

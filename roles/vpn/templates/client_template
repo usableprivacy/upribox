@@ -1,8 +1,12 @@
 client
 comp-lzo
 dev tun
+{% if vpn_protocol == "UDP"%}
 proto udp
-remote <IP-ADRESS> 1194
+{% elif vpn_protocol == "TCP"%}
+proto tcp
+{% endif %}
+remote <IP-ADRESS> {{vpn_port}}
 # tls-remote server
 verify-x509-name server name
 key-direction 1
