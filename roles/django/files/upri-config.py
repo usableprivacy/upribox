@@ -448,8 +448,11 @@ def check_domain(arg):
 
 def action_restart_network(arg):
     print 'restarting network...'
-    #return 0 # TODO implement
     return call_ansible('network_config')
+
+def action_restart_firewall(arg):
+    print 'restarting firewall...'
+    return call_ansible('iptables')
 
 # add your custom actions here
 ALLOWED_ACTIONS = {
@@ -470,7 +473,8 @@ ALLOWED_ACTIONS = {
     'parse_logs': action_parse_logs,
     'generate_profile': action_generate_profile,
     'delete_profile': action_delete_profile,
-    'restart_network': action_restart_network
+    'restart_network': action_restart_network,
+    'restart_firewall': action_restart_firewall
 }
 
 #
