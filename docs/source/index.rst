@@ -3,23 +3,31 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to upribox's documentation!
-===================================
+*********************************
+Usable Privacy Box (**upribox**)
+*********************************
 
-Contents:
+
+**Privacy made easy for the Raspberry Pi 1, 2, and 3**
+
+The upribox software is used to create Raspberry Pi images to turn your Raspberry Pi into a privacy-enhancing Wireless router. Main features:
+
+ * Transparent advertisment- and tracker-blocking (silent wifi)
+ * Transparent adblocking + Tor network (ninja wifi)
+ * OpenVPN server for privacy on the road
+
+.. note:: The documentation of the upribox project is still in progress and `currently missing <https://github.com/usableprivacy/upribox/issues/37/>`_.
 
 .. toctree::
    :maxdepth: 2
 
    intro
-   security
-   privacy
-   networking
+   architecture
    modules
 
 
-Indices and tables
-==================
+indices
+*******************
 
 * :ref:`genindex`
 * :ref:`modindex`

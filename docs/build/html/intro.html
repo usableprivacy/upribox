@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Intro &#8212; upribox 0.7 documentation</title>
+    <title>Getting started &#8212; upribox 0.7 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,8 +26,8 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="upribox 0.7 documentation" href="index.html" />
-    <link rel="next" title="Security Features" href="security.html" />
-    <link rel="prev" title="Welcome to upribox’s documentation!" href="index.html" />
+    <link rel="next" title="Architecture" href="architecture.html" />
+    <link rel="prev" title="Usable Privacy Box (upribox)" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -42,27 +42,63 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="intro">
-<h1>Intro<a class="headerlink" href="#intro" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="getting-started">
-<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="getting-started">
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="hardware-requirements">
-<h3>Hardware requirements<a class="headerlink" href="#hardware-requirements" title="Permalink to this headline">¶</a></h3>
+<h2>Hardware requirements<a class="headerlink" href="#hardware-requirements" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="installation">
-<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="id1">
-<h3>Getting started<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h2>Getting started<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="customization">
+<h2>Customization<a class="headerlink" href="#customization" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="network">
+<h3>Network<a class="headerlink" href="#network" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="static-network-configuration">
+<h4>static network configuration<a class="headerlink" href="#static-network-configuration" title="Permalink to this headline">¶</a></h4>
+<p>Connect to your upribox via ssh and create a <strong>interfaces.fact</strong> file in
+the <em>/etc/ansible/facts.d</em> directory. The following interfaces
+configuration, will set the upribox to use a static IP configuration:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;general&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;static&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;static&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.203.95.160&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;netmask&quot;</span><span class="p">:</span> <span class="s2">&quot;255.255.255.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gateway&quot;</span><span class="p">:</span> <span class="s2">&quot;10.203.95.254&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;dns&quot;</span><span class="p">:</span> <span class="s2">&quot;10.203.50.233 10.203.95.250&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 </div>
-<div class="section" id="architecture">
-<h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="infrastructure-as-code">
-<h3>Infrastructure as code<a class="headerlink" href="#infrastructure-as-code" title="Permalink to this headline">¶</a></h3>
+<p>Make sure to adapt the <em>ip</em>,<em>netmask</em>,<em>gateway</em>, and <em>dns</em> values to
+reflect your setup. Once you created the interfaces.fact file, run
+<code class="docutils literal"><span class="pre">sudo</span> <span class="pre">upri-config.py</span> <span class="pre">restart_network</span></code> to configure the network device
+and finally <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">reboot</span></code> to start the upribox with the static IP
+setup.</p>
 </div>
-<div class="section" id="updates">
-<h3>Updates<a class="headerlink" href="#updates" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="custom-vpn-port">
+<h4>custom VPN port<a class="headerlink" href="#custom-vpn-port" title="Permalink to this headline">¶</a></h4>
+<p>Connect to your upribox via ssh and use the
+following commands to set a custom <em>port</em> and <em>protocol</em> for the upribox
+OpenVPN server:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">upri</span><span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">py</span> <span class="n">set_vpn_connection</span> <span class="mi">1194</span><span class="o">/</span><span class="n">UDP</span>
+<span class="n">sudo</span> <span class="n">upri</span><span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">py</span> <span class="n">restart_vpn</span>
+<span class="n">sudo</span> <span class="n">upri_conifg</span><span class="o">.</span><span class="n">py</span> <span class="n">restart_firewall</span>
+</pre></div>
+</div>
+<p>Make sure to use a correct port - protocol combination: valid ports are
+between <em>1025</em> and <em>65535</em> (<strong>unprivileged ports</strong>), and protocol can be
+either <strong>UDP</strong> or <strong>TCP</strong>. If you want to access your upribox&#8217;s VPN
+server over <strong>443/TCP</strong> (standard HTTPS port) you need to set a custom
+port-forwarding rule in your router: set your VPN server to a
+unprivileged TCP port e.g. 4300/TCP and then forward port 443/TCP to
+port 4300/TCP of your upribox.</p>
+</div>
 </div>
 </div>
 </div>
@@ -73,18 +109,21 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/upribox-logo_200px.png" alt="Logo"/>
+            </a></p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Intro</a><ul>
-<li><a class="reference internal" href="#getting-started">Getting started</a><ul>
+<li><a class="reference internal" href="#">Getting started</a><ul>
 <li><a class="reference internal" href="#hardware-requirements">Hardware requirements</a></li>
 <li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#id1">Getting started</a></li>
+<li><a class="reference internal" href="#customization">Customization</a><ul>
+<li><a class="reference internal" href="#network">Network</a><ul>
+<li><a class="reference internal" href="#static-network-configuration">static network configuration</a></li>
+<li><a class="reference internal" href="#custom-vpn-port">custom VPN port</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#architecture">Architecture</a><ul>
-<li><a class="reference internal" href="#infrastructure-as-code">Infrastructure as code</a></li>
-<li><a class="reference internal" href="#updates">Updates</a></li>
 </ul>
 </li>
 </ul>
@@ -94,8 +133,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Welcome to upribox&#8217;s documentation!</a></li>
-      <li>Next: <a href="security.html" title="next chapter">Security Features</a></li>
+      <li>Previous: <a href="index.html" title="previous chapter">Usable Privacy Box (<strong>upribox</strong>)</a></li>
+      <li>Next: <a href="architecture.html" title="next chapter">Architecture</a></li>
   </ul></li>
 </ul>
 </div>
