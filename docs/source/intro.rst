@@ -1,24 +1,24 @@
-######################
+###############
 Getting started
-######################
+###############
 
 Hardware requirements
-======================
+=====================
 
 Installation
-======================
+============
 
-Getting started
-======================
+User manual
+===========
 
 Customization
-======================
+=============
 
 Network
 _______
 
 static network configuration
-*****************************
+****************************
 
 Connect to your upribox via ssh and create a **interfaces.fact** file in
 the */etc/ansible/facts.d* directory. The following interfaces
