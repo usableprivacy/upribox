@@ -1,7 +1,7 @@
 # Usable Privacy Box
 ### Privacy made easy for the Raspberry Pi 1, 2, and 3
 The [upribox](https://upribox.org) software is used to create Raspberry Pi images to turn your Raspberry Pi into a privacy-enhancing Wireless router. Main features:
-* Transparent advertisment- and tracker-blocking (silent wifi)
+* Transparent advertisement- and tracker-blocking (silent wifi)
 * Transparent adblocking + Tor network (ninja wifi)
 * OpenVPN server for privacy on the road
 
@@ -27,7 +27,7 @@ Once you are connect to either of the upribox wifi networks (Silent or Ninja) yo
 * microSDHC Class 10 (min. 4GB) [[Amazon.com]](https://www.amazon.com/SanDisk-MicroSDHC-Standard-Packaging-SDSDQUAN-008G-G4A/dp/B00M55C0VU/)
 * Power supply [[Amazon.com]](https://www.amazon.com/Kootek-Universal-Charger-Raspberry-External/dp/B00GWDLJGS) [[Adafruit]](https://www.adafruit.com/products/1995)
 * TL-WN722N Wireless USB adapter [[Amazon.com]](https://www.amazon.com/TP-LINK-TL-WN722N-Wireless-Adapter-External/dp/B002SZEOLG)
-* Since Version 0.5 of the upribox we support the Pi3 natively, so no additional WiFI dongle is required. Currently the Pi3 Wifi only supports one active Hotspot, therefor you can not yet activate the **Ninja WiFi** on the Pi3.
+* Since Version 0.5 of the upribox we support the Pi3 natively, so no additional WiFI dongle is required. Currently the Pi3 Wifi only supports one active Hotspot, therefore you can not yet activate the **Ninja WiFi** on the Pi3.
 
 *The upribox software works with Raspberry Pi 1 as well, but the performance for adblocking is considerable worse. Other potentially suitable USB WiFi hardware can be found in the [Pi(rate)Box Wiki](https://piratebox.cc/raspberry_pi:piratebox_wifi_compatibility).
 
