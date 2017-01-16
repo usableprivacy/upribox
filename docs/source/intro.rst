@@ -64,3 +64,17 @@ server over **443/TCP** (standard HTTPS port) you need to set a custom
 port-forwarding rule in your router: set your VPN server to a
 unprivileged TCP port e.g. 4300/TCP and then forward port 443/TCP to
 port 4300/TCP of your upribox.
+
+custom wifi channel
+*******************
+
+Connect to your upribox via ssh and use the
+following commands to set a custom *channel* for the upribox
+WiFi:
+
+::
+
+    sudo upri-config.py set_wifi_channel 3
+    sudo upri-config.py restart_wlan
+
+Valid WiFi channels are numbers between 1 and 10.

@@ -369,6 +369,17 @@ def action_set_vpn_connection(arg):
     write_role('vpn', vpn_connection)
     return 0
 
+# return values:
+# 10: invalid argument
+def action_set_wlan_channel(arg):
+    if not int(arg) in range(1,10):
+        print 'error: channel must be between 1 and 10'
+        return 10
+    print 'wifi channel: %s' % arg
+    channel = {"general": {"channel": arg}}
+    write_role('wlan', channel)
+    return 0
+
 def action_restart_vpn(arg):
     print 'restarting vpn...'
     #return 0 # TODO implement
@@ -465,6 +476,7 @@ ALLOWED_ACTIONS = {
     'restart_tor': action_restart_tor,
     'enable_vpn': action_set_vpn,
     'set_vpn_connection': action_set_vpn_connection,
+    'set_wlan_channel': action_set_wlan_channel,
     'restart_vpn': action_restart_vpn,
     'enable_ssh': action_set_ssh,
     'restart_ssh': action_restart_ssh,
