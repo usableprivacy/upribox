@@ -31,6 +31,8 @@ CLIENT_TEMPLATE = "/etc/openvpn/client_template"
 # revokes previously generated openvpn client certificates
 # return values:
 # 26 failed to revoke certificate
+
+
 def action_delete_profile(slug):
     try:
         filename = os.path.basename(slug)
@@ -57,6 +59,8 @@ def action_delete_profile(slug):
 # 24: provided domain is not valid
 # 23: unable to create client certificate files
 # 22: openvpn client template is missing
+
+
 def action_generate_profile(profile_id):
     with open('/etc/ansible/default_settings.json', 'r') as f:
         config = json.load(f)
@@ -66,10 +70,10 @@ def action_generate_profile(profile_id):
     try:
         conn = sqlite3.connect(dbfile)
         c = conn.cursor()
-        c.execute("SELECT slug,dyndomain FROM vpn_vpnprofile WHERE id=?",(profile_id,))
+        c.execute("SELECT slug,dyndomain FROM vpn_vpnprofile WHERE id=?", (profile_id,))
         data = c.fetchone()
         if not data:
-            #invalid profile id
+            # invalid profile id
             print 'profile id does not exist in database'
             return 21
 
@@ -83,13 +87,15 @@ def action_generate_profile(profile_id):
 
         filename = os.path.basename(slug)
 
-        rc = subprocess.call(['/usr/bin/openssl', 'req', '-newkey', 'rsa:2048', '-nodes', '-subj', "/C=AT/ST=Austria/L=Vienna/O=Usable Privacy Box/OU=VPN/CN=%s" % filename, '-keyout', '/etc/openvpn/ca/%sKey.pem' % filename, '-out', '/etc/openvpn/ca/%sReq.pem' % filename])
+        rc = subprocess.call(['/usr/bin/openssl', 'req', '-newkey', 'rsa:2048', '-nodes', '-subj', "/C=AT/ST=Austria/L=Vienna/O=Usable Privacy Box/OU=VPN/CN=%s" %
+                              filename, '-keyout', '/etc/openvpn/ca/%sKey.pem' % filename, '-out', '/etc/openvpn/ca/%sReq.pem' % filename])
 
         if rc != 0:
             print "error while creating client certificate reques"
             return 23
 
-        subprocess.call(['/usr/bin/openssl', 'ca', '-in', '/etc/openvpn/ca/%sReq.pem' % filename, '-days', '730', '-batch', '-out', '/etc/openvpn/ca/%sCert.pem' % filename, '-notext', '-cert', '/etc/openvpn/ca/caCert.pem', '-keyfile', '/etc/openvpn/ca/caKey.pem'])
+        subprocess.call(['/usr/bin/openssl', 'ca', '-in', '/etc/openvpn/ca/%sReq.pem' % filename, '-days', '730', '-batch', '-out', '/etc/openvpn/ca/%sCert.pem' %
+                         filename, '-notext', '-cert', '/etc/openvpn/ca/caCert.pem', '-keyfile', '/etc/openvpn/ca/caKey.pem'])
 
         if rc != 0:
             print "error while creating client certificate"
@@ -123,6 +129,8 @@ def action_generate_profile(profile_id):
 # 16: error
 # 1: new entries have been added
 # 0: no changes
+
+
 def action_parse_logs(arg):
     dnsmasq_val = parse_dnsmasq_logs(arg)
     privoxy_val = parse_privoxy_logs(arg)
@@ -139,6 +147,8 @@ def action_parse_logs(arg):
 # 16: error
 # 1: new entries have been added
 # 0: no changes
+
+
 def parse_privoxy_logs(arg):
     rlog = re.compile('(\d{4}-\d{2}-\d{2} (\d{2}:?){3}).\d{3} [a-z0-9]{8} Crunch: Blocked: (.*)')
 
@@ -150,8 +160,7 @@ def parse_privoxy_logs(arg):
                            config['log']['privoxy']['logfiles']['logname'])
 
     if os.path.isfile(logfile):
-        print
-        "parsing privoxy logfile %s" % logfile
+        print "parsing privoxy logfile %s" % logfile
         with open(logfile, 'r') as privoxy:
             logentries = []
             for line in privoxy:
@@ -163,11 +172,9 @@ def parse_privoxy_logs(arg):
                         pdate = datetime.strptime(sdate, '%Y-%m-%d %H:%M:%S')
                         psite = urlparse(ssite).netloc
                         logentries.append((psite, pdate))
-                        print
-                        "found new block: [%s] %s" % (sdate, psite)
+                        print "found new block: [%s] %s" % (sdate, psite)
                 except Exception as e:
-                    print
-                    "failed to parse line \"%s\": %s" % (line, e.message)
+                    print "failed to parse line \"%s\": %s" % (line, e.message)
 
         # write updates into db
         if len(logentries) > 0:
@@ -183,15 +190,12 @@ def parse_privoxy_logs(arg):
                 # todo: implement reload
                 subprocess.call(["/usr/sbin/service", "privoxy", "restart"])
             except Exception as e:
-                print
-                "failed to write to database"
+                print "failed to write to database"
                 return 16
             return 1
 
-
     else:
-        print
-        "failed to parse privoxy logfile %s: file not found" % logfile
+        print "failed to parse privoxy logfile %s: file not found" % logfile
         return 16
 
     return 0
@@ -217,8 +221,7 @@ def parse_dnsmasq_logs(arg):
                            config['log']['dnsmasq']['logfiles']['logname'])
 
     if os.path.isfile(logfile):
-        print
-        "parsing dnsmasq logfile %s" % logfile
+        print "parsing dnsmasq logfile %s" % logfile
         cur_year = time.localtime().tm_year
         with open(logfile, 'r') as dnsmasq:
             querylogentries = []
@@ -233,11 +236,9 @@ def parse_dnsmasq_logs(arg):
                         pdate = datetime.strptime(sdate, '%b %d %H:%M:%S')
                         pdate = pdate.replace(year=cur_year)
                         querylogentries.append((psite, pdate))
-                        print
-                        "found new query: [%s] %s" % (psite, pdate)
+                        print "found new query: [%s] %s" % (psite, pdate)
                 except Exception as e:
-                    print
-                    "failed to parse query \"%s\": %s" % (line, e.message)
+                    print "failed to parse query \"%s\": %s" % (line, e.message)
 
                 try:
                     res = re.match(blockedPattern, line)
@@ -248,11 +249,9 @@ def parse_dnsmasq_logs(arg):
                         pdate = datetime.strptime(sdate, '%b %d %H:%M:%S')
                         pdate = pdate.replace(year=cur_year)
                         blockedlogentries.append((psite, pdate))
-                        print
-                        "found new blocked query: [%s] %s" % (psite, pdate)
+                        print "found new blocked query: [%s] %s" % (psite, pdate)
                 except Exception as e:
-                    print
-                    "failed to parse blocked query \"%s\": %s" % (line, e.message)
+                    print "failed to parse blocked query \"%s\": %s" % (line, e.message)
 
         # write updates into db
         if len(querylogentries) > 0:
@@ -270,14 +269,12 @@ def parse_dnsmasq_logs(arg):
                 # todo: implement reload
                 subprocess.call(["/usr/sbin/service", "dnsmasq", "restart"])
             except Exception as e:
-                print
-                "failed to write to database"
+                print "failed to write to database"
                 return 16
             return 1
 
     else:
-        print
-        "failed to parse dnsmasq logfile %s: file not found" % logfile
+        print "failed to parse dnsmasq logfile %s: file not found" % logfile
         return 16
 
     return 0
@@ -292,37 +289,44 @@ def action_set_ssid(arg):
     print 'setting ssid to "%s"' % arg
     if not check_ssid(arg):
         return 12
-    ssid = { "upri": { "ssid": arg } }
+    ssid = {"upri": {"ssid": arg}}
     write_role('wlan', ssid)
 
 # return values:
 # 11: password does not meet password policy
+
+
 def action_set_password(arg):
     print 'setting password'
     if not check_passwd(arg):
         return 11
-    passwd = { "upri": { "passwd": arg } }
+    passwd = {"upri": {"passwd": arg}}
     write_role('wlan', passwd)
 
 #
 # return values:
 # 12: ssid does not meet policy
 #
+
+
 def action_set_tor_ssid(arg):
     print 'setting tor ssid to "%s"' % arg
     if not check_ssid(arg):
         return 12
-    ssid = { "ninja": { "ssid": arg } }
+    ssid = {"ninja": {"ssid": arg}}
     write_role('wlan', ssid)
 
 # return values:
 # 11: password does not meet password policy
+
+
 def action_set_tor_password(arg):
     print 'setting tor password'
     if not check_passwd(arg):
         return 11
-    passwd = { "ninja": { "passwd": arg } }
+    passwd = {"ninja": {"passwd": arg}}
     write_role('wlan', passwd)
+
 
 def action_restart_wlan(arg):
     print 'restarting wlan...'
@@ -330,13 +334,16 @@ def action_restart_wlan(arg):
 
 # return values:
 # 10: invalid argument
+
+
 def action_set_tor(arg):
     if arg not in ['yes', 'no']:
         print 'error: only "yes" and "no" are allowed'
         return 10
     print 'tor enabled: %s' % arg
-    passwd = { "general": { "enabled": arg } }
+    passwd = {"general": {"enabled": arg}}
     write_role('tor', passwd)
+
 
 def action_restart_tor(arg):
     print 'restarting tor...'
@@ -344,22 +351,26 @@ def action_restart_tor(arg):
 
 # return values:
 # 10: invalid argument
+
+
 def action_set_vpn(arg):
     if arg not in ['yes', 'no']:
         print 'error: only "yes" and "no" are allowed'
         return 10
     print 'vpn enabled: %s' % arg
-    vpn = { "general": { "enabled": arg } }
+    vpn = {"general": {"enabled": arg}}
     write_role('vpn', vpn)
     return 0
 
 # return values:
 # 10: invalid argument
+
+
 def action_set_vpn_connection(arg):
     '1194/udp'
     port, protocol = arg.split('/')
     protocol = protocol.upper()
-    if not int(port) in range(1025,65535) or protocol not in ['UDP', 'TCP']:
+    if not int(port) in range(1025, 65535) or protocol not in ['UDP', 'TCP']:
         print 'error: only valid "port/protocol" combinations are allowed e.g. "1194/UDP"'
         print 'port must be unprivileged: 1025 - 65535'
         print 'protocol can be either UDP or TCP'
@@ -369,20 +380,24 @@ def action_set_vpn_connection(arg):
     write_role('vpn', vpn_connection)
     return 0
 
+
 def action_restart_vpn(arg):
     print 'restarting vpn...'
-    #return 0 # TODO implement
+    # return 0 # TODO implement
     return call_ansible('toggle_vpn')
 
 # return values:
 # 10: invalid argument
+
+
 def action_set_ssh(arg):
     if arg not in ['yes', 'no']:
         print 'error: only "yes" and "no" are allowed'
         return 10
     print 'ssh enabled: %s' % arg
-    en = { "general": { "enabled": arg } }
+    en = {"general": {"enabled": arg}}
     write_role('ssh', en)
+
 
 def action_restart_ssh(arg):
     print 'restarting ssh...'
@@ -390,17 +405,21 @@ def action_restart_ssh(arg):
 
 # return values:
 # 10: invalid argument
+
+
 def action_set_apate(arg):
     if arg not in ['yes', 'no']:
         print 'error: only "yes" and "no" are allowed'
         return 10
     print 'apate enabled: %s' % arg
-    en = { "general": { "enabled": arg } }
+    en = {"general": {"enabled": arg}}
     write_role('apate', en)
+
 
 def action_restart_apate(arg):
     print 'restarting apate...'
     return call_ansible('toggle_apate')
+
 
 def check_passwd(arg):
     pw = passwd.Password(arg)
@@ -422,11 +441,12 @@ def check_passwd(arg):
     else:
         return True
 
+
 def check_ssid(arg):
     ssid_value = ssid.SSID(arg)
     if not ssid_value.is_valid():
         if not ssid_value.has_allowed_length():
-             print 'the password must be between 1 to 32 characters long'
+            print 'the password must be between 1 to 32 characters long'
         if not ssid_value.has_only_allowed_chars():
             print 'the ssid must only contain following special characters: %s' % ssid_value.get_allowed_chars()
 
@@ -434,11 +454,12 @@ def check_ssid(arg):
     else:
         return True
 
+
 def check_domain(arg):
     domain_value = domain.Domain(arg)
     if not domain_value.is_valid():
         if not domain_value.has_allowed_length():
-             print 'the password can only contain up to 255 characters'
+            print 'the password can only contain up to 255 characters'
         if not domain_value.has_only_allowed_chars():
             print 'the domain must only contain following special characters: %s' % domain_value.get_allowed_chars()
 
@@ -446,9 +467,11 @@ def check_domain(arg):
     else:
         return True
 
+
 def action_restart_network(arg):
     print 'restarting network...'
     return call_ansible('network_config')
+
 
 def action_restart_firewall(arg):
     print 'restarting firewall...'
@@ -480,12 +503,16 @@ ALLOWED_ACTIONS = {
 #
 # calls ansible and executes the given tag locally
 #
+
+
 def call_ansible(tag):
     return subprocess.call([ANSIBLE_COMMAND, '-i', ANSIBLE_INVENTORY, ANSIBLE_PLAY, "--tags", tag, "--connection=local"])
 
 #
 # write the custom json "data" to the fact with the given name "rolename"
 #
+
+
 def write_role(rolename, data):
     p = path.join(FACTS_DIR, rolename + '.fact')
     try:
@@ -503,23 +530,26 @@ def write_role(rolename, data):
 # 1: syntax error
 # 2: invalid number of arguments
 # 3: invalid action
+
+
 def main():
     # append empty second parameter if none given
     if len(sys.argv) == 2:
         sys.argv.append('')
 
-    if len(sys.argv) !=3:
+    if len(sys.argv) != 3:
         usage(2)
 
     action = sys.argv[1]
     args = sys.argv[2]
 
-    # check if requested action is valid
+    # check if requested actions is valid
     if sys.argv[1] in ALLOWED_ACTIONS:
         print "action: %s" % action
         return ALLOWED_ACTIONS[action](args)
     else:
         usage(3)
+
 
 def usage(ex):
     print "usage: %s <action> <args>" % sys.argv[0]
