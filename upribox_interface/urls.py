@@ -34,6 +34,7 @@ urlpatterns = [
     # WLAN config
     url(r'^$', RedirectView.as_view(pattern_name='upri_silent', permanent=False), name='upri_index'),
     url(r'^silent/$', "wlan.views.silent", name="upri_silent"),
+    url(r'^silent/toggle/$', "wlan.views.silent_toggle", name="upri_silent_toggle"),
     url(r'^ninja/$', "wlan.views.ninja", name="upri_ninja"),
     url(r'^ninja/toggle/$', "wlan.views.ninja_toggle", name="upri_ninja_toggle"),
     url(r'^ninja/check_pi3/$', "wlan.views.check_pi3", name="upri_check_pi3"),

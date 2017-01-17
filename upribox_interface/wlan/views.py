@@ -53,10 +53,9 @@ def ninja_toggle(request):
         raise Http404()
 
     state = request.POST['enabled']
-    jobs.queue_job(wlanjobs.toogle_tor, (state,))
+    jobs.queue_job(wlanjobs.toggle_tor, (state,))
 
     return render_to_response("modal.html", {"message": True, "refresh_url": reverse('upri_ninja')})
-
 
 @login_required
 def silent(request):
@@ -80,6 +79,15 @@ def silent(request):
     context.push({'messagestore': jobs.get_messages()})
     return render_to_response("silent.html", context)
 
+@login_required
+def silent_toggle(request):
+    if request.method != 'POST':
+        raise Http404()
+
+    state = request.POST['enabled']
+    jobs.queue_job(wlanjobs.toggle_silent, (state,))
+
+    return render_to_response("modal.html", {"message": True, "refresh_url": reverse('upri_silent')})
 
 @login_required
 def check_pi3(request):

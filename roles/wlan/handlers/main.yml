@@ -18,5 +18,10 @@
   shell: "ip addr add dev wlan0 192.168.55.254/24" 
   when: ipaddr.stdout.find("192.168.55.254") == -1
 
+# somtimes wlan0 isn't added to /run/network/ifstate and it is not possible to use ifdown and ifup
+- name: add wlan0 to ifstate
+  shell: "echo 'wlan0=wlan0' | tee -a /run/network/ifstate"
+  when: ifstate.stdout.find("wlan0=wlan0") == -1
+
 - name: restart isc-dhcp-server
   service: name=isc-dhcp-server state=restarted

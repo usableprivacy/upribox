@@ -127,6 +127,7 @@ def action_parse_logs(arg):
     dnsmasq_val = parse_dnsmasq_logs(arg)
     privoxy_val = parse_privoxy_logs(arg)
     if 16 in (privoxy_val, dnsmasq_val):
+        #return 1
         return 16
     elif 1 in (privoxy_val, dnsmasq_val):
         return 1
@@ -278,6 +279,7 @@ def parse_dnsmasq_logs(arg):
     else:
         print
         "failed to parse dnsmasq logfile %s: file not found" % logfile
+        #ERROR HERE
         return 16
 
     return 0
@@ -335,12 +337,26 @@ def action_set_tor(arg):
         print 'error: only "yes" and "no" are allowed'
         return 10
     print 'tor enabled: %s' % arg
-    passwd = { "general": { "enabled": arg } }
-    write_role('tor', passwd)
+    tor = { "general": { "enabled": arg } }
+    write_role('tor', tor)
+
+# return values:
+# 10: invalid argument
+def action_set_silent(arg):
+    if arg not in ['yes', 'no']:
+        print 'error: only "yes" and "no" are allowed'
+        return 10
+    print 'silent enabled: %s' % arg
+    silent = { "general": { "enabled": arg } }
+    write_role('wlan', silent)
 
 def action_restart_tor(arg):
     print 'restarting tor...'
     return call_ansible('toggle_tor')
+
+def action_restart_silent(arg):
+    print 'restarting silent...'
+    return call_ansible('toggle_silent')
 
 # return values:
 # 10: invalid argument
@@ -473,7 +489,9 @@ ALLOWED_ACTIONS = {
     'set_tor_password': action_set_tor_password,
     'restart_wlan': action_restart_wlan,
     'enable_tor': action_set_tor,
+    'enable_silent': action_set_silent,
     'restart_tor': action_restart_tor,
+    'restart_silent': action_restart_silent,
     'enable_vpn': action_set_vpn,
     'set_vpn_connection': action_set_vpn_connection,
     'set_wlan_channel': action_set_wlan_channel,

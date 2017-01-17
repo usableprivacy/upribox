@@ -18,9 +18,8 @@
 
 # On what interfaces should the DHCP server (dhcpd) serve DHCP requests?
 #       Separate multiple interfaces with spaces, e.g. "eth0 eth1".
-{% if tor|bool%}
+{% if tor|bool and silent|bool%}
 INTERFACES="wlan0 wlan0_0"
-{% endif %}
-{% if not tor|bool%}
+{% else %}
 INTERFACES="wlan0"
 {% endif %}
