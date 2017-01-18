@@ -3,6 +3,3 @@
 - set_fact:
     tor: "{{ default_settings.tor.general.enabled if not (ansible_local is defined and ansible_local.tor is defined and ansible_local.tor.general is defined) else ansible_local.tor.general.enabled | default(default_settings.tor.general.enabled) }}"
     silent: "{{ default_settings.silent.general.enabled if not (ansible_local is defined and ansible_local.wlan is defined and ansible_local.wlan.general is defined) else ansible_local.wlan.general.enabled | default(default_settings.silent.general.enabled) }}"
-
-- set_fact:
-    tor_if: "{{ 'wlan0' if (tor|bool and not silent|bool) else 'wlan0_0' }}"

@@ -279,7 +279,6 @@ def parse_dnsmasq_logs(arg):
     else:
         print
         "failed to parse dnsmasq logfile %s: file not found" % logfile
-        #ERROR HERE
         return 16
 
     return 0

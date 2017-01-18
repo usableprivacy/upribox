@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-14 13:09+0000\n"
+"POT-Creation-Date: 2017-01-18 17:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,11 +63,11 @@ msgstr "unknown error occured."
 
 #: more/jobs.py:38
 msgid "Apate ARP Spoofing Daemon wird gestartet..."
-msgstr ""
+msgstr "Starting Apate ARP Spoofing Daemon..."
 
 #: more/jobs.py:40
 msgid "Apate ARP Spoofing Daemon wird gestoppt..."
-msgstr ""
+msgstr "Stopping Apate ARP Spoofing Daemon..."
 
 #: more/jobs.py:45
 msgid "Konfiguration von Apate ARP Spoofing Daemon erfolgreich."

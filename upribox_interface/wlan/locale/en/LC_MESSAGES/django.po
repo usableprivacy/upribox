@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-14 13:09+0000\n"
+"POT-Creation-Date: 2017-01-18 17:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -95,9 +95,39 @@ msgstr "starting ninja WiFi failed."
 msgid "Stoppen des ninja WLAN fehlgeschlagen."
 msgstr "stopping ninja WiFi failed."
 
-#: wlan/jobs.py:80
+#: wlan/jobs.py:80 wlan/jobs.py:108
 msgid "Es ist ein unbekannter Fehler aufgetreten."
 msgstr "an unknown error occurred."
+
+#: wlan/jobs.py:88
+#, fuzzy
+#| msgid "ninja WLAN wird gestartet..."
+msgid "silent WLAN wird gestartet..."
+msgstr "starting ninja WiFi..."
+
+#: wlan/jobs.py:90
+#, fuzzy
+#| msgid "ninja WLAN wird gestoppt..."
+msgid "silent WLAN wird gestoppt..."
+msgstr "stopping ninja WiFi..."
+
+#: wlan/jobs.py:99
+#, fuzzy
+#| msgid "Konfiguration des ninja WLAN erfolgreich."
+msgid "Konfiguration des silent WLAN erfolgreich."
+msgstr "successfully configured ninja Wifi."
+
+#: wlan/jobs.py:104
+#, fuzzy
+#| msgid "Starten des ninja WLAN fehlgeschlagen."
+msgid "Starten des silent WLAN fehlgeschlagen."
+msgstr "starting ninja WiFi failed."
+
+#: wlan/jobs.py:106
+#, fuzzy
+#| msgid "Stoppen des ninja WLAN fehlgeschlagen."
+msgid "Stoppen des silent WLAN fehlgeschlagen."
+msgstr "stopping ninja WiFi failed."
 
 #: wlan/templates/ninja.html:6
 msgid "Ninja Modus - upribox"
@@ -140,35 +170,39 @@ msgstr "The Ninja WiFi can not be activated on the Raspberry Pi 3."
 msgid "Ein-/Ausschalten"
 msgstr "enable/Off"
 
-#: wlan/templates/ninja.html:39
+#: wlan/templates/ninja.html:40
 msgid "Ninja Modus läuft"
 msgstr "ninja mode active"
 
-#: wlan/templates/ninja.html:40
+#: wlan/templates/ninja.html:41 wlan/templates/silent.html:34
 msgid "Ausschalten"
 msgstr "disable"
 
-#: wlan/templates/ninja.html:44
+#: wlan/templates/ninja.html:45
 msgid "Ninja Modus läuft nicht"
 msgstr "ninja mode inactive"
 
-#: wlan/templates/ninja.html:45
+#: wlan/templates/ninja.html:47 wlan/templates/silent.html:27
 msgid "Einschalten"
 msgstr "enable"
 
-#: wlan/templates/ninja.html:54 wlan/templates/silent.html:26
+#: wlan/templates/ninja.html:49
+msgid "Um den Ninja Modus zu starten, aktiviere bitte zuerst den Silent Modus"
+msgstr "To start ninja node please activate silent mode first"
+
+#: wlan/templates/ninja.html:59 wlan/templates/silent.html:47
 msgid "WLAN Zugangsdaten"
 msgstr "WiFi configuration"
 
-#: wlan/templates/ninja.html:62 wlan/templates/silent.html:33
+#: wlan/templates/ninja.html:67 wlan/templates/silent.html:54
 msgid "Information einklappen"
 msgstr "hide information"
 
-#: wlan/templates/ninja.html:62
+#: wlan/templates/ninja.html:67
 msgid "Was ist der Ninja Modus?"
 msgstr "What's behind the ninja mode?"
 
-#: wlan/templates/ninja.html:64
+#: wlan/templates/ninja.html:69
 msgid ""
 "Im Ninja-Modus befinden Sie sich in einem anonymen Netzwerk (Tor), womit "
 "eine Nachverfolgung Ihrer Aktivit&auml;ten im Internet erschwert wird. So "
@@ -182,11 +216,11 @@ msgstr ""
 "see which websites you access. Your requests are tunneled through multiple "
 "Tor relays which may cause reduction of your internet speed."
 
-#: wlan/templates/ninja.html:66
+#: wlan/templates/ninja.html:71
 msgid "Im Ninja-Modus sind alle Eigenschaften des Silent Modus integriert."
 msgstr "All advantages of the silent mode are integrated in the ninja mode."
 
-#: wlan/templates/ninja.html:68
+#: wlan/templates/ninja.html:73
 #, python-format
 msgid ""
 "H&auml;ufig gestellte Fragen zur upribox finden Sie unter <a href="
@@ -195,7 +229,7 @@ msgstr ""
 "Answers to frequently asked questions (FAQ) can be found here: <a href="
 "\"%(faq_url)s\" title=\"FAQ\">Help</a>."
 
-#: wlan/templates/ninja.html:69 wlan/templates/silent.html:38
+#: wlan/templates/ninja.html:74 wlan/templates/silent.html:59
 msgid "Information ausblenden"
 msgstr "hide information"
 
@@ -211,15 +245,29 @@ msgstr "silent mode"
 msgid "Ohne Werbung surfen."
 msgstr "surf without ads"
 
-#: wlan/templates/silent.html:20
+#: wlan/templates/silent.html:26
+#, fuzzy
+#| msgid "Silent Modus läuft"
+msgid "Silent Modus läuft nicht"
+msgstr "silent mode active"
+
+#: wlan/templates/silent.html:31
 msgid "Silent Modus läuft"
 msgstr "silent mode active"
 
-#: wlan/templates/silent.html:33
+#: wlan/templates/silent.html:35
+msgid "Deaktivierung des Silent Modus deaktiviert auch den Ninja Modus."
+msgstr "Deactivation of silent mode also deactivates ninja mode"
+
+#: wlan/templates/silent.html:37
+msgid "Aktiviere SSH und Apate, um den Silent Modus deaktivieren zu können"
+msgstr "Activate SSH and Apate to deactivate silent mode"
+
+#: wlan/templates/silent.html:54
 msgid "Was ist der Silent Modus?"
 msgstr "What is the silent mode?"
 
-#: wlan/templates/silent.html:35
+#: wlan/templates/silent.html:56
 #, python-format
 msgid ""
 "Der SILENT-Modus erlaubt ihnen, Webseiten ohne Werbung anzusehen. Diese wird "
@@ -235,7 +283,7 @@ msgstr ""
 "displayed incorrectly. Help to improve the upribox and report such cases: <a "
 "href=\"mailto:%(email)s\">%(email)s</a>."
 
-#: wlan/templates/silent.html:37
+#: wlan/templates/silent.html:58
 #, python-format
 msgid ""
 "H&auml;ufig gestellte Fragen zur upribox finden Sie unter <a href="

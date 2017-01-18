@@ -18,7 +18,7 @@
 
   - name: print states
     debug:
-      msg: "silent: {{ silent }}, tor: {{ tor }}, tor_if: {{ tor_if }}"
+      msg: "silent: {{ silent }}, tor: {{ tor }}"
     tags:
       - toggle_silent
       - toggle_tor

@@ -43,7 +43,7 @@ default_settings:
       enabled: 'no'
   silent:
     general:
-      enabled: "yes"
+      enabled: 'yes'
   ssh:
     general:
       enabled: 'yes'

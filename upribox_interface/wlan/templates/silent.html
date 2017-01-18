@@ -19,23 +19,24 @@
 
                     {% get_fact 'wlan' 'general' 'enabled' as silentenabled%}
                     {% get_fact 'ssh' 'general' 'enabled' as sshenabled%}
-                    {% get_fact 'tor' 'general' 'enabled' as torenabled%}
+                    {% get_fact 'apate' 'general' 'enabled' as apateenabled%}
 
-                    {% if silentenabled == 'yes'%}
-                        <div class="switch icon i-on">
-                            <p>{% trans "Silent Modus läuft" %}</p>
-
-                            {% if sshenabled == 'yes' or torenabled == 'yes'%}
-                            <button class="js-toggle-button" data-state-enabled="no" href="{% url 'upri_silent_toggle' %}">{% trans "Ausschalten" %}</button>
-                            {% else %}
-                            <p>{% trans "Aktiviere SSH oder Ninja Modus, um den Silent Modus deaktivieren zu können" %}</p>
-                            {% endif %}
-
-                        </div>
-                    {% else %}
+                    {% if silentenabled == 'no'%}
                         <div class="switch icon i-off">
                             <p>{% trans "Silent Modus läuft nicht" %}</p>
                             <button class="js-toggle-button" data-state-enabled="yes" href="{% url 'upri_silent_toggle' %}">{% trans "Einschalten" %}</button>
+                        </div>
+                    {% else %}
+                        <div class="switch icon i-on">
+                            <p>{% trans "Silent Modus läuft" %}</p>
+
+                            {% if sshenabled == 'yes' and apateenabled == 'yes' %}
+                            <button class="js-toggle-button" data-state-enabled="no" href="{% url 'upri_silent_toggle' %}">{% trans "Ausschalten" %}</button>
+                            <p>{% trans "Deaktivierung des Silent Modus deaktiviert auch den Ninja Modus." %}</p>
+                            {% else %}
+                            <p>{% trans "Aktiviere SSH und Apate, um den Silent Modus deaktivieren zu können" %}</p>
+                            {% endif %}
+
                         </div>
                     {% endif %}
 

@@ -29,26 +29,11 @@
 
 - name: configure interfaces
   template: src=interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=644
-  register: interface
+  register: interfaces
   tags:
     - toggle_tor
     - toggle_silent
     - network_config
-
-- name: check ifstate
-  shell: "cat /run/network/ifstate"
-  register: ifstate
-  changed_when: true
-  notify: add wlan0 to ifstate
-  tags:
-    - toggle_tor
-    - toggle_silent
-
-- name: update wlan0
-  shell: "ifdown wlan0 && ifup wlan0"
-  tags:
-    - toggle_tor
-    - toggle_silent
 
 - name: check if static ip setup is enabled
   set_fact:
@@ -132,8 +117,35 @@
   with_items:
     - hostapd
     - isc-dhcp-server
+  when: tor|bool or silent|bool
+  tags:
+    - toggle_tor
+    - toggle_silent
 
 - name: start services
   service: name={{ item }} state=started
   with_items:
     - hostapd
+  when: tor|bool or silent|bool
+  tags:
+    - toggle_tor
+    - toggle_silent
+
+- name: disable services
+  service: name={{ item }} enabled=no
+  with_items:
+    - hostapd
+    - isc-dhcp-server
+  when: not (tor|bool or silent|bool)
+  tags:
+    - toggle_tor
+    - toggle_silent
+
+- name: stop services
+  service: name={{ item }} state=stopped
+  with_items:
+    - hostapd
+  when: not (tor|bool or silent|bool)
+  tags:
+    - toggle_tor
+    - toggle_silent

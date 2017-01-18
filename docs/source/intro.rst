@@ -82,7 +82,7 @@ Valid WiFi channels are numbers between 1 and 10.
 de/activate wifi
 ****************
 
-If you have SSH enabled you can connect to your upribox and deactivate both, Ninja and/or Silent WiFi:
+If you have SSH enabled you can connect to your upribox and deactivate both, Ninja and Silent WiFi:
 
 ::
 
@@ -91,4 +91,4 @@ If you have SSH enabled you can connect to your upribox and deactivate both, Nin
     sudo upri-config.py enable_tor no
     sudo upri-config.py restart_tor
 
-To activate them again replace "no" with "yes"
+To activate them again replace "no" with "yes". If you activate Ninja WiFi, you have to activate Silent WiFi as well.
