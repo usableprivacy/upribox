@@ -101,20 +101,22 @@ class HolisticSniffThread(_SniffThread):
                 # Windows does this 3 times before sending a broadcast request
                 sendp(Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=pkt[ARP].pdst, pdst=pkt[ARP].psrc, hwdst=pkt[ARP].hwsrc, hwsrc=self.mac))
 
-            # broadcast request to or from gateway
-            elif pkt[Ether].dst.lower() == util.hex2str_mac(ETHER_BROADCAST) and (pkt[ARP].psrc == self.gateway or pkt[ARP].pdst == self.gateway):
+            # broadcast request to gateway
+            elif pkt[Ether].dst.lower() == util.hex2str_mac(ETHER_BROADCAST) and (pkt[ARP].pdst == self.gateway):
+                # pkt[ARP].psrc == self.gateway or
+
                 # spoof transmitter
                 packets = [Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=pkt[ARP].pdst, pdst=pkt[ARP].psrc, hwsrc=self.mac, hwdst=pkt[ARP].hwsrc)]
 
-                # get mac address of original target
-                dest = self.gate_mac
-                if pkt[ARP].pdst != self.gateway:
-                    # send arp request if destination was not the gateway
-                    dest = util.get_mac(pkt[ARP].pdst, self.interface)
-
-                if dest:
-                    # spoof receiver
-                    packets.append(Ether(dst=dest) / ARP(op=2, psrc=pkt[ARP].psrc, hwsrc=self.mac, pdst=pkt[ARP].pdst, hwdst=dest))
+                # # get mac address of original target
+                # dest = self.gate_mac
+                # if pkt[ARP].pdst != self.gateway:
+                #     # send arp request if destination was not the gateway
+                #     dest = util.get_mac(pkt[ARP].pdst, self.interface)
+                #
+                # if dest:
+                #     # spoof receiver
+                #     packets.append(Ether(dst=dest) / ARP(op=2, psrc=pkt[ARP].psrc, hwsrc=self.mac, pdst=pkt[ARP].pdst, hwdst=dest))
 
                 # some os didn't accept an answer immediately (after sending the first ARP request after boot
                 # so, send packets after some delay
@@ -176,25 +178,27 @@ class SelectiveSniffThread(_SniffThread):
                 # add transmitting device to redis db
                 self.redis.add_device(pkt[ARP].psrc, pkt[ARP].hwsrc)
 
-            # broadcast request to or from gateway
-            elif pkt[Ether].dst.lower() == util.hex2str_mac(ETHER_BROADCAST) and (pkt[ARP].psrc == self.gateway or pkt[ARP].pdst == self.gateway):
+            # broadcast request to gateway
+            elif pkt[Ether].dst.lower() == util.hex2str_mac(ETHER_BROADCAST) and (pkt[ARP].pdst == self.gateway):
+                # pkt[ARP].psrc == self.gateway or
+
                 # spoof transmitter
                 packets = [Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=pkt[ARP].pdst, pdst=pkt[ARP].psrc, hwsrc=self.mac, hwdst=pkt[ARP].hwsrc)]
 
-                # get mac address of original target
-                dest = self.gate_mac
-                if pkt[ARP].pdst != self.gateway:
-                    # send arp request if destination was not the gateway
-                    dest = util.get_mac(pkt[ARP].pdst, self.interface)
-
-                if dest:
-                    # spoof receiver
-                    packets.append(Ether(dst=dest) / ARP(op=2, psrc=pkt[ARP].psrc, hwsrc=self.mac, pdst=pkt[ARP].pdst, hwdst=dest))
+                # # get mac address of original target
+                # dest = self.gate_mac
+                # if pkt[ARP].pdst != self.gateway:
+                #     # send arp request if destination was not the gateway
+                #     dest = util.get_mac(pkt[ARP].pdst, self.interface)
+                #
+                # if dest:
+                #     # spoof receiver
+                #     packets.append(Ether(dst=dest) / ARP(op=2, psrc=pkt[ARP].psrc, hwsrc=self.mac, pdst=pkt[ARP].pdst, hwdst=dest))
 
                 # add transmitting device to redis db
                 self.redis.add_device(pkt[ARP].psrc, pkt[ARP].hwsrc)
                 # add receiving device to redis db
-                self.redis.add_device(pkt[ARP].pdst, dest)
+                # self.redis.add_device(pkt[ARP].pdst, dest)
 
                 # some os didn't accept an answer immediately (after sending the first ARP request after boot
                 # so, send packets after some delay

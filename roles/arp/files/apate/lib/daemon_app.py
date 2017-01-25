@@ -152,7 +152,7 @@ class HolisticDaemonApp(_DaemonApp):
             Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=self.gateway, hwdst=ETHER_BROADCAST,
                                              hwsrc=self.gate_mac))
         # to clients so that they send and arp reply to the gateway
-        sendp(Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=str(self.network), hwsrc=self.gate_mac))
+        # sendp(Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=str(self.network), hwsrc=self.gate_mac))
 
     def exit(self, signal_number, stack_frame):
         """This method is called from the python-daemon when the daemon is stopping.
@@ -177,7 +177,8 @@ class HolisticDaemonApp(_DaemonApp):
 
         # generates a packet for each possible client of the network
         # these packets update existing entries in the arp table of the gateway
-        packets = [Ether(dst=self.gate_mac) / ARP(op=1, psrc=str(x), pdst=str(x)) for x in self.ip_range]
+        # packets = [Ether(dst=self.gate_mac) / ARP(op=1, psrc=str(x), pdst=str(x)) for x in self.ip_range]
+
         # gratuitous arp to clients
         # updates the gateway entry of the clients arp table
         packets.append(Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=self.gateway,
@@ -228,14 +229,14 @@ class SelectiveDaemonApp(_DaemonApp):
         First, sends a GARP broadcast request to all clients to tell them the real gateway.
         Then ARP replies for existing clients are sent to the gateway.
         """
-        # spoof clients with GARP boradcast request
+        # spoof clients with GARP broadcast request
         sendp(
             Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=self.gateway, hwdst=ETHER_BROADCAST,
                                              hwsrc=self.gate_mac))
 
         # generate ARP reply packet for every existing client and spoof the gateway
-        packets = [Ether(dst=self.gate_mac) / ARP(op=2, psrc=dev[0], pdst=self.gateway, hwsrc=dev[1]) for dev in self.redis.get_devices_values(filter_values=True)]
-        sendp(packets)
+        # packets = [Ether(dst=self.gate_mac) / ARP(op=2, psrc=dev[0], pdst=self.gateway, hwsrc=dev[1]) for dev in self.redis.get_devices_values(filter_values=True)]
+        # sendp(packets)
 
     def exit(self, signal_number, stack_frame):
         """This method is called from the python-daemon when the daemon is stopping.
@@ -269,13 +270,14 @@ class SelectiveDaemonApp(_DaemonApp):
         exp1 = lambda dev: Ether(dst=dev[1]) / ARP(op=2, psrc=self.gateway, pdst=dev[0], hwdst=dev[1])
 
         # lamda expression to generate arp replies to spoof the gateway
-        exp2 = lambda dev: Ether(dst=self.gate_mac) / ARP(op=2, psrc=dev[0], pdst=self.gateway, hwdst=self.gate_mac)
+        # exp2 = lambda dev: Ether(dst=self.gate_mac) / ARP(op=2, psrc=dev[0], pdst=self.gateway, hwdst=self.gate_mac)
 
         while True:
             # generates packets for existing clients
             # due to the labda expressions p1 and p2 this list comprehension, each iteration generates 2 packets
             # one to spoof the client and one to spoof the gateway
-            packets = [p(dev) for dev in self.redis.get_devices_values(filter_values=True) for p in (exp1, exp2)]
+            packets = [p(dev) for dev in self.redis.get_devices_values(filter_values=True) for p in (exp1,)]  # if dev[0] != self.gateway]
+            #packets = [p(dev) for dev in self.redis.get_devices_values(filter_values=True) for p in (exp1, exp2) if dev[0] != self.gateway]
 
             sendp(packets)
             time.sleep(self.__SLEEP)
