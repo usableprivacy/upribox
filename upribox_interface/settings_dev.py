@@ -177,7 +177,7 @@ LOGGING = {
 }
 
 ANSIBLE_FACTS_DIR = '/etc/ansible/facts.d'
-DEFAULT_SETTINGS = 'lib/default_settings.json'
+DEFAULT_SETTINGS = '/etc/ansible/default_settings.json'
 
 # if this is set to true, lib.utils.exec_upri_config will always return 0 if
 # /usr/local/bin/upri-config.py is missing

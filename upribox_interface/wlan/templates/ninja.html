@@ -42,10 +42,10 @@
                     {% else %}
                         <div class="switch icon i-off">
                             <p>{% trans "Ninja Modus läuft nicht" %}</p>
-                            {% if silentenabled == 'yes'%}
-                            <button class="js-toggle-button" data-state-enabled="yes" href="{% url 'upri_ninja_toggle' %}">{% trans "Einschalten" %}</button>
-                            {% else %}
+                            {% if silentenabled == 'no'%}
                             <p>{% trans "Um den Ninja Modus zu starten, aktiviere bitte zuerst den Silent Modus" %}</p>
+                            {% else %}
+                            <button class="js-toggle-button" data-state-enabled="yes" href="{% url 'upri_ninja_toggle' %}">{% trans "Einschalten" %}</button>
                             {% endif %}
                         </div>
                     {% endif %}

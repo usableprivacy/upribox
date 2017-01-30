@@ -31,6 +31,9 @@
 
 - name: create dnsmasq log dir
   file: path={{default_settings.log.general.path}}/{{default_settings.log.dnsmasq.subdir}} state=directory mode=0755 owner=dnsmasq
+  tags:
+    - toggle_tor
+    - toggle_silent
 
 - name: ensure dnsmasq logfile exists
   copy:
@@ -40,6 +43,9 @@
     group: root
     owner: dnsmasq
     mode: 0640
+  tags:
+    - toggle_tor
+    - toggle_silent
 
 - name: create tmpfiles.d conf file
   template: src=systemd-log-dir dest=/usr/lib/tmpfiles.d/dnsmasq.conf

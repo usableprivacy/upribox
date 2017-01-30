@@ -53,9 +53,10 @@ def ninja_toggle(request):
         raise Http404()
 
     state = request.POST['enabled']
-    jobs.queue_job(wlanjobs.toggle_tor, (state,))
+    jobs.queue_job(wlanjobs.toogle_tor, (state,))
 
     return render_to_response("modal.html", {"message": True, "refresh_url": reverse('upri_ninja')})
+
 
 @login_required
 def silent(request):

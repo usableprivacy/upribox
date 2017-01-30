@@ -56,7 +56,7 @@ def reconfigure_tor(ssid, password):
         jobs.job_message(_("Es ist ein unbekannter Fehler aufgetreten. Fehlercode: %(errorcode)s" % {'errorcode': e.rc}))
 
 
-def toggle_tor(state):
+def toogle_tor(state):
 
     if state in ['yes', 'no']:
         try:

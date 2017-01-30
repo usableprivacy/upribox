@@ -127,7 +127,6 @@ def action_parse_logs(arg):
     dnsmasq_val = parse_dnsmasq_logs(arg)
     privoxy_val = parse_privoxy_logs(arg)
     if 16 in (privoxy_val, dnsmasq_val):
-        #return 1
         return 16
     elif 1 in (privoxy_val, dnsmasq_val):
         return 1
