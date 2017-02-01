@@ -10,7 +10,8 @@ iface eth0 inet static
   dns-nameservers {{ ansible_local.interfaces.static.dns | default(default_settings.interfaces.static.dns) }}
 {% endif %}
 {% else %}
-iface eth0 inet dhcp
+auto eth0
+allow-hotplug eth0
 {% endif %}
 
 auto wlan0

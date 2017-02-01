@@ -12,6 +12,15 @@
     - isc-dhcp-server
     - rng-tools
 
+- name: test if hardware rng device exists
+  stat:
+    path: /dev/hwrng
+  register: hwrng_device
+
+- name: disable rngd service
+  command: systemctl disable rng-tools.service
+  when: hwrng_device.stat.exists == False
+
 #- name: fix locales
 #  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }} default_release=jessie
 #  with_items:
