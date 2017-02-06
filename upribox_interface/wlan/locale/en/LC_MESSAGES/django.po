@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-18 17:27+0000\n"
+"POT-Creation-Date: 2017-02-06 09:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,34 +100,24 @@ msgid "Es ist ein unbekannter Fehler aufgetreten."
 msgstr "an unknown error occurred."
 
 #: wlan/jobs.py:88
-#, fuzzy
-#| msgid "ninja WLAN wird gestartet..."
 msgid "silent WLAN wird gestartet..."
-msgstr "starting ninja WiFi..."
+msgstr "starting silent WiFi..."
 
 #: wlan/jobs.py:90
-#, fuzzy
-#| msgid "ninja WLAN wird gestoppt..."
 msgid "silent WLAN wird gestoppt..."
-msgstr "stopping ninja WiFi..."
+msgstr "stopping silent WiFi..."
 
 #: wlan/jobs.py:99
-#, fuzzy
-#| msgid "Konfiguration des ninja WLAN erfolgreich."
 msgid "Konfiguration des silent WLAN erfolgreich."
-msgstr "successfully configured ninja Wifi."
+msgstr "successfully configured silent Wifi."
 
 #: wlan/jobs.py:104
-#, fuzzy
-#| msgid "Starten des ninja WLAN fehlgeschlagen."
 msgid "Starten des silent WLAN fehlgeschlagen."
-msgstr "starting ninja WiFi failed."
+msgstr "starting silent WiFi failed."
 
 #: wlan/jobs.py:106
-#, fuzzy
-#| msgid "Stoppen des ninja WLAN fehlgeschlagen."
 msgid "Stoppen des silent WLAN fehlgeschlagen."
-msgstr "stopping ninja WiFi failed."
+msgstr "stopping silent WiFi failed."
 
 #: wlan/templates/ninja.html:6
 msgid "Ninja Modus - upribox"
@@ -182,13 +172,13 @@ msgstr "disable"
 msgid "Ninja Modus läuft nicht"
 msgstr "ninja mode inactive"
 
-#: wlan/templates/ninja.html:47 wlan/templates/silent.html:27
-msgid "Einschalten"
-msgstr "enable"
-
-#: wlan/templates/ninja.html:49
+#: wlan/templates/ninja.html:47
 msgid "Um den Ninja Modus zu starten, aktiviere bitte zuerst den Silent Modus"
 msgstr "To start ninja node please activate silent mode first"
+
+#: wlan/templates/ninja.html:49 wlan/templates/silent.html:27
+msgid "Einschalten"
+msgstr "enable"
 
 #: wlan/templates/ninja.html:59 wlan/templates/silent.html:47
 msgid "WLAN Zugangsdaten"
