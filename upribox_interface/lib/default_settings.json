@@ -17,7 +17,7 @@
     },
     "tor": {
         "general": {
-            "enabled": "yes"
+            "enabled": "no"
         }
     },
     "unattended_upgrades": {

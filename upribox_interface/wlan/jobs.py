@@ -78,3 +78,31 @@ def toogle_tor(state):
                 jobs.job_message(_("Stoppen des ninja WLAN fehlgeschlagen."))
     else:
         jobs.job_message(_("Es ist ein unbekannter Fehler aufgetreten."))
+
+
+def toggle_silent(state):
+
+    if state in ['yes', 'no']:
+        try:
+            if state == 'yes':
+                jobs.job_message(_("silent WLAN wird gestartet..."))
+            else:
+                jobs.job_message(_("silent WLAN wird gestoppt..."))
+
+            logger.debug("restarting silent")
+            utils.exec_upri_config('enable_silent', state)
+            if state == 'no':
+                utils.exec_upri_config('enable_tor', 'no')
+                utils.exec_upri_config('restart_tor')
+            else:
+                utils.exec_upri_config('restart_silent')
+            jobs.job_message(_("Konfiguration des silent WLAN erfolgreich."))
+
+        except utils.AnsibleError as e:
+            logger.error("ansible failed with error %d: %s" % (e.rc, e.message))
+            if state == 'yes':
+                jobs.job_message(_("Starten des silent WLAN fehlgeschlagen."))
+            else:
+                jobs.job_message(_("Stoppen des silent WLAN fehlgeschlagen."))
+    else:
+        jobs.job_message(_("Es ist ein unbekannter Fehler aufgetreten."))

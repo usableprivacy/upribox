@@ -12,7 +12,7 @@
     }, 
     "tor": {
         "general": {
-            "enabled": true
+            "enabled": "no"
         }
     }, 
     "unattended_upgrades": {

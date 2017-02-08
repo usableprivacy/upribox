@@ -1,6 +1,6 @@
 ---
-- include: ../../tor/tasks/tor_state.yml tags=toggle_tor
-- include: ../../common/tasks/other_env.yml tags=toggle_tor
+- include: ../../tor/tasks/tor_state.yml tags=toggle_tor,toggle_silent
+- include: ../../common/tasks/other_env.yml tags=toggle_tor,toggle_silent
 
 - name: install services
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
@@ -22,6 +22,7 @@
   register: res
   tags:
     - toggle_tor
+    - toggle_silent
   
 # dnsmasq does not log per default
 #- name: remove default logfiles
@@ -30,6 +31,21 @@
 
 - name: create dnsmasq log dir
   file: path={{default_settings.log.general.path}}/{{default_settings.log.dnsmasq.subdir}} state=directory mode=0755 owner=dnsmasq
+  tags:
+    - toggle_tor
+    - toggle_silent
+
+- name: ensure dnsmasq logfile exists
+  copy:
+    content: ""
+    dest: "{{default_settings.log.general.path}}/{{default_settings.log.dnsmasq.subdir}}/{{default_settings.log.dnsmasq.logfiles.logname}}"
+    force: no
+    group: root
+    owner: dnsmasq
+    mode: 0640
+  tags:
+    - toggle_tor
+    - toggle_silent
 
 - name: create tmpfiles.d conf file
   template: src=systemd-log-dir dest=/usr/lib/tmpfiles.d/dnsmasq.conf
@@ -40,6 +56,7 @@
   when: res|changed
   tags:
     - toggle_tor
+    - toggle_silent
     
 - name: copy the openresolv config file
   copy: src=resolvconf.conf dest=/etc/resolvconf.conf mode="0644"
@@ -51,3 +68,4 @@
   template: src=logrotate.j2 dest=/etc/logrotate.d/dnsmasq mode=0644
   tags:
     - toggle_tor
+    - toggle_silent

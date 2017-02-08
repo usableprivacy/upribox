@@ -1,5 +1,5 @@
 ---
-  - include: ../../tor/tasks/tor_state.yml tags=toggle_tor
+  - include: ../../tor/tasks/tor_state.yml tags=toggle_tor,toggle_silent
   - include_vars: ../../vpn/defaults/main.yml
 
   - name: install services
@@ -11,6 +11,14 @@
   - name: copy the iptables rules file
     template: src=iptables.upribox.ipv4 dest=/etc/iptables/rules.v4 owner=root group=root mode=0644
     notify:
-    - restore iptables
+     - restore iptables
     tags:
-    - toggle_tor
+     - toggle_tor
+     - toggle_silent
+
+  - name: print states
+    debug:
+      msg: "silent: {{ silent }}, tor: {{ tor }}"
+    tags:
+      - toggle_silent
+      - toggle_tor
