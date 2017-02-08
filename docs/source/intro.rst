@@ -11,14 +11,29 @@ Installation
 User manual
 ===========
 
+Web Interface
+-------------
+
+
 Customization
 =============
 
-Network
-_______
+There are two possible ways to adapt the settings of your upribox: use the Web Interface, or use *custom facts*. Configuration options
+that are important for all users are available in the Web Interface, special configuration options for tech-savvy users can be manually
+set using SSH.
+
+.. note::
+    The upribox Software update mechanisms ensures that the system remains in a consistent state. Manual changes to configuration files
+    are therefore overwritten by the periodic software update process of the upribox.
+
+The custom configuration options of the upribox Software are stored in **/etc/ansible/fact.d/**. Example for these configuration
+facts can be found here: :download:`local_facts.tar.gz <examples/local_facts.tar.gz>`.
+
+Advanced Network Settings
+-------------------------
 
 static network configuration
-****************************
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Connect to your upribox via ssh and create a **interfaces.fact** file in
 the */etc/ansible/facts.d* directory. The following interfaces
@@ -44,8 +59,8 @@ reflect your setup. Once you created the interfaces.fact file, run
 and finally ``sudo reboot`` to start the upribox with the static IP
 setup.
 
-custom VPN port
-***************
+custom VPN server port
+----------------------
 
 Connect to your upribox via ssh and use the
 following commands to set a custom *port* and *protocol* for the upribox
@@ -66,7 +81,7 @@ unprivileged TCP port e.g. 4300/TCP and then forward port 443/TCP to
 port 4300/TCP of your upribox.
 
 custom wifi channel
-*******************
+-------------------
 
 Connect to your upribox via ssh and use the
 following commands to set a custom *channel* for the upribox
@@ -79,8 +94,8 @@ WiFi:
 
 Valid WiFi channels are numbers between 1 and 10.
 
-de/activate wifi
-****************
+de/activate WiFi
+----------------
 
 If you have SSH enabled you can connect to your upribox and deactivate both, Ninja and Silent WiFi:
 
