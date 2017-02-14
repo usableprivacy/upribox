@@ -7,7 +7,7 @@ class ApateRedis(object):
     """This class is used to manage the Apate Redis DB."""
     __PREFIX = "apate"
     """str: Prefix which is used for every key in the redis db."""
-    __DELIMITER = ":"
+    __DELIMITER = "|"
     """str: Delimiter used for separating parts of keys in the redis db."""
     __IP = "ip"
     """str: Indicator for the IP part of the redis key."""

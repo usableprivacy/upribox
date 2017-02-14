@@ -13,7 +13,7 @@ import logging
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 # suppresses following message
 # WARNING: No route found for IPv6 destination :: (no default route?)
-from scapy.all import conf, sendp, ARP, Ether, ETHER_BROADCAST, IP
+from scapy.all import conf, sendp, send, ARP, Ether, ETHER_BROADCAST, IP, IPv6, ICMPv6EchoRequest, IPv6ExtHdrHopByHop, RouterAlert, ICMPv6MLQuery
 from scapy.contrib.igmp import IGMP
 import util
 
@@ -40,6 +40,28 @@ class ARPDiscoveryThread(threading.Thread):
         sendp(Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=self.network))
 
 
+class MulticastPingDiscoveryThread(threading.Thread):
+    """This thread is used to discover clients on the network by sending ICMPv6 Multicast Pings."""
+    _MULTICAST_DEST = "ff02::1"
+    # RFC 4443: The data received in the ICMPv6 Echo Request message MUST be returned
+    # entirely and unmodified in the ICMPv6 Echo Reply message.
+    _DATA = "upribox"
+    _SLEEP = 60
+
+    def __init__(self):
+        """Initialises the thread.
+        """
+        threading.Thread.__init__(self)
+
+    def run(self):
+        """Sends broadcast ARP requests for every possible client of the network.
+        Received ARP replies are processed by a SniffThread.
+        """
+        while True:
+            send(IPv6(dst=self._MULTICAST_DEST) / ICMPv6EchoRequest(data=self._DATA))
+            time.sleep(self._SLEEP)
+
+
 class IGMPDiscoveryThread(threading.Thread):
     """This thread is used to discover clients on the network by sending IGMP general queries."""
 
@@ -52,7 +74,7 @@ class IGMPDiscoveryThread(threading.Thread):
     _TTL = 1
     """int: Value for TTL for IP packet."""
 
-    def __init__(self, gateway, network, ip, mac):
+    def __init__(self, ipv4):
         """Initialises the thread.
 
         Args:
@@ -63,10 +85,10 @@ class IGMPDiscoveryThread(threading.Thread):
 
         """
         threading.Thread.__init__(self)
-        self.gateway = gateway
-        self.network = network
-        self.mac = mac
-        self.ip = ip
+        self.gateway = ipv4.gateway
+        self.network = str(ipv4.network.network)
+        self.mac = ipv4.mac
+        self.ip = ipv4.ip
 
     def run(self):
         """Sends IGMP general query packets using the multicast address 224.0.0.1.
@@ -116,3 +138,26 @@ class PubSubThread(threading.Thread):
     def stop(self):
         """Closes the connection of the PubSub object."""
         self.pubsub.close()
+
+
+class MulticastListenerDiscoveryThread(threading.Thread):
+    """This thread is used to discover clients on the network by sending ICMPv6 MLDv2 Queries."""
+    _MULTICAST_DEST = "ff02::1"
+    _HOP_LIMIT = 1
+    # RFC 4443: The data received in the ICMPv6 Echo Request message MUST be returned
+    # entirely and unmodified in the ICMPv6 Echo Reply message.
+    #_DATA = "upribox"
+    _SLEEP = 60
+
+    def __init__(self):
+        """Initialises the thread.
+        """
+        threading.Thread.__init__(self)
+
+    def run(self):
+        """Sends broadcast ARP requests for every possible client of the network.
+        Received ARP replies are processed by a SniffThread.
+        """
+        while True:
+            send(IPv6(dst=self._MULTICAST_DEST, hlim=self._HOP_LIMIT) / IPv6ExtHdrHopByHop(options=RouterAlert()) / ICMPv6MLQuery())
+            time.sleep(self._SLEEP)
