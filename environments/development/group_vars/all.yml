@@ -32,6 +32,9 @@ default_settings:
   tor:
     general:
       enabled: 'no'
+  silent:
+    general:
+      enabled: 'yes'
   ssh:
     general:
       enabled: 'yes'

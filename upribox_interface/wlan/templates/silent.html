@@ -13,14 +13,35 @@
 {% block content %}
     <div class="row clearfix">
         <div class="col-2 col-2-main js-col-2-main">
-            <form>
                 <fieldset>
+
                     <legend>{% trans "Ein-/Ausschalten" %}</legend>
-                    <div class="switch icon i-on">
-                        <p>{% trans "Silent Modus läuft" %}</p>
-                    </div>
+
+                    {% get_fact 'wlan' 'general' 'enabled' as silentenabled%}
+                    {% get_fact 'ssh' 'general' 'enabled' as sshenabled%}
+                    {% get_fact 'apate' 'general' 'enabled' as apateenabled%}
+
+                    {% if silentenabled == 'no'%}
+                        <div class="switch icon i-off">
+                            <p>{% trans "Silent Modus läuft nicht" %}</p>
+                            <button class="js-toggle-button" data-state-enabled="yes" href="{% url 'upri_silent_toggle' %}">{% trans "Einschalten" %}</button>
+                        </div>
+                    {% else %}
+                        <div class="switch icon i-on">
+                            <p>{% trans "Silent Modus läuft" %}</p>
+
+                            {% if sshenabled == 'yes' and apateenabled == 'yes' %}
+                            <button class="js-toggle-button" data-state-enabled="no" href="{% url 'upri_silent_toggle' %}">{% trans "Ausschalten" %}</button>
+                            <p>{% trans "Deaktivierung des Silent Modus deaktiviert auch den Ninja Modus." %}</p>
+                            {% else %}
+                            <p>{% trans "Aktiviere SSH und Apate, um den Silent Modus deaktivieren zu können" %}</p>
+                            {% endif %}
+
+                        </div>
+                    {% endif %}
+
+
                 </fieldset>
-            </form>
 
             {% url 'upri_silent' as href %}
             {% trans "WLAN Zugangsdaten" as form_title%}

@@ -341,13 +341,26 @@ def action_set_tor(arg):
         print 'error: only "yes" and "no" are allowed'
         return 10
     print 'tor enabled: %s' % arg
-    passwd = {"general": {"enabled": arg}}
-    write_role('tor', passwd)
+    tor = { "general": { "enabled": arg } }
+    write_role('tor', tor)
 
+# return values:
+# 10: invalid argument
+def action_set_silent(arg):
+    if arg not in ['yes', 'no']:
+        print 'error: only "yes" and "no" are allowed'
+        return 10
+    print 'silent enabled: %s' % arg
+    silent = { "general": { "enabled": arg } }
+    write_role('wlan', silent)
 
 def action_restart_tor(arg):
     print 'restarting tor...'
     return call_ansible('toggle_tor')
+
+def action_restart_silent(arg):
+    print 'restarting silent...'
+    return call_ansible('toggle_silent')
 
 # return values:
 # 10: invalid argument
@@ -380,6 +393,16 @@ def action_set_vpn_connection(arg):
     write_role('vpn', vpn_connection)
     return 0
 
+# return values:
+# 10: invalid argument
+def action_set_wlan_channel(arg):
+    if not int(arg) in range(1,10):
+        print 'error: channel must be between 1 and 10'
+        return 10
+    print 'wifi channel: %s' % arg
+    channel = {"general": {"channel": arg}}
+    write_role('wlan', channel)
+    return 0
 
 def action_restart_vpn(arg):
     print 'restarting vpn...'
@@ -485,9 +508,12 @@ ALLOWED_ACTIONS = {
     'set_tor_password': action_set_tor_password,
     'restart_wlan': action_restart_wlan,
     'enable_tor': action_set_tor,
+    'enable_silent': action_set_silent,
     'restart_tor': action_restart_tor,
+    'restart_silent': action_restart_silent,
     'enable_vpn': action_set_vpn,
     'set_vpn_connection': action_set_vpn_connection,
+    'set_wlan_channel': action_set_wlan_channel,
     'restart_vpn': action_restart_vpn,
     'enable_ssh': action_set_ssh,
     'restart_ssh': action_restart_ssh,
