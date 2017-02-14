@@ -14,3 +14,8 @@
     - restore iptables
     tags:
     - toggle_tor
+
+  - name: copy the iptables rules file
+    template: src=iptables.upribox.ipv6 dest=/etc/iptables/rules.v6 owner=root group=root mode=0644
+    notify:
+    - restore ip6tables
