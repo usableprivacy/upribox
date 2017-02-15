@@ -58,7 +58,7 @@ def main():
     try:
         # when configured to use the holistic spoofing mode
         if data['mode'] == "holistic":
-            dapp = daemon_app.HolisticDaemonApp(logger, str(data['interface']), data['pidfile'], data['stdout'], data['stderr'])
+            dapp = daemon_app.HolisticDaemonApp(logger, str(data['interface']), data['pidfile'], data['stdout'], data['stderr'], data['dns'])
         else:
             # selective spoofing mode is default
             dapp = daemon_app.SelectiveDaemonApp(logger, str(data['interface']), data['pidfile'], data['stdout'], data['stderr'], data['dns'])

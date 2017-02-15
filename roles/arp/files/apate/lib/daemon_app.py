@@ -41,6 +41,7 @@ class _DaemonApp(object):
             pidfile (str): Path of the pidfile, used by the daemon.
             stdout (str): Path of stdout, used by the daemon.
             stderr (str): Path of stderr, used by the daemon.
+            dns_file (str): Path of file containing the nameservers.
 
         Raises:
             DaemonError: Signalises the failure of the daemon.
@@ -58,6 +59,7 @@ class _DaemonApp(object):
         self.logger = logger
         self.interface = interface
 
+        # namedtuple for providing information about the IP configuration
         IPInfo = collections.namedtuple('IPInfo', 'ip, netmask, network, gateway, mac, gate_mac, dns_servers, redis')
 
         if_info = None
@@ -79,6 +81,7 @@ class _DaemonApp(object):
             ip = if_info[ni.AF_INET][0]['addr']
             # get subnetmask of specified interface
             netmask = if_info[ni.AF_INET][0]['netmask']
+            # get the network address
             network = IPNetwork("{}/{}".format(ip, netmask))
 
             # get default gateway
@@ -93,7 +96,9 @@ class _DaemonApp(object):
                 self.logger.error("Unable to get MAC address of IPv4 Gateway")
                 # raise DaemonError()
 
+            # get all ipv4 nameservers
             dns_servers = [x for x in rs.nameservers if IPAddress(x).version == 4]
+            # store ipv4 information
             self.ipv4 = IPInfo(ip, netmask, network, gateway, mac, gate_mac, dns_servers, None)
         except AddrFormatError as afe:
             # this should never happen, because values are retrieved via netifaces library
@@ -105,6 +110,7 @@ class _DaemonApp(object):
 
         try:
             # global IPv6 if self.ipv6 results in True
+            # get ipv6 addresses of specified interface
             ip = [x for x in if_info[ni.AF_INET6] if not IPAddress(x['addr'].split("%")[0]).is_private()]
             #self.linklocal = [x['addr'].split("%")[0] for x in if_info[ni.AF_INET6] if IPAddress(x['addr'].split("%")[0]).is_link_local()][0]
 
@@ -124,7 +130,9 @@ class _DaemonApp(object):
                 self.logger.error("Unable to get MAC address of IPv6 Gateway")
                 # raise DaemonError()
 
+            # get all ipv6 nameservers
             dns_servers = [x for x in rs.nameservers if IPAddress(x).version == 6]
+            # store ipv6 information
             self.ipv6 = IPInfo(ip, netmask, network, gateway, mac, gate_mac, dns_servers, None)
         except AddrFormatError as afe:
             # this should never happen, because values are retrieved via netifaces library
@@ -136,6 +144,7 @@ class _DaemonApp(object):
 
         # if not self.ipv4 and not self.ipv6:
         if not any((self.ipv4, self.ipv6)):
+            # at least ipv4 or ipv6 has to be configured
             raise DaemonError()
 
     def _return_to_normal(self):
@@ -170,6 +179,7 @@ class HolisticDaemonApp(_DaemonApp):
             pidfile (str): Path of the pidfile, used by the daemon.
             stdout (str): Path of stdout, used by the daemon.
             stderr (str): Path of stderr, used by the daemon.
+            dns_file (str): Path of file containing the nameservers.
 
         Raises:
             DaemonError: Signalises the failure of the daemon.
@@ -243,15 +253,18 @@ class SelectiveDaemonApp(_DaemonApp):
             pidfile (str): Path of the pidfile, used by the daemon.
             stdout (str): Path of stdout, used by the daemon.
             stderr (str): Path of stderr, used by the daemon.
+            dns_file (str): Path of file containing the nameservers.
 
         Raises:
             DaemonError: Signalises the failure of the daemon.
         """
         super(self.__class__, self).__init__(logger, interface, pidfile, stdout, stderr, dns_file)
 
+        # add redis objects to the ip tuples
         self.ipv4 = self.ipv4._replace(redis=ApateRedis(str(self.ipv4.network.network), logger))
         self.ipv6 = self.ipv6._replace(redis=ApateRedis(str(self.ipv6.network.network), logger))
 
+        # used for thread synchronisation (for waking this thread)
         self.sleeper = threading.Condition()
 
         self.threads = {}
@@ -264,6 +277,7 @@ class SelectiveDaemonApp(_DaemonApp):
         self.threads['mldv2thread'] = MulticastListenerDiscoveryThread()
         self.threads['psthread6'] = PubSubThread(self.ipv6.redis, self.logger)
 
+        # declare all threads as deamons
         for worker in self.threads:
             self.threads[worker].daemon = True
 
@@ -271,6 +285,7 @@ class SelectiveDaemonApp(_DaemonApp):
         """This method is called when the daemon is stopping.
         First, sends a GARP broadcast request to all clients to tell them the real gateway.
         Then ARP replies for existing clients are sent to the gateway.
+        If IPv6 is enabled, Apate tells the clients the real gateway via neighbor advertisements.
         """
         # spoof clients with GARP broadcast request
         with self.sleeper:
@@ -279,14 +294,12 @@ class SelectiveDaemonApp(_DaemonApp):
                     Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.ipv4.gateway, pdst=self.ipv4.gateway, hwdst=ETHER_BROADCAST,
                                                      hwsrc=self.ipv4.gate_mac))
             if self.ipv6:
+                # check if the impersonation of the DNS server is necessary
                 tgt = (self.ipv6.gateway, self.ipv6.dns_servers[0]) if util.is_spoof_dns(self.ipv6) else (self.ipv6.gateway,)
 
                 for source in tgt:
                     sendp(Ether(dst=ETHER_BROADCAST) / IPv6(src=source, dst=MulticastPingDiscoveryThread._MULTICAST_DEST) /
                           ICMPv6ND_NA(tgt=source, R=0, S=0) / ICMPv6NDOptDstLLAddr(lladdr=self.ipv6.gate_mac))
-        # generate ARP reply packet for every existing client and spoof the gateway
-        # packets = [Ether(dst=self.gate_mac) / ARP(op=2, psrc=dev[0], pdst=self.gateway, hwsrc=dev[1]) for dev in self.redis.get_devices_values(filter_values=True)]
-        # sendp(packets)
 
     def exit(self, signal_number, stack_frame):
         """This method is called from the python-daemon when the daemon is stopping.
@@ -302,7 +315,7 @@ class SelectiveDaemonApp(_DaemonApp):
 
         Threads:
             A SniffThread, which sniffs for incoming ARP packets and adds new devices to the redis db.
-            Two HostDiscoveryThread, which are searching for existing devices on the network.
+            Several HostDiscoveryThread, which are searching for existing devices on the network.
             A PubSubThread, which is listening for redis expiry messages.
 
         Note:
@@ -338,16 +351,13 @@ class SelectiveDaemonApp(_DaemonApp):
                 packets.extend([p(dev) for dev in self.ipv4.redis.get_devices_values(filter_values=True) for p in (exp1,)])  # if dev[0] != self.gateway]
             #packets = [p(dev) for dev in self.redis.get_devices_values(filter_values=True) for p in (exp1, exp2) if dev[0] != self.gateway]
             if self.ipv6:
+                # check if the impersonation of the DNS server is necessary
                 tgt = (self.ipv6.gateway, self.ipv6.dns_servers[0]) if util.is_spoof_dns(self.ipv6) else (self.ipv6.gateway,)
 
                 for source in tgt:
                     packets.extend([Ether(dst=dev[1]) / IPv6(src=source, dst=dev[0]) /
                                     ICMPv6ND_NA(tgt=source, R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=self.ipv6.mac)
                                     for dev in self.ipv6.redis.get_devices_values(filter_values=True)])
-                # spoof dns server
-                # packets.extend([Ether(dst=dev[1]) / IPv6(src=self.dns_servers[0], dst=dev[0]) /
-                #                 ICMPv6ND_NA(tgt=self.dns_servers[0], R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=self.mac)
-                #                 for dev in self.redisv6.get_devices_values(filter_values=True)])
 
             sendp(packets)
             try:
@@ -359,9 +369,6 @@ class SelectiveDaemonApp(_DaemonApp):
                     return
                 else:
                     raise e
-
-            # time.sleep(self.__SLEEP)
-
 
 class DaemonError(Exception):
     """This error class indicates, that the daemon has failed."""

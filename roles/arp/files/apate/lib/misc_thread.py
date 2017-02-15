@@ -5,17 +5,19 @@ Classes:
     ARPDiscoveryThread: Discovers clients on the network by sending out ARP request.
     IGMPDiscoveryThread: Discovers clients on the network by sending out IGMP general queries.
     PubSubThread: Listens for redis expiry messages and removes expired devices.
+    MulticastPingDiscoveryThread: Discovers clients on the network by sending out multicast echo requests.
+    MulticastListenerDiscoveryThread: Discovers clients on the network by sending out MLDv2 queries.
 
 """
 import time
 import threading
 import logging
+import util
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 # suppresses following message
 # WARNING: No route found for IPv6 destination :: (no default route?)
 from scapy.all import conf, sendp, send, ARP, Ether, ETHER_BROADCAST, IP, IPv6, ICMPv6EchoRequest, IPv6ExtHdrHopByHop, RouterAlert, ICMPv6MLQuery
 from scapy.contrib.igmp import IGMP
-import util
 
 
 class ARPDiscoveryThread(threading.Thread):
@@ -43,10 +45,13 @@ class ARPDiscoveryThread(threading.Thread):
 class MulticastPingDiscoveryThread(threading.Thread):
     """This thread is used to discover clients on the network by sending ICMPv6 Multicast Pings."""
     _MULTICAST_DEST = "ff02::1"
+    """str: IPv6 all nodes multicast address."""
     # RFC 4443: The data received in the ICMPv6 Echo Request message MUST be returned
     # entirely and unmodified in the ICMPv6 Echo Reply message.
     _DATA = "upribox"
+    """str: This data is used to identify echo replies."""
     _SLEEP = 60
+    """int: Time to wait before sending packets anew."""
 
     def __init__(self):
         """Initialises the thread.
@@ -54,8 +59,9 @@ class MulticastPingDiscoveryThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        """Sends broadcast ARP requests for every possible client of the network.
-        Received ARP replies are processed by a SniffThread.
+        """Sends ICMPv6 echo request packets marked with the data upribox to the
+        IPv6 all nodes multicast address.
+        Received echo replies are processed by a SniffThread.
         """
         while True:
             send(IPv6(dst=self._MULTICAST_DEST) / ICMPv6EchoRequest(data=self._DATA))
@@ -78,10 +84,11 @@ class IGMPDiscoveryThread(threading.Thread):
         """Initialises the thread.
 
         Args:
-            gateway (str): The gateway's IP address.
-            network (str): The network IP address.
-            mac (str): MAC address of this device.
-            ip (str): IP address of this device.
+            ipv4 (namedtuple): Contains various information about the IPv4 configuration.
+            ipv4.gateway (str): The gateway's IP address.
+            ipv4.network (netaddr.IPNetwork): The network IP address.
+            ipv4.mac (str): MAC address of this device.
+            ipv4.ip (str): IP address of this device.
 
         """
         threading.Thread.__init__(self)
@@ -143,11 +150,11 @@ class PubSubThread(threading.Thread):
 class MulticastListenerDiscoveryThread(threading.Thread):
     """This thread is used to discover clients on the network by sending ICMPv6 MLDv2 Queries."""
     _MULTICAST_DEST = "ff02::1"
+    """str: IPv6 all nodes multicast address."""
     _HOP_LIMIT = 1
-    # RFC 4443: The data received in the ICMPv6 Echo Request message MUST be returned
-    # entirely and unmodified in the ICMPv6 Echo Reply message.
-    #_DATA = "upribox"
+    """int: Speficies the Hop Limit parameter for the IPv6 packet field."""
     _SLEEP = 60
+    """int: Time to wait before sending packets anew."""
 
     def __init__(self):
         """Initialises the thread.
@@ -155,8 +162,8 @@ class MulticastListenerDiscoveryThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        """Sends broadcast ARP requests for every possible client of the network.
-        Received ARP replies are processed by a SniffThread.
+        """Sends Multicast Listener Discovery Queries to all nodes on the network.
+        Received Multicast Listener Reports are processed by a SniffThread.
         """
         while True:
             send(IPv6(dst=self._MULTICAST_DEST, hlim=self._HOP_LIMIT) / IPv6ExtHdrHopByHop(options=RouterAlert()) / ICMPv6MLQuery())
