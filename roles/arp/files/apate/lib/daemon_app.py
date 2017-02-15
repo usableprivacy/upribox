@@ -105,7 +105,7 @@ class _DaemonApp(object):
             self.logger.error("A error happened during determinig the IPv4 network: {}".format(str(afe)))
             # raise DaemonError()
         except KeyError:
-            self.logger.error("No IPv4 efault gateway is configured")
+            self.logger.error("No IPv4 default gateway is configured")
             # raise DaemonError()
 
         try:
@@ -139,7 +139,7 @@ class _DaemonApp(object):
             self.logger.error("A error happened during determinig the IPv6 network: {}".format(str(afe)))
             # raise DaemonError()
         except KeyError:
-            self.logger.error("No IPv6 efault gateway is configured")
+            self.logger.error("No IPv6 default gateway is configured")
             # raise DaemonError()
 
         # if not self.ipv4 and not self.ipv6:
