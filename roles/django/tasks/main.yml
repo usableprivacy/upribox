@@ -149,8 +149,6 @@
   # failed_when: res.rc != 0 and res.rc != 1
   # changed_when: res.rc == 0
 
-  # also delete rotated log files
-  # ansible 2.x would cover this task with find and file module
 - name: remove rqworker log files from other environment
   file: path='{{other_env.default_settings.log.general.path}}/{{item.value}}' state=absent
   # shell: "rm {{other_env.default_settings.log.general.path}}/{{item.value}}*"

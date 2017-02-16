@@ -241,7 +241,7 @@ class SelectiveDaemonApp(_DaemonApp):
     This mode is suitable for bigger networks, as the bottleneck of this mode is virtually only the host discovery.
     """
 
-    __SLEEP = 5
+    __SLEEP = 4
     """int: Defines the time to sleep after packets are sent before they are sent anew."""
 
     def __init__(self, logger, interface, pidfile, stdout, stderr, dns_file):
