@@ -339,11 +339,10 @@ class SelectiveDaemonApp(_DaemonApp):
             exp1 = lambda dev: Ether(dst=dev[1]) / ARP(op=2, psrc=self.ipv4.gateway, pdst=dev[0], hwdst=dev[1])
 
         # lamda expression to generate arp replies to spoof the gateway
-        # exp2 = lambda dev: Ether(dst=self.gate_mac) / ARP(op=2, psrc=dev[0], pdst=self.gateway, hwdst=self.gate_mac)
-
-        packets = []
+        # exp2 = lambda dev: Ether(dst=self.gate_mac) / ARP(op=2, psrc=dev[0], pdst=self.gateway, hwdst=self.gate_mac
 
         while True:
+            packets = []
             # generates packets for existing clients
             # due to the labda expressions p1 and p2 this list comprehension, each iteration generates 2 packets
             # one to spoof the client and one to spoof the gateway
