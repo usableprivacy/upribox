@@ -1,3 +1,5 @@
+.. _base-image-label:
+
 Development
 ===========
 
@@ -14,7 +16,7 @@ upribox image set-up. The following guide explains the steps necessary
 to setup a development environment for the upribox software.
 
 Prerequisites [on your development machine]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 -  install *ansible* 1.9.6 (``sudo pip install ansible==1.9.6``) and
    *git*
@@ -48,7 +50,7 @@ Development Mode
 -  add your RaspberryPi address(es) in the [upriboxes] section in
    environments/development/inventory
 
-Once you added the IP address of your Rasspberry Pi to the development
+Once you added the IP address of your Raspberry Pi to the development
 inventory, start chaing the upribox source and deploy your local config
 with:
 
