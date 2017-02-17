@@ -2,18 +2,73 @@
 Getting started
 ###############
 
+*********************
 Hardware requirements
-=====================
+*********************
 
+Table of recommended hardware
+=============================
+
+.. note::
+   Since upribox v0.5 we support the Pi3 natively, so no
+   additional WiFI dongle is required. The Pi3 Wifi however
+   supports only one active Hotspot. You can not yet activate the
+   **Ninja WiFi** on the Pi3.
+
++--------------+------------------------+------------------------+
+|              | Raspberry Pi 3 [#f1]_  | Raspberry Pi 2 [#f2]_  |
++==============+========================+========================+
+| SD Card      |      microSDHC Class 10 (min. 4GB) [#f3]_       |
++--------------+------------------------+------------------------+
+| Power Supply |      Micro USB 5V/2A [#f4]_                     |
++--------------+------------------------+------------------------+
+| WiFi         |       onboard          |  TL-WN722N [#f5]_      |
++--------------+------------------------+------------------------+
+
+The upribox software works with Raspberry Pi 1 as well, but the
+performance for adblocking is considerable worse. Other potentially
+suitable USB WiFi hardware for the Raspberry Pi 2 can be found in the `Pi(rate)Box
+Wiki <https://piratebox.cc/raspberry_pi:piratebox_wifi_compatibility>`__.
+
+.. rubric:: Links to Hardware
+
+.. [#f1] Raspberry Pi 3 `Amazon.com <https://www.amazon.com/Raspberry-Pi-RASP-PI-3-Model-Motherboard/dp/B01CD5VC92>`__
+.. [#f2] Raspberry Pi 2 `[Element14] <http://element14.com/raspberrypi2>`__ `[Adafruit] <https://www.adafruit.com/products/2358>`__
+.. [#f3] Sandisk SDHC 8GB `[Amazon.com] <https://www.amazon.com/SanDisk-MicroSDHC-Standard-Packaging-SDSDQUAN-008G-G4A/dp/B00M55C0VU/>`__
+.. [#f4] Power Supply `[Amazon.com] <https://www.amazon.com/Kootek-Universal-Charger-Raspberry-External/dp/B00GWDLJGS>`__ `[Adafruit] <https://www.adafruit.com/products/1995>`__
+.. [#f5] TL-WN722N Wireless USB adapter `[Amazon.com] <https://www.amazon.com/TP-LINK-TL-WN722N-Wireless-Adapter-External/dp/B002SZEOLG>`__
+
+
+************
 Installation
-============
+************
 
+See the `official Raspberry Pi
+documentation <https://www.raspberrypi.org/documentation/installation/installing-images/>`__
+for pointers on how to install the upribox image on the SD card. Upon
+the first boot the SSH/VPN keys are automatically re-generated (this
+will take a couple of minutes), and the system partitions are resized to
+use the entire size of the SD card. In the following you also find a
+list of required (and tested hardware) for the upribox software. Make
+sure that you use a compatible USB WiFi dongle!
+
+***********
 User manual
-===========
+***********
+
+Default passwords
+=================
+
+-  **Silent WiFi** (SSID: *upribox* ), **Ninja WiFi** (SSID:
+   *upribox-ninja*), password: *changeme*
+-  **SSH/Webinterface** login: *upri* password: *changethedefaults!*
 
 Web Interface
--------------
+=============
 
+Once you are connect to either of the upribox wifi networks (Silent or
+Ninja) you can access the upribox Webinterface via the following URI:
+http://upri.box.
 
 Customization
 =============
