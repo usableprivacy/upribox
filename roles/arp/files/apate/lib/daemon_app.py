@@ -11,7 +11,6 @@ Classes:
 import os
 import logging
 import time
-import threading
 import collections
 import dns.resolver
 import netifaces as ni
@@ -20,12 +19,11 @@ from netaddr import IPAddress, IPNetwork, AddrFormatError
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 # suppresses following message
 # WARNING: No route found for IPv6 destination :: (no default route?)
-from scapy.all import conf, sendp, ARP, Ether, ETHER_BROADCAST, ICMPv6NDOptDstLLAddr, ICMPv6ND_NA, IPv6
+from scapy.all import conf, sendp, ARP, Ether, ETHER_BROADCAST
 
 import util
-from sniff_thread import HolisticSniffThread, SelectiveSniffThread
-from apate_redis import ApateRedis
-from misc_thread import ARPDiscoveryThread, IGMPDiscoveryThread, PubSubThread, MulticastPingDiscoveryThread, MulticastListenerDiscoveryThread
+from sniff_thread import HolisticSniffThread
+from daemon_process import SelectiveIPv4Process, SelectiveIPv6Process
 
 
 class _DaemonApp(object):
@@ -94,7 +92,6 @@ class _DaemonApp(object):
                     raise DaemonError()
             except Exception:
                 self.logger.error("Unable to get MAC address of IPv4 Gateway")
-                # raise DaemonError()
 
             # get all ipv4 nameservers
             dns_servers = [x for x in rs.nameservers if IPAddress(x).version == 4]
@@ -103,10 +100,10 @@ class _DaemonApp(object):
         except AddrFormatError as afe:
             # this should never happen, because values are retrieved via netifaces library
             self.logger.error("A error happened during determinig the IPv4 network: {}".format(str(afe)))
-            # raise DaemonError()
         except KeyError:
-            self.logger.error("No IPv4 default gateway is configured")
-            # raise DaemonError()
+            self.logger.debug("No IPv4 default gateway is configured")
+        except IndexError:
+            self.logger.debug("No IPv4 address is configured")
 
         try:
             # global IPv6 if self.ipv6 results in True
@@ -128,7 +125,6 @@ class _DaemonApp(object):
                     raise DaemonError()
             except Exception:
                 self.logger.error("Unable to get MAC address of IPv6 Gateway")
-                # raise DaemonError()
 
             # get all ipv6 nameservers
             dns_servers = [x for x in rs.nameservers if IPAddress(x).version == 6]
@@ -137,14 +133,14 @@ class _DaemonApp(object):
         except AddrFormatError as afe:
             # this should never happen, because values are retrieved via netifaces library
             self.logger.error("A error happened during determinig the IPv6 network: {}".format(str(afe)))
-            # raise DaemonError()
         except KeyError:
-            self.logger.error("No IPv6 default gateway is configured")
-            # raise DaemonError()
+            self.logger.debug("No IPv6 default gateway is configured")
+        except IndexError:
+            self.logger.debug("No IPv6 address is configured")
 
-        # if not self.ipv4 and not self.ipv6:
         if not any((self.ipv4, self.ipv6)):
             # at least ipv4 or ipv6 has to be configured
+            self.logger.error("Unable to retriev IPv4 and IPv6 configuration")
             raise DaemonError()
 
     def _return_to_normal(self):
@@ -186,7 +182,7 @@ class HolisticDaemonApp(_DaemonApp):
         """
         super(self.__class__, self).__init__(logger, interface, pidfile, stdout, stderr, dns_file)
 
-        self.sniffthread = HolisticSniffThread(self.interface, self.ipv4, self.ipv6)
+        self.sniffthread = HolisticSniffThread(self.interface, self.ipv4)
         self.sniffthread.daemon = True
 
     def _return_to_normal(self):
@@ -241,9 +237,6 @@ class SelectiveDaemonApp(_DaemonApp):
     This mode is suitable for bigger networks, as the bottleneck of this mode is virtually only the host discovery.
     """
 
-    __SLEEP = 4
-    """int: Defines the time to sleep after packets are sent before they are sent anew."""
-
     def __init__(self, logger, interface, pidfile, stdout, stderr, dns_file):
         """Initialises several things needed to define the daemons behaviour.
 
@@ -259,54 +252,18 @@ class SelectiveDaemonApp(_DaemonApp):
             DaemonError: Signalises the failure of the daemon.
         """
         super(self.__class__, self).__init__(logger, interface, pidfile, stdout, stderr, dns_file)
-
-        # add redis objects to the ip tuples
-        self.ipv4 = self.ipv4._replace(redis=ApateRedis(str(self.ipv4.network.network), logger))
-        self.ipv6 = self.ipv6._replace(redis=ApateRedis(str(self.ipv6.network.network), logger))
-
-        # used for thread synchronisation (for waking this thread)
-        self.sleeper = threading.Condition()
-
-        self.threads = {}
-        # Initialise threads
-        self.threads['sniffthread'] = SelectiveSniffThread(self.interface, self.ipv4, self.ipv6, self.sleeper)
-        self.threads['psthread'] = PubSubThread(self.ipv4.redis, self.logger)
-        self.threads['arpthread'] = ARPDiscoveryThread(self.ipv4.gateway, str(self.ipv4.network.network))
-        self.threads['igmpthread'] = IGMPDiscoveryThread(self.ipv4)
-        self.threads['icmpv6thread'] = MulticastPingDiscoveryThread()
-        self.threads['mldv2thread'] = MulticastListenerDiscoveryThread()
-        self.threads['psthread6'] = PubSubThread(self.ipv6.redis, self.logger)
-
-        # declare all threads as deamons
-        for worker in self.threads:
-            self.threads[worker].daemon = True
-
-    def _return_to_normal(self):
-        """This method is called when the daemon is stopping.
-        First, sends a GARP broadcast request to all clients to tell them the real gateway.
-        Then ARP replies for existing clients are sent to the gateway.
-        If IPv6 is enabled, Apate tells the clients the real gateway via neighbor advertisements.
-        """
-        # spoof clients with GARP broadcast request
-        with self.sleeper:
-            if self.ipv4:
-                sendp(
-                    Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.ipv4.gateway, pdst=self.ipv4.gateway, hwdst=ETHER_BROADCAST,
-                                                     hwsrc=self.ipv4.gate_mac))
-            if self.ipv6:
-                # check if the impersonation of the DNS server is necessary
-                tgt = (self.ipv6.gateway, self.ipv6.dns_servers[0]) if util.is_spoof_dns(self.ipv6) else (self.ipv6.gateway,)
-
-                for source in tgt:
-                    sendp(Ether(dst=ETHER_BROADCAST) / IPv6(src=source, dst=MulticastPingDiscoveryThread._MULTICAST_DEST) /
-                          ICMPv6ND_NA(tgt=source, R=0, S=0) / ICMPv6NDOptDstLLAddr(lladdr=self.ipv6.gate_mac))
+        self.processv4 = None
+        self.processv6 = None
 
     def exit(self, signal_number, stack_frame):
         """This method is called from the python-daemon when the daemon is stopping.
         Threads are stopped and clients are despoofed via _return_to_normal().
         """
-        self._return_to_normal()
-        raise SystemExit()
+        if self.processv4:
+            self.processv4.shutdown()
+
+        if self.processv6:
+            self.processv6.shutdown()
 
     def run(self):
         """Starts multiple threads sends out packets to spoof
@@ -324,51 +281,23 @@ class SelectiveDaemonApp(_DaemonApp):
             Unlike the holistic mode only packets for existing clients are generated.
 
         """
-        self.threads['sniffthread'].start()
+
+        # a child-process object has to be created in the same parent process as the process that wants to start the child
+        # __init__ is called inside the initial process, whereas run() is called inside the newly created deamon process
+        # therefore create the process here
         if self.ipv4:
-            self.threads['arpthread'].start()
-            self.threads['psthread'].start()
-            self.threads['igmpthread'].start()
+            self.processv4 = SelectiveIPv4Process(self.logger, self.interface, self.ipv4)
+            self.processv4.start()
+
         if self.ipv6:
-            self.threads['icmpv6thread'].start()
-            self.threads['mldv2thread'].start()
-            self.threads['psthread6'].start()
+            self.processv6 = SelectiveIPv6Process(self.logger, self.interface, self.ipv6)
+            self.processv6.start()
 
-        # lamda expression to generate arp replies to spoof the clients
-        if self.ipv4:
-            exp1 = lambda dev: Ether(dst=dev[1]) / ARP(op=2, psrc=self.ipv4.gateway, pdst=dev[0], hwdst=dev[1])
+        if self.processv4:
+            self.processv4.join()
+        if self.processv6:
+            self.processv6.join()
 
-        # lamda expression to generate arp replies to spoof the gateway
-        # exp2 = lambda dev: Ether(dst=self.gate_mac) / ARP(op=2, psrc=dev[0], pdst=self.gateway, hwdst=self.gate_mac)
-
-        packets = []
-
-        while True:
-            # generates packets for existing clients
-            # due to the labda expressions p1 and p2 this list comprehension, each iteration generates 2 packets
-            # one to spoof the client and one to spoof the gateway
-            if self.ipv4:
-                packets.extend([p(dev) for dev in self.ipv4.redis.get_devices_values(filter_values=True) for p in (exp1,)])  # if dev[0] != self.gateway]
-            #packets = [p(dev) for dev in self.redis.get_devices_values(filter_values=True) for p in (exp1, exp2) if dev[0] != self.gateway]
-            if self.ipv6:
-                # check if the impersonation of the DNS server is necessary
-                tgt = (self.ipv6.gateway, self.ipv6.dns_servers[0]) if util.is_spoof_dns(self.ipv6) else (self.ipv6.gateway,)
-
-                for source in tgt:
-                    packets.extend([Ether(dst=dev[1]) / IPv6(src=source, dst=dev[0]) /
-                                    ICMPv6ND_NA(tgt=source, R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=self.ipv6.mac)
-                                    for dev in self.ipv6.redis.get_devices_values(filter_values=True)])
-
-            sendp(packets)
-            try:
-                with self.sleeper:
-                    self.sleeper.wait(timeout=self.__SLEEP)
-            except RuntimeError as e:
-                # this error is thrown by the with-statement when the thread is stopped
-                if len(e.args) > 0 and e.args[0] == "cannot release un-acquired lock":
-                    return
-                else:
-                    raise e
 
 class DaemonError(Exception):
     """This error class indicates, that the daemon has failed."""
