@@ -2,23 +2,95 @@
 Getting started
 ###############
 
+*********************
 Hardware requirements
-=====================
+*********************
 
+Table of recommended hardware
+=============================
+
+.. note::
+   Since upribox v0.5 we support the Pi3 natively, so no
+   additional WiFI dongle is required. The Pi3 Wifi however
+   supports only one active Hotspot. You can not yet activate the
+   **Ninja WiFi** on the Pi3.
+
++--------------+------------------------+------------------------+
+|              | Raspberry Pi 3 [#f1]_  | Raspberry Pi 2 [#f2]_  |
++==============+========================+========================+
+| SD Card      |      microSDHC Class 10 (min. 4GB) [#f3]_       |
++--------------+------------------------+------------------------+
+| Power Supply |      Micro USB 5V/2A [#f4]_                     |
++--------------+------------------------+------------------------+
+| WiFi         |       onboard          |  TL-WN722N [#f5]_      |
++--------------+------------------------+------------------------+
+
+The upribox software works with Raspberry Pi 1 as well, but the
+performance for adblocking is considerable worse. Other potentially
+suitable USB WiFi hardware for the Raspberry Pi 2 can be found in the `Pi(rate)Box
+Wiki <https://piratebox.cc/raspberry_pi:piratebox_wifi_compatibility>`__.
+
+.. rubric:: Links to Hardware
+
+.. [#f1] Raspberry Pi 3 `Amazon.com <https://www.amazon.com/Raspberry-Pi-RASP-PI-3-Model-Motherboard/dp/B01CD5VC92>`__
+.. [#f2] Raspberry Pi 2 `[Element14] <http://element14.com/raspberrypi2>`__ `[Adafruit] <https://www.adafruit.com/products/2358>`__
+.. [#f3] Sandisk SDHC 8GB `[Amazon.com] <https://www.amazon.com/SanDisk-MicroSDHC-Standard-Packaging-SDSDQUAN-008G-G4A/dp/B00M55C0VU/>`__
+.. [#f4] Power Supply `[Amazon.com] <https://www.amazon.com/Kootek-Universal-Charger-Raspberry-External/dp/B00GWDLJGS>`__ `[Adafruit] <https://www.adafruit.com/products/1995>`__
+.. [#f5] TL-WN722N Wireless USB adapter `[Amazon.com] <https://www.amazon.com/TP-LINK-TL-WN722N-Wireless-Adapter-External/dp/B002SZEOLG>`__
+
+
+************
 Installation
-============
+************
 
+See the `official Raspberry Pi
+documentation <https://www.raspberrypi.org/documentation/installation/installing-images/>`__
+for pointers on how to install the upribox image on the SD card. Upon
+the first boot the SSH/VPN keys are automatically re-generated (this
+will take a couple of minutes), and the system partitions are resized to
+use the entire size of the SD card. In the following you also find a
+list of required (and tested hardware) for the upribox software. Make
+sure that you use a compatible USB WiFi dongle!
+
+***********
 User manual
-===========
+***********
+
+Default passwords
+=================
+
+-  **Silent WiFi** (SSID: *upribox* ), **Ninja WiFi** (SSID:
+   *upribox-ninja*), password: *changeme*
+-  **SSH/Webinterface** login: *upri* password: *changethedefaults!*
+
+Web Interface
+=============
+
+Once you are connect to either of the upribox wifi networks (Silent or
+Ninja) you can access the upribox Webinterface via the following URI:
+http://upri.box.
+
+.. _customization-label:
 
 Customization
 =============
 
-Network
-_______
+There are two possible ways to adapt the settings of your upribox: use the Web Interface, or use *custom facts*. Configuration options
+that are important for all users are available in the Web Interface, special configuration options for tech-savvy users can be manually
+set using SSH.
+
+.. note::
+    The upribox Software update mechanisms ensures that the system remains in a consistent state. Manual changes to configuration files
+    are therefore overwritten by the periodic software update process of the upribox.
+
+The custom configuration options of the upribox Software are stored in **/etc/ansible/fact.d/**. Example for these configuration
+facts can be found here: :download:`local_facts.tar.gz <examples/local_facts.tar.gz>`.
+
+Advanced Network Settings
+-------------------------
 
 static network configuration
-****************************
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Connect to your upribox via ssh and create a **interfaces.fact** file in
 the */etc/ansible/facts.d* directory. The following interfaces
@@ -44,8 +116,8 @@ reflect your setup. Once you created the interfaces.fact file, run
 and finally ``sudo reboot`` to start the upribox with the static IP
 setup.
 
-custom VPN port
-***************
+custom VPN server port
+----------------------
 
 Connect to your upribox via ssh and use the
 following commands to set a custom *port* and *protocol* for the upribox
@@ -66,7 +138,7 @@ unprivileged TCP port e.g. 4300/TCP and then forward port 443/TCP to
 port 4300/TCP of your upribox.
 
 custom wifi channel
-*******************
+-------------------
 
 Connect to your upribox via ssh and use the
 following commands to set a custom *channel* for the upribox
@@ -79,8 +151,8 @@ WiFi:
 
 Valid WiFi channels are numbers between 1 and 10.
 
-de/activate wifi
-****************
+de/activate WiFi
+----------------
 
 If you have SSH enabled you can connect to your upribox and deactivate both, Ninja and Silent WiFi:
 

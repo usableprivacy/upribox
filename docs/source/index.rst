@@ -10,7 +10,7 @@ The upribox software is used to create Raspberry Pi images to turn your Raspberr
  * Transparent adblocking + Tor network (ninja wifi)
  * OpenVPN server for privacy on the road
 
-.. note:: The documentation of the upribox project is still `in progress <https://github.com/usableprivacy/upribox/issues/37/>`_.
+.. warning:: The documentation of the upribox project is still `in progress <https://github.com/usableprivacy/upribox/issues/37/>`_.
 
 .. toctree::
    :maxdepth: 2
