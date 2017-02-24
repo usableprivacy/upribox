@@ -6,6 +6,7 @@ from jsonmerge import merge
 from os import path
 import sys
 sys.path.insert(0, "/usr/share/nginx/www-upri-interface/lib/")
+sys.path.insert(0, "/opt/apate/lib/")
 import passwd
 import ssid
 import domain
@@ -15,6 +16,13 @@ import time
 from urlparse import urlparse
 import os
 import sqlite3
+import logging
+logging.basicConfig(stream=sys.stdout, level=logging.WARNING)
+from apate_redis import ApateRedis
+import socket
+import netifaces as ni
+from netaddr import IPNetwork
+
 
 # directory where facts are located
 FACTS_DIR = "/etc/ansible/facts.d"
@@ -26,13 +34,82 @@ ANSIBLE_INVENTORY = "/var/lib/ansible/local/environments/production/inventory_pu
 ANSIBLE_PLAY = "/var/lib/ansible/local/local.yml"
 # path to the openvpn client config template
 CLIENT_TEMPLATE = "/etc/openvpn/client_template"
+CONFIG_FILE = "/etc/apate/config.json"
+
+def action_disable_device(arg):
+    if not check_ip(arg):
+        return 27
+
+    return toggle_device(arg, False)
+
+def action_enable_device(arg):
+    if not check_ip(arg):
+        return 27
+
+    return toggle_device(arg, True)
+
+def check_ip(ip):
+    try:
+        socket.inet_pton(socket.AF_INET,ip)
+        return socket.AF_INET
+    except socket.error:
+        try:
+            socket.inet_pton(socket.AF_INET6,ip)
+            return socket.AF_INET6
+        except socket.error:
+            return None
+
+def get_network(interface, addr_family):
+    if_info = None
+    try:
+        if_info = ni.ifaddresses(interface)
+    except ValueError as e:
+        print "An error concerning the interface {} has occurred: {}".format(interface, str(e))
+        return None
+    # get subnetmask of specified interface
+    try:
+        addr = if_info[addr_family][0]['addr']
+        netmask = if_info[addr_family][0]['netmask'].split("/")[0]
+        return str(IPNetwork("{}/{}".format(addr, netmask)).network)
+    except IndexError:
+        return None
+
+def toggle_device(ip, enabled):
+    try:
+        with open(CONFIG_FILE) as config:
+            data = json.load(config)
+    except ValueError as ve:
+        print "Could not parse the configuration file"
+        print str(ve)
+        return 28
+    except IOError as ioe:
+        print "An error occurred while trying to open the configuration file"
+        print str(ioe)
+        return 29
+
+    if 'interface' not in data:
+        print "The configuration file does not include all necessary options"
+        return 30
+
+    network = get_network(data['interface'], check_ip(ip))
+    if not network:
+        return 31
+
+    try:
+        redis = ApateRedis(network, logging.getLogger('config'))
+        if enabled:
+            redis.enable_device(ip, network)
+        else:
+            redis.disable_device(ip, network)
+    except:
+        return 32
+
+    return 0
 
 #
 # revokes previously generated openvpn client certificates
 # return values:
 # 26 failed to revoke certificate
-
-
 def action_delete_profile(slug):
     try:
         filename = os.path.basename(slug)
@@ -523,7 +600,9 @@ ALLOWED_ACTIONS = {
     'generate_profile': action_generate_profile,
     'delete_profile': action_delete_profile,
     'restart_network': action_restart_network,
-    'restart_firewall': action_restart_firewall
+    'restart_firewall': action_restart_firewall,
+    'enable_device': action_enable_device,
+    'disable_device': action_disable_device
 }
 
 #
