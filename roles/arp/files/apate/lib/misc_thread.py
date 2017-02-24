@@ -135,7 +135,6 @@ class PubSubThread(threading.Thread):
         self.redis = ip.redis
         self.logger = logger
         self.pubsub = self.redis.get_pubsub()
-        #self.sleeper = sleeper
         self.handler = handler
 
     def run(self):

@@ -168,15 +168,30 @@ class ApateRedis(object):
         return self.__DB
 
     def get_toggled_key(self, network=None):
-        # return self.__TOGGLED_KEY
+        """Returns the key of the redis database set, which is used to store devices that should be toggled.
+
+        Args:
+            network (str, optional): Network address of the device. If not set, self.network is used instead.
+
+        Returns:
+            str: Key of the redis database set used for toggled devices
+
+        """
         return self.__DELIMITER.join((self.__PREFIX, "toggle", self.__NETWORK, network or self.network))
 
     def pop_toggled(self, network=None):
+        """Retrieves a list of devices, that should be toggled, from the redis db, removes these devices
+        and returns the list.
+
+        Args:
+            network (str, optional): Network address of the device. If not set, self.network is used instead.
+
+        Returns:
+            list: Devices that should be toggled
+
+        """
         devs = list(self.redis.smembers(self.get_toggled_key(network=network or self.network)))
-        try:
-            self.redis.srem(self.get_toggled_key(network=network or self.network), *devs)
-        except Exception as e:
-            self.logger.exception(e)
+        self.redis.srem(self.get_toggled_key(network=network or self.network), *devs)
         return devs
 
     def _add_entry(self, key, value):
@@ -210,6 +225,16 @@ class ApateRedis(object):
         return self.redis.srem(ApateRedis.__DELIMITER.join((ApateRedis.__PREFIX, ApateRedis.__NETWORK, str(network))), str(ip))
 
     def check_device_disabled(self, ip, network=None):
+        """Checks if a device already has a disabled device entry in the redis db.
+
+        Args:
+            ip (str): IP address of the device.
+            network (str, optional): Network address of the device. If not set, self.network is used instead.
+
+            Returns:
+                bool: Whether the device is already disabled
+
+        """
         # True if devices is disabled
         return self.redis.get(self._get_device_name(ip, network or self.network, enabled=False)) is not None
 
@@ -218,7 +243,4 @@ class ApateRedis(object):
         # this is done to avoid race conditions
         self.add_device(ip, self.get_device_mac(ip, network, enabled=not enabled), network, enabled=enabled, force=True)
         self.remove_device(ip, network, enabled=not enabled)
-        try:
-            self.redis.sadd(self.get_toggled_key(network=network), self._get_device_name(ip, network, enabled=enabled))
-        except Exception as e:
-            self.logger.exception(e)
+        self.redis.sadd(self.get_toggled_key(network=network), self._get_device_name(ip, network, enabled=enabled))
