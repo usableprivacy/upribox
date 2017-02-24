@@ -78,7 +78,7 @@ class _DaemonApp(object):
             # get ip of specified interface
             ip = if_info[ni.AF_INET][0]['addr']
             # get subnetmask of specified interface
-            netmask = if_info[ni.AF_INET][0]['netmask']
+            netmask = if_info[ni.AF_INET][0]['netmask'].split("/")[0]
             # get the network address
             network = IPNetwork("{}/{}".format(ip, netmask))
 
@@ -112,7 +112,7 @@ class _DaemonApp(object):
             #self.linklocal = [x['addr'].split("%")[0] for x in if_info[ni.AF_INET6] if IPAddress(x['addr'].split("%")[0]).is_link_local()][0]
 
             # get network address
-            network = IPNetwork("{}/{}".format(ip[0]['addr'], ip[0]['netmask']))
+            network = IPNetwork("{}/{}".format(ip[0]['addr'], ip[0]['netmask'].split("/")[0]))
             # get subnetmask of specified interface
             netmask = [entry['netmask'] for entry in if_info[ni.AF_INET6]]
             # get default gateway

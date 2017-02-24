@@ -17,6 +17,7 @@ class ApateRedis(object):
     """int: Redis db which should be used."""
     __TTL = 259200
     """int: Time after which device entries in the redis db expire. (default=3 days)"""
+    # __TOGGLED_KEY = __DELIMITER.join((__PREFIX, "toggle"))
 
     def __init__(self, network, logger):
         """Initialises ApateRedis objects. A connection to the local redis server
@@ -48,7 +49,8 @@ class ApateRedis(object):
             bool: True if successful, false otherwise.
 
         """
-        if not self._check_device_disabled(ip, network or self.network) or force:
+        # TODO make thread-safe
+        if not self.check_device_disabled(ip, network or self.network) or force:
             self._add_device_to_network(ip, network or self.network)
             return self._add_entry(self._get_device_name(ip, network or self.network, enabled=enabled), mac)
 
@@ -165,6 +167,18 @@ class ApateRedis(object):
         """
         return self.__DB
 
+    def get_toggled_key(self, network=None):
+        # return self.__TOGGLED_KEY
+        return self.__DELIMITER.join((self.__PREFIX, "toggle", self.__NETWORK, network or self.network))
+
+    def pop_toggled(self, network=None):
+        devs = list(self.redis.smembers(self.get_toggled_key(network=network or self.network)))
+        try:
+            self.redis.srem(self.get_toggled_key(network=network or self.network), *devs)
+        except Exception as e:
+            self.logger.exception(e)
+        return devs
+
     def _add_entry(self, key, value):
         # inserted keys expire after __TTL
         return self.redis.set(key, value, ApateRedis.__TTL)
@@ -175,16 +189,16 @@ class ApateRedis(object):
     @staticmethod
     def _get_device_name(ip, network, enabled=None):
         # example for the return value
-        # ip = "192.168.0.1", network = "192.168.0.0", enabled = True  -->  "apate:net:192.168.0.0:ip:192.168.0.1:1"
+        # ip = "192.168.0.1", network = "192.168.0.0", enabled = True  -->  "apate|net|192.168.0.0|ip|192.168.0.1|1"
         if enabled is None:
-            # don't include the enabled-section (e.g.: "apate:net:192.168.0.0:ip:192.168.0.1")
+            # don't include the enabled-section (e.g.: "apate|net|192.168.0.0|ip|192.168.0.1")
             return ApateRedis.__DELIMITER.join((ApateRedis.__PREFIX, ApateRedis.__NETWORK, str(network), ApateRedis.__IP, str(ip)))
         else:
             return ApateRedis.__DELIMITER.join((ApateRedis.__PREFIX, ApateRedis.__NETWORK, str(network), ApateRedis.__IP, str(ip), str(int(enabled))))
 
     @staticmethod
     def _get_network_name(network):
-        # e.g.: network = "192.168.0.0"  -->  "apate:net:192.168.0.0"
+        # e.g.: network = "192.168.0.0"  -->  "apate|net|192.168.0.0"
         return ApateRedis.__DELIMITER.join((ApateRedis.__PREFIX, ApateRedis.__NETWORK, str(network)))
 
     def _add_device_to_network(self, ip, network):
@@ -195,12 +209,16 @@ class ApateRedis(object):
         """Removes an IP address from a network (redis set)."""
         return self.redis.srem(ApateRedis.__DELIMITER.join((ApateRedis.__PREFIX, ApateRedis.__NETWORK, str(network))), str(ip))
 
-    def _check_device_disabled(self, ip, network):
+    def check_device_disabled(self, ip, network=None):
         # True if devices is disabled
-        return self.redis.get(self._get_device_name(ip, network, enabled=False)) is not None
+        return self.redis.get(self._get_device_name(ip, network or self.network, enabled=False)) is not None
 
     def _toggle_device(self, ip, network, enabled):
         # add new device first and delete old device afterwards
         # this is done to avoid race conditions
         self.add_device(ip, self.get_device_mac(ip, network, enabled=not enabled), network, enabled=enabled, force=True)
         self.remove_device(ip, network, enabled=not enabled)
+        try:
+            self.redis.sadd(self.get_toggled_key(network=network), self._get_device_name(ip, network, enabled=enabled))
+        except Exception as e:
+            self.logger.exception(e)

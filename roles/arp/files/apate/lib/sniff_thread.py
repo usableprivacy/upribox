@@ -190,7 +190,8 @@ class SelectiveIPv4SniffThread(_SelectiveSniffThread):
                 # incoming packets(that are sniffed): Windows correctly fills in the hwdst, linux (router) only 00:00:00:00:00:00
                 # this answers packets asking if we are the gateway (directly not via broadcast)
                 # Windows does this 3 times before sending a broadcast request
-                sendp(Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=pkt[ARP].pdst, pdst=pkt[ARP].psrc, hwdst=pkt[ARP].hwsrc, hwsrc=self.ip.mac))
+                if not self.ip.redis.check_device_disabled(pkt[ARP].psrc):
+                    sendp(Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=pkt[ARP].pdst, pdst=pkt[ARP].psrc, hwdst=pkt[ARP].hwsrc, hwsrc=self.ip.mac))
                 # add transmitting device to redis db
                 self.ip.redis.add_device(pkt[ARP].psrc, pkt[ARP].hwsrc)
 
@@ -206,11 +207,13 @@ class SelectiveIPv4SniffThread(_SelectiveSniffThread):
 
                 # some os didn't accept an answer immediately (after sending the first ARP request after boot
                 # so, send packets after some delay
-                threading.Timer(self._DELAY, sendp, [packets]).start()
+                if not self.ip.redis.check_device_disabled(pkt[ARP].psrc):
+                    threading.Timer(self._DELAY, sendp, [packets]).start()
         else:
             # ARP reply
             # add transmitting device to redis db
-            self.ip.redis.add_device(pkt[ARP].psrc, pkt[ARP].hwsrc)
+            if not self.ip.redis.check_device_disabled(pkt[ARP].psrc):
+                self.ip.redis.add_device(pkt[ARP].psrc, pkt[ARP].hwsrc)
 
     def _igmp_handler(self, pkt):
         """"This method is called for each IGMP packet received through scapy's sniff function.
@@ -221,7 +224,8 @@ class SelectiveIPv4SniffThread(_SelectiveSniffThread):
             pkt (str): Received packet via scapy's sniff (through socket.recv).
         """
         self.ip.redis.add_device(pkt[IP].src, pkt[Ether].src)
-        sendp(Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=self.ip.gateway, pdst=pkt[IP].src, hwdst=pkt[Ether].src))
+        if not self.ip.redis.check_device_disabled(pkt[IP].src):
+            sendp(Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=self.ip.gateway, pdst=pkt[IP].src, hwdst=pkt[Ether].src))
 
 
 class SelectiveIPv6SniffThread(_SelectiveSniffThread):
@@ -271,10 +275,12 @@ class SelectiveIPv6SniffThread(_SelectiveSniffThread):
         # add transmitting device to redis db
         self.ip.redis.add_device(pkt[IPv6].src, pkt[Ether].src)
         # impersonate gateway
-        sendp(Ether(dst=pkt[Ether].src) / IPv6(src=self.ip.gateway, dst=pkt[IPv6].src) /
-              ICMPv6ND_NA(tgt=self.ip.gateway, R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=self.ip.mac))
+        if not self.ip.redis.check_device_disabled(pkt[IPv6].src):
+            sendp(Ether(dst=pkt[Ether].src) / IPv6(src=self.ip.gateway, dst=pkt[IPv6].src) /
+                  ICMPv6ND_NA(tgt=self.ip.gateway, R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=self.ip.mac))
 
         # impersonate DNS server if necessary
         if util.is_spoof_dns(self.ip):
-            sendp(Ether(dst=pkt[Ether].src) / IPv6(src=self.ip.dns_servers[0], dst=pkt[IPv6].src) /
-                  ICMPv6ND_NA(tgt=self.ip.dns_servers[0], R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=self.ip.mac))
+            if not self.ip.redis.check_device_disabled(pkt[IPv6].src):
+                sendp(Ether(dst=pkt[Ether].src) / IPv6(src=self.ip.dns_servers[0], dst=pkt[IPv6].src) /
+                      ICMPv6ND_NA(tgt=self.ip.dns_servers[0], R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=self.ip.mac))

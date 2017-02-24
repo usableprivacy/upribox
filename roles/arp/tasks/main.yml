@@ -55,7 +55,7 @@
   lineinfile:
     dest: /etc/redis/redis.conf
     regexp: '^notify-keyspace-events'
-    line: 'notify-keyspace-events "Ex"'
+    line: 'notify-keyspace-events "EKxs"'
   notify: restart redis
 
 - name: enable redis server

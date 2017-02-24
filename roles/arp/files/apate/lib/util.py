@@ -59,17 +59,17 @@ def get_mac6(ip, interface):
 
 def get_device_enabled(redis_device):
     """Returns the enabled part of a device entry."""
-    return redis_device.rsplit(":", 1)[-1]
+    return redis_device.rsplit("|", 1)[-1]
 
 
 def get_device_ip(redis_device):
     """Returns the ip address part of a device entry."""
-    return redis_device.rsplit(":", 2)[-2]
+    return redis_device.rsplit("|", 2)[-2]
 
 
 def get_device_net(redis_device):
     """Returns the network address part of a device entry."""
-    return redis_device.split(":", 3)[2]
+    return redis_device.split("|", 3)[2]
 
 
 def is_spoof_dns(ipv6):

@@ -120,8 +120,9 @@ class PubSubThread(threading.Thread):
 
     __SUBSCRIBE_TO = "__keyevent@{}__:expired"
     """Used to subscribe to the keyspace event expired."""
+    __SUBSCRIBE_TOO = "__keyspace@{}__:{}"
 
-    def __init__(self, redis, logger):
+    def __init__(self, ip, logger, handler):
         """Initialises the thread.
 
         Args:
@@ -130,17 +131,30 @@ class PubSubThread(threading.Thread):
 
         """
         threading.Thread.__init__(self)
-        self.redis = redis
+        self.ip = ip
+        self.redis = ip.redis
         self.logger = logger
         self.pubsub = self.redis.get_pubsub()
+        #self.sleeper = sleeper
+        self.handler = handler
 
     def run(self):
         """Subscribes to redis expiry keyspace events and removes the ip address of the expired device from the network set."""
-        self.pubsub.subscribe(self.__SUBSCRIBE_TO.format(self.redis.get_database()))
+        self.pubsub.subscribe(**{self.__SUBSCRIBE_TO.format(self.redis.get_database()): self._handle_expired,
+                                 self.__SUBSCRIBE_TOO.format(self.redis.get_database(), self.redis.get_toggled_key()): self._handle_toggled})
         for message in self.pubsub.listen():
-            self.logger.debug("Removed expired device {} from network {}".format(util.get_device_ip(message['data']), util.get_device_net(message['data'])))
-            # removes the ip of the expired device (the removed device entry) from the network set
-            self.redis._del_device_from_network(util.get_device_ip(message['data']), util.get_device_net(message['data']))
+            pass
+
+    def _handle_expired(self, message):
+        self.logger.debug("Removed expired device {} from network {}".format(util.get_device_ip(message['data']), util.get_device_net(message['data'])))
+        # removes the ip of the expired device (the removed device entry) from the network set
+        self.redis._del_device_from_network(util.get_device_ip(message['data']), util.get_device_net(message['data']))
+
+    def _handle_toggled(self, message):
+        if message['data'] == 'sadd':
+            # devs can be used to selectively spoof only the toggled devices
+            devs = self.redis.pop_toggled()
+            self.handler(self.ip, devs, self.logger)
 
     def stop(self):
         """Closes the connection of the PubSub object."""

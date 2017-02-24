@@ -52,8 +52,8 @@ class SelectiveIPv4Process(mp.Process):
         self.threads = {}
         # Initialise threads
         self.threads['sniffthread'] = SelectiveIPv4SniffThread(self.interface, self.ipv4, self.sleeper)
-        self.threads['psthread'] = PubSubThread(self.ipv4.redis, None)
-        self.threads['arpthread'] = ARPDiscoveryThread(self.ipv4.gateway, str(self.ipv4.network.network))
+        self.threads['psthread'] = PubSubThread(self.ipv4, self.logger, self.spoof_devices)
+        self.threads['arpthread'] = ARPDiscoveryThread(self.ipv4.ip, str(self.ipv4.network.network))#.gateway
         self.threads['igmpthread'] = IGMPDiscoveryThread(self.ipv4)
 
         # declare all threads as deamons
@@ -121,6 +121,18 @@ class SelectiveIPv4Process(mp.Process):
             self.logger.error("Process IPv4")
             self.logger.exception(e)
 
+    @staticmethod
+    def spoof_devices(ip, devs, logger):
+        for entry in devs:
+            dev_ip = util.get_device_ip(entry)
+            dev_hw = ip.redis.get_device_mac(dev_ip, network=util.get_device_net(entry))
+            if util.get_device_enabled(entry) == "1":
+                sendp(Ether(dst=dev_hw) / ARP(op=2, psrc=ip.gateway, pdst=dev_ip, hwdst=dev_hw))
+                # sendp(Ether(dst=ip.gate_mac) / ARP(op=2, psrc=dev_ip, pdst=ip.gateway, hwdst=ip.gate_mac))
+            else:
+                sendp(Ether(dst=dev_hw) / ARP(op=2, psrc=ip.gateway, pdst=dev_ip, hwdst=dev_hw, hwsrc=ip.gate_mac))
+                # sendp(Ether(dst=ip.gate_mac) / ARP(op=2, psrc=dev_ip, pdst=ip.gateway, hwsrc=dev_hw))
+
 
 class SelectiveIPv6Process(mp.Process):
     """Implements the abstract class _DaemonApp and also implements the selective spoofing mode of Apate.
@@ -164,7 +176,7 @@ class SelectiveIPv6Process(mp.Process):
         self.threads['sniffthread'] = SelectiveIPv6SniffThread(self.interface, self.ipv6, self.sleeper)
         self.threads['icmpv6thread'] = MulticastPingDiscoveryThread()
         self.threads['mldv2thread'] = MulticastListenerDiscoveryThread()
-        self.threads['psthread6'] = PubSubThread(self.ipv6.redis, self.logger)
+        self.threads['psthread6'] = PubSubThread(self.ipv6, self.logger, self.spoof_devices)
 
         # declare all threads as deamons
         for worker in self.threads:
@@ -235,3 +247,23 @@ class SelectiveIPv6Process(mp.Process):
         except Exception as e:
             self.logger.error("Process IPv6")
             self.logger.exception(e)
+
+    @staticmethod
+    def spoof_devices(ip, devs, logger):
+        tgt = (ip.gateway, ip.dns_servers[0]) if util.is_spoof_dns(ip) else (ip.gateway,)
+
+        for entry in devs:
+            dev_ip = util.get_device_ip(entry)
+            dev_hw = ip.redis.get_device_mac(dev_ip, network=util.get_device_net(entry))
+
+            for source in tgt:
+                if util.get_device_enabled(entry) == "1":
+                    # sendp(Ether(dst=dev_hw) / ARP(op=2, psrc=ip.gateway, pdst=dev_ip, hwdst=dev_hw))
+                    sendp([Ether(dst=dev_hw) / IPv6(src=source, dst=dev_ip) /
+                           ICMPv6ND_NA(tgt=source, R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=ip.mac)])
+                    # sendp(Ether(dst=ip.gate_mac) / ARP(op=2, psrc=dev_ip, pdst=ip.gateway, hwdst=ip.gate_mac))
+                else:
+                    # sendp(Ether(dst=dev_hw) / ARP(op=2, psrc=ip.gateway, pdst=dev_ip, hwdst=dev_hw, hwsrc=ip.gate_mac))
+                    # sendp(Ether(dst=ip.gate_mac) / ARP(op=2, psrc=dev_ip, pdst=ip.gateway, hwsrc=dev_hw))
+                    sendp([Ether(dst=dev_hw) / IPv6(src=source, dst=dev_ip) /
+                           ICMPv6ND_NA(tgt=source, R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=ip.gate_mac)])
