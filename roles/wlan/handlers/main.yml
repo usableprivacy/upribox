@@ -2,10 +2,14 @@
 - name: restart dnsmasq
   service: name=dnsmasq state=restarted
 
+- name: restart networking
+  service: name=networking state=restarted
+  notify: restart apate
+
 - name: restart hostapd
   shell: service hostapd stop && sleep 5 && service hostapd start
   notify: get ip address
-  
+
 - name: get ip address
   shell: "ip addr show wlan0"
   register: ipaddr
@@ -15,7 +19,7 @@
 # during initial deployment, wlan0 often does not receive an ip address
 # this does not happen on subsequent reboots
 - name: fix ip address
-  shell: "ip addr add dev wlan0 192.168.55.254/24" 
+  shell: "ip addr add dev wlan0 192.168.55.254/24"
   when: ipaddr.stdout.find("192.168.55.254") == -1
 
 - name: restart isc-dhcp-server

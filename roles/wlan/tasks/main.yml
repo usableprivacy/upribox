@@ -1,5 +1,5 @@
 ---
-- include: ../../tor/tasks/tor_state.yml tags=ssid,toggle_tor,toggle_silent,network_config
+- include: ../../tor/tasks/tor_state.yml tags=ssid,toggle_tor,toggle_silent,network_config,dhcp_server
 
 - name: install required packages
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
@@ -114,12 +114,17 @@
   tags:
     - toggle_tor
     - toggle_silent
+    - dhcp_server
+    - network_config
 
 - name: set dhcp ip ranges
   template: src=dhcpd.conf.j2 dest=/etc/dhcp/dhcpd.conf owner=root group=root mode=644
+  notify: restart isc-dhcp-server
   tags:
     - toggle_tor
     - toggle_silent
+    - dhcp_server
+    - network_config
 
 - name: enable services
   service: name={{ item }} enabled=yes
@@ -130,6 +135,8 @@
   tags:
     - toggle_tor
     - toggle_silent
+    - dhcp_server
+    - network_config
 
 - name: start services
   service: name={{ item }} state=started
@@ -149,6 +156,8 @@
   tags:
     - toggle_tor
     - toggle_silent
+    - dhcp_server
+    - network_config
 
 - name: stop services
   service: name={{ item }} state=stopped

@@ -25,6 +25,7 @@ subnet 192.168.55.0 netmask 255.255.255.0 {
         default-lease-time 86400;
         max-lease-time 86400;
 }
+
 {% if tor|bool%}
 subnet 192.168.56.0 netmask 255.255.255.0 {
         option routers                  192.168.56.254;
@@ -35,4 +36,21 @@ subnet 192.168.56.0 netmask 255.255.255.0 {
         default-lease-time 86400;
         max-lease-time 86400;
 }
+{% endif %}
+
+{% if ansible_local is defined and ansible_local.dhcpd is defined and ansible_local.dhcpd.general is defined and ansible_local.dhcpd.general.enabled is defined and ansible_local.dhcpd.general.enabled | default(default_settings.dhcpd.general.enabled) | bool %}
+{% if ansible_local is defined and ansible_local.interfaces is defined and ansible_local.interfaces.general is defined and ansible_local.interfaces.general.mode | default(default_settings.interfaces.general.mode) == "static" and ansible_local.interfaces.static is defined %}
+{% set dhcpd_ip = ansible_local.interfaces.static.ip | default(default_settings.interfaces.static.ip) %}
+{% set dhcpd_netmask = ansible_local.interfaces.static.netmask | default(default_settings.interfaces.static.netmask) %}
+{% set dhcpd_tmp = dhcpd_ip ~ "/" ~ dhcpd_netmask %}
+subnet {{ dhcpd_tmp | ipaddr('network')}} netmask {{ ansible_local.interfaces.static.netmask | default(default_settings.interfaces.static.netmask) }} {
+        option routers                  {{ ansible_local.interfaces.static.ip | default(default_settings.interfaces.static.ip) }};
+        option subnet-mask              {{ ansible_local.interfaces.static.netmask | default(default_settings.interfaces.static.netmask) }};
+        option broadcast-address        {{ dhcpd_tmp | ipaddr('broadcast') }};
+        option domain-name-servers      {{ ansible_local.interfaces.static.ip | default(default_settings.interfaces.static.ip) }};
+	range {{ dhcpd_tmp | ipaddr('100') | ipaddr('address') }} {{ dhcpd_tmp | ipaddr('200') | ipaddr('address') }};
+        default-lease-time 86400;
+        max-lease-time 86400;
+}
+{% endif %}
 {% endif %}
