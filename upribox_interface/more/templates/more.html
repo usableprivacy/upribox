@@ -61,7 +61,15 @@
         </fieldset>
     </form>
 
-     <h2>{% trans "upribox Software" %}</h2>
+    <h2>{% trans "Statische IP" %}</h2>
+    <p>{% trans "Mithilfe dieser Funktion kann der upribox eine statische IP Adresse zugewiesen werden." %}</p>
+
+    {% trans "Statische IP" as form_title %}
+    {% url "upri_static" as href %}
+    {% include "form.html" with form=ip_form %}
+
+
+    <h2>{% trans "upribox Software" %}</h2>
     <p>{% trans "Letztes update: " %} {{ update_time|date:"SHORT_DATETIME_FORMAT" }} (UTC)</p>
     <p>Version: {{ version }}</p>
 
