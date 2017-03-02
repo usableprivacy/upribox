@@ -180,7 +180,6 @@ def parse_privoxy_logs(arg):
     with open('/etc/ansible/default_settings.json', 'r') as f:
         config = json.load(f)
 
-    #logfile = "/Users/ju/Dropbox/Arbeit/upribox/Upribox2.0/statistics2.0/dnsmasq.log"
     logfile = os.path.join(config['log']['general']['path'], config['log']['privoxy']['subdir'],
                            config['log']['privoxy']['logfiles']['logname'])
 
@@ -241,7 +240,6 @@ def parse_dnsmasq_logs(arg):
     with open('/etc/ansible/default_settings.json', 'r') as f:
         config = json.load(f)
 
-    #logfile = "/Users/ju/Dropbox/Arbeit/upribox/Upribox2.0/statistics2.0/dnsmasq.log"
     logfile = os.path.join(config['log']['general']['path'], config['log']['dnsmasq']['subdir'],
                            config['log']['dnsmasq']['logfiles']['logname'])
 
