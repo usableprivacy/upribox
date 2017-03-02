@@ -89,6 +89,7 @@
   with_items:
     - jsonmerge
     - functools32
+    - redis
 
 - name: install supervisor for rqworker
   apt: name=supervisor state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
