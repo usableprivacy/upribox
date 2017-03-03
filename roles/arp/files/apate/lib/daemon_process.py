@@ -174,8 +174,8 @@ class SelectiveIPv6Process(mp.Process):
         self.threads = {}
         # Initialise threads
         self.threads['sniffthread'] = SelectiveIPv6SniffThread(self.interface, self.ipv6, self.sleeper)
-        self.threads['icmpv6thread'] = MulticastPingDiscoveryThread()
-        self.threads['mldv2thread'] = MulticastListenerDiscoveryThread()
+        self.threads['icmpv6thread'] = MulticastPingDiscoveryThread(self.interface)
+        self.threads['mldv2thread'] = MulticastListenerDiscoveryThread(self.interface)
         self.threads['psthread6'] = PubSubThread(self.ipv6, self.logger, self.spoof_devices)
 
         # declare all threads as deamons

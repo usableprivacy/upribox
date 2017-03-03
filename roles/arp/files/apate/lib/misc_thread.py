@@ -28,7 +28,7 @@ class ARPDiscoveryThread(threading.Thread):
 
         Args:
             gateway (str): The gateways IP address.
-            network (str): The network IP address.s
+            network (str): The network IP address.
 
         """
         threading.Thread.__init__(self)
@@ -53,10 +53,11 @@ class MulticastPingDiscoveryThread(threading.Thread):
     _SLEEP = 60
     """int: Time to wait before sending packets anew."""
 
-    def __init__(self):
+    def __init__(self, interface):
         """Initialises the thread.
         """
         threading.Thread.__init__(self)
+        self.interface = interface
 
     def run(self):
         """Sends ICMPv6 echo request packets marked with the data upribox to the
@@ -64,7 +65,7 @@ class MulticastPingDiscoveryThread(threading.Thread):
         Received echo replies are processed by a SniffThread.
         """
         while True:
-            send(IPv6(dst=self._MULTICAST_DEST) / ICMPv6EchoRequest(data=self._DATA))
+            send(IPv6(dst=self._MULTICAST_DEST) / ICMPv6EchoRequest(data=self._DATA), iface=self.interface)
             time.sleep(self._SLEEP)
 
 
@@ -169,15 +170,16 @@ class MulticastListenerDiscoveryThread(threading.Thread):
     _SLEEP = 60
     """int: Time to wait before sending packets anew."""
 
-    def __init__(self):
+    def __init__(self, interface):
         """Initialises the thread.
         """
         threading.Thread.__init__(self)
+        self.interface = interface
 
     def run(self):
         """Sends Multicast Listener Discovery Queries to all nodes on the network.
         Received Multicast Listener Reports are processed by a SniffThread.
         """
         while True:
-            send(IPv6(dst=self._MULTICAST_DEST, hlim=self._HOP_LIMIT) / IPv6ExtHdrHopByHop(options=RouterAlert()) / ICMPv6MLQuery())
+            send(IPv6(dst=self._MULTICAST_DEST, hlim=self._HOP_LIMIT) / IPv6ExtHdrHopByHop(options=RouterAlert()) / ICMPv6MLQuery(), iface=self.interface)
             time.sleep(self._SLEEP)
