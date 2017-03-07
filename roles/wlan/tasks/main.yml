@@ -51,7 +51,8 @@
     - network_config
 
 - name: configure eth0 interface with networkd
-  copy: src=40-eth0.network dest=/etc/systemd/network/40-eth0.network owner=root group=root mode=644
+  template: src=40-eth0.network dest=/etc/systemd/network/40-eth0.network owner=root group=root mode=644
+  notify: restart systemd-networkd
   tags:
     - toggle_tor
     - toggle_silent
