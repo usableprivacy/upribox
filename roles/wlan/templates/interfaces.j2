@@ -9,9 +9,6 @@ iface eth0 inet static
 {% if ansible_local.interfaces.static.dns is defined %}
   dns-nameservers {{ ansible_local.interfaces.static.dns | default(default_settings.interfaces.static.dns) }}
 {% endif %}
-{% else %}
-auto eth0
-allow-hotplug eth0
 {% endif %}
 
 auto wlan0
@@ -19,7 +16,7 @@ allow-hotplug wlan0
 iface wlan0 inet static
   address 192.168.55.254
   netmask 255.255.255.0
-  #pre-up ifconfig wlan0 hw ether {{ ansible_wlan0.macaddress | regex_replace('^..', magic_mac_prefix) | regex_replace('..$', magic_mac_postfix) }} 
+  #pre-up ifconfig wlan0 hw ether {{ ansible_wlan0.macaddress | regex_replace('^..', magic_mac_prefix) | regex_replace('..$', magic_mac_postfix) }}
   hwaddress ether {{ ansible_wlan0.macaddress | regex_replace('^..', magic_mac_prefix) | regex_replace('..$', magic_mac_postfix) }}
   #pre-up iptables-restore < /etc/iptables.upribox.ipv4
 
