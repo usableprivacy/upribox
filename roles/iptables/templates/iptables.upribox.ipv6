@@ -34,6 +34,7 @@ COMMIT
 #-A OUTPUT -p icmpv6 --icmpv6-type neighbor-advertisement -j ACCEPT
 -A FORWARD -p icmpv6 --icmpv6-type echo-request -m state --state NEW  -j ACCEPT
 #-A FORWARD -p icmpv6 --icmpv6-type echo-reply -j ACCEPT
+-A OUTPUT -p icmpv6 --icmpv6-type redirect -j DROP
 
 COMMIT
 # Completed on Thu Oct 21 2015
