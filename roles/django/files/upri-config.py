@@ -17,6 +17,7 @@ import os
 import sqlite3
 import redis as redisDB
 
+
 # directory where facts are located
 FACTS_DIR = "/etc/ansible/facts.d"
 # path to the ansible-playbook executeable
@@ -39,27 +40,9 @@ __DNSMASQ = "dnsmasq"
 __PRIVOXY = "privoxy"
 __BLOCKED = "blocked"
 __ADFREE = "adfree"
-__SIXMONTHS = "sixmonths"
-__TODAY = "today"
-__MONTHS = "months"
-__DOMAINS = "domains"
-
-
-"""
--- donuts --
-(sum of stats:dnsmasq:blocked:months:*)
-sum of stats:dnsmasq:adfree:months:*
-stats:dnsmasq:blocked:(todaydate)
-stats:dnsmasq:adfree:(todaydate)
-
--- bars --
-stats:dnsmasq:blocked:months:1 - stats:dnsmasq:months:12
-stats:privoxy:months:1 - stats:privoxy:months:12
-
--- lists --
-stats:dnsmasq:blocked:domains:*
-stats:privoxy:domains:*
-"""
+__MONTH = "month"
+__DAY = "day"
+__DOMAIN = "domain"
 
 #
 # revokes previously generated openvpn client certificates
@@ -198,10 +181,10 @@ def parse_privoxy_logs(arg):
                         psite = urlparse(ssite).netloc
 
                         # increments value of domain by 1 or sets to 1 if domain does not exist yet
-                        redis.incr(__DELIMITER.join((__PREFIX, __PRIVOXY, __DOMAINS, psite)))
+                        redis.incr(__DELIMITER.join((__PREFIX, __PRIVOXY, __BLOCKED, __DOMAIN, psite)))
 
                         # increments value of month by 1 or sets to 1 if the month does not exist yet
-                        redis.incr(__DELIMITER.join((__PREFIX, __PRIVOXY, __MONTHS, str(month))))
+                        redis.incr(__DELIMITER.join((__PREFIX, __PRIVOXY, __BLOCKED, __MONTH, str(month))))
 
                         changed = True
                         print "found new block: [%s] %s" % (sdate, psite)
@@ -262,10 +245,10 @@ def parse_dnsmasq_logs(arg):
                         month = pdate.month
 
                         # increments value of today's date by 1 or sets to 1 if the date does not exist yet
-                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __ADFREE, date)))
+                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __ADFREE, __DAY, date)))
 
                         # increments value of month by 1 or sets to 1 if the month does not exist yet
-                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __ADFREE, __MONTHS, str(month))))
+                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __ADFREE, __MONTH, str(month))))
 
                         changed = True
 
@@ -285,13 +268,13 @@ def parse_dnsmasq_logs(arg):
                         month = pdate.month
 
                         # increments value of today's date by 1 or sets to 1 if the date does not exist yet
-                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __BLOCKED, date)))
+                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __BLOCKED, __DAY, date)))
 
                         # increments value of domain by 1 or sets to 1 if domain does not exist yet
-                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __BLOCKED, __DOMAINS, psite)))
+                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __BLOCKED, __DOMAIN, psite)))
 
                         # increments value of month by 1 or sets to 1 if the month does not exist yet
-                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __BLOCKED, __MONTHS, str(month))))
+                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __BLOCKED, __MONTH, str(month))))
 
                         changed = True
 
@@ -315,6 +298,7 @@ def parse_dnsmasq_logs(arg):
         return 16
 
     return 0
+
 #
 # set a new ssid for the upribox "silent" wlan
 # return values:
