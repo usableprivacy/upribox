@@ -19,6 +19,7 @@ COMMIT
 -A INPUT -p icmpv6 --icmpv6-type echo-reply -d fe80::/64 -j ACCEPT
 # -m hl --hl-eq 255
 #-A OUTPUT -p icmpv6 --icmpv6-type echo-reply -j ACCEPT
+-A INPUT -p udp -m udp --dport 546 -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
 -A INPUT -p udp -m udp --dport 53 -j ACCEPT
 -A INPUT -p udp -m udp --sport 67:68 --dport 67:68 -j ACCEPT
