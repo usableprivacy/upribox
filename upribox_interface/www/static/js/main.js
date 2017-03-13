@@ -219,33 +219,21 @@ UPRIBOX.Main = (function($) {
         }
     }
     /**
-     * Draw Chartist chart
-     * @param data
+     * Draw Chartist charts
+     * @param chartdata
      */
     function drawChart(chartdata) {
-        /** upribox statistics sample code  **/
         //Chartist js-library (https://gionkunz.github.io/chartist-js/)
 
-        //data = {
-        //    //test data
-        //    /** todos **/
-        //    //api node for real data
-        //    labels: ['Juli', 'August', 'September', 'Oktober', 'November'],
-        //    //first series: visited websites per month, second series: blocked content per month
-        //    series: [
-        //        [1200, 2000, 4000, 2392, 1829],
-        //        [2382, 2392, 2933, 3238, 3448]
-        //    ]
-        //};
-        // var data = {
-        //     labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8', 'W9', 'W10'],
-        //     series: [
-        //         [1, 2, 4, 8, 6, -2, -1, -4, -6, -2]
-        //     ]
-        // };
+        var padding = 15;
+        var y_axis_width = Math.max.apply( Math, chartdata.bar_data.series[0].concat(chartdata.bar_data.series[1] ) ).toString().length;
+        if (y_axis_width > 4) {
+            padding = (y_axis_width - 3) * 10;
+        }
 
         var bar_options = {
             stackBars: true,
+            chartPadding: padding,
             axisY: {
                 onlyInteger: true
             }
@@ -253,9 +241,15 @@ UPRIBOX.Main = (function($) {
 
         new Chartist.Bar('.ct-chart', chartdata.bar_data, bar_options);
 
-        
-        var pie1_percentage = Math.round((chartdata.pie1_data.series[1] / (chartdata.pie1_data.series[0] + chartdata.pie1_data.series[1]) * 100) * 100) / 100;
-        var pie2_percentage = Math.round((chartdata.pie2_data.series[1] / (chartdata.pie2_data.series[0] + chartdata.pie2_data.series[1]) * 100) * 100) / 100;
+        var pie1_percentage = 0;
+        if (chartdata.pie1_data.series[0] + chartdata.pie1_data.series[1] > 0) {
+            pie1_percentage = Math.round((chartdata.pie1_data.series[1] / (chartdata.pie1_data.series[0] + chartdata.pie1_data.series[1]) * 100) * 100) / 100;
+        }
+
+        var pie2_percentage = 0;
+        if (chartdata.pie2_data.series[0] + chartdata.pie2_data.series[1] > 0) {
+            pie2_percentage = Math.round((chartdata.pie2_data.series[1] / (chartdata.pie2_data.series[0] + chartdata.pie2_data.series[1]) * 100) * 100) / 100;
+        }
 
         var pie1_options = {
             donut: true,
