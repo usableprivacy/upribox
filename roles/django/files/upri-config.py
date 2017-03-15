@@ -22,6 +22,7 @@ from apate_redis import ApateRedis
 import socket
 import netifaces as ni
 from netaddr import IPNetwork
+import redis as redisDB
 
 
 # directory where facts are located
@@ -105,6 +106,21 @@ def toggle_device(ip, enabled):
         return 32
 
     return 0
+
+redis = redisDB.StrictRedis(host="localhost", port=6379, db=7)
+
+# syntax for keys in redis db for statistics
+__PREFIX = "stats"
+"""str: Prefix which is used for every key in the redis db."""
+__DELIMITER = ":"
+"""str: Delimiter used for separating parts of keys in the redis db."""
+__DNSMASQ = "dnsmasq"
+__PRIVOXY = "privoxy"
+__BLOCKED = "blocked"
+__ADFREE = "adfree"
+__MONTH = "month"
+__DAY = "day"
+__DOMAIN = "domain"
 
 #
 # revokes previously generated openvpn client certificates
@@ -229,17 +245,17 @@ def action_parse_logs(arg):
 def parse_privoxy_logs(arg):
     rlog = re.compile('(\d{4}-\d{2}-\d{2} (\d{2}:?){3}).\d{3} [a-z0-9]{8} Crunch: Blocked: (.*)')
 
+    changed = False
     with open('/etc/ansible/default_settings.json', 'r') as f:
         config = json.load(f)
 
-    dbfile = config['django']['db']
     logfile = os.path.join(config['log']['general']['path'], config['log']['privoxy']['subdir'],
                            config['log']['privoxy']['logfiles']['logname'])
+
 
     if os.path.isfile(logfile):
         print "parsing privoxy logfile %s" % logfile
         with open(logfile, 'r') as privoxy:
-            logentries = []
             for line in privoxy:
                 try:
                     res = re.match(rlog, line)
@@ -247,37 +263,35 @@ def parse_privoxy_logs(arg):
                         sdate = res.group(1)
                         ssite = res.group(3)
                         pdate = datetime.strptime(sdate, '%Y-%m-%d %H:%M:%S')
+                        month = pdate.month
                         psite = urlparse(ssite).netloc
-                        logentries.append((psite, pdate))
+                        # increments value of domain by 1 or sets to 1 if domain does not exist yet
+                        redis.incr(__DELIMITER.join((__PREFIX, __PRIVOXY, __BLOCKED, __DOMAIN, psite)))
+
+                        # increments value of month by 1 or sets to 1 if the month does not exist yet
+                        redis.incr(__DELIMITER.join((__PREFIX, __PRIVOXY, __BLOCKED, __MONTH, str(month))))
+
+                        changed = True
                         print "found new block: [%s] %s" % (sdate, psite)
                 except Exception as e:
                     print "failed to parse line \"%s\": %s" % (line, e.message)
 
-        # write updates into db
-        if len(logentries) > 0:
+        if changed:
             try:
-                conn = sqlite3.connect(dbfile)
-                c = conn.cursor()
-                c.executemany("INSERT INTO statistics_privoxylogentry(url,log_date) VALUES (?,?)", logentries)
-                c.execute("DELETE FROM statistics_privoxylogentry WHERE log_date <= date('now','-6 month')")
-                conn.commit()
-                conn.close()
+                pass
                 # delete logfile
                 os.remove(logfile)
                 # todo: implement reload
                 subprocess.call(["/usr/sbin/service", "privoxy", "restart"])
             except Exception as e:
-                print "failed to write to database"
+                print "failed to write to redis database"
                 return 16
             return 1
-
     else:
         print "failed to parse privoxy logfile %s: file not found" % logfile
         return 16
 
     return 0
-
-
 #
 # parse the dnsmasq logfile and insert data into django db
 # DnsmasqQueryLogEntry contains all queries (blocked and unblocked)
@@ -290,19 +304,19 @@ def parse_dnsmasq_logs(arg):
     queryPattern = re.compile('([a-zA-Z]{3} ? \d{1,2} (\d{2}:?){3}) dnsmasq\[[0-9]*\]: query\[[A-Z]*\] (.*) from ([0-9]+.?){4}')
     blockedPattern = re.compile('([a-zA-Z]{3} ? \d{1,2} (\d{2}:?){3}) dnsmasq\[[0-9]*\]: config (.*) is 192.168.55.254')
 
+    changed = False
     with open('/etc/ansible/default_settings.json', 'r') as f:
         config = json.load(f)
 
-    dbfile = config['django']['db']
     logfile = os.path.join(config['log']['general']['path'], config['log']['dnsmasq']['subdir'],
                            config['log']['dnsmasq']['logfiles']['logname'])
+
+
 
     if os.path.isfile(logfile):
         print "parsing dnsmasq logfile %s" % logfile
         cur_year = time.localtime().tm_year
         with open(logfile, 'r') as dnsmasq:
-            querylogentries = []
-            blockedlogentries = []
             for line in dnsmasq:
                 try:
                     res = re.match(queryPattern, line)
@@ -312,7 +326,17 @@ def parse_dnsmasq_logs(arg):
                         psite = str(ssite)
                         pdate = datetime.strptime(sdate, '%b %d %H:%M:%S')
                         pdate = pdate.replace(year=cur_year)
-                        querylogentries.append((psite, pdate))
+                        date = pdate.strftime('%Y-%m-%d')
+                        month = pdate.month
+
+                        # increments value of today's date by 1 or sets to 1 if the date does not exist yet
+                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __ADFREE, __DAY, date)))
+
+                        # increments value of month by 1 or sets to 1 if the month does not exist yet
+                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __ADFREE, __MONTH, str(month))))
+
+                        changed = True
+
                         print "found new query: [%s] %s" % (psite, pdate)
                 except Exception as e:
                     print "failed to parse query \"%s\": %s" % (line, e.message)
@@ -325,37 +349,40 @@ def parse_dnsmasq_logs(arg):
                         psite = str(ssite)
                         pdate = datetime.strptime(sdate, '%b %d %H:%M:%S')
                         pdate = pdate.replace(year=cur_year)
-                        blockedlogentries.append((psite, pdate))
+                        date = pdate.strftime('%Y-%m-%d')
+                        month = pdate.month
+
+                        # increments value of today's date by 1 or sets to 1 if the date does not exist yet
+                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __BLOCKED, __DAY, date)))
+
+                        # increments value of domain by 1 or sets to 1 if domain does not exist yet
+                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __BLOCKED, __DOMAIN, psite)))
+
+                        # increments value of month by 1 or sets to 1 if the month does not exist yet
+                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __BLOCKED, __MONTH, str(month))))
+
+                        changed = True
+
                         print "found new blocked query: [%s] %s" % (psite, pdate)
                 except Exception as e:
                     print "failed to parse blocked query \"%s\": %s" % (line, e.message)
 
-        # write updates into db
-        if len(querylogentries) > 0:
+        if changed:
             try:
-                conn = sqlite3.connect(dbfile)
-                c = conn.cursor()
-                c.executemany("INSERT INTO statistics_dnsmasqquerylogentry(url,log_date) VALUES (?,?)", querylogentries)
-                c.execute("DELETE FROM statistics_dnsmasqquerylogentry WHERE log_date <= date('now','-6 month')")
-                c.executemany("INSERT INTO statistics_dnsmasqblockedlogentry(url,log_date) VALUES (?,?)", blockedlogentries)
-                c.execute("DELETE FROM statistics_dnsmasqblockedlogentry WHERE log_date <= date('now','-6 month')")
-                conn.commit()
-                conn.close()
+                pass
                 # delete logfile
                 os.remove(logfile)
                 # todo: implement reload
                 subprocess.call(["/usr/sbin/service", "dnsmasq", "restart"])
             except Exception as e:
-                print "failed to write to database"
+                print "failed to write to redis database"
                 return 16
             return 1
-
     else:
         print "failed to parse dnsmasq logfile %s: file not found" % logfile
         return 16
 
     return 0
-
 
 #
 # set a new ssid for the upribox "silent" wlan

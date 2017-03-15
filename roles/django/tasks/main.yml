@@ -175,6 +175,9 @@
     path: "{{default_settings.log.general.path}}/{{default_settings.log.dnsmasq.subdir}}/{{default_settings.log.dnsmasq.logfiles.logname}}"
   register: dns_log_file
 
+- name: cleanup statistics
+  shell: "/var/webapp-virtualenv/bin/python /usr/share/nginx/www-upri-interface/manage.py cleanup --settings {{django_settings_file}}"
+
 - name: update block statistics
   shell: "/usr/local/bin/upri-config.py parse_logs"
   register: update_result
