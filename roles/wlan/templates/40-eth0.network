@@ -1,0 +1,16 @@
+[Match]
+Name=eth0
+[Network]
+{% if ansible_local is defined and ansible_local.interfaces is defined and ansible_local.interfaces.general is defined and ansible_local.interfaces.general.mode | default(default_settings.interfaces.general.mode) == "static" and ansible_local.interfaces.static is defined %}
+DHCP=no
+{% set dhcpd_ip = ansible_local.interfaces.static.ip | default(default_settings.interfaces.static.ip) %}
+{% set dhcpd_netmask = ansible_local.interfaces.static.netmask | default(default_settings.interfaces.static.netmask) %}
+{% set dhcpd_tmp = dhcpd_ip ~ "/" ~ dhcpd_netmask %}
+Address={{ dhcpd_tmp | ipaddr('host/prefix') }}
+Gateway={{ ansible_local.interfaces.static.gateway | default(default_settings.interfaces.static.gateway) }}
+{% if ansible_local.interfaces.static.dns is defined %}
+DNS={{ ansible_local.interfaces.static.dns | default(default_settings.interfaces.static.dns) }}
+{% endif %}
+{% else %}
+DHCP=yes
+{% endif %}

@@ -13,28 +13,28 @@ log_format blackhole_combined '"$host" - [$time_local] '
   '"$http_user_agent"';
 
 server {
-	
-  listen   80 default_server; ## listen for ipv4; this line is default and implied
+  listen 80 default_server;
+  listen [::]:80 default_server; ## listen for ipv4; this line is default and implied
 
   location = /robots.txt  { access_log off; log_not_found off; }
   location = /favicon.ico { access_log off; log_not_found off; }
-  
+
   gzip off;
-	
+
   access_log {{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.blackhole_access}} blackhole_combined;
   error_log {{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.blackhole_error}} error;
 
 	root /usr/share/nginx/www-upri-blackhole;
-	
+
 	#rewrite all requests to a blank HTML file
 	location / {
 
 	  default_type text/html;
 
     try_files /blank$emptyfile_suffix /blank;
-		
+
     rewrite_by_lua '
-		
+
                 local ck = require "cookie"
                 local cookie, err = ck:new()
 
@@ -60,7 +60,7 @@ server {
 			    end
 			end
 		end
-		
+
             ';
 	}
 	location /pagead {

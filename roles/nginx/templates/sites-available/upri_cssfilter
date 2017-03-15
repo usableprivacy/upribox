@@ -1,5 +1,6 @@
 server {
-	listen 80;
+    listen 80;
+    listen [::]:80;
 
 	root /usr/share/nginx/www-upri-blackhole;
 	index index.html index.htm;

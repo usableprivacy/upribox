@@ -15,10 +15,11 @@ import threading
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 # suppresses following message
 # WARNING: No route found for IPv6 destination :: (no default route?)
-from scapy.all import sendp, ARP, Ether, IP, ETHER_BROADCAST, sniff
+from scapy.all import sendp, ARP, Ether, IP, ETHER_BROADCAST, sniff, ICMPv6EchoReply, IPv6, ICMPv6MLReport, ICMPv6ND_RA, ICMPv6NDOptDstLLAddr, ICMPv6ND_NA
 from scapy.contrib.igmp import IGMP
 
 import util
+from misc_thread import MulticastPingDiscoveryThread
 
 
 class _SniffThread(threading.Thread):
@@ -32,21 +33,17 @@ class _SniffThread(threading.Thread):
     _LFILTER = staticmethod(lambda x: x.haslayer(ARP))
     """function: lambda filter used for scapy's sniff function."""
 
-    def __init__(self, interface, gateway, mac, gate_mac):
+    def __init__(self, interface, ip):
         """Initialises several things needed to define the thread's behaviour.
 
         Args:
             interface (str): The network interface which should be used. (e.g. eth0)
-            gateway (str): IP address of the gateway.
-            mac (str): MAC address of the spoofing device. (own MAC address)
-            gate_mac (str): MAC address of the gateway.
-
+            ipv4 (namedtuple): Contains several information about the ipv4 configuration.
+            ipv6 (namedtuple): Contains several information about the ipv6 configuration.
         """
         threading.Thread.__init__(self)
         self.interface = interface
-        self.gateway = gateway
-        self.mac = mac
-        self.gate_mac = gate_mac
+        self.ip = ip
 
     def run(self):
         """Starts sniffing for incoming ARP packets with scapy.
@@ -72,17 +69,15 @@ class HolisticSniffThread(_SniffThread):
     the listener of the holistic spoofing mode of Apate.
     """
 
-    def __init__(self, interface, gateway, mac, gate_mac):
+    def __init__(self, interface, ipv4):
         """Initialises several things needed to define the thread's behaviour.
 
         Args:
             interface (str): The network interface which should be used. (e.g. eth0)
-            gateway (str): IP address of the gateway.
-            mac (str): MAC address of the spoofing device. (own MAC address)
-            gate_mac (str): MAC address of the gateway.
-
+            ipv4 (namedtuple): Contains several information about the ipv4 configuration.
+            ipv6 (namedtuple): Contains several information about the ipv6 configuration.
         """
-        super(self.__class__, self).__init__(interface, gateway, mac, gate_mac)
+        super(HolisticSniffThread, self).__init__(interface, ipv4)
 
     def _packet_handler(self, pkt):
         """This method is called for each packet received through scapy's sniff function.
@@ -95,55 +90,78 @@ class HolisticSniffThread(_SniffThread):
         if pkt[ARP].op == 1:
 
             # packets intended for this machine (upribox)
-            if pkt[Ether].dst == self.mac:
+            if pkt[Ether].dst == self.ip.mac:
                 # incoming packets(that are sniffed): Windows correctly fills in the hwdst, linux (router) only 00:00:00:00:00:00
                 # this answers packets asking if we are the gateway (directly not via broadcast)
                 # Windows does this 3 times before sending a broadcast request
-                sendp(Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=pkt[ARP].pdst, pdst=pkt[ARP].psrc, hwdst=pkt[ARP].hwsrc, hwsrc=self.mac))
+                sendp(Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=pkt[ARP].pdst, pdst=pkt[ARP].psrc, hwdst=pkt[ARP].hwsrc, hwsrc=self.ip.mac))
 
-            # broadcast request to or from gateway
-            elif pkt[Ether].dst.lower() == util.hex2str_mac(ETHER_BROADCAST) and (pkt[ARP].psrc == self.gateway or pkt[ARP].pdst == self.gateway):
+            # broadcast request to gateway
+            elif pkt[Ether].dst.lower() == util.hex2str_mac(ETHER_BROADCAST) and (pkt[ARP].pdst == self.ip.gateway):
+                # pkt[ARP].psrc == self.gateway or
+
                 # spoof transmitter
-                packets = [Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=pkt[ARP].pdst, pdst=pkt[ARP].psrc, hwsrc=self.mac, hwdst=pkt[ARP].hwsrc)]
-
-                # get mac address of original target
-                dest = self.gate_mac
-                if pkt[ARP].pdst != self.gateway:
-                    # send arp request if destination was not the gateway
-                    dest = util.get_mac(pkt[ARP].pdst, self.interface)
-
-                if dest:
-                    # spoof receiver
-                    packets.append(Ether(dst=dest) / ARP(op=2, psrc=pkt[ARP].psrc, hwsrc=self.mac, pdst=pkt[ARP].pdst, hwdst=dest))
+                packets = [Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=pkt[ARP].pdst, pdst=pkt[ARP].psrc, hwsrc=self.ip.mac, hwdst=pkt[ARP].hwsrc)]
 
                 # some os didn't accept an answer immediately (after sending the first ARP request after boot
                 # so, send packets after some delay
                 threading.Timer(self._DELAY, sendp, [packets]).start()
+                # TODO gratuitous neighbor advertisements
 
 
-class SelectiveSniffThread(_SniffThread):
+class _SelectiveSniffThread(_SniffThread):
     """Implements the abstract class _SniffThread and also implements
     the listener of the selective spoofing mode of Apate.
     """
+    _SNIFF_PARTS = []
+    """list: List of tuples containing a BFP filter and the according scapy class."""
 
-    _SNIFF_FILTER = "(arp or igmp) and inbound"
+    _SNIFF_DIRECTION = "inbound"
+    """str: speficies which traffic should be sniffed."""
+
+    _SNIFF_FILTER = lambda self: "({}) and {}".format(" or ".join(zip(* self._SNIFF_PARTS)[0]), self._SNIFF_DIRECTION)
     """str: tcpdump filter used for scapy's sniff function."""
-    _LFILTER = staticmethod(lambda x: any([x.haslayer(layer) for layer in (ARP, IGMP)]))
+    # _SNIFF_FILTER = "(arp or igmp or (icmp6 and ip6[40] == 129) or (multicast and ip6[48] == 131) or (icmp6 and ip6[40] == 134)) and inbound"
+
+    _LFILTER = lambda self, x: any([x.haslayer(layer) for layer in zip(* self._SNIFF_PARTS)[1]])
+    # _LFILTER = staticmethod(lambda x: any([x.haslayer(layer) for layer in (ARP, IGMP, ICMPv6EchoReply, ICMPv6MLReport, ICMPv6ND_RA)]))
     """function: lambda filter used for scapy's sniff function."""
 
-    def __init__(self, interface, gateway, mac, gate_mac, redis):
+    def __init__(self, interface, ip, sleeper):
         """Initialises several things needed to define the thread's behaviour.
 
         Args:
             interface (str): The network interface which should be used. (e.g. eth0)
-            gateway (str): IP address of the gateway.
-            mac (str): MAC address of the spoofing device. (own MAC address)
-            gate_mac (str): MAC address of the gateway.
-            redis (apate_redis.ApateRedis): Used to add new devices to redis db.
+            ipv4 (namedtuple): Contains several information about the ipv4 configuration.
+            ipv6 (namedtuple): Contains several information about the ipv6 configuration.
+            sleeper (threading.Condition): Used for thread synchronisation.
 
         """
-        super(self.__class__, self).__init__(interface, gateway, mac, gate_mac)
-        self.redis = redis
+        super(_SelectiveSniffThread, self).__init__(interface, ip)
+        self.sleeper = sleeper
+
+    def run(self):
+        """Starts sniffing for incoming ARP packets with scapy.
+        Actions after receiving a packet ar defines via _packet_handler.
+        """
+        # the filter argument in scapy's sniff function seems to be applied too late
+        # therefore some unwanted packets are processed (e.g. tcp packets of ssh session)
+        # but it still decreases the number of packets that need to be processed by the lfilter function
+        sniff(prn=self._packet_handler, filter=self._SNIFF_FILTER(), lfilter=self._LFILTER, store=0, iface=self.interface)
+
+
+class SelectiveIPv4SniffThread(_SelectiveSniffThread):
+    """Implements the abstract class _SniffThread and also implements
+    the listener of the selective spoofing mode of Apate.
+    """
+    _SNIFF_PARTS = [
+        ("arp", ARP),
+        ("igmp", IGMP),
+    ]
+    """list: List of tuples containing a BFP filter and the according scapy class."""
+
+    def __init__(self, interface, ip, sleeper):
+        super(SelectiveIPv4SniffThread, self).__init__(interface, ip, sleeper)
 
     def _packet_handler(self, pkt):
         """This method is called for each packet received through scapy's sniff function.
@@ -152,9 +170,9 @@ class SelectiveSniffThread(_SniffThread):
             pkt (str): Received packet via scapy's sniff (through socket.recv).
         """
 
-        if pkt.haslayer(ARP):
+        if self.ip and pkt.haslayer(ARP):
             self._arp_handler(pkt)
-        elif pkt.haslayer(IGMP):
+        elif self.ip and pkt.haslayer(IGMP):
             self._igmp_handler(pkt)
 
     def _arp_handler(self, pkt):
@@ -168,41 +186,34 @@ class SelectiveSniffThread(_SniffThread):
         # when ARP request
         if pkt[ARP].op == 1:
             # packets intended for this machine (upribox)
-            if pkt[Ether].dst == self.mac:
+            if pkt[Ether].dst == self.ip.mac:
                 # incoming packets(that are sniffed): Windows correctly fills in the hwdst, linux (router) only 00:00:00:00:00:00
                 # this answers packets asking if we are the gateway (directly not via broadcast)
                 # Windows does this 3 times before sending a broadcast request
-                sendp(Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=pkt[ARP].pdst, pdst=pkt[ARP].psrc, hwdst=pkt[ARP].hwsrc, hwsrc=self.mac))
+                if not self.ip.redis.check_device_disabled(pkt[ARP].psrc):
+                    sendp(Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=pkt[ARP].pdst, pdst=pkt[ARP].psrc, hwdst=pkt[ARP].hwsrc, hwsrc=self.ip.mac))
                 # add transmitting device to redis db
-                self.redis.add_device(pkt[ARP].psrc, pkt[ARP].hwsrc)
+                self.ip.redis.add_device(pkt[ARP].psrc, pkt[ARP].hwsrc)
 
-            # broadcast request to or from gateway
-            elif pkt[Ether].dst.lower() == util.hex2str_mac(ETHER_BROADCAST) and (pkt[ARP].psrc == self.gateway or pkt[ARP].pdst == self.gateway):
+            # broadcast request to gateway
+            elif pkt[Ether].dst.lower() == util.hex2str_mac(ETHER_BROADCAST) and (pkt[ARP].pdst == self.ip.gateway):
+                # pkt[ARP].psrc == self.gateway or
+
                 # spoof transmitter
-                packets = [Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=pkt[ARP].pdst, pdst=pkt[ARP].psrc, hwsrc=self.mac, hwdst=pkt[ARP].hwsrc)]
-
-                # get mac address of original target
-                dest = self.gate_mac
-                if pkt[ARP].pdst != self.gateway:
-                    # send arp request if destination was not the gateway
-                    dest = util.get_mac(pkt[ARP].pdst, self.interface)
-
-                if dest:
-                    # spoof receiver
-                    packets.append(Ether(dst=dest) / ARP(op=2, psrc=pkt[ARP].psrc, hwsrc=self.mac, pdst=pkt[ARP].pdst, hwdst=dest))
+                packets = [Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=pkt[ARP].pdst, pdst=pkt[ARP].psrc, hwsrc=self.ip.mac, hwdst=pkt[ARP].hwsrc)]
 
                 # add transmitting device to redis db
-                self.redis.add_device(pkt[ARP].psrc, pkt[ARP].hwsrc)
-                # add receiving device to redis db
-                self.redis.add_device(pkt[ARP].pdst, dest)
+                self.ip.redis.add_device(pkt[ARP].psrc, pkt[ARP].hwsrc)
 
                 # some os didn't accept an answer immediately (after sending the first ARP request after boot
                 # so, send packets after some delay
-                threading.Timer(self._DELAY, sendp, [packets]).start()
+                if not self.ip.redis.check_device_disabled(pkt[ARP].psrc):
+                    threading.Timer(self._DELAY, sendp, [packets]).start()
         else:
             # ARP reply
             # add transmitting device to redis db
-            self.redis.add_device(pkt[ARP].psrc, pkt[ARP].hwsrc)
+            if not self.ip.redis.check_device_disabled(pkt[ARP].psrc):
+                self.ip.redis.add_device(pkt[ARP].psrc, pkt[ARP].hwsrc)
 
     def _igmp_handler(self, pkt):
         """"This method is called for each IGMP packet received through scapy's sniff function.
@@ -212,7 +223,64 @@ class SelectiveSniffThread(_SniffThread):
         Args:
             pkt (str): Received packet via scapy's sniff (through socket.recv).
         """
-        # if util.get_mac(pkt[IP].src,self.interface):
-        self.redis.add_device(pkt[IP].src, pkt[Ether].src)
-        sendp([Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=self.gateway, pdst=pkt[IP].src, hwdst=pkt[Ether].src),
-               Ether(dst=self.gate_mac) / ARP(op=2, psrc=pkt[IP].src, pdst=self.gateway, hwdst=self.gate_mac)])
+        self.ip.redis.add_device(pkt[IP].src, pkt[Ether].src)
+        if not self.ip.redis.check_device_disabled(pkt[IP].src):
+            sendp(Ether(dst=pkt[Ether].src) / ARP(op=2, psrc=self.ip.gateway, pdst=pkt[IP].src, hwdst=pkt[Ether].src))
+
+
+class SelectiveIPv6SniffThread(_SelectiveSniffThread):
+    """Implements the abstract class _SniffThread and also implements
+    the listener of the selective spoofing mode of Apate.
+    """
+    _SNIFF_PARTS = [
+        # icmpv6 echo reply
+        ("(icmp6 and ip6[40] == 129)", ICMPv6EchoReply),
+        # mldv2 multicast listener report
+        ("(multicast and ip6[48] == 131)", ICMPv6MLReport),
+        # router advertisement
+        ("(icmp6 and ip6[40] == 134)", ICMPv6ND_RA)
+    ]
+    """list: List of tuples containing a BFP filter and the according scapy class."""
+
+    def __init__(self, interface, ip, sleeper):
+        super(SelectiveIPv6SniffThread, self).__init__(interface, ip, sleeper)
+
+    def _packet_handler(self, pkt):
+        """This method is called for each packet received through scapy's sniff function.
+
+        Args:
+            pkt (str): Received packet via scapy's sniff (through socket.recv).
+        """
+
+        if self.ip and pkt.haslayer(ICMPv6EchoReply) and pkt[ICMPv6EchoReply].data == MulticastPingDiscoveryThread._DATA:
+            # react to echo replies with data == upribox
+            self._icmpv6_handler(pkt)
+        elif self.ip and pkt.haslayer(ICMPv6MLReport):
+            # react to multicast listener reports
+            self._icmpv6_handler(pkt)
+        elif self.ip and pkt.haslayer(ICMPv6ND_RA):
+            # spoof clients after receiving a router advertisement
+            with self.sleeper:
+                self.sleeper.notifyAll()
+
+    def _icmpv6_handler(self, pkt):
+        """"This method is called for each ICMPv6 echo reply packet or multicast listener report packet
+        received through scapy's sniff function.
+        Incoming packets are used to spoof involved devices and add new devices
+        to the redis db.
+
+        Args:
+            pkt (str): Received packet via scapy's sniff (through socket.recv).
+        """
+        # add transmitting device to redis db
+        self.ip.redis.add_device(pkt[IPv6].src, pkt[Ether].src)
+        # impersonate gateway
+        if not self.ip.redis.check_device_disabled(pkt[IPv6].src):
+            sendp(Ether(dst=pkt[Ether].src) / IPv6(src=self.ip.gateway, dst=pkt[IPv6].src) /
+                  ICMPv6ND_NA(tgt=self.ip.gateway, R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=self.ip.mac))
+
+        # impersonate DNS server if necessary
+        if util.is_spoof_dns(self.ip):
+            if not self.ip.redis.check_device_disabled(pkt[IPv6].src):
+                sendp(Ether(dst=pkt[Ether].src) / IPv6(src=self.ip.dns_servers[0], dst=pkt[IPv6].src) /
+                      ICMPv6ND_NA(tgt=self.ip.dns_servers[0], R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=self.ip.mac))

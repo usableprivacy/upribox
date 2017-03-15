@@ -769,6 +769,8 @@ debug  8192 # Non-fatal errors
 #        listen-address [::1]:8118
 #
 listen-address  0.0.0.0:8118
+# privoxy fails if trying to listen on same port on ipv6 and ipv4
+listen-address [::]:8119
 #
 #  4.2. toggle
 #  ============
@@ -1076,10 +1078,8 @@ permit-access  192.168.155.0/24
 permit-access  10.0.0.0/8
 permit-access  172.16.0.0/12
 permit-access  192.168.0.0/16
-# legacy config
-#permit-access  192.168.0.0/24
-#permit-access  192.168.20.0/24
-#permit-access  10.8.0.0/24
+permit-access  [fe80::]/64
+permit-access  [2000::]/3
 #
 #      This is equivalent to the following line even if listening on
 #      an IPv4 address (not supported on all platforms):

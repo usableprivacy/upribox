@@ -6,7 +6,7 @@
   when: ansible_distribution_release == "wheezy"
 
 - name: configure hosts
-  copy: src=hosts dest=/etc/hosts owner=root group=root mode=644
+  template: src=hosts dest=/etc/hosts owner=root group=root mode=644
 
 - name: create group for logging users
   group: name="tmp-logger" state=present
@@ -107,7 +107,7 @@
   file: path="{{ pull_workdir }}" state=directory owner=root group=root mode=0751
 
 - name: update upribox git repo
-  git: repo="{{ pull_repo_url }}" version="{{ pull_branch }}" dest="{{ pull_workdir }}" clone=yes update=yes
+  git: repo="{{ pull_repo_url }}" version="{{ pull_branch }}" dest="{{ pull_workdir }}" clone=yes update=yes force=yes
   when: pull_deployment is not defined and env == "production"
 
 - name: get local working dir

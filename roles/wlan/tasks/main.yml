@@ -21,6 +21,9 @@
   command: systemctl disable rng-tools.service
   when: hwrng_device.stat.exists == False
 
+- name: enable systemd-networkd service
+  command: systemctl enable systemd-networkd.service
+
 #- name: fix locales
 #  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }} default_release=jessie
 #  with_items:
@@ -36,6 +39,9 @@
 - name: enable ip forwarding
   sysctl: name=net.ipv4.ip_forward value=1 state=present
 
+- name: enable ip6 forwarding
+  sysctl: name=net.ipv6.conf.all.forwarding value=1 state=present
+
 - name: configure interfaces
   template: src=interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=644
   register: interfaces
@@ -43,6 +49,15 @@
     - toggle_tor
     - toggle_silent
     - network_config
+
+- name: configure eth0 interface with networkd
+  template: src=40-eth0.network dest=/etc/systemd/network/40-eth0.network owner=root group=root mode=644
+  notify: restart systemd-networkd
+  tags:
+    - toggle_tor
+    - toggle_silent
+    - network_config
+
 
 - name: check if static ip setup is enabled
   set_fact:

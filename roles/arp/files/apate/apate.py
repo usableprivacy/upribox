@@ -14,7 +14,7 @@ from lib import daemon_app
 
 CONFIG_FILE = "/etc/apate/config.json"
 """Path of the config file for the Apate ARP spoofing daemon."""
-CONFIG_OPTIONS = ('logfile', 'pidfile', 'interface', 'stderr', 'stdout', 'mode')
+CONFIG_OPTIONS = ('logfile', 'pidfile', 'interface', 'stderr', 'stdout', 'mode', 'dns')
 """Options that need to be present in the config file."""
 
 
@@ -58,10 +58,10 @@ def main():
     try:
         # when configured to use the holistic spoofing mode
         if data['mode'] == "holistic":
-            dapp = daemon_app.HolisticDaemonApp(logger, str(data['interface']), data['pidfile'], data['stdout'], data['stderr'])
+            dapp = daemon_app.HolisticDaemonApp(logger, str(data['interface']), data['pidfile'], data['stdout'], data['stderr'], data['dns'])
         else:
             # selective spoofing mode is default
-            dapp = daemon_app.SelectiveDaemonApp(logger, str(data['interface']), data['pidfile'], data['stdout'], data['stderr'])
+            dapp = daemon_app.SelectiveDaemonApp(logger, str(data['interface']), data['pidfile'], data['stdout'], data['stderr'], data['dns'])
     except Exception as e:
         logger.error("An error happened during initialsising the daemon process - terminating process")
         logger.exception(e)

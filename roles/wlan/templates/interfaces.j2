@@ -1,20 +1,6 @@
 auto lo
 iface lo inet loopback
 
-{% if ansible_local is defined and ansible_local.interfaces is defined and ansible_local.interfaces.general is defined and ansible_local.interfaces.general.mode | default(default_settings.interfaces.general.mode) == "static" and ansible_local.interfaces.static is defined %}
-auto eth0
-iface eth0 inet static
-  address {{ ansible_local.interfaces.static.ip | default(default_settings.interfaces.static.ip) }}
-  netmask {{ ansible_local.interfaces.static.netmask | default(default_settings.interfaces.static.netmask) }}
-  gateway {{ ansible_local.interfaces.static.gateway | default(default_settings.interfaces.static.gateway) }}
-{% if ansible_local.interfaces.static.dns is defined %}
-  dns-nameservers {{ ansible_local.interfaces.static.dns | default(default_settings.interfaces.static.dns) }}
-{% endif %}
-{% else %}
-auto eth0
-allow-hotplug eth0
-{% endif %}
-
 auto wlan0
 allow-hotplug wlan0
 iface wlan0 inet static
