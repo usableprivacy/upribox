@@ -1,8 +1,9 @@
 [Unit]
 Description=Apate ARP Spoofing Daemon
 Requires=networking.service network-online.target redis-server.service
+BindsTo=sys-subsystem-net-devices-eth0.device network-online.target
 Wants=network-online.target
-After=networking.service redis-server.service network-online.target
+After=sys-subsystem-net-devices-eth0.device networking.service redis-server.service network-online.target
 
 [Service]
 Type=forking

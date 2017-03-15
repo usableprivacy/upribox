@@ -11,6 +11,8 @@ Classes:
 import os
 import logging
 import time
+import collections
+import dns.resolver
 import netifaces as ni
 from netaddr import IPAddress, IPNetwork, AddrFormatError
 
@@ -20,16 +22,15 @@ logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 from scapy.all import conf, sendp, ARP, Ether, ETHER_BROADCAST
 
 import util
-from sniff_thread import HolisticSniffThread, SelectiveSniffThread
-from apate_redis import ApateRedis
-from misc_thread import ARPDiscoveryThread, IGMPDiscoveryThread, PubSubThread
+from sniff_thread import HolisticSniffThread
+from daemon_process import SelectiveIPv4Process, SelectiveIPv6Process
 
 
 class _DaemonApp(object):
     """This is an abstract class, which should be inherited to define the
     Apate daemon's behaviour."""
 
-    def __init__(self, logger, interface, pidfile, stdout, stderr):
+    def __init__(self, logger, interface, pidfile, stdout, stderr, dns_file):
         """Initialises several things needed to define the daemons behaviour.
 
         Args:
@@ -38,6 +39,7 @@ class _DaemonApp(object):
             pidfile (str): Path of the pidfile, used by the daemon.
             stdout (str): Path of stdout, used by the daemon.
             stderr (str): Path of stderr, used by the daemon.
+            dns_file (str): Path of file containing the nameservers.
 
         Raises:
             DaemonError: Signalises the failure of the daemon.
@@ -55,6 +57,9 @@ class _DaemonApp(object):
         self.logger = logger
         self.interface = interface
 
+        # namedtuple for providing information about the IP configuration
+        IPInfo = collections.namedtuple('IPInfo', 'ip, netmask, network, gateway, mac, gate_mac, dns_servers, redis')
+
         if_info = None
         try:
             if_info = ni.ifaddresses(self.interface)
@@ -62,43 +67,80 @@ class _DaemonApp(object):
             self.logger.error("An error concerning the interface {} has occurred: {}".format(self.interface, str(e)))
             raise DaemonError()
 
-        # get ip of specified interface
-        self.ip = if_info[2][0]['addr']
-        # get subnetmask of specified interface
-        self.netmask = if_info[2][0]['netmask']
-        # get mac address of specified interface
-        self.mac = if_info[17][0]['addr']
+        self.ipv4 = None
+        self.ipv6 = None
 
-        # get network address
+        # get mac address of specified interface
+        mac = if_info[ni.AF_LINK][0]['addr']
+        rs = dns.resolver.Resolver(filename=dns_file)
+
         try:
-            self.network = IPNetwork("{}/{}".format(self.ip, self.netmask))
+            # get ip of specified interface
+            ip = if_info[ni.AF_INET][0]['addr']
+            # get subnetmask of specified interface
+            netmask = if_info[ni.AF_INET][0]['netmask'].split("/")[0]
+            # get the network address
+            network = IPNetwork("{}/{}".format(ip, netmask))
+
+            # get default gateway
+            gateway = ni.gateways()["default"][ni.AF_INET][0]
+
+            try:
+                # get MAC address of gateway
+                gate_mac = util.get_mac(gateway, self.interface)
+                if not gate_mac:
+                    raise DaemonError()
+            except Exception:
+                self.logger.error("Unable to get MAC address of IPv4 Gateway")
+
+            # get all ipv4 nameservers
+            dns_servers = [x for x in rs.nameservers if IPAddress(x).version == 4]
+            # store ipv4 information
+            self.ipv4 = IPInfo(ip, netmask, network, gateway, mac, gate_mac, dns_servers, None)
         except AddrFormatError as afe:
             # this should never happen, because values are retrieved via netifaces library
-            self.logger.error("A grave error happened during determinig the network: {}".format(str(afe)))
-            raise DaemonError()
-
-        # get default gateway
-        try:
-            self.gateway = ni.gateways()["default"][ni.AF_INET][0]
+            self.logger.error("A error happened during determinig the IPv4 network: {}".format(str(afe)))
         except KeyError:
-            self.logger.error("No default gateway is configured")
-            raise DaemonError()
-
-        # get all ip addresses that are in the specified network
-        # and remove network address, broadcast, own ip, gateway ip
-        self.ip_range = list(self.network)
-        self.ip_range.remove(IPAddress(self.ip))
-        self.ip_range.remove(IPAddress(self.gateway))
-        self.ip_range.remove(IPAddress(self.network.broadcast))
-        self.ip_range.remove(IPAddress(self.network.network))
+            self.logger.debug("No IPv4 default gateway is configured")
+        except IndexError:
+            self.logger.debug("No IPv4 address is configured")
 
         try:
-            # get MAC address of gateway
-            self.gate_mac = util.get_mac(self.gateway, self.interface)
-            if not self.gate_mac:
-                raise DaemonError()
-        except Exception:
-            self.logger.error("Unable to get MAC address of Gateway")
+            # global IPv6 if self.ipv6 results in True
+            # get ipv6 addresses of specified interface
+            ip = [x for x in if_info[ni.AF_INET6] if not IPAddress(x['addr'].split("%")[0]).is_private()]
+            #self.linklocal = [x['addr'].split("%")[0] for x in if_info[ni.AF_INET6] if IPAddress(x['addr'].split("%")[0]).is_link_local()][0]
+
+            # get network address
+            network = IPNetwork("{}/{}".format(ip[0]['addr'], ip[0]['netmask'].split("/")[0]))
+            # get subnetmask of specified interface
+            netmask = [entry['netmask'] for entry in if_info[ni.AF_INET6]]
+            # get default gateway
+            gateway = ni.gateways()["default"][ni.AF_INET6][0]
+
+            try:
+                # get MAC address of gateway
+                gate_mac = util.get_mac6(gateway, self.interface)
+                if not gate_mac:
+                    raise DaemonError()
+            except Exception:
+                self.logger.error("Unable to get MAC address of IPv6 Gateway")
+
+            # get all ipv6 nameservers
+            dns_servers = [x for x in rs.nameservers if IPAddress(x).version == 6]
+            # store ipv6 information
+            self.ipv6 = IPInfo(ip, netmask, network, gateway, mac, gate_mac, dns_servers, None)
+        except AddrFormatError as afe:
+            # this should never happen, because values are retrieved via netifaces library
+            self.logger.error("A error happened during determinig the IPv6 network: {}".format(str(afe)))
+        except KeyError:
+            self.logger.debug("No IPv6 default gateway is configured")
+        except IndexError:
+            self.logger.debug("No IPv6 address is configured")
+
+        if not any((self.ipv4, self.ipv6)):
+            # at least ipv4 or ipv6 has to be configured
+            self.logger.error("Unable to retriev IPv4 and IPv6 configuration")
             raise DaemonError()
 
     def _return_to_normal(self):
@@ -124,7 +166,7 @@ class HolisticDaemonApp(_DaemonApp):
     __SLEEP = 20
     """int: Defines the time to sleep after packets are sent before they are sent anew."""
 
-    def __init__(self, logger, interface, pidfile, stdout, stderr):
+    def __init__(self, logger, interface, pidfile, stdout, stderr, dns_file):
         """Initialises several things needed to define the daemons behaviour.
 
         Args:
@@ -133,13 +175,14 @@ class HolisticDaemonApp(_DaemonApp):
             pidfile (str): Path of the pidfile, used by the daemon.
             stdout (str): Path of stdout, used by the daemon.
             stderr (str): Path of stderr, used by the daemon.
+            dns_file (str): Path of file containing the nameservers.
 
         Raises:
             DaemonError: Signalises the failure of the daemon.
         """
-        super(self.__class__, self).__init__(logger, interface, pidfile, stdout, stderr)
+        super(self.__class__, self).__init__(logger, interface, pidfile, stdout, stderr, dns_file)
 
-        self.sniffthread = HolisticSniffThread(self.interface, self.gateway, self.mac, self.gate_mac)
+        self.sniffthread = HolisticSniffThread(self.interface, self.ipv4)
         self.sniffthread.daemon = True
 
     def _return_to_normal(self):
@@ -149,10 +192,10 @@ class HolisticDaemonApp(_DaemonApp):
         """
         # clients gratutious arp
         sendp(
-            Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=self.gateway, hwdst=ETHER_BROADCAST,
-                                             hwsrc=self.gate_mac))
+            Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.ipv4.gateway, pdst=self.ipv4.gateway, hwdst=ETHER_BROADCAST,
+                                             hwsrc=self.ipv4.gate_mac))
         # to clients so that they send and arp reply to the gateway
-        sendp(Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=str(self.network), hwsrc=self.gate_mac))
+        # sendp(Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=str(self.network), hwsrc=self.gate_mac))
 
     def exit(self, signal_number, stack_frame):
         """This method is called from the python-daemon when the daemon is stopping.
@@ -177,11 +220,11 @@ class HolisticDaemonApp(_DaemonApp):
 
         # generates a packet for each possible client of the network
         # these packets update existing entries in the arp table of the gateway
-        packets = [Ether(dst=self.gate_mac) / ARP(op=1, psrc=str(x), pdst=str(x)) for x in self.ip_range]
+        # packets = [Ether(dst=self.gate_mac) / ARP(op=1, psrc=str(x), pdst=str(x)) for x in self.ip_range]
+
         # gratuitous arp to clients
         # updates the gateway entry of the clients arp table
-        packets.append(Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=self.gateway,
-                                                        hwdst=ETHER_BROADCAST))
+        packets = [Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.ipv4.gateway, pdst=self.ipv4.gateway, hwdst=ETHER_BROADCAST)]
         while True:
             sendp(packets)
             time.sleep(self.__SLEEP)
@@ -194,10 +237,7 @@ class SelectiveDaemonApp(_DaemonApp):
     This mode is suitable for bigger networks, as the bottleneck of this mode is virtually only the host discovery.
     """
 
-    __SLEEP = 5
-    """int: Defines the time to sleep after packets are sent before they are sent anew."""
-
-    def __init__(self, logger, interface, pidfile, stdout, stderr):
+    def __init__(self, logger, interface, pidfile, stdout, stderr, dns_file):
         """Initialises several things needed to define the daemons behaviour.
 
         Args:
@@ -206,43 +246,24 @@ class SelectiveDaemonApp(_DaemonApp):
             pidfile (str): Path of the pidfile, used by the daemon.
             stdout (str): Path of stdout, used by the daemon.
             stderr (str): Path of stderr, used by the daemon.
+            dns_file (str): Path of file containing the nameservers.
 
         Raises:
             DaemonError: Signalises the failure of the daemon.
         """
-        super(self.__class__, self).__init__(logger, interface, pidfile, stdout, stderr)
-        self.redis = ApateRedis(str(self.network.network), logger)
-
-        # Initialise threads
-        self.sniffthread = SelectiveSniffThread(self.interface, self.gateway, self.mac, self.gate_mac, self.redis)
-        self.sniffthread.daemon = True
-        self.psthread = PubSubThread(self.redis, self.logger)
-        self.psthread.daemon = True
-        self.arpthread = ARPDiscoveryThread(self.gateway, str(self.network.network))
-        self.arpthread.daemon = True
-        self.igmpthread = IGMPDiscoveryThread(self.gateway, str(self.network.network), self.ip, self.mac)
-        self.igmpthread.daemon = True
-
-    def _return_to_normal(self):
-        """This method is called when the daemon is stopping.
-        First, sends a GARP broadcast request to all clients to tell them the real gateway.
-        Then ARP replies for existing clients are sent to the gateway.
-        """
-        # spoof clients with GARP boradcast request
-        sendp(
-            Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.gateway, pdst=self.gateway, hwdst=ETHER_BROADCAST,
-                                             hwsrc=self.gate_mac))
-
-        # generate ARP reply packet for every existing client and spoof the gateway
-        packets = [Ether(dst=self.gate_mac) / ARP(op=2, psrc=dev[0], pdst=self.gateway, hwsrc=dev[1]) for dev in self.redis.get_devices_values(filter_values=True)]
-        sendp(packets)
+        super(self.__class__, self).__init__(logger, interface, pidfile, stdout, stderr, dns_file)
+        self.processv4 = None
+        self.processv6 = None
 
     def exit(self, signal_number, stack_frame):
         """This method is called from the python-daemon when the daemon is stopping.
         Threads are stopped and clients are despoofed via _return_to_normal().
         """
-        self._return_to_normal()
-        raise SystemExit()
+        if self.processv4:
+            self.processv4.shutdown()
+
+        if self.processv6:
+            self.processv6.shutdown()
 
     def run(self):
         """Starts multiple threads sends out packets to spoof
@@ -251,7 +272,7 @@ class SelectiveDaemonApp(_DaemonApp):
 
         Threads:
             A SniffThread, which sniffs for incoming ARP packets and adds new devices to the redis db.
-            Two HostDiscoveryThread, which are searching for existing devices on the network.
+            Several HostDiscoveryThread, which are searching for existing devices on the network.
             A PubSubThread, which is listening for redis expiry messages.
 
         Note:
@@ -260,25 +281,22 @@ class SelectiveDaemonApp(_DaemonApp):
             Unlike the holistic mode only packets for existing clients are generated.
 
         """
-        self.sniffthread.start()
-        self.arpthread.start()
-        self.psthread.start()
-        self.igmpthread.start()
 
-        # lamda expression to generate arp replies to spoof the clients
-        exp1 = lambda dev: Ether(dst=dev[1]) / ARP(op=2, psrc=self.gateway, pdst=dev[0], hwdst=dev[1])
+        # a child-process object has to be created in the same parent process as the process that wants to start the child
+        # __init__ is called inside the initial process, whereas run() is called inside the newly created deamon process
+        # therefore create the process here
+        if self.ipv4:
+            self.processv4 = SelectiveIPv4Process(self.logger, self.interface, self.ipv4)
+            self.processv4.start()
 
-        # lamda expression to generate arp replies to spoof the gateway
-        exp2 = lambda dev: Ether(dst=self.gate_mac) / ARP(op=2, psrc=dev[0], pdst=self.gateway, hwdst=self.gate_mac)
+        if self.ipv6:
+            self.processv6 = SelectiveIPv6Process(self.logger, self.interface, self.ipv6)
+            self.processv6.start()
 
-        while True:
-            # generates packets for existing clients
-            # due to the labda expressions p1 and p2 this list comprehension, each iteration generates 2 packets
-            # one to spoof the client and one to spoof the gateway
-            packets = [p(dev) for dev in self.redis.get_devices_values(filter_values=True) for p in (exp1, exp2)]
-
-            sendp(packets)
-            time.sleep(self.__SLEEP)
+        if self.processv4:
+            self.processv4.join()
+        if self.processv6:
+            self.processv6.join()
 
 
 class DaemonError(Exception):

@@ -90,6 +90,8 @@
     - jsonmerge
     - functools32
     - redis
+    - netifaces
+    - netaddr
 
 - name: install supervisor for rqworker
   apt: name=supervisor state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
@@ -139,17 +141,25 @@
   file: path=/var/log/supervisor state=absent
   #when: res1 |changed or res2 |changed or res3 |changed or sv_config |changed
 
+  # also delete rotated log files
+  # ansible 2.x would cover this task with find and file module
 - name: remove supervisor log files from other environment
-  file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
+  file: path='{{other_env.default_settings.log.general.path}}/{{item.value}}' state=absent
+  # shell: "rm {{other_env.default_settings.log.general.path}}/{{item.value}}*"
   with_dict: "{{other_env.default_settings.log.supervisor.logfiles}}"
-#  when: res1 |changed or res2 |changed or res3 |changed or sv_config |changed
+  # register: res
   when: res2 |changed or res3 |changed or sv_config |changed
+  # failed_when: res.rc != 0 and res.rc != 1
+  # changed_when: res.rc == 0
 
 - name: remove rqworker log files from other environment
-  file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
+  file: path='{{other_env.default_settings.log.general.path}}/{{item.value}}' state=absent
+  # shell: "rm {{other_env.default_settings.log.general.path}}/{{item.value}}*"
   with_dict: "{{other_env.default_settings.log.rqworker.logfiles}}"
-# when: res1 |changed or res2 |changed or res3 |changed or sv_config |changed
+  # register: res
   when: res2 |changed or res3 |changed or sv_config |changed
+  # failed_when: res.rc != 0 and res.rc != 1
+  # changed_when: res.rc == 0
 
 - name: restart supervisor myworker task
   shell: "supervisorctl restart myworker"
