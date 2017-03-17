@@ -15,7 +15,7 @@ max-lease-time 7200;
 # have to hack syslog.conf to complete the redirection).
 log-facility local7;
 
-
+{% if silent|bool%}
 subnet 192.168.55.0 netmask 255.255.255.0 {
         option routers                  192.168.55.254;
         option subnet-mask              255.255.255.0;
@@ -25,6 +25,7 @@ subnet 192.168.55.0 netmask 255.255.255.0 {
         default-lease-time 86400;
         max-lease-time 86400;
 }
+{% endif %}
 
 {% if tor|bool%}
 subnet 192.168.56.0 netmask 255.255.255.0 {
