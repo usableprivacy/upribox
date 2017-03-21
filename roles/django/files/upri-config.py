@@ -21,7 +21,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.WARNING)
 from apate_redis import ApateRedis
 import socket
 import netifaces as ni
-from netaddr import IPNetwork
+from netaddr import IPNetwork, IPAddress, ZEROFILL
 import redis as redisDB
 
 
@@ -384,6 +384,53 @@ def parse_dnsmasq_logs(arg):
 
     return 0
 
+def action_set_ip(arg):
+    print 'setting ip to "%s"' % arg
+    ip = None
+    try:
+        ip = IPAddress(arg, flags=ZEROFILL)
+    except:
+        return 12
+
+    obj = {"static": {"ip": str(ip)}}
+    write_role('interfaces', obj)
+
+def action_set_dns_server(arg):
+    print 'setting ip to "%s"' % arg
+    ip = None
+    try:
+        ip = IPAddress(arg, flags=ZEROFILL)
+    except:
+        return 12
+
+    obj = {"static": {"dns": str(ip)}}
+    write_role('interfaces', obj)
+
+def action_set_netmask(arg):
+    print 'setting ip to "%s"' % arg
+    ip = None
+    try:
+        ip = IPAddress(arg, flags=ZEROFILL)
+    except:
+        return 12
+
+    obj = {"static": {"netmask": str(ip)}}
+    write_role('interfaces', obj)
+
+def action_set_gateway(arg):
+    print 'setting ip to "%s"' % arg
+    ip = None
+    try:
+        ip = IPAddress(arg, flags=ZEROFILL)
+    except:
+        return 12
+
+    obj = {"static": {"gateway": str(ip)}}
+    write_role('interfaces', obj)
+
+def action_restart_network(arg):
+    print 'restarting network...'
+    return call_ansible('network_config')
 #
 # set a new ssid for the upribox "silent" wlan
 # return values:

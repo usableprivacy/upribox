@@ -40,18 +40,22 @@ UPRIBOX.Main = (function($) {
 
         $('body').on('click', '.js-edit-form', function(e) {
              e.preventDefault();
-             var inputs = $('.js-form > fieldset > input');
+            //  var inputs = $('.js-form > fieldset > input');
+             var inputs = $(this).closest('.js-form').find('fieldset > input');
              inputs.attr('disabled',false);
              inputs.first().focus();
              $(this).hide();
-             $('.js-abort-form').show();
+             $(this).closest('.js-form').find('.js-abort-form').show();
+            //  $('.js-abort-form').show();
         });
         $('body').on('click', '.js-abort-form', function(e) {
              e.preventDefault();
-             var inputs = $('.js-form > fieldset > input');
+            //  var inputs = $('.js-form > fieldset > input');
+             var inputs = $(this).closest('.js-form').find('fieldset > input');
              inputs.attr('disabled',true);
              $(this).hide();
-             $('.js-edit-form').show();
+            //  $('.js-edit-form').show();
+             $(this).closest('.js-form').find('.js-edit-form').show();
         });
 
         $('body').on('click', '.action-qr-show', function() {

@@ -6,6 +6,36 @@ from django.utils.translation import ugettext as _
 import logging
 logger = logging.getLogger('uprilogger')
 
+def reconfigure_network(ip, netmask, gateway, dns):
+
+    jobs.job_message(_("Die Netzwerkeinstellungen werden neu konfiguriert..."))
+    try:
+        if ip:
+            logger.debug("new IP: %s" % ip)
+            jobs.job_message(_("IP Adresse wird geändert..."))
+            utils.exec_upri_config('set_ip', ip)
+        if netmask:
+            logger.debug("new netmask: %s" % netmask)
+            jobs.job_message(_("Subnetzmaske wird geändert..."))
+            utils.exec_upri_config('set_netmask', netmask)
+        if gateway:
+            logger.debug("new gateway: %s" % gateway)
+            jobs.job_message(_("Gateway wird geändert..."))
+            utils.exec_upri_config('set_gateway', gateway)
+        if dns:
+            logger.debug("new dns server: %s" % dns)
+            jobs.job_message(_("DNS Server wird geändert..."))
+            utils.exec_upri_config('set_dns_server', dns)
+        if ip or netmask or gateway or dns:
+            jobs.job_message(_("Netzwerk wird neu gestartet..."))
+            logger.debug("restarting network")
+            # utils.exec_upri_config('restart_network')
+
+        jobs.job_message(_("Konfiguration erfolgreich"))
+
+    except utils.AnsibleError as e:
+        logger.error("ansible failed with error %d: %s" % (e.rc, e.message))
+        jobs.job_message(_("Es ist ein unbekannter Fehler aufgetreten. Fehlercode: %(errorcode)s" % {'errorcode': e.rc}))
 
 def toggle_ssh(state):
 

@@ -1,13 +1,14 @@
 ---
 - include: ../../tor/tasks/tor_state.yml tags=toggle_tor,toggle_silent
 - include: ../../common/tasks/other_env.yml tags=toggle_tor,toggle_silent
+- include: ../../wlan/tasks/dhcpd_state.yml tags=network_config
 
 - name: install services
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
   with_items:
     - openresolv
     - dnsmasq
-    
+
 - name: enable services
   service: name={{ item }} enabled=yes
   with_items:
@@ -23,7 +24,7 @@
   tags:
     - toggle_tor
     - toggle_silent
-  
+
 # dnsmasq does not log per default
 #- name: remove default logfiles
 #  file: path=/var/log/dnsmasq.log state=absent
@@ -57,15 +58,47 @@
   tags:
     - toggle_tor
     - toggle_silent
-    
+
+- name: check if dnsmasq-resolv.conf is link
+  stat: path=/etc/dnsmasq-resolv.conf
+  register: dnsres
+  when: not mode == "static"
+  tags:
+    - network_config
+
+- name: remove dnsmasq-resolv.conf if link and dhcpd
+  file: path=/etc/dnsmasq-resolv.conf state=absent
+  when: not mode == "static" and  dnsres.stat.islnk is defined and dnsres.stat.islnk
+  tags:
+    - network_config
+
 - name: copy the openresolv config file
-  copy: src=resolvconf.conf dest=/etc/resolvconf.conf mode="0644"
+  template: src=resolvconf.conf dest=/etc/resolvconf.conf mode="0644"
   notify:
     - restart dnsmasq
     - ifupdown eth0
+  tags:
+    - network_config
 
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/dnsmasq mode=0644
   tags:
     - toggle_tor
     - toggle_silent
+
+- name: configure systemd-resolved
+  service: name=systemd-resolved state={{'started' if mode == "static" else 'stopped'}} enabled={{mode == "static"}}
+  tags:
+    - network_config
+
+- name: remove dnsmasq-resolv.conf if static ip
+  file: path=/etc/dnsmasq-resolv.conf state=absent
+  when: mode == "static"
+  tags:
+    - network_config
+
+- name: link dnsmasq-resolv.conf to /run/systemd/resolve/resolv.conf
+  file: src=/run/systemd/resolve/resolv.conf dest=/etc/dnsmasq-resolv.conf state=link
+  when: mode == "static"
+  tags:
+    - network_config

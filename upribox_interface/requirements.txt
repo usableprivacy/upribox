@@ -7,3 +7,4 @@ redis==2.10.3
 requests==2.7.0
 rq==0.5.4
 wsgiref==0.1.2
+netaddr==0.7.18

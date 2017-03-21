@@ -182,8 +182,8 @@ DEFAULT_SETTINGS = 'lib/default_settings.json'
 # if this is set to true, lib.utils.exec_upri_config will always return 0 if
 # /usr/local/bin/upri-config.py is missing
 # this is meant for local debugging where things like SSID changes cannot
-# be tested. In Production, this variable should be set to false
-IGNORE_MISSING_UPRICONFIG = True
+# be tested. In Production, this variable should be set to False
+IGNORE_MISSING_UPRICONFIG = False
 
 RQ_QUEUES = {
     'default': {
