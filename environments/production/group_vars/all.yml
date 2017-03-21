@@ -64,6 +64,10 @@ default_settings:
       logfiles:
         #logrotate applies to *.log
         logname: 'privoxy.log'
+    squid:
+      subdir: 'squid'
+      logfiles:
+        logname: 'squid.log'
     apate:
       subdir: 'apate'
       logfiles:

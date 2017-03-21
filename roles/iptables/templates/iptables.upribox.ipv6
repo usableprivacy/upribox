@@ -4,7 +4,7 @@
 :INPUT ACCEPT [552:35980]
 :OUTPUT ACCEPT [603:39466]
 :POSTROUTING ACCEPT [252:16709]
--A PREROUTING ! -d fe80::/64 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8119
+-A PREROUTING ! -d fe80::/64 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 3128
 -A PREROUTING -i eth0 -p udp -m udp --dport 53 -j REDIRECT --to-ports 53
 -A POSTROUTING -o eth0 -j MASQUERADE
 COMMIT
@@ -25,7 +25,7 @@ COMMIT
 -A INPUT -p udp -m udp --sport 67:68 --dport 67:68 -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
 -A INPUT -p {{vpn_protocol|lower}} -m {{vpn_protocol|lower}} --dport {{vpn_port|lower}} -j ACCEPT
--A INPUT -p tcp -m tcp --dport 8119 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 3128 -j ACCEPT
 -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
 -A INPUT -p icmpv6 --icmpv6-type router-advertisement -m hl --hl-eq 255 -j ACCEPT

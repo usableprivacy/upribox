@@ -51,6 +51,10 @@ default_settings:
       subdir: 'privoxy'
       logfiles:
         logname: 'privoxy.log'
+    squid:
+      subdir: 'squid'
+      logfiles:
+        logname: 'squid.log'
     apate:
       subdir: 'apate'
       logfiles:
