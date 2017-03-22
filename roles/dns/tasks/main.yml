@@ -66,9 +66,9 @@
   tags:
     - network_config
 
-- name: remove dnsmasq-resolv.conf if link and dhcpd
+- name: remove dnsmasq-resolv.conf if link and dhcp
   file: path=/etc/dnsmasq-resolv.conf state=absent
-  when: not mode == "static" and  dnsres.stat.islnk is defined and dnsres.stat.islnk
+  when: not mode == "static" and dnsres.stat.islnk is defined and dnsres.stat.islnk
   tags:
     - network_config
 

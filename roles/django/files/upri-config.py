@@ -411,6 +411,8 @@ def action_set_netmask(arg):
     ip = None
     try:
         ip = IPAddress(arg, flags=ZEROFILL)
+        if not ip.is_netmask():
+            return 13
     except:
         return 12
 
@@ -428,9 +430,31 @@ def action_set_gateway(arg):
     obj = {"static": {"gateway": str(ip)}}
     write_role('interfaces', obj)
 
+def action_set_static(arg):
+    map = {'yes':'static','no':'dhcp'}
+    if arg not in ['yes', 'no']:
+        print 'error: only "yes" and "no" are allowed'
+        return 10
+    print 'static network config enabled: %s' % arg
+    en = {"general": {"mode": map[arg]}}
+    write_role('interfaces', en)
+
 def action_restart_network(arg):
     print 'restarting network...'
     return call_ansible('network_config')
+
+def action_set_dhcpd(arg):
+    if arg not in ['yes', 'no']:
+        print 'error: only "yes" and "no" are allowed'
+        return 10
+    print 'DHCP server enabled: %s' % arg
+    en = {"general": {"enabled": arg}}
+    write_role('dhcpd', en)
+
+def action_restart_dhcpd(arg):
+    print 'restarting dhcp server...'
+    return call_ansible('dhcp_server')
+
 #
 # set a new ssid for the upribox "silent" wlan
 # return values:
@@ -676,7 +700,15 @@ ALLOWED_ACTIONS = {
     'restart_network': action_restart_network,
     'restart_firewall': action_restart_firewall,
     'enable_device': action_enable_device,
-    'disable_device': action_disable_device
+    'disable_device': action_disable_device,
+    'set_ip': action_set_ip,
+    'set_dns_server': action_set_dns_server,
+    'set_netmask': action_set_netmask,
+    'set_gateway': action_set_gateway,
+    'restart_network': action_restart_network,
+    'enable_static_ip': action_set_static,
+    'set_dhcpd': action_set_dhcpd,
+    'restart_dhcpd': action_restart_dhcpd
 }
 
 #
