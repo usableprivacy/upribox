@@ -64,10 +64,31 @@
     <h2>{% trans "Statische IP" %}</h2>
     <p>{% trans "Mithilfe dieser Funktion kann der upribox eine statische IP Adresse zugewiesen werden." %}</p>
 
-    {% trans "Statische IP" as form_title %}
-    {% url "upri_static" as href %}
-    {% include "form.html" with form=ip_form %}
+    <form>
+        <fieldset>
+            <legend>{% trans "Ein-/Ausschalten" %}</legend>
 
+            {% get_fact 'interfaces' 'general' 'mode' as mode%}
+
+            {% if mode == 'static'%}
+                <div class="switch icon i-on">
+                    <p>{% trans "Statische IP ist aktiviert" %}</p>
+                    <button class="js-toggle-button" data-state-enabled="dhcp" href="{% url 'upri_dhcp_save' %}">{% trans "DHCP aktivieren" %}</button>
+                </div>
+            {% else %}
+                <div class="switch icon i-off">
+                    <p>{% trans "Statische IP ist deaktiviert" %}</p>
+                    <a href="#" class="js-expand-button">{% trans "(Statische IP konfigurieren)" %}</a>
+                </div>
+            {% endif %}
+        </fieldset>
+    </form>
+
+    <div class="js-static-ip-form{% if mode == 'dhcp' %} hidden{% endif %}">
+        {% trans "Statische IP" as form_title %}
+        {% url "upri_static_save" as href %}
+        {% include "form.html" with form=ip_form %}
+    </div>
 
     <h2>{% trans "upribox Software" %}</h2>
     <p>{% trans "Letztes update: " %} {{ update_time|date:"SHORT_DATETIME_FORMAT" }} (UTC)</p>

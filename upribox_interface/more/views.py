@@ -23,7 +23,7 @@ def more_config(request, save_form):
 
     form = AdminForm(request)
     ip_form = StaticIPForm(utils.get_fact('interfaces', 'static', 'ip'), utils.get_fact('interfaces', 'static', 'netmask'),
-                           utils.get_fact('interfaces', 'static', 'gateway'), utils.get_fact('interfaces', 'static', 'dns'))
+                           utils.get_fact('interfaces', 'static', 'gateway'), utils.get_fact('interfaces', 'static', 'dns'), utils.get_fact('interfaces', 'static', 'dhcp'))
 
     if request.method == 'POST':
 
@@ -54,14 +54,15 @@ def more_config(request, save_form):
                 logger.error("admin form validation failed")
         elif save_form == "static_ip":
             ip_form = StaticIPForm(utils.get_fact('interfaces', 'static', 'ip'), utils.get_fact('interfaces', 'static', 'netmask'),
-                                   utils.get_fact('interfaces', 'static', 'gateway'), utils.get_fact('interfaces', 'static', 'dns'), request.POST)
+                                   utils.get_fact('interfaces', 'static', 'gateway'), utils.get_fact('interfaces', 'static', 'dns'), utils.get_fact('interfaces', 'static', 'dhcp'), request.POST)
             if ip_form.is_valid():
                 # logger.info(ip_form.cleaned_data['ip_address'])
                 ip = ip_form.cleaned_data['ip_address']
                 netmask = ip_form.cleaned_data['ip_netmask']
                 gateway = ip_form.cleaned_data['gateway']
                 dns = ip_form.cleaned_data['dns_server']
-                jobs.queue_job(sshjobs.reconfigure_network, (ip, netmask, gateway, dns))
+                dhcp = ip_form.cleaned_data['dhcp_server']
+                jobs.queue_job(sshjobs.reconfigure_network, (ip, netmask, gateway, dns, dhcp))
                 # context.push({'message': True, 'ninja_ssid':ssid})
                 context.push({'message': True})
                 context.push({'messagestore': jobs.get_messages()})
@@ -104,6 +105,23 @@ def apate_toggle(request):
 
     return render_to_response("modal.html", {"message": True, "refresh_url": reverse('upri_more')})
 
+@login_required
+def save_static(request):
+    if request.method != 'POST':
+        raise Http404()
+
+    jobs.queue_job(sshjobs.toggle_static, ('static',))
+
+    return render_to_response("modal.html", {"message": True, "refresh_url": reverse('upri_more')})
+
+@login_required
+def save_dhcp(request):
+    if request.method != 'POST':
+        raise Http404()
+
+    jobs.queue_job(sshjobs.toggle_static, ('dhcp',))
+
+    return render_to_response("modal.html", {"message": True, "refresh_url": reverse('upri_more')})
 
 # @require_POST
 # @login_required
