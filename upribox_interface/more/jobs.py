@@ -29,7 +29,7 @@ def reconfigure_network(ip, netmask, gateway, dns):
         if ip or netmask or gateway or dns:
             jobs.job_message(_("Netzwerk wird neu gestartet..."))
             logger.debug("restarting network")
-            # utils.exec_upri_config('restart_network')
+            utils.exec_upri_config('restart_network')
 
         jobs.job_message(_("Konfiguration erfolgreich"))
 
@@ -80,5 +80,28 @@ def toggle_apate(state):
                 jobs.job_message(_("Starten von Apate ARP Spoofing Daemon fehlgeschlagen."))
             else:
                 jobs.job_message(_("Stoppen von Apate ARP Spoofing Daemon fehlgeschlagen."))
+    else:
+        jobs.job_message(_("Es ist ein unbekannter Fehler aufgetreten."))
+
+def toggle_static(state):
+
+    if state in ['dhcp', 'static']:
+        try:
+            if state == 'static':
+                jobs.job_message(_("Statische IP wird aktiviert..."))
+            else:
+                jobs.job_message(_("Statische IP wird deaktiviert..."))
+
+            logger.debug("restarting network")
+            utils.exec_upri_config('enable_static_ip', state)
+            utils.exec_upri_config('restart_network')
+            jobs.job_message(_("Konfiguration von Interfaces erfolgreich."))
+
+        except utils.AnsibleError as e:
+            logger.error("ansible failed with error %d: %s" % (e.rc, e.message))
+            if state == 'static':
+                jobs.job_message(_("Aktivierung von statischer IP fehlgeschlagen."))
+            else:
+                jobs.job_message(_("Deaktivierung von statischer IP fehlgeschlagen."))
     else:
         jobs.job_message(_("Es ist ein unbekannter Fehler aufgetreten."))

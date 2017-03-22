@@ -68,14 +68,20 @@ class StaticIPForm(forms.Form):
         required=True,
         label=ugettext_lazy("DNS Server"),
     )
+    dhcp_server = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput,
+        label=ugettext_lazy("DHCP Server"),
+    )
 
-    def __init__(self, ip, netmask, gateway, dns, *args, **kwargs):
+    def __init__(self, ip, netmask, gateway, dns, dhcp, *args, **kwargs):
         super(StaticIPForm, self).__init__(*args, **kwargs)
 
         self.fields['ip_address'].widget.attrs['value'] = ip
         self.fields['ip_netmask'].widget.attrs['value'] = netmask
         self.fields['gateway'].widget.attrs['value'] = gateway
         self.fields['dns_server'].widget.attrs['value'] = dns
+        self.fields['dhcp_server'].widget.attrs['value'] = dhcp
 
     def clean(self):
         cleaned_data = super(StaticIPForm, self).clean()

@@ -618,6 +618,14 @@ def action_restart_apate(arg):
     print 'restarting apate...'
     return call_ansible('toggle_apate')
 
+def action_set_static_ip(arg):
+    if arg not in ['dhcp', 'static']:
+        print 'error: only "dhcp" and "static" are allowed'
+        return 10
+    print 'interface mode: %s' % arg
+    en = {"general": {"mode": arg}}
+    write_role('interfaces', en)
+
 
 def check_passwd(arg):
     pw = passwd.Password(arg)
@@ -693,6 +701,7 @@ ALLOWED_ACTIONS = {
     'enable_ssh': action_set_ssh,
     'restart_ssh': action_restart_ssh,
     'enable_apate': action_set_apate,
+    'enable_static_ip': action_set_static_ip,
     'restart_apate': action_restart_apate,
     'parse_logs': action_parse_logs,
     'generate_profile': action_generate_profile,
