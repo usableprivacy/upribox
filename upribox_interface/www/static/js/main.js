@@ -97,8 +97,15 @@ UPRIBOX.Main = (function($) {
         $('body').on('click', '.js-toggle-button', toggleServiceState);
         $('body').on('click', '.js-expand-button', function(e) {
             e.preventDefault();
-            console.log("expandStaticIP called")
             $('.js-static-ip-form').removeClass('hidden');
+            $('.js-collapse-button').removeClass('hidden');
+            $('.js-expand-button').addClass('hidden');
+        });
+        $('body').on('click', '.js-collapse-button', function(e) {
+            e.preventDefault();
+            $('.js-static-ip-form').addClass('hidden');
+            $('.js-collapse-button').addClass('hidden');
+            $('.js-expand-button').removeClass('hidden');
         });
 
         $('body').on('click', '#button-vpn-generate', function(e) {

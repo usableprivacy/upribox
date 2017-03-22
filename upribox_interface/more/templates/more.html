@@ -78,7 +78,8 @@
             {% else %}
                 <div class="switch icon i-off">
                     <p>{% trans "Statische IP ist deaktiviert" %}</p>
-                    <a href="#" class="js-expand-button">{% trans "(Statische IP konfigurieren)" %}</a>
+                    <a href="#" class="js-expand-button{% if mode == 'static' %} hidden{% endif %}">{% trans "(Statische IP konfigurieren)" %}</a>
+                    <a href="#" class="js-collapse-button{% if mode == 'dhcp' %} hidden{% endif %}">{% trans "(abbrechen)" %}</a>
                 </div>
             {% endif %}
         </fieldset>
