@@ -62,7 +62,6 @@
 - name: check if dnsmasq-resolv.conf is link
   stat: path=/etc/dnsmasq-resolv.conf
   register: dnsres
-  when: not mode == "static"
   tags:
     - network_config
 
@@ -93,12 +92,12 @@
 
 - name: remove dnsmasq-resolv.conf if static ip
   file: path=/etc/dnsmasq-resolv.conf state=absent
-  when: mode == "static"
+  when: mode == "static" and dnsres.stat.islnk is defined and not dnsres.stat.islnk
   tags:
     - network_config
 
 - name: link dnsmasq-resolv.conf to /run/systemd/resolve/resolv.conf
   file: src=/run/systemd/resolve/resolv.conf dest=/etc/dnsmasq-resolv.conf state=link
-  when: mode == "static"
+  when: mode == "static" and dnsres.stat.islnk is defined and not dnsres.stat.islnk
   tags:
     - network_config

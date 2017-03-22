@@ -7,7 +7,7 @@
   notify: restart apate
 
 - name: restart hostapd
-  shell: service hostapd stop && sleep 5 && service hostapd start
+  shell: service hostapd stop {{ "&& sleep 5 && service hostapd start" if (tor|bool or silent|bool) else "" }}
   notify: get ip address
 
 - name: get ip address
@@ -24,7 +24,11 @@
 
 - name: restart isc-dhcp-server
   service: name=isc-dhcp-server state=restarted
-  #enabled='{{ tor|bool or silent|bool or dhcpd|bool }}'
 
 - name: restart systemd-networkd
   shell: systemctl restart systemd-networkd
+
+- name: configure isc-dhcp-server
+  service: name={{ item }} enabled={{ not (tor|bool or silent|bool or dhcpd|bool) }}
+  with_items:
+    - isc-dhcp-server
