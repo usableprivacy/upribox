@@ -23,7 +23,7 @@ def more_config(request, save_form):
 
     form = AdminForm(request)
     ip_form = StaticIPForm(utils.get_fact('interfaces', 'static', 'ip'), utils.get_fact('interfaces', 'static', 'netmask'),
-                           utils.get_fact('interfaces', 'static', 'gateway'), utils.get_fact('interfaces', 'static', 'dns'), utils.get_fact('interfaces', 'static', 'dhcp'))
+                           utils.get_fact('interfaces', 'static', 'gateway'), utils.get_fact('interfaces', 'static', 'dns'), utils.get_fact('dhcpd', 'general', 'enabled'))
 
     if request.method == 'POST':
 
@@ -54,7 +54,7 @@ def more_config(request, save_form):
                 logger.error("admin form validation failed")
         elif save_form == "static_ip":
             ip_form = StaticIPForm(utils.get_fact('interfaces', 'static', 'ip'), utils.get_fact('interfaces', 'static', 'netmask'),
-                                   utils.get_fact('interfaces', 'static', 'gateway'), utils.get_fact('interfaces', 'static', 'dns'), utils.get_fact('interfaces', 'static', 'dhcp'), request.POST)
+                                   utils.get_fact('interfaces', 'static', 'gateway'), utils.get_fact('interfaces', 'static', 'dns'), utils.get_fact('dhcpd', 'general', 'enabled'), request.POST)
             if ip_form.is_valid():
                 # logger.info(ip_form.cleaned_data['ip_address'])
                 ip = ip_form.cleaned_data['ip_address']

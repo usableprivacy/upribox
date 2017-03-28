@@ -81,7 +81,8 @@ class StaticIPForm(forms.Form):
         self.fields['ip_netmask'].widget.attrs['value'] = netmask
         self.fields['gateway'].widget.attrs['value'] = gateway
         self.fields['dns_server'].widget.attrs['value'] = dns
-        self.fields['dhcp_server'].widget.attrs['value'] = dhcp
+        #self.fields['dhcp_server'].widget.attrs['checked'] = str(dhcp.lower() == "yes").lower()
+        self.fields['dhcp_server'].initial = dhcp.lower() == "yes"
 
     def clean(self):
         cleaned_data = super(StaticIPForm, self).clean()

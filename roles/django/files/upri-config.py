@@ -430,14 +430,14 @@ def action_set_gateway(arg):
     obj = {"static": {"gateway": str(ip)}}
     write_role('interfaces', obj)
 
-def action_set_static(arg):
-    map = {'yes':'static','no':'dhcp'}
-    if arg not in ['yes', 'no']:
-        print 'error: only "yes" and "no" are allowed'
-        return 10
-    print 'static network config enabled: %s' % arg
-    en = {"general": {"mode": map[arg]}}
-    write_role('interfaces', en)
+# def action_set_static(arg):
+#     map = {'yes':'static','no':'dhcp'}
+#     if arg not in ['yes', 'no']:
+#         print 'error: only "yes" and "no" are allowed'
+#         return 10
+#     print 'static network config enabled: %s' % arg
+#     en = {"general": {"mode": map[arg]}}
+#     write_role('interfaces', en)
 
 def action_restart_network(arg):
     print 'restarting network...'
@@ -715,9 +715,9 @@ ALLOWED_ACTIONS = {
     'set_netmask': action_set_netmask,
     'set_gateway': action_set_gateway,
     'restart_network': action_restart_network,
-    'enable_static_ip': action_set_static,
+    #'enable_static_ip': action_set_static,
     'set_dhcpd': action_set_dhcpd,
-    'restart_dhcpd': action_restart_dhcpd
+    'restart_dhcpd': action_restart_dhcpd,
 }
 
 #

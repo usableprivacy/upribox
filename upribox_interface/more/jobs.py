@@ -6,10 +6,13 @@ from django.utils.translation import ugettext as _
 import logging
 logger = logging.getLogger('uprilogger')
 
-def reconfigure_network(ip, netmask, gateway, dns):
+def reconfigure_network(ip, netmask, gateway, dns, dhcp):
 
     jobs.job_message(_("Die Netzwerkeinstellungen werden neu konfiguriert..."))
     try:
+        logger.debug("Static IP activated")
+        jobs.job_message(_("Modus zur Vergabe statischer IP Adressen wird aktiviert..."))
+        utils.exec_upri_config('enable_static_ip', "static")
         if ip:
             logger.debug("new IP: %s" % ip)
             jobs.job_message(_("IP Adresse wird geändert..."))
@@ -30,12 +33,24 @@ def reconfigure_network(ip, netmask, gateway, dns):
             jobs.job_message(_("Netzwerk wird neu gestartet..."))
             logger.debug("restarting network")
             utils.exec_upri_config('restart_network')
+        if dhcp is not None:
+            logger.debug("dhcp server: %s" % dhcp)
+            jobs.job_message(_("DNS Server wird geändert..."))
+            utils.exec_upri_config('set_dhcpd', "yes" if dhcp else "no")
+            jobs.job_message(_("DHCP Server wird konfiguriert..."))
+            utils.exec_upri_config('restart_dhcpd')
 
         jobs.job_message(_("Konfiguration erfolgreich"))
 
     except utils.AnsibleError as e:
         logger.error("ansible failed with error %d: %s" % (e.rc, e.message))
         jobs.job_message(_("Es ist ein unbekannter Fehler aufgetreten. Fehlercode: %(errorcode)s" % {'errorcode': e.rc}))
+
+def toogle_static(mode):
+    if mode in ['dhcp', 'static']:
+        utils.exec_upri_config('enable_static_ip', mode)
+        utils.exec_upri_config('restart_network')
+        utils.exec_upri_config('restart_dhcpd')
 
 def toggle_ssh(state):
 
