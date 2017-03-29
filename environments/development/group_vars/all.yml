@@ -15,6 +15,14 @@ ansible_uwsgi_version: 1.9.2
 django_settings_file: settings_dev
 
 default_settings:
+  registrar:
+    general:
+      enabled: 'yes'
+      interface: 'eth0'
+      # or maybe 'all'
+    pid:
+      dir: '/var/run/registrar'
+      file: 'registrar.pid'
   apate:
     general:
       enabled: 'no'
@@ -51,6 +59,12 @@ default_settings:
       subdir: 'privoxy'
       logfiles:
         logname: 'privoxy.log'
+    registrar:
+      subdir: 'registrar'
+      logfiles:
+        logname: registrar.log
+        stdout: stdout.log
+        stderr: stderr.log
     apate:
       subdir: 'apate'
       logfiles:

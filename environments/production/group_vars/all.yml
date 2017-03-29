@@ -24,6 +24,14 @@ ansible_uwsgi_version: 1.9.2
 django_settings_file: settings_prod
 
 default_settings:
+  registrar:
+    general:
+      enabled: 'yes'
+      interface: 'eth0'
+      # or maybe 'all'
+    pid:
+      dir: '/var/run/registrar'
+      file: 'registrar.pid'
   apate:
     general:
       enabled: 'no'
@@ -68,6 +76,12 @@ default_settings:
       subdir: 'apate'
       logfiles:
         logname: apate.log
+        stdout: stdout.log
+        stderr: stderr.log
+    registrar:
+      subdir: 'registrar'
+      logfiles:
+        logname: registrar.log
         stdout: stdout.log
         stderr: stderr.log
     tor:

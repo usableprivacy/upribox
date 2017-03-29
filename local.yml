@@ -16,5 +16,6 @@
     - { role: dns_ninja, tags: ["dns_ninja"] }
     - { role: arp, tags: ["arp"] }
     - { role: nginx, tags: ["nginx"] }
+    - { role: fingerprinting, tags: ["fingerprinting"] }
   post_tasks:
     - include: roles/ssh/main.yml tags=toggle_ssh
