@@ -214,4 +214,4 @@ SSL_PINNING_PATH = '/usr/local/etc/upri-filter-update/update-server.pem'
 # Path to logfiles
 PRIVOXY_LOGFILE = '/var/tmp/log/privoxy/privoxy.log'
 OPENVPN_LOGFILE = '/var/tmp/log/openvpn.log'
-
+DNS_FILE = '/etc/dnsmasq-resolv.conf'

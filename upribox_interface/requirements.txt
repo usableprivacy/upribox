@@ -8,3 +8,5 @@ requests==2.7.0
 rq==0.5.4
 wsgiref==0.1.2
 netaddr==0.7.18
+netifaces==0.10.5
+dnspython==1.15.0
