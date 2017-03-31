@@ -77,6 +77,9 @@ class RegistrarSniffThread(_SniffThread):
                 # TODO do some database stuff here
                 if entry[0] in ["hostname", "vendor_class_id", "requested_addr", "message-type"]:
                     self.logger.info("%s %s", entry[0], entry[1])
-                if entry[9] == "client_id":
+                elif entry[9] == "client_id":
                     # client_id value is hardware type (0x01) and mac address
-                    ":".join(hexstr(entry[1], onlyhex=1).split(" ")[1:])
+                    ":".join(hexstr(entry[1], onlyhex=True).split(" ")[1:])
+                elif entry[9] == 'param_req_list':
+                    # DHCP fingerprint in fingerbank format
+                    ",".join([str(int(num, 16)) for num in hexstr(entry[1], onlyhex=True).split(" ")])
