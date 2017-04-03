@@ -71,7 +71,7 @@ class StaticIPForm(forms.Form):
     dhcp_server = forms.BooleanField(
         required=False,
         widget=forms.CheckboxInput,
-        label=ugettext_lazy("DHCP Server"),
+        label=ugettext_lazy("upribox als DHCP Server nutzen"),
     )
 
     def __init__(self, ip, netmask, gateway, dns, dhcp, *args, **kwargs):

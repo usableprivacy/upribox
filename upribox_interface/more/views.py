@@ -64,6 +64,7 @@ def more_config(request, save_form):
                 jobs.queue_job(sshjobs.reconfigure_network, (ip, netmask, gateway, dns, dhcp))
                 # context.push({'message': True, 'ninja_ssid':ssid})
                 context.push({'message': True})
+                context.push({"refresh_url": reverse('upri_more')})
                 context.push({'messagestore': jobs.get_messages()})
 
     update_status = UpdateStatus()

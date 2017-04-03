@@ -40,7 +40,7 @@ def reconfigure_network(ip, netmask, gateway, dns, dhcp):
             jobs.job_message(_("DHCP Server wird konfiguriert..."))
             utils.exec_upri_config('restart_dhcpd')
 
-        jobs.job_message(_("Konfiguration erfolgreich"))
+        jobs.job_message(_("Konfiguration von Interfaces erfolgreich."))
 
     except utils.AnsibleError as e:
         logger.error("ansible failed with error %d: %s" % (e.rc, e.message))

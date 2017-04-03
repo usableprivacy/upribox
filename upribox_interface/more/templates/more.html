@@ -61,34 +61,50 @@
         </fieldset>
     </form>
 
-    <h2>{% trans "Statische IP" %}</h2>
-    <p>{% trans "Mithilfe dieser Funktion kann der upribox eine statische IP Adresse zugewiesen werden." %}</p>
+    <div class="row clearfix">
+        <div class="col-2 col-2-main js-col-2-main">
+            <h2>{% trans "Statische IP" %}</h2>
+            <p>{% trans "Mithilfe dieser Funktion kann der upribox eine statische IP Adresse zugewiesen werden." %}</p>
 
-    <form>
-        <fieldset>
-            <legend>{% trans "Ein-/Ausschalten" %}</legend>
+            <form>
+                <fieldset>
+                    <legend>{% trans "Ein-/Ausschalten" %}</legend>
 
-            {% get_fact 'interfaces' 'general' 'mode' as mode%}
+                    {% get_fact 'interfaces' 'general' 'mode' as mode%}
 
-            {% if mode == 'static'%}
-                <div class="switch icon i-on">
-                    <p>{% trans "Statische IP ist aktiviert" %}</p>
-                    <button class="js-toggle-button" data-state-enabled="dhcp" href="{% url 'upri_dhcp_save' %}">{% trans "DHCP aktivieren" %}</button>
-                </div>
-            {% else %}
-                <div class="switch icon i-off">
-                    <p>{% trans "Statische IP ist deaktiviert" %}</p>
-                    <a href="#" class="js-expand-button{% if mode == 'static' %} hidden{% endif %}">{% trans "(Statische IP konfigurieren)" %}</a>
-                    <a href="#" class="js-collapse-button{% if mode == 'dhcp' %} hidden{% endif %}">{% trans "(abbrechen)" %}</a>
-                </div>
-            {% endif %}
-        </fieldset>
-    </form>
+                    {% if mode == 'static'%}
+                        <div class="switch icon i-on">
+                            <p>{% trans "Statische IP ist aktiviert" %}</p>
+                            <button class="js-toggle-button" data-state-enabled="dhcp" href="{% url 'upri_dhcp_save' %}">{% trans "deaktivieren" %}</button>
+                        </div>
+                    {% else %}
+                        <div class="switch icon i-off">
+                            <p>{% trans "Statische IP ist deaktiviert" %}</p>
+                            <a href="#" class="js-expand-button{% if mode == 'static' %} hidden{% endif %}">{% trans "(Statische IP konfigurieren)" %}</a>
+                            <a href="#" class="js-collapse-button{% if mode == 'dhcp' %} hidden{% endif %}">{% trans "(abbrechen)" %}</a>
+                        </div>
+                    {% endif %}
+                </fieldset>
+            </form>
 
-    <div class="js-static-ip-form{% if mode == 'dhcp' %} hidden{% endif %}">
-        {% trans "Statische IP" as form_title %}
-        {% url "upri_static_save" as href %}
-        {% include "form.html" with form=ip_form %}
+            <div class="js-static-ip-form{% if mode == 'dhcp' %} hidden{% endif %}">
+                {% trans "Statische IP" as form_title %}
+                {% url "upri_static_save" as href %}
+                {% include "form.html" with form=ip_form %}
+            </div>
+        </div>
+         <div class="col-2 col-2-info js-col-2-info">
+            <aside>
+                <h2 class="icon i-information js-info-trigger">
+                    <a href="#" title="{% trans "Information einklappen" %}" class="i-arrow">{% trans "Wie funktioniert die statische IP?" %}</a>
+                </h2>
+                <p>{% trans "Hier können erfahrene Nutzerinnen und Nutzer Ihrer upribox eine statische IP zuweisen." %}</p>
+                <p>{% trans "Zusätzlich ist es möglich, Ihre upribox als DHCP-Server agieren zu lassen, um sämtlichen Netzwerkverkehr über diese zu leiten. Dazu muss der DHCP-Server im Interface Ihres Routers deaktiviert werden." %}</p>
+                {% url 'upri_faq' as faq_url %}
+                <p>{%  blocktrans %}H&auml;ufig gestellte Fragen zur upribox finden Sie unter <a href="{{ faq_url }}" title="FAQ">Hilfe</a>.{%  endblocktrans %}</p>
+                <a href="#" title="{% trans "Information ausblenden" %}" class="info-out i-arrow js-info-trigger">{% trans "Information ausblenden" %}</a>
+            </aside>
+        </div>
     </div>
 
     <h2>{% trans "upribox Software" %}</h2>
