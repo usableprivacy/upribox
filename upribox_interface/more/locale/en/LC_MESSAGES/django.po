@@ -55,7 +55,7 @@ msgstr "DNS server"
 
 #: more/forms.py:74
 msgid "upribox als DHCP Server nutzen"
-msgstr ""
+msgstr "use upribox as DHCP server"
 
 #: more/forms.py:93
 msgid "Es handelt sich nicht um eine Subnetzmaske"
@@ -118,10 +118,8 @@ msgid "Konfiguration von Interfaces erfolgreich."
 msgstr "Configuration of interfaces successful."
 
 #: more/jobs.py:47
-#, fuzzy, python-format
-#| msgid "Es ist ein unbekannter Fehler aufgetreten."
 msgid "Es ist ein unbekannter Fehler aufgetreten. Fehlercode: %(errorcode)s"
-msgstr "Unknown error occured."
+msgstr "Unknown error occured. Error-code: %(errorcode)s"
 
 #: more/jobs.py:60
 msgid "SSH wird gestartet..."
