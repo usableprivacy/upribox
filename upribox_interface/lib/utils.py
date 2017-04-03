@@ -4,13 +4,16 @@ import json
 from os import listdir
 from os.path import isfile, join, exists
 import logging
-from django.conf import settings
 import subprocess
 import time
+import dns.resolver
 import passwd
+from django.conf import settings
 from django.utils.translation import ugettext_lazy
-from django import forms
 from django.utils.crypto import get_random_string
+from django import forms
+import netifaces as ni
+from netaddr import IPAddress
 
 logger = logging.getLogger('uprilogger')
 
@@ -35,7 +38,7 @@ def get_defaults():
         raise e
 
 
-def get_fact(role, group, fact):
+def get_fact(role, group, fact, defaults=True):
     if exists(settings.ANSIBLE_FACTS_DIR):
         try:
             with open(join(settings.ANSIBLE_FACTS_DIR, role + ".fact")) as file:
@@ -43,9 +46,9 @@ def get_fact(role, group, fact):
                 return data[group][fact] if group in data and fact in data[group] else check_defaults(role, group, fact)
         except IOError as e:
             logger.debug('Cannot read Local Facts File ' + role + " :" + e.strerror)
-            return check_defaults(role, group, fact)
+            return check_defaults(role, group, fact) if defaults else None
     else:
-        return check_defaults(role, group, fact)
+        return check_defaults(role, group, fact) if defaults else None
 
 
 def check_defaults(role, group, fact):
@@ -78,7 +81,7 @@ def check_passwords(password1, password2):
         raise forms.ValidationError(ugettext_lazy("Die beiden Passwörter stimmen nicht überein."))
 
     pw2 = passwd.Password(password2)
-    #password2 not empty string and valid
+    # password2 not empty string and valid
     if password2 and not pw2.is_valid():
         errors = []
         if not pw2.has_digit():
@@ -96,8 +99,7 @@ def check_passwords(password1, password2):
             errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss zwischen 8 und 63 Zeichen lang sein.")))
         if not pw2.has_only_allowed_chars():
             errors.append(forms.ValidationError(ugettext_lazy(
-                    "Das Passwort darf lediglich die Sonderzeichen %s enthalten." % pw2.get_allowed_chars())))
-
+                "Das Passwort darf lediglich die Sonderzeichen %s enthalten." % pw2.get_allowed_chars())))
 
         raise forms.ValidationError(errors)
 
@@ -107,7 +109,60 @@ def check_passwords(password1, password2):
 def secure_random_id(instance):
     return get_random_string(16)
 
+
+def get_system_network_config():
+    if_info = None
+    try:
+        interface = ni.gateways()['default'][ni.AF_INET][1]
+        if_info = ni.ifaddresses(interface)
+    except ValueError as e:
+        logger.error("An error concerning the interface {} has occurred: {}".format(interface, str(e)))
+        return get_default_network_config()
+
+    try:
+        # get ip of specified interface
+        ip = get_fact('interfaces', 'static', 'ip', defaults=False) or if_info[ni.AF_INET][-1]['addr']
+    except IndexError:
+        logger.debug("No IPv4 address is configured")
+        ip = check_defaults('interfaces', 'static', 'ip')
+    try:
+        # get subnetmask of specified interface
+        netmask = get_fact('interfaces', 'static', 'netmask', defaults=False) or if_info[ni.AF_INET][-1]['netmask'].split("/")[0]
+    except IndexError:
+        logger.debug("No IPv4 netmask is configured")
+        netmask = check_defaults('interfaces', 'static', 'netmask')
+
+    gw_default = False
+    try:
+        # get default gateway
+        gateway = get_fact('interfaces', 'static', 'gateway', defaults=False) or ni.gateways()["default"][ni.AF_INET][0]
+    except KeyError:
+        logger.debug("No IPv4 default gateway is configured")
+        gateway = check_defaults('interfaces', 'static', 'gateway')
+        gw_default = True
+
+    dns_servers = [get_fact('interfaces', 'static', 'dns', defaults=False)]
+    if not dns_servers[0] and exists(settings.DNS_FILE):
+        rs = dns.resolver.Resolver(filename=settings.DNS_FILE)
+        # get all ipv4 nameservers
+        dns_servers = [x for x in rs.nameservers if IPAddress(x).version == 4]
+    else:
+        if not gw_default:
+            dns_servers = [gateway]
+        else:
+            check_defaults('interfaces', 'static', 'dns')
+
+    # return ipv4 information
+    return {'ip': ip, 'netmask': netmask, 'gateway': gateway, 'dns_servers': dns_servers}
+
+
+def get_default_network_config():
+    return {'ip': get_fact('interfaces', 'static', 'ip'), 'netmask': get_fact('interfaces', 'static', 'netmask'),
+            'gateway': get_fact('interfaces', 'static', 'gateway'), 'dns_servers': [get_fact('interfaces', 'static', 'dns')]}
+
+
 class AnsibleError(Exception):
+
     def __init__(self, message, rc):
         super(AnsibleError, self).__init__(message)
         self.rc = rc
