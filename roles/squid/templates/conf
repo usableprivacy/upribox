@@ -3570,7 +3570,7 @@ cache_mem 128 MB
 #Default:
 # The format definitions squid, common, combined, referrer, useragent are built in.
 logformat squid_ext %ts.%03tu %6tr %>a:%>p %Ss/%03>Hs %<st %rm %ru %[un %Sh/%<a:%<p %mt
-logformat useragent_short %>a "%{User-Agent}>h"
+logformat useragent_short %>a;;%{User-Agent}>h
 
 #  TAG: access_log
 #	Configures whether and how Squid logs HTTP and ICP transactions.
@@ -3651,8 +3651,7 @@ logformat useragent_short %>a "%{User-Agent}>h"
 #	Default:
 #		access_log daemon:/var/log/squid3/access.log squid
 #Default:
-#access_log daemon:/var/log/log/squid3/access.log squid
-access_log daemon:{{ default_settings.log.general.path }}/{{default_settings.log.squid.subdir}}/access.log useragent_short
+access_log daemon:{{ default_settings.log.general.path }}/{{ default_settings.log.squid.subdir }}/{{ default_settings.log.squid.logfiles.logname }} useragent_short
 
 #  TAG: icap_log
 #	ICAP log files record ICAP transaction summaries, one line per

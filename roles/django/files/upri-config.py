@@ -383,7 +383,57 @@ def parse_dnsmasq_logs(arg):
         return 16
 
     return 0
+#
+# parse the squid logfile and insert new user-agents into django db
+# return values:
+# 16: error
+# 1: new entries have been added
+# 0: no changes
+def action_parse_user_agents(arg):
+    changed = False
+    with open('/etc/ansible/default_settings.json', 'r') as f:
+        config = json.load(f)
 
+    dbfile = config['django']['db']
+    logfile = os.path.join(config['log']['general']['path'], config['log']['squid']['subdir'],
+                           config['log']['squid']['logfiles']['logname'])
+
+    if os.path.isfile(logfile):
+        print "parsing squid logfile %s" % logfile
+        with open(logfile, 'r') as squid:
+            for line in squid:
+                try:
+                    parts = line.split(";;")
+                    conn = sqlite3.connect(dbfile)
+                    c = conn.cursor()
+                    c.execute("SELECT ip,user_agent,final FROM devices_deviceentry WHERE ip=?", (parts[0],))
+                    data = c.fetchone()
+                    if not data:
+                        c.execute("INSERT INTO devices_deviceentry VALUES (ip=?, user_agent=?)", (parts[0], parts[1]))
+                        conn.commit()
+                        changed = True
+                    else:
+                        if not data[2] and len(parts[1]) > 1:
+                            c.execute("UPDATE devices_deviceentry SET user_agent=? where ip=?", (parts[1], parts[0]))
+                            conn.commit()
+                            changed = True
+                except Exception as e:
+                    print "failed to parse user-agent \"%s\": %s" % (line, e.message)
+
+        if changed:
+            try:
+                # delete logfile
+                os.remove(logfile)
+                subprocess.call(["/usr/sbin/service", "squid3", "restart"])
+            except Exception as e:
+                print "failed to restart service"
+                return 16
+            return 1
+    else:
+        print "failed to parse squid logfile %s: file not found" % logfile
+        return 16
+
+    return 0
 #
 # set a new ssid for the upribox "silent" wlan
 # return values:
@@ -624,12 +674,13 @@ ALLOWED_ACTIONS = {
     'enable_apate': action_set_apate,
     'restart_apate': action_restart_apate,
     'parse_logs': action_parse_logs,
+    'parse_user_agents': action_parse_user_agents,
     'generate_profile': action_generate_profile,
     'delete_profile': action_delete_profile,
     'restart_network': action_restart_network,
     'restart_firewall': action_restart_firewall,
     'enable_device': action_enable_device,
-    'disable_device': action_disable_device
+    'disable_device': action_disable_device,
 }
 
 #
