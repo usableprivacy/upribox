@@ -11,6 +11,7 @@
     - { role: wlan, tags: ["wlan"] }
     - { role: vpn, tags: ["vpn"] }
     - { role: privoxy, tags: ["privoxy"] }
+    - { role: squid, tags: ["squid"] }
     - { role: tor, tags: ["tor"] }
     - { role: dns_ninja, tags: ["dns_ninja"] }
     - { role: nginx, tags: ["nginx"] }

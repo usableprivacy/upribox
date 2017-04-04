@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'wlan',
     'vpn',
     'statistics',
+    'devices',
     'more'
 )
 

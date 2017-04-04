@@ -65,6 +65,10 @@ default_settings:
         logname: registrar.log
         stdout: stdout.log
         stderr: stderr.log
+    squid:
+      subdir: 'squid'
+      logfiles:
+        logname: 'squid.log'
     apate:
       subdir: 'apate'
       logfiles:
