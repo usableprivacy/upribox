@@ -14,7 +14,7 @@ from lib import daemon_app
 
 CONFIG_FILE = "/etc/registrar/config.json"
 """Path of the config file for the Registrar fingerprinting daemon."""
-CONFIG_OPTIONS = ('logfile', 'pidfile', 'interface', 'stderr', 'stdout')
+CONFIG_OPTIONS = ('logfile', 'pidfile', 'interface', 'stderr', 'stdout', 'django-db')
 """Options that need to be present in the config file."""
 
 
@@ -55,8 +55,16 @@ def main():
     logger.addHandler(handler)
 
     # catch error which could arise during initialisation
+    config = {
+        "interface": str(data['interface']),
+        "pidfile": data['pidfile'],
+        "stdout": data['stdout'],
+        "stderr": data['stderr'],
+        "django-db": data['django-db']
+    }
+
     try:
-        dapp = daemon_app.DaemonApp(logger, str(data['interface']), data['pidfile'], data['stdout'], data['stderr'])
+        dapp = daemon_app.DaemonApp(logger, config)
     except Exception as e:
         logger.error("An error happened during initialsising the daemon process - terminating process")
         logger.exception(e)

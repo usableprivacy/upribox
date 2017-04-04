@@ -7,6 +7,8 @@ logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 # suppresses following message
 # WARNING: No route found for IPv6 destination :: (no default route?)
 from scapy.all import sniff, DHCP, hexstr
+import sqlite3
+from util import insert_or_update_fingerprint, DaemonError
 
 
 class _SniffThread(threading.Thread):
@@ -42,7 +44,12 @@ class _SniffThread(threading.Thread):
         # the filter argument in scapy's sniff function seems to be applied too late
         # therefore some unwanted packets are processed (e.g. tcp packets of ssh session)
         # but it still decreases the number of packets that need to be processed by the lfilter function
+        # try:
         sniff(prn=self._packet_handler, filter=self._SNIFF_FILTER(), lfilter=self._LFILTER, store=0, iface=self.interface)
+        # except Exception as e:
+        #     print("killed2")
+        #     # self.conn.close()
+        #     raise e
 
     def _packet_handler(self, pkt):
         """This method should be overriden to define the thread's behaviour."""
@@ -61,7 +68,7 @@ class RegistrarSniffThread(_SniffThread):
     _SNIFF_PARTS = [("udp and (port 76 or port 68)", DHCP)]
     """list: List of tuples containing a BFP filter and the according scapy class."""
 
-    def __init__(self, interface, logger):
+    def __init__(self, interface, logger, dbfile):
         """Initialises several things needed to define the thread's behaviour.
 
         Args:
@@ -69,17 +76,58 @@ class RegistrarSniffThread(_SniffThread):
         """
         super(RegistrarSniffThread, self).__init__(interface)
         self.logger = logger
+        self.dbfile = dbfile
+        # try:
+        #     self.conn = sqlite3.connect(dbfile)
+        # except sqlite3.Error as sqle:
+        #     self.logger.error("Failed to connect to sqlite database at path %s" % (dbfile,))
+        #     self.logger.exception(sqle)
+        #     raise DaemonError()
 
     def _packet_handler(self, pkt):
         if pkt.haslayer(DHCP):
             # self.logger.error(pkt[DHCP].command())
+            params = {}
+            # dhcp request
+            # options = dict(pkt[DHCP].options)
+            # if options.get('message-type', 0) == 3 and options.get('requested_addr', None):
             for entry in pkt[DHCP].options:
-                # TODO do some database stuff here
-                if entry[0] in ["hostname", "vendor_class_id", "requested_addr", "message-type"]:
-                    self.logger.info("%s %s", entry[0], entry[1])
-                elif entry[9] == "client_id":
+                if entry[0] == "message-type":
+                    params['message-type'] = entry[1]
+                elif entry[0] == "vendor_class_id":
+                    # self.logger.info("%s %s", entry[0], entry[1])
+                    params['dhcp_vendor'] = entry[1]
+                elif entry[0] == 'requested_addr':
+                    params['ip'] = entry[1]
+                elif entry[0] == 'hostname':
+                    params['hostname'] = entry[1]
+                elif entry[0] == "client_id":
                     # client_id value is hardware type (0x01) and mac address
-                    ":".join(hexstr(entry[1], onlyhex=True).split(" ")[1:])
-                elif entry[9] == 'param_req_list':
+                    params['mac'] = ":".join(hexstr(entry[1], onlyhex=True).split(" ")[-6:])
+                elif entry[0] == 'param_req_list':
                     # DHCP fingerprint in fingerbank format
-                    ",".join([str(int(num, 16)) for num in hexstr(entry[1], onlyhex=True).split(" ")])
+                    params['dhcp_fingerprint'] = ",".join([str(int(num, 16)) for num in hexstr(entry[1], onlyhex=True).split(" ")])
+
+            if params.get('message-type', 0) == 3 and params.get('ip', None):
+                insert_or_update_fingerprint(self.conn, self.logger, **params)
+
+    def run(self):
+        # db connection needs to be created in same thead as it is executed
+        # therefore create it here
+        try:
+            self.conn = sqlite3.connect(self.dbfile)
+        except sqlite3.Error as sqle:
+            self.logger.error("Failed to connect to sqlite database at path %s" % (self.dbfile,))
+            self.logger.exception(sqle)
+            raise DaemonError()
+        # try:
+        super(RegistrarSniffThread, self).run()
+        # except Exception as e:
+        #     print("killed")
+        #     self.conn.close()
+        #     raise e
+
+    # def stop(self):
+    #     self.conn.close()
+    #     self.logger.info("stop")
+    #     super(RegistrarSniffThread, self).stop()

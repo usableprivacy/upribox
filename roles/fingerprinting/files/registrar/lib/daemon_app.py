@@ -18,14 +18,14 @@ logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 # WARNING: No route found for IPv6 destination :: (no default route?)
 from scapy.all import conf
 
-from sniff_thread import RegistrarSniffThread
+from sniff_thread import RegistrarSniffThread, _SniffThread
 
 
 class DaemonApp(object):
     """This is an abstract class, which should be inherited to define the
     Apate daemon's behaviour."""
 
-    def __init__(self, logger, interface, pidfile, stdout, stderr):
+    def __init__(self, logger, config):
         """Initialises several things needed to define the daemons behaviour.
 
         Args:
@@ -43,32 +43,42 @@ class DaemonApp(object):
         conf.verb = 0
 
         self.stdin_path = os.devnull
-        self.stdout_path = stdout
-        self.stderr_path = stderr
-        self.pidfile_path = pidfile
+        self.stdout_path = config['stdout']
+        self.stderr_path = config['stderr']
+        self.pidfile_path = config['pidfile']
         self.pidfile_timeout = 5
         # self.pidfile_timeout = 0
 
         self.logger = logger
-        self.interface = interface
+        self.interface = config['interface']
+        self.django_db = config['django-db']
 
-        self.sniffthread = RegistrarSniffThread(self.interface, logger)
+        self.sniffthread = RegistrarSniffThread(self.interface, logger, self.django_db)
         self.sniffthread.daemon = True
         self.sleeper = threading.Condition()
 
     def exit(self, signal_number, stack_frame):
         """This method is called if the daemon stops."""
-        #self.sniffthread.stop()
+        # self.sniffthread.stop()
         # with self.sleeper:
         #     self.sleeper.notify_all()
+        # self.sniffthread.stop()
         raise SystemExit()
 
     def run(self):
         """This method should be overriden to define the daemon's behaviour."""
+        # try:
         self.sniffthread.start()
         while True:
             # do some regular work here
             time.sleep(60)
+        # except SystemExit as se:
+        #     self.logger.info("sysexit")
+        #     self.logger.info(str(threading.enumerate()))
+        #     for thr in threading.enumerate():
+        #         if isinstance(thr, _SniffThread):
+        #             thr.stop()
+        #     raise se
         # self.sniffthread.join()
         # try:
         #     with self.sleeper:
@@ -79,8 +89,3 @@ class DaemonApp(object):
         #         return
         #     else:
         #         raise e
-
-
-class DaemonError(Exception):
-    """This error class indicates, that the daemon has failed."""
-    pass

@@ -3,5 +3,6 @@
     "logfile": "{{ default_settings.log.general.path }}/{{ default_settings.log.registrar.subdir }}/{{ default_settings.log.registrar.logfiles.logname }}",
     "interface": "{{ default_settings.registrar.general.interface if not (ansible_local is defined and ansible_local.registrar is defined and ansible_local.registrar.general) else ansible_local.registrar.general.interface | default(default_settings.registrar.general.interface) }}",
     "stdout": "{{ default_settings.log.general.path }}/{{ default_settings.log.registrar.subdir }}/{{ default_settings.log.registrar.logfiles.stdout }}",
-    "stderr": "{{ default_settings.log.general.path }}/{{ default_settings.log.registrar.subdir }}/{{ default_settings.log.registrar.logfiles.stderr }}"
+    "stderr": "{{ default_settings.log.general.path }}/{{ default_settings.log.registrar.subdir }}/{{ default_settings.log.registrar.logfiles.stderr }}",
+    "django-db": "{{ default_settings.django.db }}"
 }
