@@ -412,12 +412,13 @@ def action_parse_user_agents(arg):
             for line in squid:
                 try:
                     parts = line.split(";;")
+                    # TODO new connection for every line in logfile?
                     conn = sqlite3.connect(dbfile)
                     c = conn.cursor()
                     c.execute("SELECT ip,user_agent,final FROM devices_deviceentry WHERE ip=?", (parts[0],))
                     data = c.fetchone()
                     if not data:
-                        c.execute("INSERT INTO devices_deviceentry VALUES (ip=?, user_agent=?)", (parts[0], parts[1]))
+                        c.execute("INSERT INTO devices_deviceentry (ip, user_agent) VALUES (?, ?)", (parts[0], parts[1]))
                         conn.commit()
                         changed = True
                     else:
@@ -427,9 +428,11 @@ def action_parse_user_agents(arg):
                             changed = True
                 except Exception as e:
                     print "failed to parse user-agent \"%s\": %s" % (line, e.message)
+        # TODO conn.close()
         if changed:
             try:
                 # delete logfile
+                # is that necessary? shouldn't truncating the file be enough?
                 os.remove(logfile)
                 subprocess.call(["/usr/sbin/service", "squid3", "restart"])
             except Exception as e:
