@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-06 09:49+0000\n"
+"POT-Creation-Date: 2017-04-03 10:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -236,10 +236,8 @@ msgid "Ohne Werbung surfen."
 msgstr "surf without ads"
 
 #: wlan/templates/silent.html:26
-#, fuzzy
-#| msgid "Silent Modus läuft"
 msgid "Silent Modus läuft nicht"
-msgstr "silent mode active"
+msgstr "silent mode not active"
 
 #: wlan/templates/silent.html:31
 msgid "Silent Modus läuft"

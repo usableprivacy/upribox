@@ -4,6 +4,7 @@ import os
 
 
 class HardwareInfo:
+
     def __init__(self):
         self.specs = self.get_hw_specs()
         self.model = self.get_hardware_model()
@@ -30,17 +31,17 @@ class HardwareInfo:
             return None
 
     def get_wireless_devices(self):
-            network_devices = self.get_network_devices()
-            wireless_devices = dict()
-            try:
-                for device in network_devices:
-                    if 'wireless' in device['capabilities']:
-                        wifi_device = {'driver': device['configuration']['driver'],
-                                       'bus': device['businfo']}
-                        wireless_devices[device['logicalname']] = wifi_device
-                return wireless_devices
-            except:
-                return None
+        network_devices = self.get_network_devices()
+        wireless_devices = dict()
+        try:
+            for device in network_devices:
+                if 'wireless' in device['capabilities']:
+                    wifi_device = {'driver': device['configuration']['driver'],
+                                   'bus': device['businfo']}
+                    wireless_devices[device['logicalname']] = wifi_device
+            return wireless_devices
+        except:
+            return None
 
     def get_hardware_model(self):
         if 'product' in self.specs:
@@ -132,8 +133,10 @@ class UpdateStatus:
     def get_version(self):
         if self.tag:
             return self.tag
-        else:
+        elif all((self.branch, self.last_commit_short)):
             return self.branch + '/' + self.last_commit_short
+        else:
+            return ''
 
     def get_update_time(self):
         try:

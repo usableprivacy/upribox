@@ -76,9 +76,9 @@ class _DaemonApp(object):
 
         try:
             # get ip of specified interface
-            ip = if_info[ni.AF_INET][0]['addr']
+            ip = if_info[ni.AF_INET][-1]['addr']
             # get subnetmask of specified interface
-            netmask = if_info[ni.AF_INET][0]['netmask'].split("/")[0]
+            netmask = if_info[ni.AF_INET][-1]['netmask'].split("/")[0]
             # get the network address
             network = IPNetwork("{}/{}".format(ip, netmask))
 

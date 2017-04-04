@@ -21,7 +21,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.WARNING)
 from apate_redis import ApateRedis
 import socket
 import netifaces as ni
-from netaddr import IPNetwork
+from netaddr import IPNetwork, IPAddress, ZEROFILL
 import redis as redisDB
 
 
@@ -384,6 +384,77 @@ def parse_dnsmasq_logs(arg):
 
     return 0
 
+def action_set_ip(arg):
+    print 'setting ip to "%s"' % arg
+    ip = None
+    try:
+        ip = IPAddress(arg, flags=ZEROFILL)
+    except:
+        return 12
+
+    obj = {"static": {"ip": str(ip)}}
+    write_role('interfaces', obj)
+
+def action_set_dns_server(arg):
+    print 'setting ip to "%s"' % arg
+    ip = None
+    try:
+        ip = IPAddress(arg, flags=ZEROFILL)
+    except:
+        return 12
+
+    obj = {"static": {"dns": str(ip)}}
+    write_role('interfaces', obj)
+
+def action_set_netmask(arg):
+    print 'setting ip to "%s"' % arg
+    ip = None
+    try:
+        ip = IPAddress(arg, flags=ZEROFILL)
+        if not ip.is_netmask():
+            return 13
+    except:
+        return 12
+
+    obj = {"static": {"netmask": str(ip)}}
+    write_role('interfaces', obj)
+
+def action_set_gateway(arg):
+    print 'setting ip to "%s"' % arg
+    ip = None
+    try:
+        ip = IPAddress(arg, flags=ZEROFILL)
+    except:
+        return 12
+
+    obj = {"static": {"gateway": str(ip)}}
+    write_role('interfaces', obj)
+
+# def action_set_static(arg):
+#     map = {'yes':'static','no':'dhcp'}
+#     if arg not in ['yes', 'no']:
+#         print 'error: only "yes" and "no" are allowed'
+#         return 10
+#     print 'static network config enabled: %s' % arg
+#     en = {"general": {"mode": map[arg]}}
+#     write_role('interfaces', en)
+
+def action_restart_network(arg):
+    print 'restarting network...'
+    return call_ansible('network_config')
+
+def action_set_dhcpd(arg):
+    if arg not in ['yes', 'no']:
+        print 'error: only "yes" and "no" are allowed'
+        return 10
+    print 'DHCP server enabled: %s' % arg
+    en = {"general": {"enabled": arg}}
+    write_role('dhcpd', en)
+
+def action_restart_dhcpd(arg):
+    print 'restarting dhcp server...'
+    return call_ansible('dhcp_server')
+
 #
 # set a new ssid for the upribox "silent" wlan
 # return values:
@@ -547,6 +618,14 @@ def action_restart_apate(arg):
     print 'restarting apate...'
     return call_ansible('toggle_apate')
 
+def action_set_static_ip(arg):
+    if arg not in ['dhcp', 'static']:
+        print 'error: only "dhcp" and "static" are allowed'
+        return 10
+    print 'interface mode: %s' % arg
+    en = {"general": {"mode": arg}}
+    write_role('interfaces', en)
+
 
 def check_passwd(arg):
     pw = passwd.Password(arg)
@@ -622,6 +701,7 @@ ALLOWED_ACTIONS = {
     'enable_ssh': action_set_ssh,
     'restart_ssh': action_restart_ssh,
     'enable_apate': action_set_apate,
+    'enable_static_ip': action_set_static_ip,
     'restart_apate': action_restart_apate,
     'parse_logs': action_parse_logs,
     'generate_profile': action_generate_profile,
@@ -629,7 +709,15 @@ ALLOWED_ACTIONS = {
     'restart_network': action_restart_network,
     'restart_firewall': action_restart_firewall,
     'enable_device': action_enable_device,
-    'disable_device': action_disable_device
+    'disable_device': action_disable_device,
+    'set_ip': action_set_ip,
+    'set_dns_server': action_set_dns_server,
+    'set_netmask': action_set_netmask,
+    'set_gateway': action_set_gateway,
+    'restart_network': action_restart_network,
+    #'enable_static_ip': action_set_static,
+    'set_dhcpd': action_set_dhcpd,
+    'restart_dhcpd': action_restart_dhcpd,
 }
 
 #

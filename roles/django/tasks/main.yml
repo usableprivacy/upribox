@@ -7,8 +7,14 @@
 #  copy: src=webapp/upri_uwsgi.ini dest=/usr/share/nginx/www-upri-interface/upri_uwsgi.ini
 #  notify: restart uwsgi
 
+# - name: copy django webapp
+#   copy: src=upribox_interface/ dest=/usr/share/nginx/www-upri-interface owner="{{'www-data' if env == 'development' else 'root' }}" group="{{'www-data' if env == 'development' else 'root' }}"
+#   register: copy_django
+#   notify: reload uwsgi
+
 - name: copy django webapp
-  copy: src=upribox_interface/ dest=/usr/share/nginx/www-upri-interface owner="{{'www-data' if env == 'development' else 'root' }}" group="{{'www-data' if env == 'development' else 'root' }}"
+  # copy: src=upribox_interface/ dest=/usr/share/nginx/www-upri-interface
+  synchronize: src=upribox_interface/ dest=/usr/share/nginx/www-upri-interface delete=yes recursive=yes checksum=yes
   register: copy_django
   notify: reload uwsgi
 

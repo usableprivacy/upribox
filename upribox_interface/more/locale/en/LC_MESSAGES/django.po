@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-06 09:49+0000\n"
+"POT-Creation-Date: 2017-04-03 10:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,69 +17,169 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: more/forms.py:13
+#: more/forms.py:14
 msgid "Benutzername"
 msgstr "user name"
 
-#: more/forms.py:18
+#: more/forms.py:19
 msgid "Altes Passwort"
 msgstr "existing password"
 
-#: more/forms.py:23
+#: more/forms.py:24
 msgid "Neues Passwort"
 msgstr "new password"
 
-#: more/forms.py:28
+#: more/forms.py:29
 msgid "Neues Passwort erneut eingeben"
 msgstr "re-enter new password"
 
-#: more/forms.py:42
+#: more/forms.py:43
 msgid "Das alte Passwort ist inkorrekt"
 msgstr "old password is invalid"
 
-#: more/jobs.py:15
-msgid "SSH wird gestartet..."
-msgstr "SSH restarts..."
+#: more/forms.py:56
+msgid "IP Adresse"
+msgstr "IP address"
 
-#: more/jobs.py:17
-msgid "SSH wird gestoppt..."
-msgstr "SSH stops..."
+#: more/forms.py:61
+msgid "Subnetzmaske"
+msgstr "subnet mask"
+
+#: more/forms.py:65
+msgid "Standardgateway"
+msgstr "default gateway"
+
+#: more/forms.py:69
+msgid "DNS Server"
+msgstr "DNS server"
+
+#: more/forms.py:74
+msgid "upribox als DHCP Server nutzen"
+msgstr "use upribox as DHCP server"
+
+#: more/forms.py:93
+msgid "Es handelt sich nicht um eine Subnetzmaske"
+msgstr "This is no valid subnet mask"
+
+#: more/forms.py:95
+msgid "Die Subnetzmaske ist inkorrekt"
+msgstr "old password is invalid"
+
+#: more/forms.py:100
+msgid "Die IP Adresse ist inkorrekt"
+msgstr "old password is invalid"
+
+#: more/forms.py:105
+msgid "Die IP Adresse des Gateways ist inkorrekt"
+msgstr "old password is invalid"
+
+#: more/forms.py:110
+msgid "Die IP Adresse des DNS Servers ist inkorrekt"
+msgstr "The IP address of the DNS server is incorrect"
+
+#: more/forms.py:115 more/forms.py:117 more/forms.py:119
+msgid "Es handelt sich nicht um eine korrekte Hostadresse"
+msgstr "This is no valid host address"
+
+#: more/jobs.py:11
+msgid "Die Netzwerkeinstellungen werden neu konfiguriert..."
+msgstr "Configuring network settings..."
+
+#: more/jobs.py:14
+msgid "Modus zur Vergabe statischer IP Adressen wird aktiviert..."
+msgstr "Activating mode for static IP address assignment..."
+
+#: more/jobs.py:18
+msgid "IP Adresse wird geändert..."
+msgstr "Setting IP address..."
 
 #: more/jobs.py:22
+msgid "Subnetzmaske wird geändert..."
+msgstr "Setting subnet mask..."
+
+#: more/jobs.py:26
+msgid "Gateway wird geändert..."
+msgstr "Setting gateway..."
+
+#: more/jobs.py:30 more/jobs.py:38
+msgid "DNS Server wird geändert..."
+msgstr "Restarting SSH..."
+
+#: more/jobs.py:33
+msgid "Netzwerk wird neu gestartet..."
+msgstr "Restarting network..."
+
+#: more/jobs.py:40
+msgid "DHCP Server wird konfiguriert..."
+msgstr "Configuring DHCP server..."
+
+#: more/jobs.py:43 more/jobs.py:113
+msgid "Konfiguration von Interfaces erfolgreich."
+msgstr "Configuration of interfaces successful."
+
+#: more/jobs.py:47
+msgid "Es ist ein unbekannter Fehler aufgetreten. Fehlercode: %(errorcode)s"
+msgstr "Unknown error occured. Error-code: %(errorcode)s"
+
+#: more/jobs.py:60
+msgid "SSH wird gestartet..."
+msgstr "Restarting SSH..."
+
+#: more/jobs.py:62
+msgid "SSH wird gestoppt..."
+msgstr "Stopping SSH..."
+
+#: more/jobs.py:67
 msgid "Konfiguration von SSH erfolgreich."
-msgstr "configuration of SSH successful."
+msgstr "Configuration of SSH successful."
 
-#: more/jobs.py:27
+#: more/jobs.py:72
 msgid "Starten von SSH fehlgeschlagen."
-msgstr "starting of SSH failed."
+msgstr "Starting of SSH failed."
 
-#: more/jobs.py:29
+#: more/jobs.py:74
 msgid "Stoppen von SSH fehlgeschlagen."
-msgstr "stopping of SSH failed."
+msgstr "Stopping of SSH failed."
 
-#: more/jobs.py:31 more/jobs.py:54
+#: more/jobs.py:76 more/jobs.py:99 more/jobs.py:122
 msgid "Es ist ein unbekannter Fehler aufgetreten."
-msgstr "unknown error occured."
+msgstr "Unknown error occured."
 
-#: more/jobs.py:38
+#: more/jobs.py:83
 msgid "Apate ARP Spoofing Daemon wird gestartet..."
 msgstr "Starting Apate ARP Spoofing Daemon..."
 
-#: more/jobs.py:40
+#: more/jobs.py:85
 msgid "Apate ARP Spoofing Daemon wird gestoppt..."
 msgstr "Stopping Apate ARP Spoofing Daemon..."
 
-#: more/jobs.py:45
+#: more/jobs.py:90
 msgid "Konfiguration von Apate ARP Spoofing Daemon erfolgreich."
-msgstr "configuration of Apate ARP Spoofing daemon successful."
+msgstr "Configuration of Apate ARP Spoofing daemon successful."
 
-#: more/jobs.py:50
+#: more/jobs.py:95
 msgid "Starten von Apate ARP Spoofing Daemon fehlgeschlagen."
 msgstr "Failed to start Apate ARP Spoofing daemon."
 
-#: more/jobs.py:52
+#: more/jobs.py:97
 msgid "Stoppen von Apate ARP Spoofing Daemon fehlgeschlagen."
 msgstr "Failed to stop Apate ARP Spoofing daemon."
+
+#: more/jobs.py:106
+msgid "Statische IP wird aktiviert..."
+msgstr "Activating static IP..."
+
+#: more/jobs.py:108
+msgid "Statische IP wird deaktiviert..."
+msgstr "Deactivate static IP..."
+
+#: more/jobs.py:118
+msgid "Aktivierung von statischer IP fehlgeschlagen."
+msgstr "Failed to activate static IP."
+
+#: more/jobs.py:120
+msgid "Deaktivierung von statischer IP fehlgeschlagen."
+msgstr "Failed to deactivate static IP."
 
 #: more/templates/more.html:7
 msgid "Admin - upribox"
@@ -108,6 +208,7 @@ msgid ""
 msgstr "This function should be used by experts to configure their upribox."
 
 #: more/templates/more.html:24 more/templates/more.html.py:46
+#: more/templates/more.html:71
 msgid "Ein-/Ausschalten"
 msgstr "switch On/Off"
 
@@ -145,10 +246,87 @@ msgstr "Apate is activated"
 msgid "Apate ist deaktiviert"
 msgstr "Apate is deactivated"
 
-#: more/templates/more.html:64
+#: more/templates/more.html:66 more/templates/more.html.py:91
+msgid "Statische IP"
+msgstr "Static IP"
+
+#: more/templates/more.html:67
+msgid ""
+"Mithilfe dieser Funktion kann der upribox eine statische IP Adresse "
+"zugewiesen werden."
+msgstr ""
+"This function can be used to assign a static IP address to your upribox"
+
+#: more/templates/more.html:77
+msgid "Statische IP ist aktiviert"
+msgstr "Static IP is activated"
+
+#: more/templates/more.html:78
+msgid "deaktivieren"
+msgstr "deactivate"
+
+#: more/templates/more.html:82
+msgid "Statische IP ist deaktiviert"
+msgstr "Static IP is deactivated"
+
+#: more/templates/more.html:83
+msgid "(Statische IP konfigurieren)"
+msgstr "(Configure static IP)"
+
+#: more/templates/more.html:84
+msgid "(abbrechen)"
+msgstr "(cancel)"
+
+#: more/templates/more.html:99
+msgid "Information einklappen"
+msgstr "hide information"
+
+#: more/templates/more.html:99
+msgid "Wie funktioniert die statische IP?"
+msgstr "How does a static IP work?"
+
+#: more/templates/more.html:101
+msgid ""
+"Hier können erfahrene Nutzerinnen und Nutzer Ihrer upribox eine statische IP "
+"zuweisen."
+msgstr ""
+"Experienced users can asign a static IP to their upribox."
+
+#: more/templates/more.html:102
+msgid ""
+"Zusätzlich ist es möglich, Ihre upribox als DHCP-Server agieren zu lassen, "
+"um sämtlichen Netzwerkverkehr über diese zu leiten. Dazu muss der DHCP-"
+"Server im Interface Ihres Routers deaktiviert werden."
+msgstr "Additionally your upribox can act as a DHCP server. This way all the traffic in your network will run over your upribox. Please deactivate the DHCP server of your home router first!"
+
+#: more/templates/more.html:104
+#, python-format
+msgid ""
+"H&auml;ufig gestellte Fragen zur upribox finden Sie unter <a href="
+"\"%(faq_url)s\" title=\"FAQ\">Hilfe</a>."
+msgstr ""
+"Answers to frequently asked questions (FAQ) can be found here: <a href="
+"\"%(faq_url)s\" title=\"FAQ\">Help</a>."
+
+#: more/templates/more.html:105
+msgid "Information ausblenden"
+msgstr "hide information"
+
+#: more/templates/more.html:110
 msgid "upribox Software"
 msgstr ""
 
-#: more/templates/more.html:65
+#: more/templates/more.html:111
 msgid "Letztes update: "
 msgstr "Last update: "
+
+#~ msgid "DHCP Server"
+#~ msgstr "DHCP server"
+
+#, fuzzy
+#~| msgid "Konfiguration von Interfaces erfolgreich."
+#~ msgid "Konfiguration von Interfaces erfolgreich"
+#~ msgstr "Configuration of interfaces successful."
+
+#~ msgid "Konfiguration erfolgreich"
+#~ msgstr "Configuration of SSH successful."

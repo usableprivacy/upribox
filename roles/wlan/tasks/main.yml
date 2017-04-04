@@ -1,5 +1,6 @@
 ---
-- include: ../../tor/tasks/tor_state.yml tags=ssid,toggle_tor,toggle_silent,network_config
+- include: ../../tor/tasks/tor_state.yml tags=ssid,toggle_tor,toggle_silent,network_config,dhcp_server
+- include: dhcpd_state.yml tags=toggle_tor,toggle_silent,network_config,dhcp_server
 
 - name: install required packages
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
@@ -106,7 +107,8 @@
 
 - name: configure hostapd
   template: src=hostapd.j2 dest=/etc/hostapd/hostapd.conf owner=root group=root mode=644
-  notify: restart hostapd
+  notify:
+    - restart hostapd
   register: hostapd_status
   tags:
     - ssid
@@ -125,51 +127,29 @@
 
 - name: set dhcp network interfaces
   template: src=isc-dhcp-server.j2 dest=/etc/default/isc-dhcp-server owner=root group=root mode=644
-  notify: restart isc-dhcp-server
+  notify:
+    - restart isc-dhcp-server
+    - configure isc-dhcp-server
   tags:
     - toggle_tor
     - toggle_silent
+    - dhcp_server
+    - network_config
 
 - name: set dhcp ip ranges
   template: src=dhcpd.conf.j2 dest=/etc/dhcp/dhcpd.conf owner=root group=root mode=644
+  notify:
+    - restart isc-dhcp-server
+    - configure isc-dhcp-server
   tags:
     - toggle_tor
     - toggle_silent
+    - dhcp_server
+    - network_config
 
-- name: enable services
-  service: name={{ item }} enabled=yes
-  with_items:
-    - hostapd
-    - isc-dhcp-server
-  when: tor|bool or silent|bool
-  tags:
-    - toggle_tor
-    - toggle_silent
-
-- name: start services
-  service: name={{ item }} state=started
-  with_items:
-    - hostapd
-  when: tor|bool or silent|bool
-  tags:
-    - toggle_tor
-    - toggle_silent
-
-- name: disable services
-  service: name={{ item }} enabled=no
-  with_items:
-    - hostapd
-    - isc-dhcp-server
-  when: not (tor|bool or silent|bool)
-  tags:
-    - toggle_tor
-    - toggle_silent
-
-- name: stop services
-  service: name={{ item }} state=stopped
-  with_items:
-    - hostapd
-  when: not (tor|bool or silent|bool)
+# disable hostapd if wlan should be disabled
+- name: toggle wlan services
+  service: name=hostapd enabled={{ tor|bool or silent|bool }} state={{ "stopped" if not (tor|bool or silent|bool) else "started" }}
   tags:
     - toggle_tor
     - toggle_silent
