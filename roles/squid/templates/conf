@@ -3569,8 +3569,7 @@ cache_mem 128 MB
 #
 #Default:
 # The format definitions squid, common, combined, referrer, useragent are built in.
-logformat squid_ext %ts.%03tu %6tr %>a:%>p %Ss/%03>Hs %<st %rm %ru %[un %Sh/%<a:%<p %mt
-logformat useragent_short %>a;;%{User-Agent}>h
+logformat useragent_short %>a;|;%"{User-Agent}>h
 
 #  TAG: access_log
 #	Configures whether and how Squid logs HTTP and ICP transactions.

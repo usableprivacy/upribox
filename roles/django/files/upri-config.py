@@ -409,26 +409,26 @@ def action_parse_user_agents(arg):
     if os.path.isfile(logfile):
         print "parsing squid logfile %s" % logfile
         with open(logfile, 'r') as squid:
-            for line in squid:
-                try:
-                    parts = line.split(";;")
-                    # TODO new connection for every line in logfile?
-                    conn = sqlite3.connect(dbfile)
-                    c = conn.cursor()
-                    c.execute("SELECT ip,user_agent,final FROM devices_deviceentry WHERE ip=?", (parts[0],))
-                    data = c.fetchone()
-                    if not data:
-                        c.execute("INSERT INTO devices_deviceentry (ip, user_agent) VALUES (?, ?)", (parts[0], parts[1]))
-                        conn.commit()
-                        changed = True
-                    else:
-                        if not data[2] and len(parts[1]) > 1:
-                            c.execute("UPDATE devices_deviceentry SET user_agent=? where ip=?", (parts[1], parts[0]))
-                            conn.commit()
+            try:
+                conn = sqlite3.connect(dbfile)
+                for line in squid:
+                    with conn:
+                        parts = line.split(";|;")
+                        c = conn.cursor()
+                        c.execute("SELECT ip,user_agent,final FROM devices_deviceentry WHERE ip=?", (parts[0],))
+                        data = c.fetchone()
+                        if not data:
+                            c.execute("INSERT INTO devices_deviceentry (ip, user_agent) VALUES (?, ?)", (parts[0], parts[1]))
                             changed = True
-                except Exception as e:
-                    print "failed to parse user-agent \"%s\": %s" % (line, e.message)
-        # TODO conn.close()
+                        else:
+                            if not data[2] and len(parts[1]) > 1:
+                                c.execute("UPDATE devices_deviceentry SET user_agent=? where ip=?", (parts[1], parts[0]))
+                                changed = True
+                conn.close()
+            except sqlite3.Error as sqle:
+                print ""
+            except Exception as e:
+                print "failed to parse user-agent \"%s\": %s" % (line, e.message)
         if changed:
             try:
                 # delete logfile
