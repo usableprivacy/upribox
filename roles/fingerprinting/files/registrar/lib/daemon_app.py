@@ -50,7 +50,7 @@ class DaemonApp(object):
         # self.pidfile_timeout = 0
 
         self.logger = logger
-        self.interface = config['interface']
+        self.interface = None if config['interface'].lower() == 'all' else config['interface']
         self.django_db = config['django-db']
 
         self.sniffthread = RegistrarSniffThread(self.interface, logger, self.django_db)

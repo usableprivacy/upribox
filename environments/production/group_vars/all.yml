@@ -27,8 +27,7 @@ default_settings:
   registrar:
     general:
       enabled: 'yes'
-      interface: 'eth0'
-      # or maybe 'all'
+      interface: 'all'
     pid:
       dir: '/var/run/registrar'
       file: 'registrar.pid'

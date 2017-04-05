@@ -44,12 +44,8 @@ class _SniffThread(threading.Thread):
         # the filter argument in scapy's sniff function seems to be applied too late
         # therefore some unwanted packets are processed (e.g. tcp packets of ssh session)
         # but it still decreases the number of packets that need to be processed by the lfilter function
-        # try:
         sniff(prn=self._packet_handler, filter=self._SNIFF_FILTER(), lfilter=self._LFILTER, store=0, iface=self.interface)
-        # except Exception as e:
-        #     print("killed2")
-        #     # self.conn.close()
-        #     raise e
+
 
     def _packet_handler(self, pkt):
         """This method should be overriden to define the thread's behaviour."""
@@ -77,12 +73,6 @@ class RegistrarSniffThread(_SniffThread):
         super(RegistrarSniffThread, self).__init__(interface)
         self.logger = logger
         self.dbfile = dbfile
-        # try:
-        #     self.conn = sqlite3.connect(dbfile)
-        # except sqlite3.Error as sqle:
-        #     self.logger.error("Failed to connect to sqlite database at path %s" % (dbfile,))
-        #     self.logger.exception(sqle)
-        #     raise DaemonError()
 
     def _packet_handler(self, pkt):
         if pkt.haslayer(DHCP):
@@ -120,14 +110,8 @@ class RegistrarSniffThread(_SniffThread):
             self.logger.error("Failed to connect to sqlite database at path %s" % (self.dbfile,))
             self.logger.exception(sqle)
             raise DaemonError()
-        # try:
         super(RegistrarSniffThread, self).run()
-        # except Exception as e:
-        #     print("killed")
-        #     self.conn.close()
-        #     raise e
 
     # def stop(self):
     #     self.conn.close()
-    #     self.logger.info("stop")
     #     super(RegistrarSniffThread, self).stop()

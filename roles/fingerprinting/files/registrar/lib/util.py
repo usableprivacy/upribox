@@ -17,7 +17,6 @@ def insert_or_update_fingerprint(conn, logger=None, **kwargs):
                     c.execute("INSERT INTO devices_deviceentry (%s) VALUES (%s)" % (",".join(params.keys()), ",".join("?" * len(params))), params.values())
                 elif not data[0]:
                     # if entry not final
-                    # if not data[0] and len(parts[1]) > 1:
                     c.execute("UPDATE devices_deviceentry SET %s where ip=?" % ("=?,".join(params.keys()) + "=?",), params.values() + [params['ip']])
         except sqlite3.Error as sqle:
             if logger:
