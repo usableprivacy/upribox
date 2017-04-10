@@ -43,6 +43,9 @@
 - name: enable ip6 forwarding
   sysctl: name=net.ipv6.conf.all.forwarding value=1 state=present
 
+- name: accept IPv6 Router Advertisements on eth0
+  sysctl: name=net.ipv6.conf.eth0.accept_ra value=2 state=present
+
 - name: configure interfaces
   template: src=interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=644
   register: interfaces
