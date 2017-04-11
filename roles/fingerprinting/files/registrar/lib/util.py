@@ -1,23 +1,23 @@
 import sqlite3
 
-_COLUMNS = ['ip', 'mac', 'dhcp_fingerprint', 'dhcp_vendor', 'hostname', 'device_name', 'user_agent', 'final']
+_COLUMNS = ['ip', 'mac', 'dhcp_fingerprint', 'dhcp_vendor', 'hostname', 'device_name', 'user_agent', 'score']
 
 
 def insert_or_update_fingerprint(conn, logger=None, **kwargs):
-    if kwargs and kwargs.get("ip", None):
+    if kwargs and kwargs.get("ip", None) and kwargs.get("mac", None):
         params = {key: value for key, value in kwargs.iteritems() if key in _COLUMNS}
 
         try:
             with conn:
                 # implicit conn.commit
                 c = conn.cursor()
-                c.execute("SELECT final FROM devices_deviceentry WHERE ip=?", (params['ip'],))
-                data = c.fetchone()
-                if not data:
+                try:
                     c.execute("INSERT INTO devices_deviceentry (%s) VALUES (%s)" % (",".join(params.keys()), ",".join("?" * len(params))), params.values())
-                elif not data[0]:
-                    # if entry not final
-                    c.execute("UPDATE devices_deviceentry SET %s where ip=?" % ("=?,".join(params.keys()) + "=?",), params.values() + [params['ip']])
+                except sqlite3.IntegrityError as sqlie:
+                    if "UNIQUE constraint failed: devices_deviceentry.mac" in sqlie.message:
+                        c.execute("UPDATE devices_deviceentry SET %s where mac=?" % ("=?,".join(params.keys()) + "=?",), params.values() + [params['mac']])
+                    else:
+                        raise sqlie
         except sqlite3.Error as sqle:
             if logger:
                 logger.exception(sqle)

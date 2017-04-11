@@ -23,7 +23,7 @@ import socket
 import netifaces as ni
 from netaddr import IPNetwork, IPAddress, ZEROFILL
 import redis as redisDB
-
+import traceback
 
 # directory where facts are located
 FACTS_DIR = "/etc/ansible/facts.d"
@@ -411,30 +411,62 @@ def action_parse_user_agents(arg):
         with open(logfile, 'r') as squid:
             try:
                 conn = sqlite3.connect(dbfile)
+                c = conn.cursor()
                 for line in squid:
                     with conn:
-                        parts = line.split(";|;")
-                        c = conn.cursor()
-                        c.execute("SELECT ip,user_agent,final FROM devices_deviceentry WHERE ip=?", (parts[0],))
-                        data = c.fetchone()
-                        if not data:
-                            c.execute("INSERT INTO devices_deviceentry (ip, user_agent) VALUES (?, ?)", (parts[0], parts[1]))
+                        parts = line.strip().split(";|;")
+                        agent_id = None
+                        try:
+                            c.execute("INSERT INTO devices_useragent (agent) VALUES (?)", (parts[2],))
                             changed = True
-                        else:
-                            if not data[2] and len(parts[1]) > 1:
-                                c.execute("UPDATE devices_deviceentry SET user_agent=? where ip=?", (parts[1], parts[0]))
+                            agent_id = c.lastrowid
+                        except sqlite3.IntegrityError as sqlie:
+                            if "UNIQUE constraint failed: devices_useragent.agent" in sqlie.message:
+                                c.execute("SELECT id FROM devices_useragent WHERE agent=?", (parts[2],))
+                                try:
+                                    agent_id = c.fetchone()[0]
+                                except (TypeError, IndexError):
+                                    raise ValueError("Unable to retrieve id of useragent string")
+                            else:
+                                raise sqlie
+
+                        device_id = None
+                        try:
+                            c.execute("INSERT INTO devices_deviceentry (ip, mac) VALUES (?, ?)", (parts[1], parts[0]))
+                            changed = True
+                            device_id = c.lastrowid
+                        except sqlite3.IntegrityError as sqlie:
+                            if "UNIQUE constraint failed: devices_deviceentry.mac" in sqlie.message:
+                                c.execute("UPDATE devices_deviceentry SET ip=? where mac=?", (parts[1], parts[0]))
                                 changed = True
+                                c.execute("SELECT id from devices_deviceentry where mac=?", (parts[0],))
+                                try:
+                                    device_id = c.fetchone()[0]
+                                except (TypeError, IndexError):
+                                    raise ValueError("Unable to retrieve id of device")
+                            else:
+                                raise sqlie
+
+                        try:
+                            if agent_id is not None and device_id is not None:
+                                c.execute("INSERT INTO devices_deviceentry_user_agent (deviceentry_id, useragent_id) values (?, ?)", (str(device_id), str(agent_id)))
+                        except sqlite3.IntegrityError:
+                            pass
+
                 conn.close()
             except sqlite3.Error as sqle:
-                print ""
+                print sqle.message
+                traceback.print_exc()
             except Exception as e:
-                print "failed to parse user-agent \"%s\": %s" % (line, e.message)
+                print "failed to parse user-agent \"%s\": %s" % (line.strip(), e.message)
         if changed:
             try:
                 # delete logfile
                 # is that necessary? shouldn't truncating the file be enough?
-                os.remove(logfile)
-                subprocess.call(["/usr/sbin/service", "squid3", "restart"])
+                with open(logfile, "w"):
+                    pass
+                # os.remove(logfile)
+                # subprocess.call(["/usr/sbin/service", "squid3", "restart"])
             except Exception as e:
                 print "failed to restart service"
                 return 16
