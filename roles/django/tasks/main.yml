@@ -12,6 +12,9 @@
 #   register: copy_django
 #   notify: reload uwsgi
 
+- name: create dir for django webapp
+  file: path=/usr/share/nginx/www-upri-interface state=directory
+
 - name: copy django webapp
   # copy: src=upribox_interface/ dest=/usr/share/nginx/www-upri-interface
   synchronize: src=upribox_interface/ dest=/usr/share/nginx/www-upri-interface delete=yes recursive=yes checksum=yes
