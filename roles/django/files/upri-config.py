@@ -463,8 +463,8 @@ def action_parse_user_agents(arg):
             try:
                 # delete logfile
                 # is that necessary? shouldn't truncating the file be enough?
-                with open(logfile, "w"):
-                    pass
+                with open(logfile, "a") as lf:
+                    lf.truncate(0)
                 # os.remove(logfile)
                 # subprocess.call(["/usr/sbin/service", "squid3", "restart"])
             except Exception as e:
