@@ -437,20 +437,24 @@ def action_parse_user_agents(arg):
                             device_id = c.lastrowid
                         except sqlite3.IntegrityError as sqlie:
                             if "UNIQUE constraint failed: devices_deviceentry.mac" in sqlie.message:
-                                c.execute("UPDATE devices_deviceentry SET ip=? where mac=?", (parts[1], parts[0]))
-                                changed = True
-                                c.execute("SELECT id from devices_deviceentry where mac=?", (parts[0],))
-                                try:
-                                    device_id = c.fetchone()[0]
-                                except (TypeError, IndexError):
+                                c.execute("SELECT id, ip from devices_deviceentry where mac=?", (parts[0],))
+                                res = c.fetchone()
+                                if not res:
                                     raise ValueError("Unable to retrieve id of device")
+
+                                device_id = res[0]
+                                if res[1] != parts[1]:
+                                    c.execute("UPDATE devices_deviceentry SET ip=? where mac=?", (parts[1], parts[0]))
+                                    changed = True
                             else:
                                 raise sqlie
 
                         try:
                             if agent_id is not None and device_id is not None:
                                 c.execute("INSERT INTO devices_deviceentry_user_agent (deviceentry_id, useragent_id) values (?, ?)", (str(device_id), str(agent_id)))
+                                changed = True
                         except sqlite3.IntegrityError:
+                            # entry already exists
                             pass
 
                 conn.close()
