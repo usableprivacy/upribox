@@ -2,7 +2,7 @@ from django.db import models
 
 class UserAgent(models.Model):
     agent = models.TextField(unique=True)
-    model = models.CharField(max_length=256)
+    model = models.CharField(max_length=256, null=True)
 
 class DeviceEntry(models.Model):
     ip = models.CharField(max_length=20, unique=False)
