@@ -11,13 +11,25 @@ class Command(NoArgsCommand):
     def handle_noargs(self, **options):
         print "Starting fingerprinting devices..."
         for device in DeviceEntry.objects.all().iterator():
-            print "Fingerprinting device with IP/MAC " + device.ip + "/" + device.mac + " ...\n"
-            for ua_entry in device.user_agent.all().iterator():
-                print "Parsing User-Agent \"" + ua_entry.agent + "\" ..."
+            print "Fingerprinting device with IP/MAC %s/%s ...\n" % (device.ip, device.mac)
+            for ua_entry in device.user_agent.filter(model=None).iterator():
+                print "Parsing User-Agent \"%s\" ..." % (ua_entry.agent)
                 user_agent = parse(ua_entry.agent)
-                print "   Browser: " + str(user_agent.browser) + "\n   OS: " + str(user_agent.os) + "\n   Device: " + str(user_agent.device) + "\n"
+                print "   Browser: %s\n   OS: %s\n   Device: %s\n" % (str(user_agent.browser), str(user_agent.os), str(user_agent.device))
                 model = user_agent.device.model
-                if device:
-                    ua_entry.model = model
+                brand = user_agent.device.brand
+                family = user_agent.os.family
+                name = ""
+                if model:
+                    if brand and "Generic" not in brand:
+                        name = brand + " "
+                    name = name + model
+                    print "Chosen device name: \"%s\"\n" % (name)
+                    ua_entry.model = name
+                    ua_entry.save()
+                elif family and family != "Other":
+                    print "Chosen device name: \"%s\"\n" % (family)
+                    ua_entry.model = family
+                    ua_entry.save()
                 else:
-                    print "Ignore this device name ..."
+                    print "No proper device name found for this device\n"
