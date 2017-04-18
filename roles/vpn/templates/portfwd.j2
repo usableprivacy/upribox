@@ -21,13 +21,13 @@ debug = False
 
 # Comparison of public IP with saved one, if new is found, update dns
 # return values:
-# 1: error in file handling(read/write) 
+# 1: error in file handling(read/write)
 def update_public_ip(pub_ip):
     # Load saved public IP
     try:
         if debug:
             print 'Load saved public IP from file'
-        # Read from file and create file if doesn't exist 
+        # Read from file and create file if doesn't exist
         with open('/tmp/ip.txt', 'a+') as f:
             pub_ip_svd = f.readline()
 
@@ -44,21 +44,21 @@ def update_public_ip(pub_ip):
     except IOError as e:
         if debug:
             print ' Exception :', e
-            print 'Public IP cannot be loaded' 
+            print 'Public IP cannot be loaded'
         return 1
 
     return 0
 
 # DNS update
 # return values:
-# 1: HTTPS request failed 
+# 1: HTTPS request failed
 def dns_update():
     if debug:
-        print 'Send DNS update' 
+        print 'Send DNS update'
     try:
         if exists('{{cert_dns_path}}'):
             r = requests.get('https://api.upribox.org/dnsupdate/', cert='{{cert_dns_path}}', timeout=3, verify='{{ssl_pinning_path}}')
-            if debug: 
+            if debug:
                 if r.text == 'OK':
                     print ' DNS Update Successful'
                 else:
@@ -212,6 +212,7 @@ def main():
 
     if public_ip is not None and upnpn_mapping_successful:
         update_public_ip(public_ip)
+        dns_update()
         sys.exit(0)
 
     if check_natpmp_support():
@@ -220,6 +221,7 @@ def main():
         print "NATPMP not supported."
 
     if natpmp_mapping_successful:
+        dns_update()
         sys.exit(0)
 
     dns_update()

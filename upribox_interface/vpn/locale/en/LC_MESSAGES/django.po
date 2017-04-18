@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-03 10:56+0000\n"
+"POT-Creation-Date: 2017-04-18 09:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -259,3 +259,19 @@ msgstr "show QR-code"
 #: vpn/templates/vpn_profile.html:24
 msgid "Profil l&ouml;schen"
 msgstr "delete profile"
+
+#: vpn/views.py:35 vpn/views.py:49
+msgid "openvpn.log konnte nicht geöffnet werden."
+msgstr "unable to open openvpn.log."
+
+#: vpn/views.py:41
+msgid "Verbindung zu api.upribox.org fehlgeschlagen."
+msgstr "connection to api.upribox.org failed."
+
+#: vpn/views.py:65
+msgid "Die Verbindung war erfolgreich!"
+msgstr "Connection successful!"
+
+#: vpn/views.py:68
+msgid "Die Verbindung war nicht erfolgreich!"
+msgstr "Connection failed!"

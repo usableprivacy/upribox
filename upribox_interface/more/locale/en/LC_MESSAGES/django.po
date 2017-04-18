@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-03 10:56+0000\n"
+"POT-Creation-Date: 2017-04-18 09:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -118,6 +118,7 @@ msgid "Konfiguration von Interfaces erfolgreich."
 msgstr "Configuration of interfaces successful."
 
 #: more/jobs.py:47
+#, python-format
 msgid "Es ist ein unbekannter Fehler aufgetreten. Fehlercode: %(errorcode)s"
 msgstr "Unknown error occured. Error-code: %(errorcode)s"
 
@@ -289,15 +290,17 @@ msgstr "How does a static IP work?"
 msgid ""
 "Hier können erfahrene Nutzerinnen und Nutzer Ihrer upribox eine statische IP "
 "zuweisen."
-msgstr ""
-"Experienced users can asign a static IP to their upribox."
+msgstr "Experienced users can asign a static IP to their upribox."
 
 #: more/templates/more.html:102
 msgid ""
 "Zusätzlich ist es möglich, Ihre upribox als DHCP-Server agieren zu lassen, "
 "um sämtlichen Netzwerkverkehr über diese zu leiten. Dazu muss der DHCP-"
 "Server im Interface Ihres Routers deaktiviert werden."
-msgstr "Additionally your upribox can act as a DHCP server. This way all the traffic in your network will run over your upribox. Please deactivate the DHCP server of your home router first!"
+msgstr ""
+"Additionally your upribox can act as a DHCP server. This way all the traffic "
+"in your network will run over your upribox. Please deactivate the DHCP "
+"server of your home router first!"
 
 #: more/templates/more.html:104
 #, python-format
