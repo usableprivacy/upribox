@@ -7,7 +7,10 @@ from user_agents import parse
 #
 # parse user-agent for device name
 #
+
+
 class Command(NoArgsCommand):
+
     def handle_noargs(self, **options):
         print "Starting fingerprinting devices..."
         for device in DeviceEntry.objects.all().iterator():

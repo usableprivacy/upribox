@@ -23,7 +23,7 @@ import socket
 import netifaces as ni
 from netaddr import IPNetwork, IPAddress, ZEROFILL
 import redis as redisDB
-import traceback
+# import traceback
 
 # directory where facts are located
 FACTS_DIR = "/etc/ansible/facts.d"
@@ -398,7 +398,7 @@ def parse_dnsmasq_logs(arg):
 
 
 def action_parse_user_agents(arg):
-    changed = False
+    errors = False
     with open('/etc/ansible/default_settings.json', 'r') as f:
         config = json.load(f)
 
@@ -418,7 +418,6 @@ def action_parse_user_agents(arg):
                         agent_id = None
                         try:
                             c.execute("INSERT INTO devices_useragent (agent) VALUES (?)", (parts[2],))
-                            changed = True
                             agent_id = c.lastrowid
                         except sqlite3.IntegrityError as sqlie:
                             if "UNIQUE constraint failed: devices_useragent.agent" in sqlie.message:
@@ -433,7 +432,6 @@ def action_parse_user_agents(arg):
                         device_id = None
                         try:
                             c.execute("INSERT INTO devices_deviceentry (ip, mac) VALUES (?, ?)", (parts[1], parts[0]))
-                            changed = True
                             device_id = c.lastrowid
                         except sqlite3.IntegrityError as sqlie:
                             if "UNIQUE constraint failed: devices_deviceentry.mac" in sqlie.message:
@@ -445,14 +443,12 @@ def action_parse_user_agents(arg):
                                 device_id = res[0]
                                 if res[1] != parts[1]:
                                     c.execute("UPDATE devices_deviceentry SET ip=? where mac=?", (parts[1], parts[0]))
-                                    changed = True
                             else:
                                 raise sqlie
 
                         try:
                             if agent_id is not None and device_id is not None:
                                 c.execute("INSERT INTO devices_deviceentry_user_agent (deviceentry_id, useragent_id) values (?, ?)", (str(device_id), str(agent_id)))
-                                changed = True
                         except sqlite3.IntegrityError:
                             # entry already exists
                             pass
@@ -460,10 +456,12 @@ def action_parse_user_agents(arg):
                 conn.close()
             except sqlite3.Error as sqle:
                 print sqle.message
-                traceback.print_exc()
+                errors = True
+                # traceback.print_exc()
             except Exception as e:
                 print "failed to parse user-agent \"%s\": %s" % (line.strip(), e.message)
-        if changed:
+                errors = True
+        if not errors:
             try:
                 # delete logfile
                 # is that necessary? shouldn't truncating the file be enough?
