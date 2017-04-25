@@ -21,7 +21,7 @@ pull_git_sshkey: '|1|YSIl0HnC//DkFvWLLsAsBxDU10Q=|PC/XJu88KyBvcN7nilLAbany2bE= s
 ansible_pip_version: 1.9.6
 ansible_uwsgi_version: 1.9.2
 
-django_settings_file: settings_prod
+django_settings_file: &django_settings_file settings_prod
 
 default_settings:
   registrar:
@@ -45,6 +45,7 @@ default_settings:
     # if you want to change the path, you will also have to
     # edit django's settings file
     db: '/var/upribox-interface/db.sqlite3'
+    settings: *django_settings_file
   tor:
     general:
       enabled: 'no'

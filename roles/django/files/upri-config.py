@@ -472,6 +472,12 @@ def action_parse_user_agents(arg):
             except Exception as e:
                 print "failed to restart service"
                 return 16
+
+            rc = subprocess.call(["/var/webapp-virtualenv/bin/python", "/usr/share/nginx/www-upri-interface/manage.py", "fingerprint", "--settings", config['django']['settings']])
+            if rc != 0:
+                print "user agent parsing failed"
+                return 16
+
             return 1
     else:
         print "failed to parse squid logfile %s: file not found" % logfile
