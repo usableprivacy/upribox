@@ -24,6 +24,11 @@
   notify:
     - restart privoxy
 
+- name: copy custom template files
+  synchronize: src=custom_templates/ dest=/etc/privoxy/custom_templates/ delete=yes recursive=yes checksum=yes
+  notify:
+    - restart privoxy
+
 - name: create privoxy log dir
   file: path={{default_settings.log.general.path}}/{{default_settings.log.privoxy.subdir}} state=directory mode=0755 owner=privoxy
 
