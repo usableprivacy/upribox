@@ -18,7 +18,7 @@ to setup a development environment for the upribox software.
 Prerequisites [on your development machine]
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
--  install *ansible* 1.9.6 (``sudo pip install ansible==1.9.6``) and
+-  install *ansible* 2.3.0.0 (``sudo pip install ansible==2.3.0.0``) and
    *git*
 -  make sure to log into your Raspberry via SSH once because ansible
    uses ~/.ssh/known\_hosts for verification (or disable host

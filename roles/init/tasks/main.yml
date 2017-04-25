@@ -50,7 +50,7 @@
     port=22
     delay=30
     timeout=300
-  sudo: false
+  become: no
 
 - name: remove default user
   remote_user: "{{ remote_user }}"

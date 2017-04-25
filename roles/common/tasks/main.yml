@@ -114,7 +114,7 @@
   local_action: command pwd
   when: pull_deployment is not defined and env == "development"
   register: pwd
-  sudo: no
+  become: no
   tags:
     - copy-local
 
@@ -145,7 +145,7 @@
 - name: remove ansible-pull logfile if environment is development
   file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
   when: env == "development"
-  with_dict: ansible_pull_log #"{{ other_env.default_settings.log.ansible_pull.logfiles | default({}) }}"
+  with_dict: "{{ ansible_pull_log }}" #"{{ other_env.default_settings.log.ansible_pull.logfiles | default({}) }}"
 
 - name: delete production files/entries
   file: path={{ item }} state=absent
