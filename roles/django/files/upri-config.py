@@ -718,6 +718,9 @@ def action_restart_apate(arg):
     print 'restarting apate...'
     return call_ansible('toggle_apate')
 
+def action_configure_devices(arg):
+    print 'configuring devices...'
+    return call_ansible('configure_devices')
 
 def action_set_static_ip(arg):
     if arg not in ['dhcp', 'static']:
@@ -807,6 +810,7 @@ ALLOWED_ACTIONS = {
     'enable_device': action_enable_device,
     'disable_device': action_disable_device,
     'set_ip': action_set_ip,
+    'configure_devices': action_configure_devices,
     'set_dns_server': action_set_dns_server,
     'set_netmask': action_set_netmask,
     'set_gateway': action_set_gateway,
