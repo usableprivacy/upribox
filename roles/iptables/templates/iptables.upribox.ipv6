@@ -8,6 +8,7 @@
 # adblocking
 {% if ansible_local is defined and ansible_local.devices is defined and ansible_local.devices.no_adblocking is defined %}
 {% for m in ansible_local.devices.no_adblocking %}
+-A PREROUTING -p udp -m udp --dport 53 -m mac --mac-source {{ m }} -j REDIRECT --to-ports 5301
 -A PREROUTING -m mac --mac-source {{ m }} -j ACCEPT
 {% endfor %}
 {% endif %}
@@ -43,6 +44,7 @@ COMMIT
 -A INPUT -p {{vpn_protocol|lower}} -m {{vpn_protocol|lower}} --dport {{vpn_port|lower}} -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 3128 -j ACCEPT
 -A INPUT -p udp -m udp --dport 5300 -j ACCEPT
+-A INPUT -p udp -m udp --dport 5301 -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 9040 -j ACCEPT
 -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT

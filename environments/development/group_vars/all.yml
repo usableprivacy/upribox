@@ -95,6 +95,9 @@ default_settings:
     dnsmasq_ninja:
       logfiles:
         logname: 'dnsmasq_ninja.log'
+    dnsmasq_unfiltered:
+      logfiles:
+        logname: 'dnsmasq_unfiltered.log'
     nginx:
       logfiles:
         error: 'nginx_error.log'
