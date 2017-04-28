@@ -45,13 +45,32 @@ subnet 192.168.56.0 netmask 255.255.255.0 {
 {% set dhcpd_netmask = ansible_local.interfaces.static.netmask | default(default_settings.interfaces.static.netmask) %}
 {% set dhcpd_tmp = dhcpd_ip ~ "/" ~ dhcpd_netmask %}
 subnet {{ dhcpd_tmp | ipaddr('network')}} netmask {{ ansible_local.interfaces.static.netmask | default(default_settings.interfaces.static.netmask) }} {
+        interface eth0;
         option routers                  {{ ansible_local.interfaces.static.ip | default(default_settings.interfaces.static.ip) }};
         option subnet-mask              {{ ansible_local.interfaces.static.netmask | default(default_settings.interfaces.static.netmask) }};
         option broadcast-address        {{ dhcpd_tmp | ipaddr('broadcast') }};
         option domain-name-servers      {{ ansible_local.interfaces.static.ip | default(default_settings.interfaces.static.ip) }};
-	range {{ dhcpd_tmp | ipaddr('100') | ipaddr('address') }} {{ dhcpd_tmp | ipaddr('200') | ipaddr('address') }};
+        range {{ dhcpd_tmp | ipaddr('130') | ipaddr('address') }} {{ dhcpd_tmp | ipaddr('200') | ipaddr('address') }};
         default-lease-time 86400;
         max-lease-time 86400;
+
+        {% if ansible_local is defined and ansible_local.devices is defined and ansible_local.devices.no_adblocking is defined %}
+        {% for m in ansible_local.devices.no_adblocking %}
+        {% set broadcast_tmp = ansible_default_ipv4.gateway ~ "/" ~  ansible_default_ipv4.netmask %}
+
+        host {{ m.replace(':','-') }} {
+              hardware ethernet             {{ m }};
+              fixed-address                 {{ broadcast_tmp | ipaddr(loop.index0+60) | ipaddr('address') }};
+              option routers                {{ ansible_default_ipv4.gateway }};
+              option subnet-mask            {{ ansible_default_ipv4.netmask }};
+              option broadcast-address      {{ broadcast_tmp | ipaddr('broadcast') }};
+              option domain-name-servers    {{ ansible_default_ipv4.gateway }};
+        }
+
+        {% endfor %}
+        {% endif %}
+
 }
+
 {% endif %}
 {% endif %}
