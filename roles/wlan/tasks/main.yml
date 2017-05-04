@@ -62,6 +62,10 @@
     - toggle_silent
     - network_config
 
+- name: disable IPv6 on eth0 when using static ip
+  sysctl: name=net.ipv6.conf.eth0.disable_ipv6 value={{ "1" if mode == "static" else "0" }} state=present
+  tags:
+    - network_config
 
 - name: check if static ip setup is enabled
   set_fact:
