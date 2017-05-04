@@ -13,8 +13,6 @@ home            = /var/webapp-virtualenv
 # process-related settings
 # master
 master          = true
-# maximum number of worker processes
-processes       = 10
 # the socket (use the full path to be safe
 socket          = /var/run/uwsgi/upri_interface.sock
 # ... with appropriate permissions - may be needed
@@ -22,3 +20,17 @@ chmod-socket    = 664
 chown-socket 	= www-data:www-data
 # clear environment on exit
 vacuum          = true
+
+uid = www-data
+gid = www-data
+add-gid = tmp-logger
+
+# stats = /tmp/uwsgi.stat
+
+cheaper = 1
+# backlog is only available on Linux and only on TCP sockets (not UNIX domain sockets)
+cheaper-algo = spare
+cheaper-initial = 1
+# maximum number of worker processes
+workers = 4
+cheaper-step = 1
