@@ -49,5 +49,11 @@
             "passwd": "MyRaspberryP1!",
             "ssid": "upriBox"
         }
+    },
+    "vpn": {
+        "connection": {
+            "port": 1194,
+            "protocol": "UDP"
+        }
     }
 }

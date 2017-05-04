@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-03 10:56+0000\n"
+"POT-Creation-Date: 2017-05-04 13:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -141,16 +141,13 @@ msgid "UPnP oder NAT-PMP auf Ihrem Router (Gateway) aktivieren, oder"
 msgstr "activate UPnP or NAT-PMP on your router/modem, or"
 
 #: vpn/templates/vpn.html:37
-#, fuzzy, python-format
-#| msgid ""
-#| "eine Port-Weiterleitung auf Ihrem Router für %(vpn_protocol)s-Port "
-#| "%(vpn_port)s zu Ihrer upribox konfigurieren!"
+#, python-format
 msgid ""
 "eine Port-Weiterleitung auf Ihrem Router für %(vpn_protocol)s-Port "
 "%(vpn_port)s zu Ihrer upribox konfigurieren!"
 msgstr ""
-"configure a port-forwarding rule from your router to %(vpn_protocol) port "
-"%(vpn_port) of your upribox."
+"configure a port-forwarding rule from your router to %(vpn_protocol)s port "
+"%(vpn_port)s of your upribox."
 
 #: vpn/templates/vpn.html:61
 msgid "\"Die upribox ist nicht erreichbar.\""
@@ -259,3 +256,19 @@ msgstr "show QR-code"
 #: vpn/templates/vpn_profile.html:24
 msgid "Profil l&ouml;schen"
 msgstr "delete profile"
+
+#: vpn/views.py:36 vpn/views.py:50
+msgid "openvpn.log konnte nicht geöffnet werden."
+msgstr "unable to open openvpn.log."
+
+#: vpn/views.py:42
+msgid "Verbindung zu api.upribox.org fehlgeschlagen."
+msgstr "connection to api.upribox.org failed."
+
+#: vpn/views.py:66
+msgid "Die Verbindung war erfolgreich!"
+msgstr "Connection successful!"
+
+#: vpn/views.py:69
+msgid "Die Verbindung war nicht erfolgreich!"
+msgstr "Connection failed!"
