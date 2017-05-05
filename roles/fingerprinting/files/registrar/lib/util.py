@@ -1,6 +1,7 @@
 import sqlite3
 
-_COLUMNS = ['ip', 'mac', 'dhcp_fingerprint', 'dhcp_vendor', 'hostname', 'device_name', 'user_agent', 'score']
+_COLUMNS = ['ip', 'mac', 'dhcp_fingerprint', 'dhcp_vendor', 'hostname']
+# _COLUMNS = ['ip', 'mac', 'dhcp_fingerprint', 'dhcp_vendor', 'hostname', 'device_name', 'user_agent', 'score']
 
 
 def insert_or_update_fingerprint(conn, logger=None, **kwargs):

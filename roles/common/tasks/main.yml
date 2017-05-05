@@ -97,11 +97,15 @@
 - name: create crontab entry to clone/pull git repository
   template: src=etc_cron.d_ansible-pull.j2 dest=/etc/cron.d/ansible-pull owner=root group=root mode=0644
   when: env == "production"
-  notify: touch crontab
+  notify: touch pull crontab
 
 - name: add ansible cronupdate script
   template: src=usr_local_bin_ansible-cron.j2 dest=/usr/local/bin/ansible-cron owner=root group=root mode=0755
   when: env == "production"
+
+- name: create crontab entry to parse user-agents
+  template: src=etc_cron.d_parse-user-agents.j2 dest=/etc/cron.d/parse-user-agents owner=root group=root mode=0644
+  notify: touch user-agent crontab
 
 - name: create local directory for local git repo
   file: path="{{ pull_workdir }}" state=directory owner=root group=root mode=0751

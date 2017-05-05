@@ -12,7 +12,7 @@ apt_target_state: installed
 ansible_pip_version: 1.9.6
 ansible_uwsgi_version: 1.9.2
 
-django_settings_file: settings_dev
+django_settings_file: &django_settings_file settings_dev
 
 default_settings:
   registrar:
@@ -36,6 +36,7 @@ default_settings:
     # if you want to change the path, you will also have to
     # edit django's settings file
     db: '/usr/share/nginx/www-upri-interface/db.sqlite3'
+    settings: *django_settings_file
   tor:
     general:
       enabled: 'no'
