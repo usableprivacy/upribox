@@ -289,7 +289,7 @@ confdir /etc/privoxy
 #      updates, you shouldn't expect templates to work with Privoxy
 #      releases other than the one they were part of, though.
 #
-#templdir .
+templdir /etc/privoxy/custom_templates
 #
 #  2.3. logdir
 #  ============

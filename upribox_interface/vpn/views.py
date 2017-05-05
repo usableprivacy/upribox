@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.http import Http404
@@ -32,13 +33,13 @@ def check_connection(request):
         with open(settings.OPENVPN_LOGFILE) as f:
             log_lines_before = f.readlines()
     except IOError:
-        return HttpResponse('{"status": "error", "msg": "openvpn.log konnte nicht geöffnet werden."}')
+        return HttpResponse('{{"status": "error", "msg": "{}"}}'.format(_("openvpn.log konnte nicht geöffnet werden.")))
 
     # Send request to upribox API
     try:
         r = requests.get("https://api.upribox.org/connectivity/", timeout=7, verify=settings.SSL_PINNING_PATH)
     except:
-        return HttpResponse('{"status": "error", "msg": "Verbindung zu api.upribox.org fehlgeschlagen."}')
+        return HttpResponse('{{"status": "error", "msg": "{}"}}'.format(_("Verbindung zu api.upribox.org fehlgeschlagen.")))
 
 
     # Get log lines with TLS-auth error after connection
@@ -46,7 +47,7 @@ def check_connection(request):
         with open(settings.OPENVPN_LOGFILE) as f:
             log_lines_after = f.readlines()
     except IOError:
-        return HttpResponse('{"status": "error", "msg": "openvpn.log konnte nicht geöffnet werden."}')
+        return HttpResponse('{{"status": "error", "msg": "{}"}}'.format(_("openvpn.log konnte nicht geöffnet werden.")))
 
     # Count error messages in logs
     count_errors_before = 0
@@ -62,10 +63,10 @@ def check_connection(request):
     # Check if error messages occurred
     if count_errors_before < count_errors_after:
         # Connection succeeded
-        return HttpResponse('{"status": "success", "msg": "That was great!"}')
+        return HttpResponse('{{"status": "success", "msg": "{}"}}'.format(_("Die Verbindung war erfolgreich!")))
     else:
         # Connection failed
-        return HttpResponse('{"status": "failure", "msg": "It obviously could not connect!"}')
+        return HttpResponse('{{"status": "failure", "msg": "{}"}}'.format(_("Die Verbindung war nicht erfolgreich!")))
 
 @login_required
 def vpn_config(request):
@@ -184,4 +185,3 @@ def vpn_toggle(request):
     jobs.queue_job(vpnjobs.toggle_vpn, (state,))
 
     return render_to_response("modal.html", {"message": True, "refresh_url": reverse('upri_vpn')})
-
