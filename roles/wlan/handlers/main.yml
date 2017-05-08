@@ -22,9 +22,6 @@
   shell: "ip addr add dev wlan0 192.168.55.254/24"
   when: ipaddr.stdout.find("192.168.55.254") == -1
 
-- name: restart isc-dhcp-server
-  service: name=isc-dhcp-server state=restarted
-
 - name: restart systemd-networkd
   shell: systemctl restart systemd-networkd
 
@@ -32,3 +29,6 @@
   service: name={{ item }} enabled={{ not (tor|bool or silent|bool or dhcpd|bool) }}
   with_items:
     - isc-dhcp-server
+
+- name: restart isc-dhcp-server
+  service: name=isc-dhcp-server state=restarted
