@@ -31,8 +31,7 @@
   register: res
 
 - name: remove log files from other environment
-  file: path={{other_env.default_settings.log.general.path}}/{{other_env.default_settings.log.rsyslog.subdir}} state=absent #/{{item.value}}
-  #with_dict: "{{other_env.default_settings.log.rsyslog.logfiles}}"
+  file: path={{other_env.default_settings.log.general.path}}/{{other_env.default_settings.log.rsyslog.subdir}} state=absent
   when: res|changed
 
 - name: remove old rsyslog logfiles
@@ -81,9 +80,6 @@
                host="{{ pull_git_host }}"
                key="{{ pull_git_sshkey }}"
 
-#- name: create directory /root/.ssh if not exists
-#  file: path=/root/.ssh state=directory recurse=yes owner=root group=root mode=600
-
 - name: create root ssh directory
   file: path=/root/.ssh state=directory
 
@@ -122,17 +118,6 @@
   tags:
     - copy-local
 
-# - debug: msg="pwd {{pwd.stdout}}"
-#   tags:
-#     - copy-local
-
-# - name: remove old git repo
-#   file: path={{ pull_workdir }} state=absent
-#   when: pull_deployment is not defined and env == "development"
-#   tags:
-#     - copy-local
-
-# copy module is very slow for many files
 - name: copy upribox git repo from local
   synchronize: src="{{ pwd.stdout }}/" dest="{{ pull_workdir }}" checksum=yes owner=no group=no
   when: pull_deployment is not defined and env == "development"
@@ -149,7 +134,7 @@
 - name: remove ansible-pull logfile if environment is development
   file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
   when: env == "development"
-  with_dict: ansible_pull_log #"{{ other_env.default_settings.log.ansible_pull.logfiles | default({}) }}"
+  with_dict: ansible_pull_log
 
 - name: delete production files/entries
   file: path={{ item }} state=absent
