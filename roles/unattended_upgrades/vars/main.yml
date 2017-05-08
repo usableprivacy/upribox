@@ -5,6 +5,6 @@ default_settings:
     general:
       enabled: 1
       update_days: 1
-      download_days: 1
+      download_days: 0
       install_days: 1
       autoclean_days: 21
