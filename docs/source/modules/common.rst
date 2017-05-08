@@ -13,7 +13,7 @@ The *common* role lays the groundwork for the following more specific roles. The
 
  - writing default settings
  - copying ansible config
- - creating directory for local facts (see :ref:`customization-label`)
+ - creating directory for local facts (see :ref:`customization`)
 
 - The upribox updates every 4 hours to the latest version on github via ansible. For this purpose the common role needs to execute among others the following tasks before updating
 
