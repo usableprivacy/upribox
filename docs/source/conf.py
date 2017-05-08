@@ -51,7 +51,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'upribox'
-copyright = u'2016, Markus Huber'
+copyright = u'2017, upribox developers'
 author = u'Markus Huber'
 
 # The version info for the project you're documenting, acts as replacement for
