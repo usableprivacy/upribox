@@ -8,17 +8,8 @@
 - name: set hostname
   hostname: name="{{ hostname }}"
 
-#- name: configure hosts
-#  template: src=hosts dest=/etc/hosts owner=root group=root mode=644
-
 - name: configure locale
   shell: 'update-locale LC_ALL="en_GB.UTF-8" LANG="en_GB.UTF-8"'
-
-#- name: install wifi firmware
-#  apt: name={{ item }} state=present force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
-#  with_items:
-#    - firmware-atheros
-#    - firmware-ralink
 
 - name: create sudo group
   group: name="{{ sudo_group }}" state=present

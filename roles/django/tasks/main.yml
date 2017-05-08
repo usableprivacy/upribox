@@ -1,22 +1,10 @@
 ---
 - include: ../../common/tasks/other_env.yml
 
-# copy the uwsgi ini file seperately because we want to trigger a restart only if this file changed
-# and not if any file in the webapp was updated
-#- name: copy uwsgi ini file
-#  copy: src=webapp/upri_uwsgi.ini dest=/usr/share/nginx/www-upri-interface/upri_uwsgi.ini
-#  notify: restart uwsgi
-
-# - name: copy django webapp
-#   copy: src=upribox_interface/ dest=/usr/share/nginx/www-upri-interface owner="{{'www-data' if env == 'development' else 'root' }}" group="{{'www-data' if env == 'development' else 'root' }}"
-#   register: copy_django
-#   notify: reload uwsgi
-
 - name: create dir for django webapp
   file: path=/usr/share/nginx/www-upri-interface state=directory
 
 - name: copy django webapp
-  # copy: src=upribox_interface/ dest=/usr/share/nginx/www-upri-interface
   synchronize: src=upribox_interface/ dest=/usr/share/nginx/www-upri-interface delete=yes recursive=yes checksum=yes
   register: copy_django
   notify: reload uwsgi
@@ -60,11 +48,6 @@
 - name: remove default logfiles
   file: path=/var/log/uwsgi.log state=absent
   when: res|changed
-
-#- name: remove uwsgi log files from other environment
-#  file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
-#  with_dict: "{{other_env.default_settings.log.uwsgi.logfiles}}"
-#  when: res|changed
 
 - name: add uwsgi vasall
   template: src=upri_uwsgi.j2 dest=/etc/uwsgi/upri_uwsgi.ini
@@ -116,14 +99,6 @@
 
 - name: enable supervisord
   service: name=supervisor enabled=yes
-
-#- name: modify logdir in supervisor init script
-#  lineinfile:
-#    dest: /etc/init.d/supervisor
-#    regexp: "^LOGDIR="
-#    line: "LOGDIR={{default_settings.log.general.path}}"
-#  notify: restart supervisor
-#  register: res1
 
 - name: change logdir of supervisor
   lineinfile:
