@@ -32,6 +32,8 @@ clone the upribox software to your computer:
 
 ``git clone https://github.com/usableprivacy/upribox.git``
 
+.. _dev_vs_prod-label:
+
 Development vs. Production mode
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

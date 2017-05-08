@@ -7,7 +7,7 @@ behind using Ansible_ is twofold:
 
 **Reproducibility**
 Every setting, installed package etc. should be documented in code. We use Ansible's default push mode to configure the base
-image in order to to: deploy the latest upribox software and harden the base image. All changes we perform on a given base images can
+image in order to deploy the latest upribox software and harden the base image. All changes we perform on a given base images can
 be reproduced (see :ref:`base-image-label`).
 
 **Continuous delivery**
@@ -55,3 +55,4 @@ User Interface
 .. rubric:: Footnotes
 
 .. [Ansible] https://www.ansible.com
+.. [Django] https://www.djangoproject.com
