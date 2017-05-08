@@ -1,6 +1,5 @@
 import logging
 from rq import Queue
-from redis import Redis
 from collections import deque
 from rq import get_current_job
 from django.conf import settings

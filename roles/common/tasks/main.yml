@@ -155,10 +155,10 @@
     - settings
 
 - name: install dependencies via pip
-  pip: name="{{ item }}" state=present
+  pip: name="{{ item.name }}" state=present version="{{ item.version }}"
   with_items:
-    - requests
-    - requests[security]
+    - { name: 'requests', version: '2.13.0' }
+    - { name: 'requests[security]', version: '2.13.0' }
 
 - name: copy filter update script
   copy: src=upri-filter-update.py dest=/usr/local/bin/upri-filter-update.py owner=root group=root mode=755
