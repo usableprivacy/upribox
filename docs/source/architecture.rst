@@ -14,7 +14,7 @@ be reproduced (see :ref:`base-image-label`).
 Ansible_ enables us to roll out bugfixes as well as new features continuously. Once the upribox software is deployed it
 automatically gets changes from our Github repository and deploys them using Ansible's pull mode.
 
-.. note:: Config files are overwritten periodically (see :ref:`customization-label`).
+.. note:: Config files are overwritten periodically (see :ref:`customization`).
 
 *******
 Modules

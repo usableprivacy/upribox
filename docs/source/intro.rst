@@ -70,7 +70,7 @@ Once you are connect to either of the upribox wifi networks (Silent or
 Ninja) you can access the upribox Webinterface via the following URI:
 http://upri.box.
 
-.. _customization-label:
+.. _customization:
 
 Customization
 =============
