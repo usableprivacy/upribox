@@ -94,13 +94,13 @@
   django_manage: settings="{{ django_settings_file }}" command=collectstatic app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
 
 - name: install dependency for management script via pip
-  pip: name="{{ item }}" state=present
+  pip: name="{{ item.name }}" state=present version="{{ item.version }}"
   with_items:
-    - jsonmerge
-    - functools32
-    - redis
-    - netifaces
-    - netaddr
+    - { name: 'jsonmerge', version: '1.3.0' }
+    - { name: 'functools32', version: '3.2.3-2' }
+    - { name: 'redis', version: '2.10.5' }
+    - { name: 'netifaces', version: '0.10.5' }
+    - { name: 'netaddr', version: '0.7.19' }
 
 - name: install supervisor for rqworker
   apt: name=supervisor state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
