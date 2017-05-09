@@ -1,7 +1,5 @@
 ---
-#- include: ../../tor/tasks/tor_state.yml tags=toggle_tor
 - include: ../../common/tasks/other_env.yml
-#tags=toggle_tor
 
 - name: install services
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
@@ -15,20 +13,6 @@
 
 - name: add dnsmasq user to loggers group
   user: name=dnsmasq groups="tmp-logger" append=yes
-
-#- stat: path=/etc/init.d/dnsmasq-unfiltered
-#  register: p
-#  when: not tor|bool
-#  tags:
-#    - toggle_tor
-
-#- name: disable service dnsmasq-unfiltered
-#  service: name={{ item }} enabled=no state=stopped
-#  with_items:
-#    - dnsmasq-unfiltered
-#  when: not tor|bool and p.stat.exists
-#  tags:
-#    - toggle_tor
 
 - name: copy dnsmasq unfiltered default
   copy: src=dnsmasq-unfiltered/default/dnsmasq-unfiltered dest=/etc/default
