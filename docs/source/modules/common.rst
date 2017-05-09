@@ -5,7 +5,7 @@ The *common* role lays the groundwork for the following more specific roles. The
 
 - building the infrastructure for logging
 
- - creating the logging directory (``/var/tmp/log`` for production and ``/var/log/log`` for development mode, see :ref:`dev_vs_prod-label`)
+ - creating the logging directory (``/var/tmp/log`` for production and ``/var/log/log`` for development mode, see :ref:`dev_vs_prod`)
  - updating rsyslog config and deleting old rsyslog logfiles
  - configuring logrotate
 

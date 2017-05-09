@@ -63,7 +63,7 @@ Default passwords
    *upribox-ninja*), password: *changeme*
 -  **SSH/Webinterface** login: *upri* password: *changethedefaults!*
 
-.. _web_interface-label:
+.. _web_interface:
 
 Web Interface
 =============

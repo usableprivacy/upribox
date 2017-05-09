@@ -1,4 +1,4 @@
-.. _base-image-label:
+.. _base-image:
 
 Development
 ===========
@@ -32,7 +32,7 @@ clone the upribox software to your computer:
 
 ``git clone https://github.com/usableprivacy/upribox.git``
 
-.. _dev_vs_prod-label:
+.. _dev_vs_prod:
 
 Development vs. Production mode
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -92,7 +92,7 @@ Set-up the initial upribox base image
    *pi/raspberry*, create a new user (*upri*) and delete *pi*. Add
    ``--ask-pass`` if you change the default password.
 -  from now on, you can deploy the upribox software in
-   production or development mode (see :ref:`dev_vs_prod-label`).
+   production or development mode (see :ref:`dev_vs_prod`).
 
 .. rubric:: Footnotes
 
