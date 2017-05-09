@@ -40,6 +40,7 @@ Privacy
 
 .. include:: modules/dns.rst
 .. include:: modules/dns_ninja.rst
+.. include:: modules/dns_unfiltered.rst
 .. include:: modules/nginx.rst
 .. include:: modules/privoxy.rst
 .. include:: modules/tor.rst
@@ -50,9 +51,12 @@ User Interface
 
 .. include:: modules/django.rst
 .. include:: modules/ssh.rst
+.. include:: modules/fingerprinting.rst
+.. include:: modules/squid.rst
 
 
 .. rubric:: Footnotes
 
 .. [Ansible] https://www.ansible.com
 .. [Django] https://www.djangoproject.com
+.. [Squid] http://www.squid-cache.org/
