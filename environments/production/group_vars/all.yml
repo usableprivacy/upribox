@@ -102,6 +102,7 @@ default_settings:
     uwsgi:
       logfiles:
         logname: 'uwsgi.log'
+        requests: null
     dnsmasq:
       subdir: 'dnsmasq'
       logfiles:

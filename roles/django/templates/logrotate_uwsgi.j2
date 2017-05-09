@@ -1,4 +1,6 @@
 {{ default_settings.log.general.path }}/{{ default_settings.log.uwsgi.logfiles.logname }}
+{% if default_settings.log.uwsgi.logfiles.requests != None  %}{{ default_settings.log.general.path }}/{{ default_settings.log.uwsgi.logfiles.requests }}
+{% endif %}
 {
   su root tmp-logger
   rotate 0

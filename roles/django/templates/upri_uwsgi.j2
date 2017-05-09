@@ -34,3 +34,6 @@ cheaper-initial = 1
 # maximum number of worker processes
 workers = 4
 cheaper-step = 1
+
+req-logger = file:{{ "/dev/null" if default_settings.log.uwsgi.logfiles.requests == None else default_settings.log.general.path~"/"~default_settings.log.uwsgi.logfiles.requests }}
+logger = file:{{ default_settings.log.general.path }}/{{ default_settings.log.uwsgi.logfiles.logname }}
