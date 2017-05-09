@@ -57,7 +57,7 @@ In order to apply changes to the configuration of the upribox Django has access 
 
 - set_vpn_connection
 
-  - Sets a new VPN connection by writing to the fact *vpn*
+  - Sets a custom port and protocol for the upribox OpenVPN server by writing to the fact *vpn*
 
 - set_wlan_channel
 

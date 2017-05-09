@@ -58,5 +58,7 @@ User Interface
 .. rubric:: Footnotes
 
 .. [Ansible] https://www.ansible.com
+.. [OpenVPN] https://openvpn.net/
+.. [Tor] https://www.torproject.org/
 .. [Django] https://www.djangoproject.com
 .. [Squid] http://www.squid-cache.org/
