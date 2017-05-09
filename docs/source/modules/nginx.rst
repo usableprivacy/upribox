@@ -7,7 +7,7 @@ upribox blackhole
 The blackhole setup returns an empty response for any request it receives, depending on the type of request this could be
 either an empty HTML page, or a blank image file. The server in addition attempts to reset/delete browser cookies for
 filtered domains: for every cookie the server receives, the server responds with the same cookie with empty values and a validity of 0.
-This setup ensures that tracking cookies are deleted from user's browser the moment the request a domain filtered by the upribox.
+This setup ensures that tracking cookies are deleted from the user's browser the moment the request for a domain filtered by the upribox is made.
 
 upribox CSS filter
 ^^^^^^^^^^^^^^^^^^
@@ -17,4 +17,4 @@ CSS filters are loaded from `/etc/nginx/lua/css.lua` and periodically updated.
 upribox web interface
 ^^^^^^^^^^^^^^^^^^^^^
 The nginx role finally prepares the setup for the upribox webinterface. The nginx configuration ensures that requests to
-http://upri.box are forwarded to to the upribox Django webinterfaace.
+http://upri.box are forwarded to the upribox Django webinterfaace.

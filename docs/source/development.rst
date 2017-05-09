@@ -3,9 +3,9 @@
 Development
 ===========
 
-The current upribox image is based on `Raspbian Jessie
-Lite <https://www.raspberrypi.org/downloads/raspbian/>`__ and customized
-with `ansible <http://www.ansible.com>`__. The Raspbian image can be
+The current upribox image is based on Raspbian_ Jessie
+Lite and customized
+with Ansible_. The Raspbian image can be
 staged into *production* or *development* mode.
 
 Development environment
@@ -64,7 +64,7 @@ Production Mode
 -  copy *environments/production/inventory.sample* to
    *environments/production/inventory*
 -  add your Raspberry IP address(es) in the [upriboxes] section in
-   environments/production/inventory
+   *environments/production/inventory*
 -  from now on, the config can be deployed with
    ``ansible-playbook -i   environments/production/inventory site.yml``
 
@@ -79,19 +79,23 @@ install *sshpass*.
 Set-up the initial upribox base image
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
--  copy environments/development/inventory.sample to
-   environments/init/inventory
+-  copy *environments/development/inventory.sample* to
+   *environments/init/inventory*
 -  add your RaspberryPi address(es) in the [upriboxes] section in
-   environments/init/inventory
+   *environments/init/inventory*
 -  make sure you have a public/private key pair for ssh on your
-   development machine. ~/.ssh/id\_rsa.pub will be automatically added
+   development machine. *~/.ssh/id\_rsa.pub* will be automatically added
    to the authorized\_hosts on the Raspberry
 -  run the initial setup with
-   ``ansible-playbook -i   environments/init/inventory setup.yml`` This
+   ``ansible-playbook -i environments/init/inventory setup.yml`` This
    command will log into your Raspberry with the default credentials
-   pi/raspberry, create a new user (upri) and delete pi. Add
-   ``--ask-pass`` if you changed the default password.
+   *pi/raspberry*, create a new user (*upri*) and delete *pi*. Add
+   ``--ask-pass`` if you change the default password.
 -  from now on, you can deploy the upribox software in
-   `production <https://github.com/usableprivacy/upribox/wiki/Development#production-mode>`__
-   or `development
-   mode <https://github.com/usableprivacy/upribox/wiki/Development#production-mode>`__.
+   production or development mode (see :ref:`dev_vs_prod-label`).
+
+.. rubric:: Footnotes
+
+.. [Raspbian] https://www.raspberrypi.org/downloads/raspbian/
+.. [Ansible] https://www.ansible.com
+.. [Privoxy] https://www.privoxy.org/
