@@ -1,5 +1,4 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
 from lib import jobs
 import lib.utils as utils
 from django.http import HttpResponse
@@ -50,10 +49,7 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def get_statistics(request):
-    return render_to_response("statistics.html", {
-        "request": request,
-        'messagestore': jobs.get_messages()
-    })
+    return render(request, "statistics.html", {'messagestore': jobs.get_messages()})
 
 @login_required()
 def json_statistics(request):
