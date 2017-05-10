@@ -9,8 +9,7 @@ from lib import jobs
 from wlan import jobs as wlanjobs
 from django.core.urlresolvers import reverse
 from lib import utils
-from lib.info import HardwareInfo, ModelInfo
-from django.http import HttpResponse
+from lib.info import ModelInfo
 
 # Get an instance of a logger
 logger = logging.getLogger('uprilogger')
@@ -88,12 +87,3 @@ def silent_toggle(request):
     jobs.queue_job(wlanjobs.toggle_silent, (state,))
 
     return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_silent')})
-
-
-@login_required
-def check_pi3(request):
-    hw = HardwareInfo()
-    if hw.runs_on_pi3():
-        return HttpResponse('{"pi3": "yes"}')
-    else:
-        return HttpResponse('{"pi3": "no"}')

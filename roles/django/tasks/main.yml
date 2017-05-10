@@ -15,9 +15,6 @@
 - name: install redis server
   apt: name=redis-server state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
 
-- name: install lshw
-  apt: name=lshw state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
-
 - name: enable redis server
   service: name=redis-server enabled=yes
 
