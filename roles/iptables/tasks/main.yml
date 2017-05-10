@@ -1,5 +1,5 @@
 ---
-  - include: ../../tor/tasks/tor_state.yml tags=toggle_tor,toggle_silent
+  - include: ../../tor/tasks/tor_state.yml tags=toggle_tor,toggle_silent,configure_devices
   - include_vars: ../../vpn/defaults/main.yml
 
   - name: install services
