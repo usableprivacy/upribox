@@ -286,11 +286,10 @@ def parse_privoxy_logs(arg):
 
         if changed:
             try:
-                pass
-                # delete logfile
-                os.remove(logfile)
-                # todo: implement reload
-                subprocess.call(["/usr/sbin/service", "privoxy", "restart"])
+                # truncate logfile
+                with open(logfile, "a") as lf:
+                    lf.truncate(0)
+                #subprocess.call(["/usr/sbin/service", "privoxy", "restart"])
             except Exception as e:
                 print "failed to write to redis database"
                 return 16
@@ -377,11 +376,10 @@ def parse_dnsmasq_logs(arg):
 
         if changed:
             try:
-                pass
-                # delete logfile
-                os.remove(logfile)
-                # todo: implement reload
-                subprocess.call(["/usr/sbin/service", "dnsmasq", "restart"])
+                # truncate logfile
+                with open(logfile, "a") as lf:
+                    lf.truncate(0)
+                #subprocess.call(["/usr/sbin/service", "dnsmasq", "restart"])
             except Exception as e:
                 print "failed to write to redis database"
                 return 16
@@ -465,12 +463,9 @@ def action_parse_user_agents(arg):
                 errors = True
         if not errors:
             try:
-                # delete logfile
-                # is that necessary? shouldn't truncating the file be enough?
+                # truncate logfile
                 with open(logfile, "a") as lf:
                     lf.truncate(0)
-                # os.remove(logfile)
-                # subprocess.call(["/usr/sbin/service", "squid3", "restart"])
             except Exception as e:
                 print "failed to restart service"
                 return 16
