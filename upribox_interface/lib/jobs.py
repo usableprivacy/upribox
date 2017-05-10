@@ -1,5 +1,6 @@
 import logging
 from rq import Queue
+from rq.job import Job
 from collections import deque
 from rq import get_current_job
 from django.conf import settings
@@ -9,6 +10,7 @@ from rq.registry import FinishedJobRegistry, StartedJobRegistry
 logger = logging.getLogger('uprilogger')
 
 q = django_rq.get_queue()
+# rqq = Queue(connection=django_rq.get_connection())
 finished_job_registry = FinishedJobRegistry(connection=django_rq.get_connection())
 started_job_registry = StartedJobRegistry(connection=django_rq.get_connection())
 failed_queue = django_rq.get_failed_queue()
@@ -28,7 +30,8 @@ def job_message(message):
 
 
 def queue_job(job, args):
-    q.enqueue(job, *args)
+    # set job description to function name in order to avoid logging parameters
+    q.enqueue(job, *args, description=job.__name__)
 
 
 def clear_jobs():
