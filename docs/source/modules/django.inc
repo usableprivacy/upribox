@@ -3,7 +3,7 @@
 django
 ------
 
-The upribox user interface (see :ref:`web_interface-label`) is based on the Python Web framework Django_.
+The upribox user interface (see :ref:`web_interface`) is based on the Python Web framework Django [#Django]_.
 The role is responsible for installing the requirements to a virtual environment, copying the web interface files,
 setting up the database and installing services like a supervisor (for the rqworker) and the application container uWSGI.
 By deploying this role the upribox also starts a cleanup process for the saved statistic files removing data older than 6 months.
@@ -33,7 +33,7 @@ In order to apply changes to the configuration of the upribox Django has access 
 
 - restart_wlan
 
-  - Triggers the Ansible_ tasks with the tag *ssid*
+  - Triggers the Ansible tasks with the tag *ssid*
 
 - enable_tor
 
@@ -45,11 +45,11 @@ In order to apply changes to the configuration of the upribox Django has access 
 
 - restart_tor
 
-  - Triggers the Ansible_ tasks with the tag *toggle_tor*
+  - Triggers the Ansible tasks with the tag *toggle_tor*
 
 - restart_silent
 
-  - Triggers the Ansible_ tasks with the tag *toggle_silent*
+  - Triggers the Ansible tasks with the tag *toggle_silent*
 
 - enable_vpn
 
@@ -57,7 +57,7 @@ In order to apply changes to the configuration of the upribox Django has access 
 
 - set_vpn_connection
 
-  - Sets a new VPN connection by writing to the fact *vpn*
+  - Sets a custom port and protocol for the upribox OpenVPN server by writing to the fact *vpn*
 
 - set_wlan_channel
 
@@ -65,7 +65,7 @@ In order to apply changes to the configuration of the upribox Django has access 
 
 - restart_vpn
 
-  - Triggers the Ansible_ tasks with the tag *toggle_vpn*
+  - Triggers the Ansible tasks with the tag *toggle_vpn*
 
 - enable_ssh
 
@@ -73,7 +73,7 @@ In order to apply changes to the configuration of the upribox Django has access 
 
 - restart_ssh
 
-  - Triggers the Ansible_ tasks with the tag *toggle_ssh*
+  - Triggers the Ansible tasks with the tag *toggle_ssh*
 
 - enable_apate
 
@@ -81,7 +81,7 @@ In order to apply changes to the configuration of the upribox Django has access 
 
 - restart_apate
 
-  - Triggers the Ansible_ tasks with the tag *toggle_apate*
+  - Triggers the Ansible tasks with the tag *toggle_apate*
 
 - enable_static_ip
 
@@ -109,7 +109,7 @@ In order to apply changes to the configuration of the upribox Django has access 
 
 - restart_dhcpd
 
-  - Triggers the Ansible_ tasks with the tag *dhcp_server*
+  - Triggers the Ansible tasks with the tag *dhcp_server*
 
 - parse_logs
 
@@ -129,7 +129,7 @@ In order to apply changes to the configuration of the upribox Django has access 
 
 - restart_firewall
 
-  - Triggers the Ansible_ tasks with the tag *iptables*
+  - Triggers the Ansible tasks with the tag *iptables*
 
 - enable_device
 
@@ -141,8 +141,8 @@ In order to apply changes to the configuration of the upribox Django has access 
 
 - configure_devices
 
-  - Triggers the Ansible_ tasks with the tag *configure_devices*
+  - Triggers the Ansible tasks with the tag *configure_devices*
 
 - restart_network
 
-  - Triggers the Ansible_ tasks with the tag *network_config*
+  - Triggers the Ansible tasks with the tag *network_config*

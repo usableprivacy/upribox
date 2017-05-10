@@ -1,11 +1,11 @@
-.. _base-image-label:
+.. _base-image:
 
 Development
 ===========
 
-The current upribox image is based on Raspbian_ Jessie
+The current upribox image is based on Raspbian [#Raspbian]_ Jessie
 Lite and customized
-with Ansible_. The Raspbian image can be
+with Ansible (see :ref:`architecture`). The Raspbian image can be
 staged into *production* or *development* mode.
 
 Development environment
@@ -32,7 +32,7 @@ clone the upribox software to your computer:
 
 ``git clone https://github.com/usableprivacy/upribox.git``
 
-.. _dev_vs_prod-label:
+.. _dev_vs_prod:
 
 Development vs. Production mode
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -92,10 +92,8 @@ Set-up the initial upribox base image
    *pi/raspberry*, create a new user (*upri*) and delete *pi*. Add
    ``--ask-pass`` if you change the default password.
 -  from now on, you can deploy the upribox software in
-   production or development mode (see :ref:`dev_vs_prod-label`).
+   production or development mode (see :ref:`dev_vs_prod`).
 
 .. rubric:: Footnotes
 
-.. [Raspbian] https://www.raspberrypi.org/downloads/raspbian/
-.. [Ansible] https://www.ansible.com
-.. [Privoxy] https://www.privoxy.org/
+.. [#Raspbian] https://www.raspberrypi.org/downloads/raspbian/

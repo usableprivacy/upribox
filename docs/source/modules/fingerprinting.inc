@@ -1,4 +1,4 @@
-.. _fingerprinting-label:
+.. _fingerprinting:
 
 fingerprinting
 --------------

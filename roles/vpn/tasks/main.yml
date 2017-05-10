@@ -39,11 +39,6 @@
   tags:
     - toggle_vpn
 
-#- name: enable services
-#  service: name={{ item }} enabled=yes
-#  with_items:
-#    - openvpn
-
 - name: create user openvpn
   user: name=openvpn shell=/bin/false home=/var/lib/openvpn groups="tmp-logger" append=yes
 
@@ -54,7 +49,7 @@
     - restart openvpn-su
 
 - name: creating openvpn folders and setting permissions
-  file: path={{ item }} state=directory owner=openvpn group=openvpn #recurse=yes
+  file: path={{ item }} state=directory owner=openvpn group=openvpn
   with_items:
     - /etc/openvpn
     - /etc/openvpn/ca
@@ -80,7 +75,6 @@
 
 - name: creating serial
   copy: src=serial dest=/etc/openssl/demoCA/serial
-  #shell: 'echo "01" >> /etc/openssl/demoCA/serial'
   when: not res.stat.exists
 
 - name: check if CA exists
@@ -178,7 +172,6 @@
   notify:
     - restart openvpn
     - restart openvpn-su
-  #register: tls_auth
 
 - name: set permissions for tls-auth.key
   file: path=/etc/openvpn/ca/tls-auth.key owner=root group=openvpn mode=640
@@ -253,19 +246,11 @@
 
 - name: disable openvpn service
   service: name=openvpn enabled=no
-  #shell: 'update-rc.d -f openvpn remove'
 
 - name: enable openvpn-su service
   service: name=openvpn-su enabled={{vpn}} state={{"started" if vpn|bool else "stopped"}}
-  #when: not vpn|bool
   tags:
     - toggle_vpn
-
-#- name: enable openvpn-su service
-#  service: name=openvpn-su enabled=no
-#  when: not vpn|bool
-#  tags:
-#    - toggle_vpn
 
 - name: modify logrotate.d entry
   template: src={{item.src}} dest=/etc/logrotate.d/{{item.dest}} mode=0644
