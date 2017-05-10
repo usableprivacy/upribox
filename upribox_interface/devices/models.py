@@ -11,3 +11,10 @@ class DeviceEntry(models.Model):
     dhcp_vendor = models.CharField(max_length=256, null=True)
     user_agent = models.ManyToManyField(UserAgent)
     hostname = models.CharField(max_length=256, null=True)
+    MODES = (
+        ('SL', "Silent"),
+        ('NJ', "Ninja"),
+        ('NO', "No Mode")
+    )
+    mode = models.CharField(max_length=2, choices=MODES, default='SL')
+    chosen_name = models.CharField(max_length=256, null=True)
