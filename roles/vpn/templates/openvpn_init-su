@@ -41,7 +41,7 @@ fi
 
 start_vpn () {
     touch {{default_settings.log.general.path}}/{{default_settings.log.vpn.logfiles.logname}}
-    chown openvpn:openvpn {{default_settings.log.general.path}}/{{default_settings.log.vpn.logfiles.logname}}
+    chown openvpn:tmp-logger {{default_settings.log.general.path}}/{{default_settings.log.vpn.logfiles.logname}}
     chmod 0664 {{default_settings.log.general.path}}/{{default_settings.log.vpn.logfiles.logname}}
     mkdir -p /run/openvpn
     chown -R openvpn:openvpn /run/openvpn

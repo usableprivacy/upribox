@@ -113,7 +113,7 @@
   when: result|changed
 
 - name: configure hostapd
-  template: src=hostapd.j2 dest=/etc/hostapd/hostapd.conf owner=root group=root mode=644
+  template: src=hostapd.j2 dest=/etc/hostapd/hostapd.conf owner=root group=root mode=640
   notify:
     - restart hostapd
     - restart isc-dhcp-server

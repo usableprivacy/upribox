@@ -3,7 +3,7 @@ import json
 import sys
 import subprocess
 from jsonmerge import merge
-from os import path
+from os import path, chmod
 import sys
 sys.path.insert(0, "/usr/share/nginx/www-upri-interface/lib/")
 sys.path.insert(0, "/opt/apate/lib/")
@@ -189,6 +189,8 @@ def action_generate_profile(profile_id):
 
         rc = subprocess.call(['/usr/bin/openssl', 'req', '-newkey', 'rsa:2048', '-nodes', '-subj', "/C=AT/ST=Austria/L=Vienna/O=Usable Privacy Box/OU=VPN/CN=%s" %
                               filename, '-keyout', '/etc/openvpn/ca/%sKey.pem' % filename, '-out', '/etc/openvpn/ca/%sReq.pem' % filename])
+
+        chmod('/etc/openvpn/ca/%sKey.pem' % filename, 0640)
 
         if rc != 0:
             print "error while creating client certificate reques"
