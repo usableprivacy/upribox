@@ -115,7 +115,7 @@ def get_system_network_config():
     try:
         interface = ni.gateways()['default'][ni.AF_INET][1]
         if_info = ni.ifaddresses(interface)
-    except ValueError as e:
+    except (ValueError, KeyError) as e:
         logger.error("An error concerning the interface {} has occurred: {}".format(interface, str(e)))
         return get_default_network_config()
 
