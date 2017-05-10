@@ -62,7 +62,7 @@
   when: env == "production"
 
 - name: migrate django database
-  django_manage: settings="{{ django_settings_file }}" command=migrate app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
+  django_manage: settings="{{ django_settings_file }}" command="migrate --fake-initial" app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
   become_user: www-data
 
 - name: add development user (upri/upri)
