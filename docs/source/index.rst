@@ -18,4 +18,3 @@ The upribox software is used to create Raspberry Pi images to turn your Raspberr
    intro
    architecture
    development
-

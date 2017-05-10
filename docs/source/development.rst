@@ -3,9 +3,9 @@
 Development
 ===========
 
-The current upribox image is based on Raspbian_ Jessie
+The current upribox image is based on Raspbian [#Raspbian]_ Jessie
 Lite and customized
-with Ansible_. The Raspbian image can be
+with Ansible (see :ref:`architecture`). The Raspbian image can be
 staged into *production* or *development* mode.
 
 Development environment
@@ -96,6 +96,4 @@ Set-up the initial upribox base image
 
 .. rubric:: Footnotes
 
-.. [Raspbian] https://www.raspberrypi.org/downloads/raspbian/
-.. [Ansible] https://www.ansible.com
-.. [Privoxy] https://www.privoxy.org/
+.. [#Raspbian] https://www.raspberrypi.org/downloads/raspbian/

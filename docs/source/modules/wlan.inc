@@ -16,4 +16,4 @@ Ninja Mode
 ^^^^^^^^^^
 
 Ninja Mode results in a separate wireless network with the default SSID *upribox-ninja* and blocks ads and trackers as
-well but in addition the traffic will be routed through the Tor_ network.
+well but in addition the traffic will be routed through the Tor [#Tor]_ network.
