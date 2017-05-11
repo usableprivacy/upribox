@@ -26,6 +26,14 @@
   pip: requirements=/usr/share/nginx/www-upri-interface/requirements.txt virtualenv=/var/webapp-virtualenv/
   notify: reload uwsgi
 
+- name: check installed uWSGI version
+  shell: pip show uwsgi | grep Version | cut -d " " -f 2
+  register: installed_uwsgi_version
+
+- name: stop uwsgi for updating
+  service: name=django-uwsgi state=stopped
+  when: installed_uwsgi_version.stdout != ansible_uwsgi_version
+
 - name: install uWSGI
   pip: name=uwsgi state=present version="{{ansible_uwsgi_version}}"
   notify: restart uwsgi

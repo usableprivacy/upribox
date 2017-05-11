@@ -72,6 +72,9 @@
     - git
     - psmisc
 
+- name: update pip via pip
+  pip: name=pip state=present version="{{pip_version}}"
+
 - name: install ansible via pip
   pip: name=ansible state=present version="{{ansible_pip_version}}"
 
