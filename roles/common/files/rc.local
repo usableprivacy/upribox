@@ -36,8 +36,10 @@ fi
 /bin/echo -e '--------------------------\n' >> /etc/issue
 
 # Change the Pi leds
-if [ -f /sys/class/leds/led1/trigger ]; then
+if [ -f /sys/class/leds/led1/trigger ] && [ -f /sys/class/leds/led1/brightness ]; then
     /bin/echo none > /sys/class/leds/led1/trigger
+    sleep 0.2
+    /bin/echo 0 > /sys/class/leds/led1/brightness
 fi
 
 if [ -f /sys/class/leds/led0/trigger ] && [ -f /sys/class/leds/led0/brightness ]; then

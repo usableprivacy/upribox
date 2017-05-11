@@ -168,6 +168,7 @@
 
 - name: copy custom rc.local file
   copy: src=rc.local dest=/etc/rc.local owner=root group=root mode=755
+  notify: fix led
 
 - name: create dnsmasq ninja directory for dnsblacklist rules
   file: path=/etc/dnsmasq.d.ninja/ state=directory owner=root group=root

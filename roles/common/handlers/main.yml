@@ -4,6 +4,9 @@
 
 - name: touch user-agent crontab
   shell: touch /etc/cron.d/parse-user-agents
-  
+
 - name: restart rsyslog
   service: name=rsyslog state=restarted
+
+- name: fix led
+  shell: /etc/rc.local
