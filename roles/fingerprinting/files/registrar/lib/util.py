@@ -2,6 +2,8 @@ import sqlite3
 
 _COLUMNS = ['ip', 'mac', 'dhcp_fingerprint', 'dhcp_vendor', 'hostname']
 # _COLUMNS = ['ip', 'mac', 'dhcp_fingerprint', 'dhcp_vendor', 'hostname', 'device_name', 'user_agent', 'score']
+_DEFAULT_MODE = "SL"
+_MODE_COLUMN = "mode"
 
 
 def insert_or_update_fingerprint(conn, logger=None, **kwargs):
@@ -13,7 +15,8 @@ def insert_or_update_fingerprint(conn, logger=None, **kwargs):
                 # implicit conn.commit
                 c = conn.cursor()
                 try:
-                    c.execute("INSERT INTO devices_deviceentry (%s) VALUES (%s)" % (",".join(params.keys()), ",".join("?" * len(params))), params.values())
+                    c.execute("INSERT INTO devices_deviceentry (%s) VALUES (%s)" %
+                              (",".join(params.keys() + [_MODE_COLUMN]), ",".join("?" * len(params) + len(_DEFAULT_MODE))), params.values() + [_DEFAULT_MODE])
                 except sqlite3.IntegrityError as sqlie:
                     if "UNIQUE constraint failed: devices_deviceentry.mac" in sqlie.message:
                         c.execute("UPDATE devices_deviceentry SET %s where mac=?" % ("=?,".join(params.keys()) + "=?",), params.values() + [params['mac']])

@@ -37,6 +37,8 @@ ANSIBLE_PLAY = "/var/lib/ansible/local/local.yml"
 CLIENT_TEMPLATE = "/etc/openvpn/client_template"
 CONFIG_FILE = "/etc/apate/config.json"
 
+# default value of mode column of devices_deviceentry table
+_DEVICE_DEFAULT_MODE = "SL"
 
 def action_disable_device(arg):
     if not check_ip(arg):
@@ -399,6 +401,7 @@ def parse_dnsmasq_logs(arg):
 
 def action_parse_user_agents(arg):
     errors = False
+
     with open('/etc/ansible/default_settings.json', 'r') as f:
         config = json.load(f)
 
@@ -431,7 +434,7 @@ def action_parse_user_agents(arg):
 
                         device_id = None
                         try:
-                            c.execute("INSERT INTO devices_deviceentry (ip, mac) VALUES (?, ?)", (parts[1], parts[0]))
+                            c.execute("INSERT INTO devices_deviceentry (ip, mac, mode) VALUES (?, ?, ?)", (parts[1], parts[0], _DEVICE_DEFAULT_MODE))
                             device_id = c.lastrowid
                         except sqlite3.IntegrityError as sqlie:
                             if "UNIQUE constraint failed: devices_deviceentry.mac" in sqlie.message:
