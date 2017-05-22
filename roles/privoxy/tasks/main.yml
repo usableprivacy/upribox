@@ -25,7 +25,7 @@
     - restart privoxy
 
 - name: copy custom template files
-  synchronize: src={{role_path}}/files/custom_templates/custom_templates/ dest=/etc/privoxy/custom_templates/ delete=yes recursive=yes checksum=yes
+  synchronize: src={{role_path}}/files/custom_templates/ dest=/etc/privoxy/custom_templates/ delete=yes recursive=yes checksum=yes
   notify:
     - restart privoxy
 
