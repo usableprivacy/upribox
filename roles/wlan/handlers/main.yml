@@ -32,3 +32,6 @@
 
 - name: restart isc-dhcp-server
   service: name=isc-dhcp-server state=restarted
+
+- name: restart avahi
+  service: name=avahi-daemon state=restarted

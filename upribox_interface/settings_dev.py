@@ -29,6 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'upri.box',
     'localhost',
+    'upribox.local',
     '127.0.0.1',
     '[::1]'
 ]

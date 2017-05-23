@@ -156,3 +156,11 @@
   tags:
     - toggle_tor
     - toggle_silent
+
+- name: copy avahi config
+  copy: src=avahi/avahi-daemon.conf dest=/etc/avahi/avahi-daemon.conf owner=root group=root mode=644
+  notify: restart avahi
+
+- name: copy avahi webinterface service
+  copy: src=avahi/interface.service dest=/etc/avahi/services/interface.service owner=root group=root mode=644
+  notify: restart avahi

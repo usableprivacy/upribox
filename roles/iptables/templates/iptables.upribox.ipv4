@@ -54,6 +54,7 @@ COMMIT
 -A INPUT -p udp -m udp --dport 5300 -j ACCEPT
 -A INPUT -p udp -m udp --dport 5301 -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 9040 -j ACCEPT
+-A INPUT -p udp -m udp --dport 5353 -j ACCEPT
 -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 
 # tor
