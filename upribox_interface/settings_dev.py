@@ -26,7 +26,12 @@ SECRET_KEY = '12$&#v9$a8*%s$rjag665ydimo*av3cax=i9q93pp=_1v5-#=j'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'upri.box',
+    'localhost',
+    '127.0.0.1',
+    '[::1]'
+]
 
 
 # Application definition
@@ -44,6 +49,7 @@ INSTALLED_APPS = (
     'wlan',
     'vpn',
     'statistics',
+    'devices',
     'more'
 )
 
@@ -64,8 +70,7 @@ ROOT_URLCONF = 'urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'www/templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'www/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -99,8 +104,8 @@ DATABASES = {
 LANGUAGE_CODE = 'de'
 
 LANGUAGES = (
-  ('de', 'Deutsch'),
-  ('en', 'English'),
+    ('de', 'Deutsch'),
+    ('en', 'English'),
 )
 
 TIME_ZONE = 'UTC'
@@ -142,7 +147,7 @@ LOGGING = {
     'formatters': {
         'simple': {
             'format': '[%(asctime)s]%(message)s',
-            'datefmt' : '%d/%b/%Y %H:%M:%S'
+            'datefmt': '%d/%b/%Y %H:%M:%S'
         }
     },
     'handlers': {
@@ -151,7 +156,7 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'simple',
         },
-        'err':{
+        'err': {
             'level': 'WARNING',
             'class': 'logging.StreamHandler',
             'formatter': 'simple',
@@ -201,6 +206,6 @@ VPN_LINK_TIMEOUT = 30
 SSL_PINNING_PATH = '/usr/local/etc/upri-filter-update/update-server.pem'
 
 # Path to logfiles
-PRIVOXY_LOGFILE = 'privoxy_testlog' #'/var/log/privoxy/privoxy.log'
+PRIVOXY_LOGFILE = 'privoxy_testlog'  # '/var/log/privoxy/privoxy.log'
 OPENVPN_LOGFILE = '/var/log/log/openvpn.log'
 DNS_FILE = '/etc/dnsmasq-resolv.conf'

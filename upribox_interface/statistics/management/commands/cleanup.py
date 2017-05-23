@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand, CommandError
+from django.db import DatabaseError
 from statistics.models import PrivoxyLogEntry, DnsmasqBlockedLogEntry, DnsmasqQueryLogEntry
 from django.utils import timezone
 from django.template.defaultfilters import date as _localdate
@@ -9,14 +10,16 @@ from datetime import datetime as dt
 import time
 import json
 import sqlite3
+import logging
+logger = logging.getLogger('uprilogger')
 
 #
 # transfer the old statistics from the sqlite db to the new accumulated redis db
 # delete monthly data that is older than 6 months
 # delete daily data that is not from today
 #
-class Command(NoArgsCommand):
-    def handle_noargs(self, **options):
+class Command(BaseCommand):
+    def handle(self, *args, **options):
 
         redis = redisDB.StrictRedis(host="localhost", port=6379, db=7)
 
@@ -118,5 +121,6 @@ class Command(NoArgsCommand):
             conn.execute("VACUUM")
             conn.commit()
             conn.close()
-        except Exception as e:
-            print "failed to write to database"
+        except DatabaseError as dbe:
+            logger.exception(dbe)
+            raise CommandError("failed to write to database")

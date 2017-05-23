@@ -11,7 +11,7 @@ Table of recommended hardware
 
 .. note::
    Since upribox v0.5 we support the Pi3 natively, so no
-   additional WiFI dongle is required. The Pi3 Wifi however
+   additional WiFi dongle is required. The Pi3 WiFi however
    supports only one active Hotspot. You can not yet activate the
    **Ninja WiFi** on the Pi3.
 
@@ -63,6 +63,8 @@ Default passwords
    *upribox-ninja*), password: *changeme*
 -  **SSH/Webinterface** login: *upri* password: *changethedefaults!*
 
+.. _web_interface:
+
 Web Interface
 =============
 
@@ -70,7 +72,7 @@ Once you are connect to either of the upribox wifi networks (Silent or
 Ninja) you can access the upribox Webinterface via the following URI:
 http://upri.box.
 
-.. _customization-label:
+.. _customization:
 
 Customization
 =============
@@ -92,7 +94,7 @@ Advanced Network Settings
 static network configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Connect to your upribox via ssh and create a **interfaces.fact** file in
+Connect to your upribox via SSH and create a **interfaces.fact** file in
 the */etc/ansible/facts.d* directory. The following interfaces
 configuration, will set the upribox to use a static IP configuration:
 
@@ -111,7 +113,7 @@ configuration, will set the upribox to use a static IP configuration:
     }
 
 Make sure to adapt the *ip*,\ *netmask*,\ *gateway*, and *dns* values to
-reflect your setup. Once you created the interfaces.fact file, run
+reflect your setup. Once you created the *interfaces.fact* file, run
 ``sudo upri-config.py restart_network`` to configure the network device
 and finally ``sudo reboot`` to start the upribox with the static IP
 setup.
@@ -119,7 +121,7 @@ setup.
 custom VPN server port
 ----------------------
 
-Connect to your upribox via ssh and use the
+Connect to your upribox via SSH and use the
 following commands to set a custom *port* and *protocol* for the upribox
 OpenVPN server:
 
@@ -140,7 +142,7 @@ port 4300/TCP of your upribox.
 custom wifi channel
 -------------------
 
-Connect to your upribox via ssh and use the
+Connect to your upribox via SSH and use the
 following commands to set a custom *channel* for the upribox
 WiFi:
 
@@ -154,7 +156,7 @@ Valid WiFi channels are numbers between 1 and 10.
 de/activate WiFi
 ----------------
 
-If you have SSH enabled you can connect to your upribox and deactivate both, Ninja and Silent WiFi:
+If you have ssh enabled you can connect to your upribox and deactivate both, Ninja and Silent WiFi:
 
 ::
 

@@ -15,20 +15,6 @@
 - name: add dnsmasq user to loggers group
   user: name=dnsmasq groups="tmp-logger" append=yes
 
-#- stat: path=/etc/init.d/dnsmasq-ninja
-#  register: p
-#  when: not tor|bool
-#  tags:
-#    - toggle_tor
-    
-#- name: disable service dnsmasq-ninja
-#  service: name={{ item }} enabled=no state=stopped
-#  with_items:
-#    - dnsmasq-ninja 
-#  when: not tor|bool and p.stat.exists
-#  tags:
-#    - toggle_tor    
-    
 - name: copy dnsmasq ninja default
   copy: src=dnsmasq-ninja/default/dnsmasq-ninja dest=/etc/default
   notify: restart dnsmasq_ninja

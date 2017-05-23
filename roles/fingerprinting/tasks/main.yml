@@ -1,0 +1,51 @@
+---
+- include: ../../common/tasks/other_env.yml
+- include: registrar_state.yml tags=toggle_registrar
+
+- name: create working directory for registrar daemon
+  file: path=/opt/registrar state=directory recurse=yes mode=0771 owner=root group=root
+
+- name: copy the registrar files
+  copy: src=registrar/ dest=/opt/registrar owner=root group=root mode=0774
+  notify: restart registrar
+
+- name: copy registrar init script
+  template: src=init/registrar dest=/etc/init.d/registrar owner=root group=root mode=0755
+  notify: restart registrar
+
+- name: copy registrar service file
+  template: src=init/registrar.service dest=/etc/systemd/system/registrar.service owner=root group=root mode=0755
+  notify: restart registrar
+  register: service_file
+
+- name: systemctl daemon-reload
+  shell: /bin/systemctl daemon-reload
+  when: service_file.changed
+
+- name: create registrar config dir
+  file: path=/etc/registrar state=directory recurse=yes mode=0771 owner=root group=root
+
+- name: copy registrar config file
+  template: src=config.json dest=/etc/registrar/config.json owner=root group=root mode=0755
+  notify: restart registrar
+
+- name: install virtualenv, tcpdump
+  apt: name={{ item }} state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
+  with_items:
+    - python-virtualenv
+    - tcpdump
+
+- name: install requirements to virtualenv
+  pip: requirements=/opt/registrar/requirements.txt virtualenv=/opt/registrar/venv
+  notify: restart registrar
+
+- name: remove log files from other environment
+  file: path={{other_env.default_settings.log.general.path}}/{{other_env.default_settings.log.registrar.subdir}} state=absent
+
+- name: modify logrotate.d entry
+  template: src=logrotate.j2 dest=/etc/logrotate.d/registrar mode=0644
+
+- name: configure registrar service
+  service: name=registrar state='{{ "started" if registrar_enabled|bool else "stopped" }}' enabled='{{ registrar_enabled|bool }}'
+  tags:
+    - toggle_registrar

@@ -1,7 +1,11 @@
 ---
 - name: reload hostapd before tor
   shell: service hostapd stop && sleep 5 && service hostapd start
+  notify: restart isc-dhcp-server before tor
+
+- name: restart isc-dhcp-server before tor
+  service: name=isc-dhcp-server state=restarted
   notify: restart tor
-  
+
 - name: restart tor
   service: name=tor state=restarted

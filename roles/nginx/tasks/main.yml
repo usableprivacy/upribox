@@ -11,10 +11,6 @@
   with_items:
     - nginx
 
-#- name: copy the nginx sites-available
-#  copy: src=sites-available dest=/etc/nginx/
-#  notify: restart nginx
-
 - name:  copy nginx site configurations
   template: src={{item.src}} dest={{item.dest}} mode=0644
   with_items:
@@ -70,9 +66,3 @@
     - upri_interface
   notify:
     - restart nginx
-
-- name: install dependencies
-  apt: name={{ item }} state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
-  with_items:
-    - python-requests
-

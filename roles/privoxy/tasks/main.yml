@@ -1,14 +1,14 @@
 ---
-- include: ../../common/tasks/other_env.yml
+- include: ../../common/tasks/other_env.yml 
 
 - name: install services
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }} #default_release=jessie
   with_items:
     - privoxy
-
+      
 - name: add privoxy user to loggers group
   user: name=privoxy groups="tmp-logger" append=yes
-
+  
 - name: enable services
   service: name={{ item }} enabled=yes
   with_items:
@@ -16,11 +16,11 @@
 
 - name: copy privoxy config
   copy: src=privoxy/ dest=/etc/privoxy/
-  notify:
+  notify: 
     - restart privoxy
-
+    
 - name: copy config file
-  template: src=config dest=/etc/privoxy/config
+  template: src=config dest=/etc/privoxy/config 
   notify:
     - restart privoxy
 
@@ -48,8 +48,7 @@
   when: res|changed or default_settings.log.general.path != "/var/log" or default_settings.log.privoxy.subdir != "privoxy"
 
 - name: remove log files from other environment
-  file: path={{other_env.default_settings.log.general.path}}/{{other_env.default_settings.log.privoxy.subdir}} state=absent #/{{item.value}}
-  #with_dict: "{{other_env.default_settings.log.privoxy.logfiles}}"
+  file: path={{other_env.default_settings.log.general.path}}/{{other_env.default_settings.log.privoxy.subdir}} state=absent
   when: res|changed
 
 - name: modify logrotate.d entry

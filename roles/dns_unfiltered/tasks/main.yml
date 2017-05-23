@@ -1,0 +1,41 @@
+---
+- include: ../../common/tasks/other_env.yml
+
+- name: install services
+  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
+  with_items:
+    - dnsmasq
+
+- name: enable services
+  service: name={{ item }} enabled=yes
+  with_items:
+    - dnsmasq
+
+- name: add dnsmasq user to loggers group
+  user: name=dnsmasq groups="tmp-logger" append=yes
+
+- name: copy dnsmasq unfiltered default
+  copy: src=dnsmasq-unfiltered/default/dnsmasq-unfiltered dest=/etc/default
+  notify: restart dnsmasq_unfiltered
+
+- name: copy dnsmasq unfiltered init.d
+  copy: src=dnsmasq-unfiltered/init.d/dnsmasq-unfiltered dest=/etc/init.d mode="755"
+  notify: restart dnsmasq_unfiltered
+
+- name: copy dnsmasq unfiltered conf
+  template: src=dnsmasq-unfiltered.conf dest=/etc/
+  notify: restart dnsmasq_unfiltered
+  register: res
+
+- name: remove dnsmasq log files from other environment
+  file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
+  with_dict: "{{other_env.default_settings.log.dnsmasq_unfiltered.logfiles}}"
+  when: res|changed or (other_env.default_settings.log.general.path != default_settings.log.general.path or other_env.default_settings.log.dnsmasq_unfiltered.logfiles.logname != default_settings.log.dnsmasq_unfiltered.logfiles.logname)
+
+- name: toggle service dnsmasq-unfiltered
+  service: name={{ item }} enabled=yes state=started
+  with_items:
+    - dnsmasq-unfiltered
+
+- name: modify logrotate.d entry
+  template: src=logrotate.j2 dest=/etc/logrotate.d/dnsmasq_unfiltered mode=0644

@@ -1,7 +1,4 @@
-from django.template import RequestContext
-
-__author__ = 'julian'
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.http import Http404, HttpResponse
@@ -11,12 +8,14 @@ from lib import jobs
 
 job_lock = Lock()
 
+
 @login_required
 def faq(request):
-    return render_to_response("faq.html", {
+    return render(request, "faq.html", {
         "request": request,
         'messagestore': jobs.get_messages()
     })
+
 
 @login_required
 def jobstatus(request):
@@ -29,9 +28,8 @@ def jobstatus(request):
             # set to "processing" otherwise
             status = "done" if jobs.check_jobs_finished() else "processing"
 
-             # add your new messages here
+            # add your new messages here
             newmessages = jobs.get_messages()
-
 
             for i in range(len(newmessages)):
                 newmessages[i] = ugettext(newmessages[i])
@@ -43,6 +41,7 @@ def jobstatus(request):
 
     else:
         return HttpResponse(status=503)
+
 
 @login_required
 def clear_jobstatus(request):

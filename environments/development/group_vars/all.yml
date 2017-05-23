@@ -10,11 +10,19 @@ apt_cache_time: 3600
 apt_target_state: installed
 
 ansible_pip_version: 1.9.6
-ansible_uwsgi_version: 1.9.2
+ansible_uwsgi_version: 2.0.15
+pip_version: 9.0.1
 
-django_settings_file: settings_dev
+django_settings_file: &django_settings_file settings_dev
 
 default_settings:
+  registrar:
+    general:
+      enabled: 'no'
+      interface: 'all'
+    pid:
+      dir: '/var/run/registrar'
+      file: 'registrar.pid'
   apate:
     general:
       enabled: 'no'
@@ -29,6 +37,7 @@ default_settings:
     # if you want to change the path, you will also have to
     # edit django's settings file
     db: '/usr/share/nginx/www-upri-interface/db.sqlite3'
+    settings: *django_settings_file
   tor:
     general:
       enabled: 'no'
@@ -51,6 +60,16 @@ default_settings:
       subdir: 'privoxy'
       logfiles:
         logname: 'privoxy.log'
+    registrar:
+      subdir: 'registrar'
+      logfiles:
+        logname: registrar.log
+        stdout: stdout.log
+        stderr: stderr.log
+    squid:
+      subdir: 'squid'
+      logfiles:
+        logname: 'squid.log'
     apate:
       subdir: 'apate'
       logfiles:
@@ -71,6 +90,7 @@ default_settings:
     uwsgi:
       logfiles:
         logname: 'uwsgi.log'
+        requests: null
     dnsmasq:
       subdir: 'dnsmasq'
       logfiles:
@@ -78,6 +98,9 @@ default_settings:
     dnsmasq_ninja:
       logfiles:
         logname: 'dnsmasq_ninja.log'
+    dnsmasq_unfiltered:
+      logfiles:
+        logname: 'dnsmasq_unfiltered.log'
     nginx:
       logfiles:
         error: 'nginx_error.log'

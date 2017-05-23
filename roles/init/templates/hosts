@@ -5,11 +5,12 @@ ff00::0        ip6-mcastprefix
 ff02::1        ip6-allnodes
 ff02::2        ip6-allrouters
 
-127.0.1.1    upri.box filter.upri.box upribox
-192.168.55.254    upri.box filter.upri.box upribox
-192.168.56.254    upri.box filter.upri.box upribox
+127.0.1.1	upribox
+192.168.55.254	upri.box filter.upri.box
+{% if 'ipv6' in hostvars[inventory_hostname]['ansible_eth0']  %}
 {% for v6 in hostvars[inventory_hostname]['ansible_eth0']['ipv6'] %}
 {% if v6.scope == 'link' %}
-{{v6.address}}  upri.box filter.upri.box upribox
+{{v6.address}}  upri.box filter.upri.box
 {% endif %}
 {% endfor %}
+{% endif %}

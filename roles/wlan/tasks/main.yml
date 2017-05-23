@@ -1,6 +1,6 @@
 ---
-- include: ../../tor/tasks/tor_state.yml tags=ssid,toggle_tor,toggle_silent,network_config,dhcp_server
-- include: dhcpd_state.yml tags=toggle_tor,toggle_silent,network_config,dhcp_server
+- include: ../../tor/tasks/tor_state.yml tags=ssid,toggle_tor,toggle_silent,network_config,dhcp_server,configure_devices
+- include: dhcpd_state.yml tags=toggle_tor,toggle_silent,network_config,dhcp_server,configure_devices
 
 - name: install required packages
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
@@ -24,12 +24,6 @@
 
 - name: enable systemd-networkd service
   command: systemctl enable systemd-networkd.service
-
-#- name: fix locales
-#  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }} default_release=jessie
-#  with_items:
-#    - locales
-# due to broken dependencies (glibc)
 
 - name: create systemd directory for hostapd
   file: path=/etc/systemd/system/hostapd.service.d state=directory
@@ -113,9 +107,10 @@
   when: result|changed
 
 - name: configure hostapd
-  template: src=hostapd.j2 dest=/etc/hostapd/hostapd.conf owner=root group=root mode=644
+  template: src=hostapd.j2 dest=/etc/hostapd/hostapd.conf owner=root group=root mode=640
   notify:
     - restart hostapd
+    - restart isc-dhcp-server
   register: hostapd_status
   tags:
     - ssid
@@ -153,6 +148,7 @@
     - toggle_silent
     - dhcp_server
     - network_config
+    - configure_devices
 
 # disable hostapd if wlan should be disabled
 - name: toggle wlan services
