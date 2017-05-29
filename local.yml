@@ -12,9 +12,12 @@
     - { role: dns, tags: ["dns"] }
     - { role: vpn, tags: ["vpn"] }
     - { role: privoxy, tags: ["privoxy"] }
+    - { role: squid, tags: ["squid"] }
     - { role: tor, tags: ["tor"] }
     - { role: dns_ninja, tags: ["dns_ninja"] }
+    - { role: dns_unfiltered, tags: ["dns_unfiltered"] }
     - { role: arp, tags: ["arp"] }
     - { role: nginx, tags: ["nginx"] }
+    - { role: fingerprinting, tags: ["fingerprinting"] }
   post_tasks:
     - include: roles/ssh/main.yml tags=toggle_ssh

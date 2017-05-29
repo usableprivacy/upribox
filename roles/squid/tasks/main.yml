@@ -1,0 +1,36 @@
+---
+- include: ../../common/tasks/other_env.yml 
+
+- name: install services
+  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
+  with_items:
+    - squid3
+      
+- name: add squid user to loggers group
+  user: name=proxy groups="tmp-logger" append=yes
+  
+- name: enable services
+  service: name={{ item }} enabled=yes
+  with_items:
+    - squid3
+    
+- name: copy config file
+  template: src=conf dest=/etc/squid3/squid.conf
+  notify:
+    - restart squid3
+
+- name: create squid log dir
+  file: path={{default_settings.log.general.path}}/{{default_settings.log.squid.subdir}} state=directory mode=0755 owner=proxy
+
+- name: create tmpfiles.d conf file
+  template: src=systemd-log-dir dest=/usr/lib/tmpfiles.d/squid3.conf
+
+- name: remove default logfiles
+  file: path=/var/log/squid3 state=absent
+  when: default_settings.log.general.path != "/var/log" or default_settings.log.squid.subdir != "squid3"
+
+- name: remove log files from other environment
+  file: path={{other_env.default_settings.log.general.path}}/{{other_env.default_settings.log.squid.subdir}} state=absent
+
+- name: modify logrotate.d entry
+  file: path=/etc/logrotate.d/squid3 state=absent

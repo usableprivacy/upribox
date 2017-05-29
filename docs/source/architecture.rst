@@ -1,20 +1,22 @@
+.. _architecture:
+
 ############
 Architecture
 ############
 
-A core technology used in the upribox software is Ansible_: a python-based configuration management software. Our rationale
-behind using Ansible_ is twofold:
+A core technology used in the upribox software is Ansible [#Ansible]_: a python-based configuration management software. Our rationale
+behind using Ansible is twofold:
 
 **Reproducibility**
 Every setting, installed package etc. should be documented in code. We use Ansible's default push mode to configure the base
-image in order to to: deploy the latest upribox software and harden the base image. All changes we perform on a given base images can
-be reproduced (see :ref:`base-image-label`).
+image in order to deploy the latest upribox software and harden the base image. All changes we perform on a given base images can
+be reproduced (see :ref:`base-image`).
 
 **Continuous delivery**
-Ansible_ enables us to roll out bugfixes as well as new features continuously. Once the upribox software is deployed it
+Ansible enables us to roll out bugfixes as well as new features continuously. Once the upribox software is deployed it
 automatically gets changes from our Github repository and deploys them using Ansible's pull mode.
 
-.. note:: Config files are overwritten periodically (see :ref:`customization-label`).
+.. note:: Config files are overwritten periodically (see :ref:`customization`).
 
 *******
 Modules
@@ -23,35 +25,44 @@ Modules
 Base setup
 ==========
 
-.. include:: modules/init.rst
-.. include:: modules/common.rst
-.. include:: modules/unattended_upgrades.rst
+.. include:: modules/init.inc
+.. include:: modules/common.inc
+.. include:: modules/unattended_upgrades.inc
 
 Networking
 ==========
 
-.. include:: modules/arp.rst
-.. include:: modules/iptables.rst
-.. include:: modules/vpn.rst
-.. include:: modules/wlan.rst
+.. include:: modules/arp.inc
+.. include:: modules/iptables.inc
+.. include:: modules/vpn.inc
+.. include:: modules/wlan.inc
 
 Privacy
 =======
 
-.. include:: modules/dns.rst
-.. include:: modules/dns_ninja.rst
-.. include:: modules/nginx.rst
-.. include:: modules/privoxy.rst
-.. include:: modules/tor.rst
+.. include:: modules/dns.inc
+.. include:: modules/dns_ninja.inc
+.. include:: modules/dns_unfiltered.inc
+.. include:: modules/nginx.inc
+.. include:: modules/privoxy.inc
+.. include:: modules/tor.inc
 
 
 User Interface
 ==============
 
-.. include:: modules/django.rst
-.. include:: modules/ssh.rst
+.. include:: modules/django.inc
+.. include:: modules/ssh.inc
+.. include:: modules/fingerprinting.inc
+.. include:: modules/squid.inc
 
 
 .. rubric:: Footnotes
 
-.. [Ansible] https://www.ansible.com
+.. [#Ansible] https://www.ansible.com
+.. [#UnattendedUpgrades] https://wiki.debian.org/UnattendedUpgrades
+.. [#OpenVPN] https://openvpn.net/
+.. [#Privoxy] https://www.privoxy.org/
+.. [#Tor] https://www.torproject.org/
+.. [#Django] https://www.djangoproject.com
+.. [#Squid] http://www.squid-cache.org/

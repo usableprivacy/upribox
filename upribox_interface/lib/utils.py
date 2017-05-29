@@ -112,11 +112,15 @@ def secure_random_id(instance):
 
 def get_system_network_config():
     if_info = None
+    interface = None
     try:
         interface = ni.gateways()['default'][ni.AF_INET][1]
         if_info = ni.ifaddresses(interface)
-    except ValueError as e:
-        logger.error("An error concerning the interface {} has occurred: {}".format(interface, str(e)))
+    except (ValueError, KeyError) as e:
+        if interface:
+            logger.warning("An error concerning the interface {} has occurred: {}".format(interface, str(e)))
+        else:
+            logger.warning("An error concerning the network configuration has occurred: {}".format(str(e)))
         return get_default_network_config()
 
     try:

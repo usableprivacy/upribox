@@ -25,11 +25,6 @@
     - toggle_tor
     - toggle_silent
 
-# dnsmasq does not log per default
-#- name: remove default logfiles
-#  file: path=/var/log/dnsmasq.log state=absent
-#  when: res|changed
-
 - name: create dnsmasq log dir
   file: path={{default_settings.log.general.path}}/{{default_settings.log.dnsmasq.subdir}} state=directory mode=0755 owner=dnsmasq
   tags:
@@ -50,6 +45,9 @@
 
 - name: create tmpfiles.d conf file
   template: src=systemd-log-dir dest=/usr/lib/tmpfiles.d/dnsmasq.conf
+  tags:
+    - toggle_tor
+    - toggle_silent
 
 - name: remove dnsmasq log files from other environment
   file: path={{other_env.default_settings.log.general.path}}/{{other_env.default_settings.log.dnsmasq.subdir}}/{{item.value}} state=absent

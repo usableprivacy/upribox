@@ -1,0 +1,88 @@
+# Configuration file for squid.
+#
+
+# Example rule allowing access from your local networks.
+# Adapt to list your (internal) IP networks from where browsing
+# should be allowed
+acl localnet src 10.0.0.0/8	# RFC1918 possible internal network
+acl localnet src 172.16.0.0/12	# RFC1918 possible internal network
+acl localnet src 192.168.0.0/16	# RFC1918 possible internal network
+acl localnet src fc00::/7       # RFC 4193 local private network range
+acl localnet src fe80::/10      # RFC 4291 link-local (directly plugged) machines
+
+acl SSL_ports port 443
+acl Safe_ports port 80		# http
+acl Safe_ports port 21		# ftp
+acl Safe_ports port 443		# https
+acl Safe_ports port 70		# gopher
+acl Safe_ports port 210		# wais
+acl Safe_ports port 1025-65535	# unregistered ports
+acl Safe_ports port 280		# http-mgmt
+acl Safe_ports port 488		# gss-http
+acl Safe_ports port 591		# filemaker
+acl Safe_ports port 777		# multiling http
+acl CONNECT method CONNECT
+
+#
+# Recommended minimum Access Permission configuration:
+#
+# Deny requests to certain unsafe ports
+http_access deny !Safe_ports
+
+# Only allow cachemgr access from localhost
+http_access allow localhost manager
+http_access deny manager
+
+# Example rule allowing access from your local networks.
+# Adapt localnet in the ACL section to list your (internal) IP networks
+# from where browsing should be allowed
+http_access allow localnet
+http_access allow localhost
+
+# And finally deny all other access to this proxy
+http_access deny all
+
+# Squid normally listens to port 3128
+http_port 3129
+http_port 3128 intercept
+
+
+#  TAG: cache_peer
+#	To specify other caches in a hierarchy, use the format:
+#
+#		cache_peer hostname type http-port icp-port [options]
+#
+cache_peer 127.0.0.1 parent 8118 0 no-query default no-digest no-netdb-exchange
+cache_peer ::1 parent 8119 0 no-query default no-digest no-netdb-exchange
+cache_mem 128 MB
+
+logformat useragent_short %>eui;|;%>a;|;%"{User-Agent}>h
+access_log daemon:{{ default_settings.log.general.path }}/{{ default_settings.log.squid.subdir }}/{{ default_settings.log.squid.logfiles.logname }} useragent_short
+
+#  TAG: netdb_filename
+#	Where Squid stores it's netdb journal.
+#	When enabled this journal preserves netdb state between restarts.
+netdb_filename none
+
+#  TAG: cache_log
+#	Squid administrative logging file.
+#
+#	This is where general information about Squid behavior goes. You can
+#	increase the amount of data logged to this file and how often it is
+#	rotated with "debug_options"
+#Default:
+cache_log {{ default_settings.log.general.path }}/{{default_settings.log.squid.subdir}}/cache.log
+
+# Leave coredumps in the first cache dir
+coredump_dir /var/spool/squid3
+
+#
+# Add any of your own refresh_pattern entries above these.
+#
+refresh_pattern ^ftp:		1440	20%	10080
+refresh_pattern ^gopher:	1440	0%	1440
+refresh_pattern -i (/cgi-bin/|\?) 0	0%	0
+refresh_pattern .		0	20%	4320
+
+# Allow DNS results to be used for this request.
+never_direct allow all

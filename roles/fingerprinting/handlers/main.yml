@@ -1,0 +1,5 @@
+---
+- include: ../tasks/registrar_state.yml tags=toggle_registrar
+
+- name: restart registrar
+  service: name=registrar state={{"restarted" if registrar_enabled|bool else "stopped"}}

@@ -1,0 +1,10 @@
+{{default_settings.log.general.path}}/{{default_settings.log.registrar.subdir}}/*.log {
+    su root root
+    compress
+    copytruncate
+    weekly
+    rotate 3
+    missingok
+    notifempty
+    maxsize 10M
+}

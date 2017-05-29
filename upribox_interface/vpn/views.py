@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.http import Http404
 from django.core.urlresolvers import reverse
-from django.template import RequestContext
 from lib import jobs
 from . import jobs as vpnjobs
 from .models import VpnProfile
@@ -21,6 +20,7 @@ from django.utils.translation import ugettext as _
 import requests
 
 logger = logging.getLogger('uprilogger')
+
 
 @login_required
 def check_connection(request):
@@ -40,7 +40,6 @@ def check_connection(request):
         r = requests.get("https://api.upribox.org/connectivity/", timeout=7, verify=settings.SSL_PINNING_PATH)
     except:
         return HttpResponse('{{"status": "error", "msg": "{}"}}'.format(_("Verbindung zu api.upribox.org fehlgeschlagen.")))
-
 
     # Get log lines with TLS-auth error after connection
     try:
@@ -68,64 +67,62 @@ def check_connection(request):
         # Connection failed
         return HttpResponse('{{"status": "failure", "msg": "{}"}}'.format(_("Die Verbindung war nicht erfolgreich!")))
 
+
 @login_required
 def vpn_config(request):
-    context = RequestContext(request)
-
-    context.push({
+    context = {
         'messagestore': jobs.get_messages(),
         'profiles': VpnProfile.objects.all(),
-        'form': VpnProfileForm()})
-    return render_to_response("vpn.html", context)
+        'form': VpnProfileForm()
+        }
+    return render(request, "vpn.html", context)
 
 @login_required
 def vpn_get(request, slug):
     try:
-        profile = VpnProfile.objects.get(slug=slug)
+        profile=VpnProfile.objects.get(slug=slug)
 
-        #render profile
-        context = RequestContext(request)
-        context.push({'profile': profile})
-        return render_to_response("vpn_profile.html", context)
+        # render profile
+        return render(request, "vpn_profile.html", {'profile': profile})
     except VpnProfile.DoesNotExist:
         raise Http404()
 
 @login_required
 def vpn_generate(request):
-    context = RequestContext(request)
+    context={}
 
-    form = VpnProfileForm(request.POST)
+    form=VpnProfileForm(request.POST)
 
     if form.is_valid():
-        profilename = form.cleaned_data.get('profilename')
-        dyndomain = form.cleaned_data.get('dyndomain')
+        profilename=form.cleaned_data.get('profilename')
+        dyndomain=form.cleaned_data.get('dyndomain')
 
-        logger.info("generating profile %s" % profilename )
-        profile = VpnProfile(profilename=profilename, dyndomain=dyndomain)
-        profile.config = "# upri.box OVPN config for %s\nfoo bar baz bar OpenVPN config goes here" % profilename
+        logger.info("generating profile %s" % profilename)
+        profile=VpnProfile(profilename=profilename, dyndomain=dyndomain)
+        profile.config="# upri.box OVPN config for %s\nfoo bar baz bar OpenVPN config goes here" % profilename
         profile.save()
         if not (settings.IGNORE_MISSING_UPRICONFIG and not exists('/usr/local/bin/upri-config.py')):
             jobs.queue_job(vpnjobs.generate_profile, (str(profile.id),))
-            context.push({'message': True})
+            context.update({'message': True})
         else:
-            context.push({'message': False})
+            context.update({'message': False})
 
-        context.push({'form': VpnProfileForm()})
+        context.update({'form': VpnProfileForm()})
 
     else:
-        context.push({'form': VpnProfileForm(request.POST)})
+        context.update({'form': VpnProfileForm(request.POST)})
 
-    context.push({
+    context.update({
             'messagestore': jobs.get_messages(),
             'profiles': VpnProfile.objects.all()})
 
-    return render_to_response("vpn.html", context)
+    return render(request, "vpn.html", context)
 
 @login_required
 def vpn_delete(request, slug):
     logger.info("deleting vpn profile %s..." % slug)
     try:
-        profile = VpnProfile.objects.get(slug=slug)
+        profile=VpnProfile.objects.get(slug=slug)
         profile.delete()
 
         try:
@@ -134,9 +131,9 @@ def vpn_delete(request, slug):
         except utils.AnsibleError as e:
             logger.error("ansible failed with error %d: %s" % (e.rc, e.message))
 
-        response = {'deleted': 'true'}
+        response={'deleted': 'true'}
     except VpnProfile.DoesNotExist:
-        response = {'deleted': 'true'}
+        response={'deleted': 'true'}
 
     return JsonResponse(response)
 
@@ -144,13 +141,13 @@ def vpn_delete(request, slug):
 def vpn_download(request, download_slug):
     logger.info("downloading vpn profile link %s..." % download_slug)
     try:
-        #get profile by download link
-        profile = VpnProfile.objects.get(download_slug=download_slug)
+        # get profile by download link
+        profile=VpnProfile.objects.get(download_slug=download_slug)
 
-        #check if download link still valid
+        # check if download link still valid
         if profile.download_valid_until is not None and profile.download_valid_until >= timezone.now():
-            response = HttpResponse(profile.config, content_type='application/x-openvpn-profile')
-            response['Content-Disposition'] = 'attachment; filename="upribox-%s.ovpn"' % profile.profilename
+            response=HttpResponse(profile.config, content_type='application/x-openvpn-profile')
+            response['Content-Disposition']='attachment; filename="upribox-%s.ovpn"' % profile.profilename
             return response
         else:
             # link timed out
@@ -163,16 +160,14 @@ def vpn_download(request, download_slug):
 def vpn_create_download(request, slug):
     try:
 
-        #create new link and set timeout date
-        profile = VpnProfile.objects.get(slug=slug)
-        profile.download_valid_until = timezone.now() + timedelta(seconds=settings.VPN_LINK_TIMEOUT)
+        # create new link and set timeout date
+        profile=VpnProfile.objects.get(slug=slug)
+        profile.download_valid_until=timezone.now() + timedelta(seconds=settings.VPN_LINK_TIMEOUT)
         profile.save()
 
         logger.info("created download link %s (valid until %s) for vpn profile %s..." % (profile.download_slug, profile.download_valid_until, slug))
-        #render profile
-        context = RequestContext(request)
-        context.push({'profile': profile})
-        return render_to_response("vpn_profile.html", context)
+        # render profile
+        return render(request, "vpn_profile.html", {'profile': profile})
     except VpnProfile.DoesNotExist:
         raise Http404()
 
@@ -181,7 +176,7 @@ def vpn_toggle(request):
     if request.method != 'POST':
         raise Http404()
 
-    state = request.POST['enabled']
+    state=request.POST['enabled']
     jobs.queue_job(vpnjobs.toggle_vpn, (state,))
 
-    return render_to_response("modal.html", {"message": True, "refresh_url": reverse('upri_vpn')})
+    return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_vpn')})

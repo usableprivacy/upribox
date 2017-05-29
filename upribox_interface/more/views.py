@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import Http404, HttpResponse
@@ -19,7 +18,7 @@ logger = logging.getLogger('uprilogger')
 
 @login_required
 def more_config(request, save_form):
-    context = RequestContext(request)
+    context = {}
 
     form = AdminForm(request)
     net_info = utils.get_system_network_config()
@@ -48,7 +47,7 @@ def more_config(request, save_form):
                 u.username = new_username
                 u.save()
                 logger.info("user %s updated to %s (password changed: %s)" % (old_username, new_username, new_password != old_password))
-                context.push({'message': True})
+                context.update({'message': True})
 
             else:
                 logger.error("admin form validation failed")
@@ -62,14 +61,15 @@ def more_config(request, save_form):
                 dns = ip_form.cleaned_data['dns_server']
                 dhcp = ip_form.cleaned_data['dhcp_server']
                 jobs.queue_job(sshjobs.reconfigure_network, (ip, netmask, gateway, dns, dhcp))
-                # context.push({'message': True, 'ninja_ssid':ssid})
-                context.push({'message': True})
-                context.push({"refresh_url": reverse('upri_more')})
-                context.push({'messagestore': jobs.get_messages()})
+                context.update({
+                    'message': True,
+                    "refresh_url": reverse('upri_more'),
+                    'messagestore': jobs.get_messages()
+                })
 
     update_status = UpdateStatus()
 
-    context.push({
+    context.update({
         'form': form,
         'ip_form': ip_form,
         'messagestore': jobs.get_messages(),
@@ -77,7 +77,7 @@ def more_config(request, save_form):
         'version': update_status.get_version()
     })
 
-    return render_to_response("more.html", context)
+    return render(request, "more.html", context)
 
 
 @login_required
@@ -88,7 +88,7 @@ def ssh_toggle(request):
     state = request.POST['enabled']
     jobs.queue_job(sshjobs.toggle_ssh, (state,))
 
-    return render_to_response("modal.html", {"message": True, "refresh_url": reverse('upri_more')})
+    return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_more')})
 
 
 @login_required
@@ -99,7 +99,7 @@ def apate_toggle(request):
     state = request.POST['enabled']
     jobs.queue_job(sshjobs.toggle_apate, (state,))
 
-    return render_to_response("modal.html", {"message": True, "refresh_url": reverse('upri_more')})
+    return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_more')})
 
 
 @login_required
@@ -109,7 +109,8 @@ def save_static(request):
 
     jobs.queue_job(sshjobs.toggle_static, ('static',))
 
-    return render_to_response("modal.html", {"message": True, "refresh_url": reverse('upri_more')})
+    return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_more')})
+
 
 @login_required
 def save_dhcp(request):
@@ -118,4 +119,4 @@ def save_dhcp(request):
 
     jobs.queue_job(sshjobs.toggle_static, ('dhcp',))
 
-    return render_to_response("modal.html", {"message": True, "refresh_url": reverse('upri_more')})
+    return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_more')})

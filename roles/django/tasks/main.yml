@@ -1,22 +1,10 @@
 ---
 - include: ../../common/tasks/other_env.yml
 
-# copy the uwsgi ini file seperately because we want to trigger a restart only if this file changed
-# and not if any file in the webapp was updated
-#- name: copy uwsgi ini file
-#  copy: src=webapp/upri_uwsgi.ini dest=/usr/share/nginx/www-upri-interface/upri_uwsgi.ini
-#  notify: restart uwsgi
-
-# - name: copy django webapp
-#   copy: src=upribox_interface/ dest=/usr/share/nginx/www-upri-interface owner="{{'www-data' if env == 'development' else 'root' }}" group="{{'www-data' if env == 'development' else 'root' }}"
-#   register: copy_django
-#   notify: reload uwsgi
-
 - name: create dir for django webapp
   file: path=/usr/share/nginx/www-upri-interface state=directory
 
 - name: copy django webapp
-  # copy: src=upribox_interface/ dest=/usr/share/nginx/www-upri-interface
   synchronize: src=upribox_interface/ dest=/usr/share/nginx/www-upri-interface delete=yes recursive=yes checksum=yes
   register: copy_django
   notify: reload uwsgi
@@ -26,9 +14,6 @@
 
 - name: install redis server
   apt: name=redis-server state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
-
-- name: install lshw
-  apt: name=lshw state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
 
 - name: enable redis server
   service: name=redis-server enabled=yes
@@ -40,6 +25,14 @@
 - name: install requirements to virtualenv
   pip: requirements=/usr/share/nginx/www-upri-interface/requirements.txt virtualenv=/var/webapp-virtualenv/
   notify: reload uwsgi
+
+- name: check installed uWSGI version
+  shell: pip show uwsgi | grep Version | cut -d " " -f 2
+  register: installed_uwsgi_version
+
+- name: stop uwsgi for updating
+  service: name=django-uwsgi state=stopped
+  when: installed_uwsgi_version.stdout != ansible_uwsgi_version
 
 - name: install uWSGI
   pip: name=uwsgi state=present version="{{ansible_uwsgi_version}}"
@@ -61,11 +54,6 @@
   file: path=/var/log/uwsgi.log state=absent
   when: res|changed
 
-#- name: remove uwsgi log files from other environment
-#  file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
-#  with_dict: "{{other_env.default_settings.log.uwsgi.logfiles}}"
-#  when: res|changed
-
 - name: add uwsgi vasall
   template: src=upri_uwsgi.j2 dest=/etc/uwsgi/upri_uwsgi.ini
   notify:
@@ -82,7 +70,7 @@
   when: env == "production"
 
 - name: migrate django database
-  django_manage: settings="{{ django_settings_file }}" command=migrate app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
+  django_manage: settings="{{ django_settings_file }}" command="migrate --fake-initial" app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
   become_user: www-data
 
 - name: add development user (upri/upri)
@@ -94,13 +82,13 @@
   django_manage: settings="{{ django_settings_file }}" command=collectstatic app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
 
 - name: install dependency for management script via pip
-  pip: name="{{ item }}" state=present
+  pip: name="{{ item.name }}" state=present version="{{ item.version }}"
   with_items:
-    - jsonmerge
-    - functools32
-    - redis
-    - netifaces
-    - netaddr
+    - { name: 'jsonmerge', version: '1.3.0' }
+    - { name: 'functools32', version: '3.2.3-2' }
+    - { name: 'redis', version: '2.10.5' }
+    - { name: 'netifaces', version: '0.10.5' }
+    - { name: 'netaddr', version: '0.7.19' }
 
 - name: install supervisor for rqworker
   apt: name=supervisor state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
@@ -116,14 +104,6 @@
 
 - name: enable supervisord
   service: name=supervisor enabled=yes
-
-#- name: modify logdir in supervisor init script
-#  lineinfile:
-#    dest: /etc/init.d/supervisor
-#    regexp: "^LOGDIR="
-#    line: "LOGDIR={{default_settings.log.general.path}}"
-#  notify: restart supervisor
-#  register: res1
 
 - name: change logdir of supervisor
   lineinfile:
@@ -179,10 +159,13 @@
   tags:
     - upri_config
 
-- name: check if DNS log file already exists
+- name: check if log files already exist
   stat:
-    path: "{{default_settings.log.general.path}}/{{default_settings.log.dnsmasq.subdir}}/{{default_settings.log.dnsmasq.logfiles.logname}}"
-  register: dns_log_file
+    path: "{{ item }}"
+  with_items:
+    - "{{default_settings.log.general.path}}/{{default_settings.log.dnsmasq.subdir}}/{{default_settings.log.dnsmasq.logfiles.logname}}"
+    - "{{default_settings.log.general.path}}/{{default_settings.log.privoxy.subdir}}/{{default_settings.log.privoxy.logfiles.logname}}"
+  register: log_files
 
 - name: cleanup statistics
   shell: "/var/webapp-virtualenv/bin/python /usr/share/nginx/www-upri-interface/manage.py cleanup --settings {{django_settings_file}}"
@@ -192,7 +175,7 @@
   register: update_result
   changed_when: "update_result.rc == 1"
   failed_when: "update_result.rc != 0 and update_result.rc != 1"
-  when: dns_log_file.stat.exists == True
+  when: not False in (log_files.results | map(attribute='stat.exists') | list)
 
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/supervisor mode=0644

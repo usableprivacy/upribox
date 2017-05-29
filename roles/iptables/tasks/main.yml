@@ -1,5 +1,5 @@
 ---
-  - include: ../../tor/tasks/tor_state.yml tags=toggle_tor,toggle_silent
+  - include: ../../tor/tasks/tor_state.yml tags=toggle_tor,toggle_silent,configure_devices
   - include_vars: ../../vpn/defaults/main.yml
 
   - name: install services
@@ -15,13 +15,7 @@
     tags:
      - toggle_tor
      - toggle_silent
-
-  - name: print states
-    debug:
-     msg: "silent: {{ silent }}, tor: {{ tor }}"
-    tags:
-     - toggle_silent
-     - toggle_tor
+     - configure_devices
 
   - name: copy the iptables rules file
     template: src=iptables.upribox.ipv6 dest=/etc/iptables/rules.v6 owner=root group=root mode=0644
@@ -30,3 +24,4 @@
     tags:
      - toggle_tor
      - toggle_silent
+     - configure_devices

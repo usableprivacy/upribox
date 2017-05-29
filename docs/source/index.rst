@@ -2,7 +2,7 @@
 Usable Privacy Box (**upribox**)
 ********************************
 
-**Privacy made easy for the Raspberry Pi 1, 2, and 3**
+**Privacy made easy for the Raspberry Pi 2, and 3**
 
 The upribox software is used to create Raspberry Pi images to turn your Raspberry Pi into a privacy-enhancing Wireless router. Main features:
 
@@ -18,4 +18,3 @@ The upribox software is used to create Raspberry Pi images to turn your Raspberr
    intro
    architecture
    development
-

@@ -1,0 +1,2 @@
+python-daemon==2.1.2
+scapy==2.3.3

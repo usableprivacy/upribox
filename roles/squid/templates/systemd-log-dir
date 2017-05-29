@@ -1,0 +1,1 @@
+d	{{default_settings.log.general.path}}/{{default_settings.log.squid.subdir}}	0755	proxy	root	-	-
