@@ -23,6 +23,7 @@ import socket
 import netifaces as ni
 from netaddr import IPNetwork, IPAddress, ZEROFILL
 import redis as redisDB
+from os.path import isfile, join, exists
 # import traceback
 
 # directory where facts are located
@@ -739,6 +740,47 @@ def action_set_static_ip(arg):
     write_role('interfaces', en)
 
 
+def _config_mac(group, mac, remove=False):
+    if re.match("[0-9a-f]{2}([:])[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", mac.lower()):
+        devices = get_fact('devices', group) or []
+        if not remove and mac.lower() not in devices:
+            devices.append(mac.lower())
+        elif remove and mac.lower() in devices:
+            devices.remove(mac.lower())
+        en = {group: devices}
+        write_role('devices', en)
+    else:
+        return 30
+
+def action_torify_device(arg):
+    if _config_mac("tor", arg):
+        print 'error: invalid mac address'
+        return 30
+    # remove from other list
+    print 'torified device: %s' % arg
+    action_include_device(arg)
+
+def action_exclude_device(arg):
+    if _config_mac("no_adblocking", arg):
+        print 'error: invalid mac address'
+        return 30
+    # remove from other list
+    print 'excluded device: %s' % arg
+    action_untorify_device(arg)
+
+def action_include_device(arg):
+    if _config_mac("no_adblocking", arg, remove=True):
+        print 'error: invalid mac address'
+        return 30
+    print 'included device: %s' % arg
+
+
+def action_untorify_device(arg):
+    if _config_mac("tor", arg, remove=True):
+        print 'error: invalid mac address'
+        return 30
+    print 'untorified device: %s' % arg
+
 def check_passwd(arg):
     pw = passwd.Password(arg)
     if not pw.is_valid():
@@ -825,6 +867,10 @@ ALLOWED_ACTIONS = {
     'restart_network': action_restart_network,
     'set_dhcpd': action_set_dhcpd,
     'restart_dhcpd': action_restart_dhcpd,
+    'torify_device': action_torify_device,
+    'exclude_device': action_exclude_device,
+    'untorify_device': action_untorify_device,
+    'include_device': action_include_device,
 }
 
 #
@@ -840,7 +886,7 @@ def call_ansible(tag):
 #
 
 
-def write_role(rolename, data):
+def write_role(rolename, data, schema={}):
     p = path.join(FACTS_DIR, rolename + '.fact')
     try:
         with open(p, 'r') as data_file:
@@ -848,9 +894,25 @@ def write_role(rolename, data):
     except IOError:
         js = {}
 
-    js = merge(js, data)
+    js = merge(js, data, schema)
+    merge
     with open(p, 'w+') as data_file:
         json.dump(js, data_file, indent=4)
+
+
+def get_fact(role, group, fact=None):
+    if exists(FACTS_DIR):
+        try:
+            with open(join(FACTS_DIR, role + ".fact")) as file:
+                data = json.load(file)
+                if fact:
+                    erg = data[group][fact] if group in data and fact in data[group] else None
+                else:
+                    erg = data[group] if group in data else None
+                return erg
+        except IOError as e:
+            print 'Cannot read Local Facts File ' + role + " :" + e.strerror
+
 
 # return values:
 # 0: ok
