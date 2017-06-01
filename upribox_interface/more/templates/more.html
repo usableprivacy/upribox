@@ -87,7 +87,7 @@
                 </fieldset>
             </form>
 
-            <div class="js-static-ip-form{% if mode == 'dhcp' %} hidden{% endif %}">
+            <div class="js-static-ip-form{% if mode == 'dhcp' and not ip_form.errors %} hidden{% endif %}">
                 {% trans "Statische IP" as form_title %}
                 {% url "upri_static_save" as href %}
                 {% include "form.html" with form=ip_form %}
