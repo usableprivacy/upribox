@@ -14,7 +14,7 @@
   notify: restart apate
 
 - name: copy apate service file
-  template: src=init/apate.service dest=/etc/systemd/system/apate.service owner=root group=root mode=0755
+  template: src=init/apate.service dest=/etc/systemd/system/apate.service owner=root group=root mode=0644
   notify: restart apate
   register: service_file
 

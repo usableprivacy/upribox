@@ -14,7 +14,7 @@
   notify: restart registrar
 
 - name: copy registrar service file
-  template: src=init/registrar.service dest=/etc/systemd/system/registrar.service owner=root group=root mode=0755
+  template: src=init/registrar.service dest=/etc/systemd/system/registrar.service owner=root group=root mode=0644
   notify: restart registrar
   register: service_file
 

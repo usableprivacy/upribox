@@ -115,8 +115,6 @@ class StaticIPForm(forms.Form):
                 self.add_error('ip_address', forms.ValidationError(ugettext_lazy("Es handelt sich nicht um eine korrekte Hostadresse")))
             if not self.is_hostaddress(network, IPAddress(cleaned_data['gateway'])):
                 self.add_error('gateway', forms.ValidationError(ugettext_lazy("Es handelt sich nicht um eine korrekte Hostadresse")))
-            if not self.is_hostaddress(network, IPAddress(cleaned_data['dns_server'])):
-                self.add_error('dns_server', forms.ValidationError(ugettext_lazy("Es handelt sich nicht um eine korrekte Hostadresse")))
         except:
             pass
 
