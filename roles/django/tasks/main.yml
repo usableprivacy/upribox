@@ -159,10 +159,13 @@
   tags:
     - upri_config
 
-- name: check if DNS log file already exists
+- name: check if log files already exist
   stat:
-    path: "{{default_settings.log.general.path}}/{{default_settings.log.dnsmasq.subdir}}/{{default_settings.log.dnsmasq.logfiles.logname}}"
-  register: dns_log_file
+    path: "{{ item }}"
+  with_items:
+    - "{{default_settings.log.general.path}}/{{default_settings.log.dnsmasq.subdir}}/{{default_settings.log.dnsmasq.logfiles.logname}}"
+    - "{{default_settings.log.general.path}}/{{default_settings.log.privoxy.subdir}}/{{default_settings.log.privoxy.logfiles.logname}}"
+  register: log_files
 
 - name: cleanup statistics
   shell: "/var/webapp-virtualenv/bin/python /usr/share/nginx/www-upri-interface/manage.py cleanup --settings {{django_settings_file}}"
@@ -172,7 +175,7 @@
   register: update_result
   changed_when: "update_result.rc == 1"
   failed_when: "update_result.rc != 0 and update_result.rc != 1"
-  when: dns_log_file.stat.exists == True
+  when: not False in (log_files.results | map(attribute='stat.exists') | list)
 
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/supervisor mode=0644

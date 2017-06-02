@@ -42,7 +42,8 @@ except NameError:
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'upri.box'
+    'upri.box',
+    'upribox.local'
 ]
 
 
