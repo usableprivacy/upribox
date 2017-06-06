@@ -77,7 +77,7 @@
     - network_config
 
 - name: disable dhcpcd on eth0 for static config
-  lineinfile: dest=/etc/dhcpcd.conf regexp=^denyinterfaces\ eth0 line="denyinterfaces eth0" state=present
+  lineinfile: path=/etc/dhcpcd.conf regexp='^denyinterfaces\ eth0' line='denyinterfaces eth0' state=present
   when: static_ip_setup is defined
   tags:
     - toggle_tor
@@ -85,7 +85,7 @@
     - network_config
 
 - name: re-enable dhcpcd on eth0
-  lineinfile: dest=/etc/dhcpcd.conf regexp=^denyinterfaces\ eth0 line="denyinterfaces eth0" state=absent
+  lineinfile: path=/etc/dhcpcd.conf regexp='^denyinterfaces\ eth0' line='denyinterfaces eth0' state=absent
   when: static_ip_setup is not defined
   tags:
     - toggle_tor
