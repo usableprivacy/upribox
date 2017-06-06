@@ -1,6 +1,7 @@
 ---
 - include: ../../common/tasks/other_env.yml
-- include: registrar_state.yml tags=toggle_registrar
+- include: registrar_state.yml
+  tags: [toggle_registrar]
 
 - name: create working directory for registrar daemon
   file: path=/opt/registrar state=directory recurse=yes mode=0771 owner=root group=root

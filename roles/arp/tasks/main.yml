@@ -1,6 +1,7 @@
 ---
 - include: ../../common/tasks/other_env.yml
-- include: apate_state.yml tags=toggle_apate
+- include: apate_state.yml
+  tags: [toggle_apate]
 
 - name: create working directory for apate daemon
   file: path=/opt/apate state=directory recurse=yes mode=0771 owner=root group=root

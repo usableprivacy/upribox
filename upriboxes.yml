@@ -20,4 +20,5 @@
     - { role: dns, tags: ["dns"] }
     - { role: fingerprinting, tags: ["fingerprinting"] }
   post_tasks:
-    - include: roles/ssh/main.yml tags=toggle_ssh
+    - include: roles/ssh/main.yml
+      tags: [toggle_ssh]

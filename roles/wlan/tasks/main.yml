@@ -1,6 +1,8 @@
 ---
-- include: ../../tor/tasks/tor_state.yml tags=ssid,toggle_tor,toggle_silent,network_config,dhcp_server,configure_devices
-- include: dhcpd_state.yml tags=toggle_tor,toggle_silent,network_config,dhcp_server,configure_devices
+- include: ../../tor/tasks/tor_state.yml
+  tags: [ssid,toggle_tor,toggle_silent,network_config,dhcp_server,configure_devices]
+- include: dhcpd_state.yml
+  tags: [toggle_tor,toggle_silent,network_config,dhcp_server,configure_devices]
 
 - name: install required packages
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}

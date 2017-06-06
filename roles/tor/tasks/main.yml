@@ -1,5 +1,6 @@
 --- 
-- include: tor_state.yml tags=toggle_tor
+- include: tor_state.yml
+  tags: [toggle_tor]
 - include: ../../common/tasks/other_env.yml 
 
 - name: install services

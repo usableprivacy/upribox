@@ -1,5 +1,6 @@
 ---
-  - include: ../../tor/tasks/tor_state.yml tags=toggle_tor,toggle_silent,configure_devices
+  - include: ../../tor/tasks/tor_state.yml
+    tags: [toggle_tor,toggle_silent,configure_devices]
   - include_vars: ../../vpn/defaults/main.yml
 
   - name: install services
@@ -8,7 +9,7 @@
      - iptables
      - iptables-persistent
 
-  - name: copy the iptables rules file
+  - name: copy the iptables (ipv4) rules file
     template: src=iptables.upribox.ipv4 dest=/etc/iptables/rules.v4 owner=root group=root mode=0644
     notify:
      - restore iptables
@@ -17,7 +18,7 @@
      - toggle_silent
      - configure_devices
 
-  - name: copy the iptables rules file
+  - name: copy the iptables (ipv6) rules file
     template: src=iptables.upribox.ipv6 dest=/etc/iptables/rules.v6 owner=root group=root mode=0644
     notify:
      - restore ip6tables

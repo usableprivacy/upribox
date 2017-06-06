@@ -1,5 +1,6 @@
 ---
-- include: vpn_state.yml tags=toggle_vpn
+- include: vpn_state.yml
+  tags: [toggle_vpn]
 - include: ../../common/tasks/other_env.yml
 
 - name: install services
