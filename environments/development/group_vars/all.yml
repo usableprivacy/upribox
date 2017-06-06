@@ -38,10 +38,7 @@ default_settings:
     # edit django's settings file
     db: '/usr/share/nginx/www-upri-interface/db.sqlite3'
     settings: *django_settings_file
-  tor:
-    general:
-      enabled: 'no'
-  silent:
+  wlan:
     general:
       enabled: 'yes'
   ssh:

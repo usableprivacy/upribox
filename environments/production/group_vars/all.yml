@@ -47,9 +47,6 @@ default_settings:
     # edit django's settings file
     db: '/var/upribox-interface/db.sqlite3'
     settings: *django_settings_file
-  tor:
-    general:
-      enabled: 'no'
   silent:
     general:
       enabled: 'yes'

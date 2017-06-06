@@ -1,8 +1,8 @@
 ---
-- include: ../../tor/tasks/tor_state.yml
-  tags: [ssid,toggle_tor,toggle_silent,network_config,dhcp_server,configure_devices]
+- include: ../../wlan/tasks/wlan_state.yml
+  tags: [ssid,toggle_silent,network_config,dhcp_server,configure_devices]
 - include: dhcpd_state.yml
-  tags: [toggle_tor,toggle_silent,network_config,dhcp_server,configure_devices]
+  tags: [toggle_silent,network_config,dhcp_server,configure_devices]
 
 - name: install required packages
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
@@ -46,7 +46,6 @@
   template: src=interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=644
   register: interfaces
   tags:
-    - toggle_tor
     - toggle_silent
     - network_config
 
@@ -54,7 +53,6 @@
   template: src=40-eth0.network dest=/etc/systemd/network/40-eth0.network owner=root group=root mode=644
   notify: restart systemd-networkd
   tags:
-    - toggle_tor
     - toggle_silent
     - network_config
 
@@ -82,7 +80,6 @@
   lineinfile: path=/etc/dhcpcd.conf regexp='^denyinterfaces\ eth0' line='denyinterfaces eth0' state=present
   when: static_ip_setup is defined
   tags:
-    - toggle_tor
     - toggle_silent
     - network_config
 
@@ -90,7 +87,6 @@
   lineinfile: path=/etc/dhcpcd.conf regexp='^denyinterfaces\ eth0' line='denyinterfaces eth0' state=absent
   when: static_ip_setup is not defined
   tags:
-    - toggle_tor
     - toggle_silent
     - network_config
 
@@ -116,7 +112,6 @@
   register: hostapd_status
   tags:
     - ssid
-    - toggle_tor
     - toggle_silent
 
 - name: configure hostapd config file path
@@ -135,7 +130,6 @@
     - restart isc-dhcp-server
     - configure isc-dhcp-server
   tags:
-    - toggle_tor
     - toggle_silent
     - dhcp_server
     - network_config
@@ -146,7 +140,6 @@
     - restart isc-dhcp-server
     - configure isc-dhcp-server
   tags:
-    - toggle_tor
     - toggle_silent
     - dhcp_server
     - network_config
@@ -154,9 +147,8 @@
 
 # disable hostapd if wlan should be disabled
 - name: toggle wlan services
-  service: name=hostapd enabled={{ tor|bool or silent|bool }} state={{ "stopped" if not (tor|bool or silent|bool) else "started" }}
+  service: name=hostapd enabled={{ silent|bool }} state={{ "stopped" if not silent|bool else "started" }}
   tags:
-    - toggle_tor
     - toggle_silent
 
 - name: copy avahi config

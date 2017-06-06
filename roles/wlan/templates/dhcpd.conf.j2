@@ -27,18 +27,6 @@ subnet 192.168.55.0 netmask 255.255.255.0 {
 }
 {% endif %}
 
-{% if tor|bool%}
-subnet 192.168.56.0 netmask 255.255.255.0 {
-        option routers                  192.168.56.254;
-        option subnet-mask              255.255.255.0;
-        option broadcast-address        192.168.56.255;
-        option domain-name-servers      192.168.56.254;
-	range 192.168.56.100 192.168.56.200;
-        default-lease-time 86400;
-        max-lease-time 86400;
-}
-{% endif %}
-
 {% if ansible_local is defined and ansible_local.dhcpd is defined and ansible_local.dhcpd.general is defined and ansible_local.dhcpd.general.enabled is defined and ansible_local.dhcpd.general.enabled | default(default_settings.dhcpd.general.enabled) | bool %}
 {% if ansible_local is defined and ansible_local.interfaces is defined and ansible_local.interfaces.general is defined and ansible_local.interfaces.general.mode | default(default_settings.interfaces.general.mode) == "static" and ansible_local.interfaces.static is defined %}
 {% set dhcpd_ip = ansible_local.interfaces.static.ip | default(default_settings.interfaces.static.ip) %}

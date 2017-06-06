@@ -580,30 +580,6 @@ def action_set_password(arg):
     passwd = {"upri": {"passwd": arg}}
     write_role('wlan', passwd)
 
-#
-# return values:
-# 12: ssid does not meet policy
-#
-
-
-def action_set_tor_ssid(arg):
-    print 'setting tor ssid to "%s"' % arg
-    if not check_ssid(arg):
-        return 12
-    ssid = {"ninja": {"ssid": arg}}
-    write_role('wlan', ssid)
-
-# return values:
-# 11: password does not meet password policy
-
-
-def action_set_tor_password(arg):
-    print 'setting tor password'
-    if not check_passwd(arg):
-        return 11
-    passwd = {"ninja": {"passwd": arg}}
-    write_role('wlan', passwd)
-
 
 def action_restart_wlan(arg):
     print 'restarting wlan...'
@@ -612,19 +588,6 @@ def action_restart_wlan(arg):
 # return values:
 # 10: invalid argument
 
-
-def action_set_tor(arg):
-    if arg not in ['yes', 'no']:
-        print 'error: only "yes" and "no" are allowed'
-        return 10
-    print 'tor enabled: %s' % arg
-    tor = {"general": {"enabled": arg}}
-    write_role('tor', tor)
-
-# return values:
-# 10: invalid argument
-
-
 def action_set_silent(arg):
     if arg not in ['yes', 'no']:
         print 'error: only "yes" and "no" are allowed'
@@ -632,11 +595,6 @@ def action_set_silent(arg):
     print 'silent enabled: %s' % arg
     silent = {"general": {"enabled": arg}}
     write_role('wlan', silent)
-
-
-def action_restart_tor(arg):
-    print 'restarting tor...'
-    return call_ansible('toggle_tor')
 
 
 def action_restart_silent(arg):
@@ -836,12 +794,8 @@ def action_restart_firewall(arg):
 ALLOWED_ACTIONS = {
     'set_ssid': action_set_ssid,
     'set_password': action_set_password,
-    'set_tor_ssid': action_set_tor_ssid,
-    'set_tor_password': action_set_tor_password,
     'restart_wlan': action_restart_wlan,
-    'enable_tor': action_set_tor,
     'enable_silent': action_set_silent,
-    'restart_tor': action_restart_tor,
     'restart_silent': action_restart_silent,
     'enable_vpn': action_set_vpn,
     'set_vpn_connection': action_set_vpn_connection,
@@ -911,7 +865,7 @@ def get_fact(role, group, fact=None):
                     erg = data[group] if group in data else None
                 return erg
         except IOError as e:
-            print 'Cannot read Local Facts File ' + role + " :" + e.strerror
+            print 'Cannot read Local Facts File ' + role + ": " + e.strerror
 
 
 # return values:

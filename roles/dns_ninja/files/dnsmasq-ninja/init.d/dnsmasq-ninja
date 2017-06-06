@@ -22,7 +22,7 @@ if [ -r /etc/default/$NAME ]; then
 	. /etc/default/$NAME
 fi
 
-# Get the system locale, so that messages are in the correct language, and the 
+# Get the system locale, so that messages are in the correct language, and the
 # charset for IDN is correct
 if [ -r /etc/default/locale ]; then
         . /etc/default/locale
@@ -67,7 +67,7 @@ fi
 # filename is set there then this inhibits the use of the resolvconf-provided
 # information.
 #
-# Note that if the resolvconf package is installed it is not possible to 
+# Note that if the resolvconf package is installed it is not possible to
 # override it just by configuration in /etc/dnsmasq.conf, it is necessary
 # to set IGNORE_RESOLVCONF=yes in /etc/default/dnsmasq.
 
@@ -143,7 +143,7 @@ stop()
 	#   1 if daemon was already stopped
 	#   2 if daemon could not be stopped
 	#   other if a failure occurred
-	start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile /var/run/dnsmasq/$NAME.pid 
+	start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile /var/run/dnsmasq/$NAME.pid
     #the following was removed because the process name is "dnsmasq" and not "dnsmasq-ninja"
     #therefore stopping the process did not work
     #--name $NAME
@@ -206,7 +206,7 @@ case "$1" in
 	if [ "$ENABLED" = "0" ]; then
 	    case "$RETVAL" in
 	       0) log_daemon_msg "Stopping $DESC" "$NAME"; log_end_msg 0 ;;
-            esac 
+            esac
 	    exit 0
 	fi
 	case "$RETVAL" in
@@ -221,7 +221,7 @@ case "$1" in
 	if [ $? -ne 0 ]; then
 	    NAME="configuration syntax check"
 	    RETVAL="2"
-	else   
+	else
 	    stop_resolvconf
 	    stop
 	    RETVAL="$?"
@@ -281,7 +281,7 @@ case "$1" in
 	    ${RESOLV_CONF:+ -r $RESOLV_CONF} \
 	    ${CACHESIZE:+ -c $CACHESIZE} \
 	    ${CONFIG_DIR:+ -7 $CONFIG_DIR} \
-	    ${DNSMASQ_OPTS:+ $DNSMASQ_OPTS} 
+	    ${DNSMASQ_OPTS:+ $DNSMASQ_OPTS}
 	;;
   *)
 	echo "Usage: /etc/init.d/$NAME {start|stop|restart|force-reload|dump-stats|status}" >&2
@@ -290,4 +290,3 @@ case "$1" in
 esac
 
 exit 0
-

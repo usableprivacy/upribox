@@ -20,11 +20,6 @@
             "enabled": "yes"
         }
     },
-    "tor": {
-        "general": {
-            "enabled": "no"
-        }
-    },
     "unattended_upgrades": {
         "general": {
             "autoclean_days": 21,
@@ -40,10 +35,6 @@
             "hw_mode": "g",
             "ieee80211n": 1,
             "wmm_enabled": 1
-        },
-        "ninja": {
-            "passwd": "MyRaspberryP1T0r!",
-            "ssid": "upriBoxTor"
         },
         "upri": {
             "passwd": "MyRaspberryP1!",

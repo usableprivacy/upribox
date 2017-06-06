@@ -23,29 +23,13 @@ In order to apply changes to the configuration of the upribox Django has access 
 
   - Sets a new password for the Silent WiFi by writing to the fact *wlan*
 
-- set_tor_ssid
-
-  - Sets a new SSID for the Ninja WiFi by writing to the fact *wlan*
-
-- set_tor_password
-
-  - Sets a new password for the Ninja WiFi by writing to the fact *wlan*
-
 - restart_wlan
 
   - Triggers the Ansible tasks with the tag *ssid*
 
-- enable_tor
-
-  - Enables/disables the Ninja WiFi by writing to the fact *tor*
-
 - enable_silent
 
   - Enables/disables the Silent WiFi by writing to the fact *wlan*
-
-- restart_tor
-
-  - Triggers the Ansible tasks with the tag *toggle_tor*
 
 - restart_silent
 

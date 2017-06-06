@@ -1,8 +1,8 @@
 ---
-- include: ../../tor/tasks/tor_state.yml
-  tags: [toggle_tor,toggle_silent]
+- include: ../../wlan/tasks/wlan_state.yml
+  tags: [toggle_silent]
 - include: ../../common/tasks/other_env.yml
-  tags: [toggle_tor,toggle_silent]
+  tags: [toggle_silent]
 - include: ../../wlan/tasks/dhcpd_state.yml
   tags: [network_config]
 
@@ -25,13 +25,11 @@
   notify: restart dnsmasq
   register: res
   tags:
-    - toggle_tor
     - toggle_silent
 
 - name: create dnsmasq log dir
   file: path={{default_settings.log.general.path}}/{{default_settings.log.dnsmasq.subdir}} state=directory mode=0755 owner=dnsmasq
   tags:
-    - toggle_tor
     - toggle_silent
 
 - name: ensure dnsmasq logfile exists
@@ -43,13 +41,11 @@
     owner: dnsmasq
     mode: 0640
   tags:
-    - toggle_tor
     - toggle_silent
 
 - name: create tmpfiles.d conf file
   template: src=systemd-log-dir dest=/usr/lib/tmpfiles.d/dnsmasq.conf
   tags:
-    - toggle_tor
     - toggle_silent
 
 - name: remove dnsmasq log files from other environment
@@ -57,7 +53,6 @@
   with_dict: "{{other_env.default_settings.log.dnsmasq.logfiles}}"
   when: res|changed
   tags:
-    - toggle_tor
     - toggle_silent
 
 - name: check if dnsmasq-resolv.conf is link
@@ -83,7 +78,6 @@
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/dnsmasq mode=0644
   tags:
-    - toggle_tor
     - toggle_silent
 
 - name: configure systemd-resolved
