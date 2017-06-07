@@ -15,15 +15,15 @@ Table of recommended hardware
    supports only one active Hotspot. You can not yet activate the
    **Ninja WiFi** on the Pi3.
 
-+--------------+------------------------+------------------------+
-|              | Raspberry Pi 3 [#f1]_  | Raspberry Pi 2 [#f2]_  |
-+==============+========================+========================+
-| SD Card      |      microSDHC Class 10 (min. 4GB) [#f3]_       |
-+--------------+------------------------+------------------------+
-| Power Supply |      Micro USB 5V/2A [#f4]_                     |
-+--------------+------------------------+------------------------+
-| WiFi         |       onboard          |  TL-WN722N [#f5]_      |
-+--------------+------------------------+------------------------+
++--------------+------------------------+---------------------------+
+|              | Raspberry Pi 3 [#f1]_  | Raspberry Pi 2 [#f2]_     |
++==============+========================+===========================+
+| SD Card      |      microSDHC Class 10 (min. 4GB) [#f3]_          |
++--------------+------------------------+---------------------------+
+| Power Supply |      Micro USB 5V/2A [#f4]_                        |
++--------------+------------------------+---------------------------+
+| WiFi         |       onboard          | TL-WN722N **v1** [#f5]_   |
++--------------+------------------------+---------------------------+
 
 The upribox software works with Raspberry Pi 1 as well, but the
 performance for adblocking is considerable worse. Other potentially
@@ -32,7 +32,7 @@ Wiki <https://piratebox.cc/raspberry_pi:piratebox_wifi_compatibility>`__.
 
 .. rubric:: Links to Hardware
 
-.. [#f1] Raspberry Pi 3 `Amazon.com <https://www.amazon.com/Raspberry-Pi-RASP-PI-3-Model-Motherboard/dp/B01CD5VC92>`__
+.. [#f1] Raspberry Pi 3 `[Element14] <https://www.element14.com/community/community/raspberry-pi/raspberrypi3>`__  `[Amazon.com] <https://www.amazon.com/Raspberry-Pi-RASP-PI-3-Model-Motherboard/dp/B01CD5VC92>`__
 .. [#f2] Raspberry Pi 2 `[Element14] <http://element14.com/raspberrypi2>`__ `[Adafruit] <https://www.adafruit.com/products/2358>`__
 .. [#f3] Sandisk SDHC 8GB `[Amazon.com] <https://www.amazon.com/SanDisk-MicroSDHC-Standard-Packaging-SDSDQUAN-008G-G4A/dp/B00M55C0VU/>`__
 .. [#f4] Power Supply `[Amazon.com] <https://www.amazon.com/Kootek-Universal-Charger-Raspberry-External/dp/B00GWDLJGS>`__ `[Adafruit] <https://www.adafruit.com/products/1995>`__
