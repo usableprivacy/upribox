@@ -1,14 +1,14 @@
 ---
-- include: ../../common/tasks/other_env.yml 
+- include: ../../common/tasks/other_env.yml
 
 - name: install services
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }} #default_release=jessie
   with_items:
     - privoxy
-      
+
 - name: add privoxy user to loggers group
   user: name=privoxy groups="tmp-logger" append=yes
-  
+
 - name: enable services
   service: name={{ item }} enabled=yes
   with_items:
@@ -16,11 +16,18 @@
 
 - name: copy privoxy config
   copy: src=privoxy/ dest=/etc/privoxy/
-  notify: 
+  notify:
     - restart privoxy
-    
+
+- name: template privoxy config
+  template: src=upri.ninja.action dest=/etc/privoxy/upri.ninja.action
+  notify:
+    - restart privoxy
+  tags:
+     - configure_devices
+
 - name: copy config file
-  template: src=config dest=/etc/privoxy/config 
+  template: src=config dest=/etc/privoxy/config
   notify:
     - restart privoxy
 

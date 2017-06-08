@@ -1,0 +1,17 @@
+{+client-header-tagger{client-mac-address}}
+/
+{-client-header-tagger{client-mac-address}}
+.upri.box
+
+{+forward-override{forward-socks5 127.0.0.1:9050 .} +hide-user-agent{Mozilla/5.0 (Windows NT 6.1; rv:31.0) Gecko/20100101 Firefox/31.0}}
+{% if ansible_local is defined and ansible_local.devices is defined and ansible_local.devices.tor is defined %}
+{% for m in ansible_local.devices.tor %}
+TAG:MAC-ADDRESS: {{ m }}
+{% endfor %}
+{% endif %}
+
+{ +client-header-filter{hide-forwarded} }
+/
+
+{ +client-header-filter{hide-mac} }
+/

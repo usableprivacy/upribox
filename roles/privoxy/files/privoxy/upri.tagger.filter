@@ -4,6 +4,9 @@ s@^Accept:\s*text/html.*(?!xml)@HTML-REQUEST@i
 CLIENT-HEADER-TAGGER: client-ip-address Tags the request with the client's IP address.
 s@@IP-ADDRESS: $origin@D
 
+CLIENT-HEADER-TAGGER: client-mac-address Tags the request with the MAC address in the Client-MAC header
+s@^Client-MAC: (.*)@MAC-ADDRESS: $1@i
+
 SERVER-HEADER-TAGGER: upri-block tagger used for blocking requests
 s@.*@UPRI-BLOCK@i
 
@@ -33,3 +36,9 @@ s@^X-Requested-With: xmlhttprequest$@UPRI-XMLHTTPREQUEST@i
 
 CLIENT-HEADER-TAGGER: upri-xmlhttprequest-exception Tags the exceptions for advanced xmlhttprequest filtering
 s@^X-Requested-With: xmlhttprequest$@UPRI-XMLHTTPREQUEST-EX@i
+
+CLIENT-HEADER-FILTER: hide-mac Remove the Client-MAC header
+s@^Client-MAC: (.*)@@i
+
+CLIENT-HEADER-FILTER: hide-forwarded Remove the X-Forwarded-For header
+s@^X-Forwarded-For: (.*)@@i

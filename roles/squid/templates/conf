@@ -46,7 +46,6 @@ http_access deny all
 http_port 3129
 http_port 3128 intercept
 
-
 #  TAG: cache_peer
 #	To specify other caches in a hierarchy, use the format:
 #
@@ -86,3 +85,7 @@ refresh_pattern .		0	20%	4320
 
 # Allow DNS results to be used for this request.
 never_direct allow all
+httpd_suppress_version_string off
+via off
+
+request_header_add Client-MAC "%>eui"

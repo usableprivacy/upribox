@@ -47,7 +47,7 @@ default_settings:
     # edit django's settings file
     db: '/var/upribox-interface/db.sqlite3'
     settings: *django_settings_file
-  silent:
+  wlan:
     general:
       enabled: 'yes'
   ssh:
