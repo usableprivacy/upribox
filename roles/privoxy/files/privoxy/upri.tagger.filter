@@ -4,6 +4,9 @@ s@^Accept:\s*text/html.*(?!xml)@HTML-REQUEST@i
 CLIENT-HEADER-TAGGER: client-ip-address Tags the request with the client's IP address.
 s@@IP-ADDRESS: $origin@D
 
+CLIENT-HEADER-TAGGER: client-forwarded-for Tags the request with the IP address in the X-Forwared-For header
+s@^X-Forwarded-For: (.*)@IP-ADDRESS: $1@i
+
 SERVER-HEADER-TAGGER: upri-block tagger used for blocking requests
 s@.*@UPRI-BLOCK@i
 
