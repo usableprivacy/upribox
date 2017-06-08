@@ -2,7 +2,7 @@
 
 ### Privacy made easy for the Raspberry Pi 1, 2, and 3
 
-[![Current releases](https://img.shields.io/badge/release-v0.9-brightgreen.svg)](https://github.com/usableprivacy/upribox/releases) [![Documentation Status](https://img.shields.io/badge/docs-latest-blue.svg)](http://upribox.readthedocs.io/en/latest/) [![GPLv3 License](https://img.shields.io/badge/license-GPLv3-yellow.svg)](https://github.com/usableprivacy/upribox/blob/master/LICENSE) [![Median time to resolve an issue](http://isitmaintained.com/badge/resolution/usableprivacy/upribox.svg)](http://isitmaintained.com/project/usableprivacy/upribox)
+[![Current releases](https://img.shields.io/badge/release-v0.9-brightgreen.svg)](https://github.com/usableprivacy/upribox/releases) [![Documentation Status](https://img.shields.io/badge/docs-latest-blue.svg)](http://upribox.readthedocs.io/en/latest/) [![GPLv3 License](https://img.shields.io/badge/license-GPLv3-yellow.svg)](https://github.com/usableprivacy/upribox/blob/master/LICENSE) [![Median time to resolve an issue](http://isitmaintained.com/badge/resolution/usableprivacy/upribox.svg)](http://isitmaintained.com/project/usableprivacy/upribox) [![Twitter Follow](https://img.shields.io/twitter/follow/usableprivacy.svg?style=social&label=Follow)](https://twitter.com/usableprivacy)
 
 The [upribox](https://upribox.org) software is used to create Raspberry Pi images to turn your Raspberry Pi into a privacy-enhancing Wireless router. Main features:
 * Transparent advertisement- and tracker-blocking (silent wifi)
