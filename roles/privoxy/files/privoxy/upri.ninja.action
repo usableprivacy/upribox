@@ -5,3 +5,6 @@
 
 {+forward-override{forward-socks5 127.0.0.1:9050 .} +hide-user-agent{Mozilla/5.0 (Windows NT 6.1; rv:31.0) Gecko/20100101 Firefox/31.0}}
 TAG:IP-ADDRESS: 192\.168\.56
+
+{ +crunch-client-header{X-Forwarded-For:} }
+/

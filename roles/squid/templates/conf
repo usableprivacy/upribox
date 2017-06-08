@@ -86,3 +86,6 @@ refresh_pattern .		0	20%	4320
 
 # Allow DNS results to be used for this request.
 never_direct allow all
+
+httpd_suppress_version_string off
+via off
