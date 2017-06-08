@@ -21,6 +21,8 @@
 - name: fix ip address
   shell: "ip addr add dev wlan0 192.168.55.254/24"
   when: ipaddr.stdout.find("192.168.55.254") == -1
+  register: ip_res
+  failed_when: ip_res.rc != 2 and ip_res.rc != 0
 
 - name: restart systemd-networkd
   shell: systemctl restart systemd-networkd
