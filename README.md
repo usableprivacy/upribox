@@ -1,5 +1,10 @@
+[![upribox Homepage](https://upribox.org/wp-content/uploads/2017/02/upribox_logo_150.png)](https://upribox.org/)
 # Usable Privacy Box
+
 ### Privacy made easy for the Raspberry Pi 1, 2, and 3
+
+[![Current releases](https://img.shields.io/badge/release-v0.9-brightgreen.svg)](https://github.com/usableprivacy/upribox/releases) [![Documentation Status](https://img.shields.io/badge/docs-latest-blue.svg)](http://upribox.readthedocs.io/en/latest/) [![GPLv3 License](https://img.shields.io/badge/license-GPLv3-yellow.svg)](https://github.com/usableprivacy/upribox/blob/master/LICENSE) [![Median time to resolve an issue](http://isitmaintained.com/badge/resolution/usableprivacy/upribox.svg)](http://isitmaintained.com/project/usableprivacy/upribox)
+
 The [upribox](https://upribox.org) software is used to create Raspberry Pi images to turn your Raspberry Pi into a privacy-enhancing Wireless router. Main features:
 * Transparent advertisement- and tracker-blocking (silent wifi)
 * Transparent adblocking + Tor network (ninja wifi)
@@ -11,8 +16,8 @@ The [upribox](https://upribox.org) software is used to create Raspberry Pi image
 See the [official Raspberry Pi documentation](https://www.raspberrypi.org/documentation/installation/installing-images/) for pointers on how to install the upribox image on the SD card. Upon the first boot the SSH/VPN keys are automatically re-generated (this will take a couple of minutes), and the system partitions are resized to use the entire size of the SD card.
 In the following you also find a list of required (and tested hardware) for the upribox software. Make sure that you use a compatible USB WiFi dongle!
 
-### [upribox-image-v0_7.zip](https://github.com/usableprivacy/upribox/releases/download/v0.7/upribox-image-v0_7.zip) (Sep 2016)
-*SHA256: 455851bc4309f2cdcec0e2b66e6845f8fe06efaa88d2c0248a4890891ab893e0*
+### [upribox-image-v0_8.zip](https://github.com/usableprivacy/upribox/releases/download/v0.8/upribox-image-v0_8.zip) (Apr 2017)
+*SHA256: 1ddae3f52efb5809e2eb2b216f7ded46e7d55948f220990bf422a57b19184aae*
 
 #### Default passwords
 * **Silent WiFi** (SSID: *upribox* ), **Ninja WiFi** (SSID: *upribox-ninja*), password: *changeme*
