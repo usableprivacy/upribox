@@ -21,6 +21,7 @@ import www.views
 import wlan.views
 import vpn.views
 import statistics.views
+import devices.views
 
 urlpatterns = [
 
@@ -59,6 +60,9 @@ urlpatterns = [
 
     # statistics config
     url(r'^statistics/$', statistics.views.get_statistics, name="upri_statistics"),
-    url(r'^statistics/get$', statistics.views.json_statistics, name="upri_get_statistics")
+    url(r'^statistics/get$', statistics.views.json_statistics, name="upri_get_statistics"),
+
+    # devices
+    url(r'^devices/$', devices.views.get_devices, name="upri_devices")
 
 ]

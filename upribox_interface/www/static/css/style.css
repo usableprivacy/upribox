@@ -151,7 +151,7 @@ html, body {
 
 @media screen and (max-width: 850px) {
     .only-mobile {
-        display: inherit;
+        display: block;
     }
 }
 
@@ -169,7 +169,7 @@ p {
     line-height: 1.85em;
 }
 
-main ul, main ol {
+/*main ul, main ol {
     margin: 1em 0;
     padding: 0;
     font-size: 0.875em;
@@ -185,16 +185,17 @@ main ul {
 main li {
     margin-left: 2em;
     padding-left: 0.5em;
-}
+}*/
 
-main a, main a:link, main a:visited {
+a, a:link, a:visited {
     color: rgb(73, 175, 192);
     text-decoration: underline;
 }
 
-main a:focus, main a:hover, main a:active {
+a:focus, a:hover, a:active {
     color: rgb(0, 116, 136);
 }
+
 
 .modal {
     position: fixed;
@@ -517,20 +518,18 @@ header .btn-menu::after {
     box-shadow: 0 4px 0 0 rgb(45, 49, 57), 0 4px 0 0 rgb(45, 49, 57);
 }
 
-.faq-link, .faq-link:link, .faq-link:visited {
+.status-link, .status-link:link, .status-link:visited {
     float: left;
     padding: 10px 10px;
     font-size: 0.9em;
     color: rgb(73, 175, 192);
+    height: 20px;
 }
 
-.faq-link:focus, .faq-link:hover, .faq-link:active {
+.status-link:focus, .status-link:hover, .status-link:active {
     color: rgb(0, 116, 136);
 }
 
-.faq-link.icon.i-faq::before {
-    height: 25px;
-}
 
 header nav ul {
     margin: 0;
@@ -582,14 +581,16 @@ header nav a:focus, header nav a:hover, header nav a:active, header nav a.active
     }
 }
 
+/* ICONS */
+
 .icon::before {
     vertical-align: middle;
     display: inline-block;
-    width: 55px;
-    height: 55px;
+    width: 50px;
+    height: 50px;
     content: '';
     background-color: transparent;
-    background-image: url('../img/icon-sprite.png');
+    background-image: url('../img/icon-sprite-v2.png');
     background-repeat: no-repeat;
     background-attachment: scroll;
 }
@@ -602,11 +603,6 @@ header nav a:focus, header nav a:hover, header nav a:active, header nav a.active
     }
 }
 
-/**@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and ( min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .icon::before {
-        background-image: url('../img/icon-sprite@2x.png');
-    }
-}**/
 
 .i-good::before {
     background-position: 0 -220px;
@@ -620,40 +616,40 @@ header nav a:focus, header nav a:hover, header nav a:active, header nav a.active
     background-position: -55px -220px;
 }
 
-.i-silent::before {
-    background-position: -55px 0;
+.i-device::before {
+    background-position: -51px -550px;
 }
 
-.i-silent:hover::before, .i-silent.active::before {
-    background-position: 0 0;
+.i-device:hover::before, .i-device.active::before {
+    background-position: -5px -550px;
 }
 
-.i-ninja::before {
+.i-statistic::before {
     margin-right: 25px;
-    background-position: -55px -56px;
+    background-position: -55px -165px;;
 }
 
-.i-ninja:hover::before, .i-ninja.active::before {
-    background-position: 0 -56px;
-}
-
-.i-vpn::before {
-    background-position: -55px -110px;
-}
-
-.i-vpn:hover::before, .i-vpn.active::before {
-    background-position: 0 -110px;
-}
-
-.i-statistics::before {
-    background-position: -55px -165px;
-}
-
-.i-statistics:hover::before, .i-statistics.active::before {
+.i-statistic:hover::before, .i-statistic.active::before {
     background-position: 0 -165px;
 }
 
-.i-silent::before, .i-vpn::before, .i-statistics::before {
+.i-konfig::before {
+    background-position: -51px -500px;
+}
+
+.i-konfig:hover::before, .i-konfig.active::before {
+    background-position: -5px -500px;
+}
+
+.i-hilfe::before {
+    background-position: -51px -600px;
+}
+
+.i-hilfe:hover::before, .i-hilfe.active::before {
+    background-position: -5px -600px;
+}
+
+.i-device::before, .i-konfig::before, .i-hilfe::before {
     margin: 0 20px 0 5px;
 }
 
@@ -682,38 +678,56 @@ header nav a:focus, header nav a:hover, header nav a:active, header nav a.active
     background-position: -70px -457px;
 }
 
+.i-user::before {
+    width: 10px;
+    background-position: -104px -347px;
+}
+
+.i-user:hover::before {
+    width: 10px;
+    background-position: -104px -457px;
+}
+
+.i-update::before {
+    width: 30px;
+    background-position: -140px -457px;
+    float: left;
+}
+
+
 @media only screen and (max-width: 850px) {
-    .i-silent::before {
+
+    .i-device::before {
         background-position: -135px 0;
     }
-    .i-silent:hover::before, .i-silent.active::before {
+    .i-device:hover::before, .i-device.active::before {
         background-position: -108px 0;
     }
- .i-ninja::before {
+    .i-statistic::before {
     margin-left: 2px;
         margin-right: 13px;
-        background-position: -135px -28px;     
+        background-position: -135px -28px;
     }
-    .i-ninja:hover::before, .i-ninja.active::before {
+    .i-statistic:hover::before, .i-statistic.active::before {
         background-position: -108px -28px;
     }
-    .i-vpn::before {
+    .i-konfig::before {
         background-position: -140px -55px;
     }
-    .i-vpn:hover::before, .i-vpn.active::before {
+    .i-konfig:hover::before, .i-konfig.active::before {
         background-position: -112px -55px;
     }
-    .i-statistics::before {
+    .i-hilfe::before {
         background-position: -140px -83px;
     }
-    .i-statistics:hover::before, .i-statistics.active::before {
+    .i-hilfe:hover::before, .i-hilfe.active::before {
         background-position: -112px -83px;
     }
-    .i-silent::before, .i-vpn::before, .i-statistics::before {
+    .i-device::before, .i-konfig::before, .i-hilfe::before {
         width: 35px;
         margin: 0 10px 0 5px;
     }
-    .i-more:focus, .i-more:hover, .i-more:active, .i-more.active, .i-logout:focus, .i-logout:hover, .i-logout:active, .i-logout.active {
+    .i-more:focus, .i-more:hover, .i-more:active, .i-more.active, .i-logout:focus, .i-logout:hover, .i-logout:active {
         color: rgb(0, 116, 136);
     }
     .i-more::before, nav .i-logout::before {
@@ -731,7 +745,7 @@ main {
     width: auto;
     max-width: 800px;
     margin-left: 300px;
-    padding: 50px 0 50px 50px;
+    padding: 50px 50px 50px 50px;
     background-color: rgb(255, 255, 255);
 }
 
@@ -744,29 +758,46 @@ main {
 @media only screen and (max-width: 850px) {
     main {
         margin: 0 auto;
-        padding: 50px 10px;
+        padding: 50px 20px;
     }
 }
 
 
 /**
- * ********** Sub-Navigation **********
+ * CHANGED ********** Sub-Navigation **********
  */
 
-main nav {
-    float: right;
-    padding-right: 50px;
+#top-bar{
+    height: 85px;
+    padding: 30px 50px 15px 50px;
+    overflow:hidden;
 }
 
-main nav ul {
-    margin: -25px 0 0 0;
+.breadcrumb{
+    height: 20px;
+    width: auto;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-top: 30px;
+    border-bottom: 1px solid #cacaca;
+    padding-bottom: 25px;
+}
+
+
+#top-bar nav {
+    float: right;
+}
+
+#top-bar nav ul {
+    margin: 0 0 0 0;
     padding: 0;
     list-style: none;
     font-size: 1em;
     font-style: normal;
 }
 
-main nav ul li {
+#top-bar nav ul li {
     display: inline;
     margin: 0 0 0 7px;
     padding: 0 0 0 7px;
@@ -774,20 +805,49 @@ main nav ul li {
 }
 
 @media only screen and (max-width: 850px) {
-    main nav {
+    #top-bar{
+        height: 40px;
+        padding: 0px;
+        padding-left: 20px;
+    }
+
+    #top-bar nav {
         display: none;
     }
+
+    #top-bar a{
+        display: none;
+    }
+
+    .breadcrumb{
+        margin-top: 0px;
+        padding-bottom: 5px;
+        margin-right: 20px;
+    }
+
 }
 
-main nav ul li:first-child {
+#top-bar nav ul li:first-child {
     border-left: none;
 }
 
-main nav .icon::before {
+#top-bar nav .icon::before {
     width: 25px;
     height: 25px;
     margin-right: 5px;
 }
+
+#top-bar a, #top-bar a:link, #top-bar a:visited {
+    color: rgb(73, 175, 192);
+    text-decoration: underline;
+}
+
+#top-bar a:focus, #top-bar a:hover, #top-bar a:active {
+    color: rgb(0, 116, 136);
+}
+
+
+
 
 
 /**
@@ -909,7 +969,7 @@ main aside .info-out {
     display: inline-block;
     width: 20px;
     height: 20px;
-    background: transparent url('../img/icon-sprite.png') -40px -460px no-repeat scroll;
+    background: transparent url('../img/icon-sprite-v2.png') no-repeat scroll;
     content: ' \203A';
     content: '';
 }
@@ -1067,10 +1127,6 @@ article p strong {
     height: 300px;
 }
 
-/*.statistics {*/
-    /*display: inline-block;*/
-/*}*/
-
 .js-filtered-sites {
     width: 300px;
     float: left;
@@ -1124,7 +1180,7 @@ article p strong {
 }
 
 .error-message {
-    
+
     color:#a94442;
     background-color: #f2dede;
     padding: 2%;
@@ -1156,7 +1212,7 @@ article p strong {
 }
 
 .modal .error-message, .warning-message, .success-message, .pending-message {
-    margin: 2%;  
+    margin: 2%;
 }
 
 .modal li {
@@ -1187,7 +1243,217 @@ article p strong {
 
 
 .loading {
-    height:     350px;
-    width:      100%;
+    height: 350px;
+    width: 100%;
     background: url('../img/loading_132.gif') no-repeat center;
 }
+
+/* -------------------------------- ADDED CSS ------------------------------------- */
+
+/* Geräteübersicht Tabelle Styles */
+.divTable{
+	display: table;
+	width: 100%;
+    margin-top: 30px;
+    margin-right: 50px;
+}
+.divTableRow {
+	display: table-row;
+}
+
+.divTableRow:nth-child(even) {
+    background: #f3f3f3;
+}
+
+.divTableHeading {
+	background-color: #EEE;
+	display: table-header-group;
+}
+.divTableCell, .divTableHead {
+	border-bottom: 1px solid #999999;
+	display: table-cell;
+	padding: 3px 10px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.divTableHead {
+    padding-bottom: 20px;
+    text-align: center;
+}
+
+.divTableHeading {
+	background-color: #EEE;
+	display: table-header-group;
+	font-weight: bold;
+}
+.divTableFoot {
+	background-color: #EEE;
+	display: table-footer-group;
+	font-weight: bold;
+}
+.divTableBody {
+	display: table-row-group;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border:none;
+  border-radius: 0;
+  font-size: 1em;
+  width: 100%
+}
+
+.radio{
+    width: inherit;
+    min-width: inherit;
+}
+
+
+
+
+.divTable p{
+    margin: 10px 0 10px 0;
+    line-height: 1.25em;
+}
+
+/* Tabellen Icons */
+
+.i-notconnected{
+    color: #c9c9c9
+}
+
+
+.i-connected::before {
+    width: 20px;
+    height: 15px;
+    background-position: -132px -351px;
+    float: left;
+    margin: 0px;
+    margin-right: 5px;
+}
+
+.i-notconnected::before {
+    width: 20px;
+    height: 15px;
+    background-position: -132px -326px;
+    float: left;
+    margin: 0px;
+    margin-right: 5px;
+}
+
+.i-ninja::before {
+    background-position: -2px -56px;
+}
+
+.i-silent::before {
+    background-position: 0 0;
+    width: 48px;
+}
+
+.i-keinmodus::before{
+    background-position: -110px -550px;
+    width: 48px;
+}
+
+@media only screen and (max-width: 480px) {
+
+    .divTableHead{
+        padding: 0px;
+        padding-bottom: 20px;
+    }
+
+}
+
+/* INFO BAR */
+
+#info-bar{
+    margin-left: 350px;
+    margin-right: 50px;
+    border-top: 1px solid #cacaca;
+    /*background: red;
+    /*position: absolute;*/
+    left: 0;
+    bottom: 0;
+}
+
+
+/* Info Table */
+
+/* DivTable.com */
+.divInfoTable{
+	display: table;
+	width: 100%;
+}
+.divInfoTableRow {
+	display: table-row;
+}
+.divInfoTableHeading {
+	background-color: #EEE;
+	display: table-header-group;
+}
+.divInfoTableCell, .divInfoTableHead {
+	/*border: 1px solid #999999;*/
+	display: table-cell;
+	padding: 3px 10px;
+}
+.divInfoTableHeading {
+	background-color: #EEE;
+	display: table-header-group;
+	font-weight: bold;
+}
+.divInfoTableFoot {
+	background-color: #EEE;
+	display: table-footer-group;
+	font-weight: bold;
+}
+.divInfoTableBody {
+	display: table-row-group;
+}
+
+.infohead{
+    font-weight: 600;
+    margin-top: 25px;
+}
+
+.infotext{
+    line-height: 1.25em;
+}
+
+.i-Bninja::before {
+    background-position: -13px -710px;
+    margin-right: 7px;
+}
+
+.i-Bsilent::before {
+    background-position: -80px -650px;
+    width: 48px;
+    margin-right: 5px;
+}
+
+.i-Bkeinmodus::before{
+    background-position: -10px -650px;
+    width: 48px;
+    margin-right: 7px;
+}
+
+
+@media only screen and (max-width: 850px) {
+    #info-bar{
+    margin-left: 20px;
+    margin-right: 20px;
+    }
+}
+
+
+@media only screen and (max-width: 650px) {
+    /*.divInfoTableCell{
+        width: 100%;
+        display: inherit;
+    }*/
+
+}
+
+

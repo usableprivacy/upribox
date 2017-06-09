@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Geräteübersicht - upribox" %}{% endblock %}
+
+{% block header %}
+    <h1>{% trans "Geräteübersicht" %}</h1>
+{% endblock %}
+
+{% block content %}
+
+    <!-- Main, Content Bereich -->
+
+    <div id="main-content">
+
+        <div class="divTable">
+            <div class="divTableBody">
+                <div class="divTableRow">
+                    <div class="divTableHead ">&nbsp;</div>
+                    <div class="divTableHead ">
+                        <div class="icon i-keinmodus"> </div>
+                    </div>
+                    <div class="divTableHead ">
+                        <div class="icon i-silent"></div>
+                    </div>
+                    <div class="divTableHead ">
+                        <div class="icon i-ninja"></div>
+                    </div>
+                </div>
+                <div class="divTableRow">
+                    <div class="divTableCell">
+                        <p class="icon i-connected">SM-850P</p>
+                    </div>
+                    <div class="divTableCell"> <input class="radio" name="row1" type="radio" /> </div>
+                    <div class="divTableCell"> <input class="radio" name="row1" type="radio" /> </div>
+                    <div class="divTableCell"> <input class="radio" name="row1" type="radio" /> </div>
+                </div>
+                <div class="divTableRow">
+                    <div class="divTableCell">
+                        <p class="icon i-notconnected">Rosis iPhone</p>
+                    </div>
+                    <div class="divTableCell"> <input class="radio" name="row2" type="radio" /> </div>
+                    <div class="divTableCell"> <input class="radio" name="row2" type="radio" /> </div>
+                    <div class="divTableCell"> <input class="radio" name="row2" type="radio" /> </div>
+                </div>
+                <div class="divTableRow">
+                    <div class="divTableCell">
+                        <p class="icon i-connected">Tablet-453</p>
+                    </div>
+                    <div class="divTableCell"> <input class="radio" name="row3" type="radio" /> </div>
+                    <div class="divTableCell"> <input class="radio" name="row3" type="radio" /> </div>
+                    <div class="divTableCell"> <input class="radio" name="row3" type="radio" /> </div>
+                </div>
+                <div class="divTableRow">
+                    <div class="divTableCell">
+                        <p class="icon i-connected">My_Laptop</p>
+                    </div>
+                    <div class="divTableCell"> <input class="radio" name="row4" type="radio" /> </div>
+                    <div class="divTableCell"> <input class="radio" name="row4" type="radio" /> </div>
+                    <div class="divTableCell"> <input class="radio" name="row4" type="radio" /> </div>
+                </div>
+                <div class="divTableRow">
+                    <div class="divTableCell">
+                        <p class="icon i-connected">Android-GM</p>
+                    </div>
+                    <div class="divTableCell"> <input class="radio" name="row5" type="radio" /> </div>
+                    <div class="divTableCell"> <input class="radio" name="row5" type="radio" /> </div>
+                    <div class="divTableCell"> <input class="radio" name="row5" type="radio" /> </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+{% block info %}
+
+    <div class="divInfoTable">
+        <div class="divInfoTableBody">
+            <div class="divInfoTableRow">
+                <div class="divInfoTableCell">
+                    <p class="icon i-Bkeinmodus infohead"> Kein Modus: </p>
+                    <p class="infotext"> Wenn kein Modus aktiviert ist, werden weder Werbung ausgeblendet, noch ihre Aktivitäten geschützt. <a class="infotext" href="#">mehr</a> </p>
+                </div>
+                <div class="divInfoTableCell">
+                    <p class="icon i-Bsilent infohead"> Silent Modus: </p>
+                    <p class="infotext"> Wenn kein Modus aktiviert ist, werden weder Werbung ausgeblendet, noch ihre Aktivitäten geschützt. <a class="infotext" href="#">mehr</a> </p>
+                </div>
+                <div class="divInfoTableCell">
+                    <p class="icon i-Bninja infohead"> Ninja Modus: </p>
+                    <p class="infotext"> Wenn kein Modus aktiviert ist, werden weder Werbung ausgeblendet, noch ihre Aktivitäten geschützt. <a class="infotext" href="#">mehr</a>  </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

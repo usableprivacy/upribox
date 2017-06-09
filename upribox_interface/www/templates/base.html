@@ -35,10 +35,10 @@
 
 				<nav class="clearfix">
 					<ul>
-						<li><a href="{% url 'upri_silent' %}" title="{% trans "Silent Modus" %}" class="icon i-silent {% navactive request 'upri_silent' %}">{% trans "Silent Modus" %}</a></li>
-						<li><a href="{% url 'upri_ninja' %}" title="{% trans "Ninja Modus" %}" class="icon i-ninja {% navactive request 'upri_ninja' %}">{% trans "Ninja Modus" %}</a></li>
-						<li><a href="{% url 'upri_vpn' %}" title="{% trans "VPN" %}" class="icon i-vpn {% navactive request 'upri_vpn' %}">{% trans "VPN" %}</a></li>
-						<li><a href="{% url 'upri_statistics' %}" title="{% trans "Statistiken" %}" class="icon i-statistics {% navactive request 'upri_statistics' %}">{% trans "Statistiken" %}</a></li>
+						<li><a href="{% url 'upri_devices' %}" title="{% trans "Geräteübersicht" %}" class="icon i-device {% navactive request 'upri_devices' %}">{% trans "Geräteübersicht" %}</a></li>
+						<li><a href="{% url 'upri_statistics' %}" title="{% trans "Statistiken" %}" class="icon i-statistic {% navactive request 'upri_statistics' %}">{% trans "Statistiken" %}</a></li>
+						<li><a href="#" title="{% trans "Konfiguration" %}" class="icon i-konfig">{% trans "Konfiguration" %}</a></li>
+						<li><a href="#" title="{% trans "Hilfe" %}" class="icon i-hilfe">{% trans "Hilfe" %}</a></li>
 						<li class="only-mobile"><a href="{% url 'upri_more' %}" title="{% trans "Admin" %}" class="icon i-more">{% trans "Admin" %}</a></li>
 						<li class="only-mobile"><a href="{% url 'upri_logout' %}" title="{% trans "Logout" %}" class="icon i-logout">{% trans "Logout" %}</a></li>
 					</ul>
@@ -46,18 +46,26 @@
                 {% endif %}
 			</header>
 
-			<main role="main" class="clearfix">
-                {% if not onlogin %}
+			<!-- Top Bar Header (Aenderungen, Submenu, Breadcrumbs) -->
+			<div id="top-bar">
+
+				<a href="#" title="Update" class="icon i-update">2 Änderungen</a>
+
 				<nav>
 					<ul>
-                        {% onpage request 'upri_faq' as onfaq %}
-                        {% onpage request 'upri_more' as onmore %}
-						{% if onfaq %}<li>{% trans "Hilfe" %}</li>{% else %}<li><a href="{% url 'upri_faq' %}" title="{% trans "FAQ" %}" class="">{% trans "Hilfe" %}</a></li>{% endif %}
-						{% if onmore %}<li>{% trans "Admin" %}</li>{% else %}<li><a href="{% url 'upri_more' %}" title="{% trans "Admin" %}" class="">{% trans "Admin" %}</a></li>{% endif %}
-						<li><a href="{% url 'upri_logout' %}" title="{% trans "Logout" %}" class="icon i-logout">{% trans "Logout" %}</a></li>
+						<li><a href="#" title="User" class="icon i-user">Upri</a></li>
+						<li><a href="#" title="Logout" class="icon i-logout">Logout</a></li>
 					</ul>
 				</nav>
-                {% endif %}
+
+				<div class="breadcrumb">
+					<p>Geräteübersicht</p>
+				</div>
+
+			</div>
+
+			<main role="main" class="clearfix">
+
 
 				<article>
                     <header>
@@ -71,6 +79,10 @@
 
 				</article>
 			</main>
+
+			<div id="info-bar">
+				{% block info %}{% endblock %}
+			</div>
 
             {% block extra %}
             {% endblock %}
