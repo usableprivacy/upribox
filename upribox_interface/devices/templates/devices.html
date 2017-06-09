@@ -28,46 +28,19 @@
                         <div class="icon i-ninja"></div>
                     </div>
                 </div>
+                {% for device in devices %}
+                    {% include 'device_entry.html' %}
+                {% empty %}
                 <div class="divTableRow">
                     <div class="divTableCell">
-                        <p class="icon i-connected">SM-850P</p>
+                        <p class="icon i-connected">{% trans "Keine Geräte verfügbar" %}</p>
                     </div>
-                    <div class="divTableCell"> <input class="radio" name="row1" type="radio" /> </div>
-                    <div class="divTableCell"> <input class="radio" name="row1" type="radio" /> </div>
-                    <div class="divTableCell"> <input class="radio" name="row1" type="radio" /> </div>
+                    <div class="divTableCell"></div>
+                    <div class="divTableCell"></div>
+                    <div class="divTableCell"></div>
                 </div>
-                <div class="divTableRow">
-                    <div class="divTableCell">
-                        <p class="icon i-notconnected">Rosis iPhone</p>
-                    </div>
-                    <div class="divTableCell"> <input class="radio" name="row2" type="radio" /> </div>
-                    <div class="divTableCell"> <input class="radio" name="row2" type="radio" /> </div>
-                    <div class="divTableCell"> <input class="radio" name="row2" type="radio" /> </div>
-                </div>
-                <div class="divTableRow">
-                    <div class="divTableCell">
-                        <p class="icon i-connected">Tablet-453</p>
-                    </div>
-                    <div class="divTableCell"> <input class="radio" name="row3" type="radio" /> </div>
-                    <div class="divTableCell"> <input class="radio" name="row3" type="radio" /> </div>
-                    <div class="divTableCell"> <input class="radio" name="row3" type="radio" /> </div>
-                </div>
-                <div class="divTableRow">
-                    <div class="divTableCell">
-                        <p class="icon i-connected">My_Laptop</p>
-                    </div>
-                    <div class="divTableCell"> <input class="radio" name="row4" type="radio" /> </div>
-                    <div class="divTableCell"> <input class="radio" name="row4" type="radio" /> </div>
-                    <div class="divTableCell"> <input class="radio" name="row4" type="radio" /> </div>
-                </div>
-                <div class="divTableRow">
-                    <div class="divTableCell">
-                        <p class="icon i-connected">Android-GM</p>
-                    </div>
-                    <div class="divTableCell"> <input class="radio" name="row5" type="radio" /> </div>
-                    <div class="divTableCell"> <input class="radio" name="row5" type="radio" /> </div>
-                    <div class="divTableCell"> <input class="radio" name="row5" type="radio" /> </div>
-                </div>
+                {% endfor %}
+                
             </div>
         </div>
 

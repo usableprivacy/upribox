@@ -8,10 +8,12 @@ from django.template.defaultfilters import date as _localdate
 import time
 import logging
 from django.shortcuts import render
+from .models import DeviceEntry
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+
 @login_required
 def get_devices(request):
-    return render(request, "devices.html", {'messagestore': jobs.get_messages()})
+    return render(request, "devices.html", {'messagestore': jobs.get_messages(), 'devices':  DeviceEntry.objects.all(), })
