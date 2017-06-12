@@ -969,7 +969,7 @@ main aside .info-out {
     display: inline-block;
     width: 20px;
     height: 20px;
-    background: transparent url('../img/icon-sprite-v2.png') no-repeat scroll;
+    background: transparent url('../img/icon-sprite-v2.png') -40px -460px no-repeat scroll;
     content: ' \203A';
     content: '';
 }

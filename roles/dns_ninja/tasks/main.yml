@@ -34,9 +34,11 @@
   when: res|changed or (other_env.default_settings.log.general.path != default_settings.log.general.path or other_env.default_settings.log.dnsmasq_ninja.logfiles.logname != default_settings.log.dnsmasq_ninja.logfiles.logname)
   
 - name: start service dnsmasq-ninja
-  service: name={{ item }} enabled=yes state=started
-  with_items:
-    - dnsmasq-ninja
+  systemd:
+    daemon-reload: yes
+    enabled: yes
+    name: dnsmasq-ninja
+    state: started
   
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/dnsmasq_ninja mode=0644
