@@ -184,6 +184,32 @@ UPRIBOX.Main = (function($) {
         });
 
         $('body').on('click', '.js-modal-close', clearJobStatus);
+
+        $('body').on('click', '.radio_device', function(e) {
+            //e.preventDefault();
+            //$(this).prop("checked", true);
+            //alert($(this).val());
+
+            var href = $(this).attr('data-href');
+            var mode = $(this).val();
+            var dev_id = $(this).attr('name');
+
+            $(this).attr('disabled', true);
+            $.ajax({
+                url: href,
+                dataType: 'html',
+                data: {'mode': mode, 'dev_id': dev_id, 'csrfmiddlewaretoken': Cookies.get('csrftoken')},
+                type: 'post',
+                context: this,
+                success: function (data) {
+                    $('body').append($(data));
+                    onAjaxUpdate();
+                    $(this).attr('disabled', false);
+                },
+
+            });
+
+        });
     }
 
     function updateChart() {

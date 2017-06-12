@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends request.is_ajax|yesno:"base_ajax.html,base.html" %}
 
 {% load i18n %}
 
@@ -11,8 +11,6 @@
 {% block content %}
 
     <!-- Main, Content Bereich -->
-
-    <div id="main-content">
 
         <div class="divTable">
             <div class="divTableBody">
@@ -40,12 +38,9 @@
                     <div class="divTableCell"></div>
                 </div>
                 {% endfor %}
-                
+
             </div>
         </div>
-
-    </div>
-
 
 {% endblock %}
 

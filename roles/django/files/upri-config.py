@@ -697,9 +697,11 @@ def action_set_static_ip(arg):
     en = {"general": {"mode": arg}}
     write_role('interfaces', en)
 
+def _check_mac(mac):
+    return re.match("[0-9a-f]{2}([:])[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", mac.lower())
 
 def _config_mac(group, mac, remove=False):
-    if re.match("[0-9a-f]{2}([:])[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", mac.lower()):
+    if _check_mac(mac):
         devices = get_fact('devices', group) or []
         if not remove and mac.lower() not in devices:
             devices.append(mac.lower())
@@ -738,6 +740,14 @@ def action_untorify_device(arg):
         print 'error: invalid mac address'
         return 30
     print 'untorified device: %s' % arg
+
+def action_silent_device(arg):
+    if _check_mac(arg):
+        action_include_device(arg)
+        action_untorify_device(arg)
+    else:
+        print 'error: invalid mac address'
+        return 30
 
 def check_passwd(arg):
     pw = passwd.Password(arg)
@@ -825,6 +835,7 @@ ALLOWED_ACTIONS = {
     'exclude_device': action_exclude_device,
     'untorify_device': action_untorify_device,
     'include_device': action_include_device,
+    'silent_device': action_silent_device,
 }
 
 #

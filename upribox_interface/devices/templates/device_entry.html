@@ -5,7 +5,7 @@
     <div class="divTableCell">
         <p class="icon i-connected">{{ device.user_agent.first.model | default_if_none:device.mac }}</p>
     </div>
-    <div class="divTableCell"> <input class="radio" name="row{{ forloop.counter0 }}" type="radio"{% if device.mode == "NO" %} checked{%endif%}/> </div>
-    <div class="divTableCell"> <input class="radio" name="row{{ forloop.counter0 }}" type="radio"{% if device.mode == "SL"  or device.mode is none %} checked{%endif%}/> </div>
-    <div class="divTableCell"> <input class="radio" name="row{{ forloop.counter0 }}" type="radio"{% if device.mode == "NJ" %} checked{%endif%}/> </div>
+    <div class="divTableCell"> <input class="radio radio_device" name="{{device.id}}" type="radio" data-href="{% url 'upri_devices_mode' %}" value="NO"{% if device.mode == "NO" %} checked{%endif%}/> </div>
+    <div class="divTableCell"> <input class="radio radio_device" name="{{device.id}}" type="radio" data-href="{% url 'upri_devices_mode' %}" value="SL"{% if device.mode == "SL"  or device.mode is none %} checked{%endif%}/> </div>
+    <div class="divTableCell"> <input class="radio radio_device" name="{{device.id}}" type="radio" data-href="{% url 'upri_devices_mode' %}" value="NJ"{% if device.mode == "NJ" %} checked{%endif%}/> </div>
 </div>

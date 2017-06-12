@@ -63,6 +63,7 @@ urlpatterns = [
     url(r'^statistics/get$', statistics.views.json_statistics, name="upri_get_statistics"),
 
     # devices
-    url(r'^devices/$', devices.views.get_devices, name="upri_devices")
+    url(r'^devices/$', devices.views.get_devices, name="upri_devices"),
+    url(r'^devices/change_mode/$', devices.views.set_device_mode, name="upri_devices_mode")
 
 ]
