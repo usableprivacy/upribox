@@ -45,7 +45,7 @@ stats:privoxy:blocked:domain:*
 """
 
 # Get an instance of a logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('uprilogger')
 
 @login_required
 def get_statistics(request):
