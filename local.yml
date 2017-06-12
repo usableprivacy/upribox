@@ -7,7 +7,6 @@
     - { role: common, tags: ["common"] }
     - { role: iptables, tags: ["iptables"] }
     - { role: unattended_upgrades, tags: ["unattended_upgrades"] }
-    - { role: django, tags: ["django"] }
     - { role: wlan, tags: ["wlan"] }
     - { role: dns, tags: ["dns"] }
     - { role: vpn, tags: ["vpn"] }
@@ -19,5 +18,6 @@
     - { role: arp, tags: ["arp"] }
     - { role: nginx, tags: ["nginx"] }
     - { role: fingerprinting, tags: ["fingerprinting"] }
+    - { role: django, tags: ["django"] }
   post_tasks:
     - include: roles/ssh/main.yml tags=toggle_ssh
