@@ -185,31 +185,37 @@ UPRIBOX.Main = (function($) {
 
         $('body').on('click', '.js-modal-close', clearJobStatus);
 
-        $('body').on('click', '.radio_device', function(e) {
-            //e.preventDefault();
-            //$(this).prop("checked", true);
-            //alert($(this).val());
+        var prevMode = undefined;
 
+        $('body').on('click', '.radio_device', function(e) {
             var href = $(this).attr('data-href');
             var mode = $(this).val();
             var dev_id = $(this).attr('name');
+            if(prevMode != mode){
+                $(this).attr('disabled', true);
+                $.ajax({
+                    url: href,
+                    dataType: 'html',
+                    data: {'mode': mode, 'dev_id': dev_id, 'csrfmiddlewaretoken': Cookies.get('csrftoken')},
+                    type: 'post',
+                    context: this,
+                    success: function (data) {
+                        $('body').append($(data));
+                        onAjaxUpdate();
+                        $(this).attr('disabled', false);
+                    },
 
-            $(this).attr('disabled', true);
-            $.ajax({
-                url: href,
-                dataType: 'html',
-                data: {'mode': mode, 'dev_id': dev_id, 'csrfmiddlewaretoken': Cookies.get('csrftoken')},
-                type: 'post',
-                context: this,
-                success: function (data) {
-                    $('body').append($(data));
-                    onAjaxUpdate();
-                    $(this).attr('disabled', false);
-                },
-
-            });
+                });
+            }
+            prevMode = undefined;
 
         });
+
+        $(document).on('mousedown', '.radio_device', function(e) {
+    		// get the value of the current checked radio
+                prevMode = $('.radio_device[name='+$(this).attr('name')+']:checked').val();
+        });
+
     }
 
     function updateChart() {

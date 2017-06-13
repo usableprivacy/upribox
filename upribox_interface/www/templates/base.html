@@ -48,20 +48,20 @@
 
 			<!-- Top Bar Header (Aenderungen, Submenu, Breadcrumbs) -->
 			<div id="top-bar">
-
+                {% if not onlogin %}
 				<a href="#" title="Update" class="icon i-update">2 Änderungen</a>
 
 				<nav>
 					<ul>
 						<li><a href="#" title="User" class="icon i-user">Upri</a></li>
-						<li><a href="#" title="Logout" class="icon i-logout">Logout</a></li>
+						<li><a href="{% url 'upri_logout' %}" title="{% trans "Logout" %}" class="icon i-logout">{% trans "Logout" %}</a></li>
 					</ul>
 				</nav>
 
 				<div class="breadcrumb">
 					<p>Geräteübersicht</p>
 				</div>
-
+                {% endif %}
 			</div>
 
 			<main role="main" class="clearfix">
