@@ -1,5 +1,5 @@
 ---
-- include: ../../common/tasks/other_env.yml 
+- include: ../../common/tasks/other_env.yml
 
 - name: install services
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
@@ -45,10 +45,18 @@
   notify: restart nginx
   register: res_error
 
+- name: disable nginx server tokens
+  lineinfile:
+    dest: /etc/nginx/nginx.conf
+    regexp: '^(.*)# server_tokens off;'
+    line: '\1server_tokens off;'
+    backrefs: yes
+  notify: restart nginx
+
 - name: remove log files from other environment
   file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
   with_dict: "{{other_env.default_settings.log.nginx.logfiles}}"
-  when: res_access|changed or res_error|changed 
+  when: res_access|changed or res_error|changed
 
 - name: remove logfiles from default location
   file: path=var/log/nginx/* state=absent
