@@ -28,7 +28,7 @@
   shell: systemctl restart systemd-networkd
 
 - name: configure isc-dhcp-server
-  service: name={{ item }} enabled={{ not (tor|bool or silent|bool or dhcpd|bool) }}
+  service: name={{ item }} enabled={{'yes' if silent|bool or tor|bool or (dhcpd|bool and mode=='static') else 'no'}}
   with_items:
     - isc-dhcp-server
 
