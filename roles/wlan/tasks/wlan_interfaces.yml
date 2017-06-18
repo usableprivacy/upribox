@@ -54,7 +54,11 @@
     - restart hostapd
     - restart isc-dhcp-server
 
-- pause: seconds=3
+# - pause: seconds=3
+#   when: plugged|bool
+
+- name: pause for 3 seconds
+  shell: /bin/sleep 3
   when: plugged|bool
 
 - name: reinstall kernel module from wlan1
