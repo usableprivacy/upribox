@@ -23,7 +23,7 @@
   notify: restart uwsgi
 
 - name: install requirements to virtualenv
-  pip: requirements=/usr/share/nginx/www-upri-interface/requirements.txt virtualenv=/var/webapp-virtualenv/
+  pip: requirements=/usr/share/nginx/www-upri-interface/requirements.txt virtualenv=/var/webapp-virtualenv/ extra_args="--upgrade"
   notify: reload uwsgi
 
 - name: check installed uWSGI version
@@ -72,6 +72,10 @@
 - name: migrate django database
   django_manage: settings="{{ django_settings_file }}" command="migrate --fake-initial" app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
   become_user: www-data
+  register: django_res
+  changed_when: django_res|changed or django_res|failed
+  notify:
+    - check django for errors
 
 - name: add development user (upri/upri)
   django_manage: settings="{{ django_settings_file }}" command=loaddata fixtures=dev_user.json app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
