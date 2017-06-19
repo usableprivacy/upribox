@@ -23,7 +23,7 @@
   notify: restart uwsgi
 
 - name: install requirements to virtualenv
-  pip: requirements=/usr/share/nginx/www-upri-interface/requirements.txt virtualenv=/var/webapp-virtualenv/
+  pip: requirements=/usr/share/nginx/www-upri-interface/requirements.txt virtualenv=/var/webapp-virtualenv/ extra_args="--upgrade"
   notify: reload uwsgi
 
 - name: check installed uWSGI version
@@ -68,6 +68,14 @@
 - name: delete development database
   file: path=/usr/share/nginx/www-upri-interface/db.sqlite3 state=absent
   when: env == "production"
+
+- name: check django for errors
+  django_manage: settings="{{ django_settings_file }}" command="help" app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
+  become_user: www-data
+  register: django_res
+  changed_when: django_res|changed or django_res|failed
+  notify:
+    - uninstall django on errors
 
 - name: migrate django database
   django_manage: settings="{{ django_settings_file }}" command="migrate --fake-initial" app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
