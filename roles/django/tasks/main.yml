@@ -75,7 +75,7 @@
   register: django_res
   changed_when: django_res|changed or django_res|failed
   notify:
-    - check django for errors
+    - uninstall django on errors
 
 - name: migrate django database
   django_manage: settings="{{ django_settings_file }}" command="migrate --fake-initial" app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv

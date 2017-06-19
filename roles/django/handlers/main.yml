@@ -8,7 +8,7 @@
 - name: restart supervisor
   service: name=supervisor state=restarted sleep=5
 
-- name: check django for errors
+- name: uninstall django on errors
   pip: name=django state=absent virtualenv=/var/webapp-virtualenv/
   when: django_res|failed
   notify: reinstall django
