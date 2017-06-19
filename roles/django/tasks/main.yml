@@ -69,13 +69,17 @@
   file: path=/usr/share/nginx/www-upri-interface/db.sqlite3 state=absent
   when: env == "production"
 
-- name: migrate django database
-  django_manage: settings="{{ django_settings_file }}" command="migrate --fake-initial" app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
+- name: check django for errors
+  django_manage: settings="{{ django_settings_file }}" command="help" app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
   become_user: www-data
   register: django_res
   changed_when: django_res|changed or django_res|failed
   notify:
     - check django for errors
+
+- name: migrate django database
+  django_manage: settings="{{ django_settings_file }}" command="migrate --fake-initial" app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
+  become_user: www-data
 
 - name: add development user (upri/upri)
   django_manage: settings="{{ django_settings_file }}" command=loaddata fixtures=dev_user.json app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv

@@ -10,10 +10,7 @@
 
 - name: check django for errors
   pip: name=django state=absent virtualenv=/var/webapp-virtualenv/
-  with_items:
-    - "AttributeError: 'module' object has no attribute 'getmro'"
-    - "ImportError: cannot import name RemovedInDjango19Warning"
-  when: django_res|failed and item in django_res.msg
+  when: django_res|failed
   notify: reinstall django
 
 - name: reinstall django
