@@ -107,14 +107,19 @@
 
   # disable tor if enabled when wlan stick is unplugged
 
+- name: check if internal wifi device exists
+  stat:
+    path: /sys/class/net/wlan0
+  register: st
+
 - name: disable tor
   shell: '/usr/local/bin/upri-config.py enable_tor no'
   register: update_result
   failed_when: update_result.rc != 0
-  when: not plugged|bool and 'wlan0' not in devices and tor|bool
+  when: not plugged|bool and 'wlan0' not in devices and tor|bool and st.stat.exists
 
 - name: apply tor changes
   shell: '/usr/local/bin/upri-config.py restart_tor'
   register: update_result
   failed_when: update_result.rc != 0
-  when: not plugged|bool and 'wlan0' not in devices and tor|bool
+  when: not plugged|bool and 'wlan0' not in devices and tor|bool and st.stat.exists
