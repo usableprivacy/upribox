@@ -5,6 +5,8 @@ import os
 class ModelInfo:
 
     MODEL_PATH = '/proc/device-tree/model'
+    WIFI_DEVICE_PATH = '/sys/class/net/wlan0/device/driver/module'
+    INTERNAL_KERNEL_MODULE = 'brcmfmac'
 
     def __init__(self):
         self.model = self.get_model_str()
@@ -25,6 +27,12 @@ class ModelInfo:
         else:
             return False
 
+    def uses_external_wifi(self):
+        try:
+            link = os.readlink(self.WIFI_DEVICE_PATH)
+            return os.path.basename(link) != self.INTERNAL_KERNEL_MODULE
+        except (IOError, OSError):
+            return False
 
 class UpdateStatus:
 

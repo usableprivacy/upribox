@@ -2,10 +2,10 @@
 
 - include: ../../tor/tasks/tor_state.yml tags=ssid,toggle_tor,toggle_silent,network_config,dhcp_server,configure_devices,wlan_device
 
-- debug:
-    msg: "{{ ansible_interfaces }}"
-  tags:
-    - wlan_device
+# - debug:
+#     msg: "{{ ansible_interfaces }}"
+#   tags:
+#     - wlan_device
 
 - set_fact:
     devices: '[{% for dev in ansible_interfaces if "wlan" in dev %}"{{ dev }}",{% endfor %}]'
@@ -14,18 +14,21 @@
   stat:
     path: "/sys/class/net/wlan0/device/driver/module"
   when: "'wlan0' in devices"
-  register: driver_internal
+  notify:
+    - revert wifi configuration on errors
+  register: driver
+  changed_when: driver|changed or driver|failed
 
 - set_fact:
     plugged: >
-        {{ (devices|length >= 2 and driver_internal is defined and driver_internal.stat.islnk is defined
-        and driver_internal.stat.islnk and driver_internal.stat.lnk_source | basename == 'brcmfmac' and 'wlan0'in devices) }}
+        {{ (devices|length >= 2 and driver is defined and driver.stat.islnk is defined
+        and driver.stat.islnk and driver.stat.lnk_source | basename == 'brcmfmac' and 'wlan0'in devices) }}
 
-- debug:
-    msg: "{{ devices|length }}"
-
-- debug:
-    msg: "{{ plugged }}"
+# - debug:
+#     msg: "{{ devices|length }}"
+#
+# - debug:
+#     msg: "{{ plugged }}"
 
 - name: disable internal wlan device
   modprobe: name=brcmfmac state=absent
@@ -33,6 +36,9 @@
   notify:
     - restart hostapd
     - restart isc-dhcp-server
+    - revert wifi configuration on errors
+  register: wifi_res
+  changed_when: wifi_res|changed or wifi_res|failed
 
 - name: persistently disable internal wlan device
   copy: src=disable_rpi3_wifi.conf dest=/etc/modprobe.d/disable_rpi3_wifi.conf mode=0644 owner=root group=root
@@ -40,12 +46,18 @@
   notify:
     - restart hostapd
     - restart isc-dhcp-server
+    - revert wifi configuration on errors
+  register: wifi_res
+  changed_when: wifi_res|changed or wifi_res|failed
 
 - name: retrieve kernel module name from wlan1
   stat:
     path: "/sys/class/net/wlan1/device/driver/module"
   when: plugged|bool and 'wlan1' in devices
+  notify:
+    - revert wifi configuration on errors
   register: driver
+  changed_when: driver|changed or driver|failed
 
 - name: remove kernel module from wlan1
   modprobe: name="{{ driver.stat.lnk_source | basename }}" state=absent
@@ -53,13 +65,16 @@
   notify:
     - restart hostapd
     - restart isc-dhcp-server
+    - revert wifi configuration on errors
+  register: wifi_res
+  changed_when: wifi_res|changed or wifi_res|failed
 
-# - pause: seconds=3
-#   when: plugged|bool
-
-- name: pause for 3 seconds
-  shell: /bin/sleep 3
+- pause: seconds=3
   when: plugged|bool
+  notify:
+    - revert wifi configuration on errors
+  register: wifi_res
+  changed_when: wifi_res|changed or wifi_res|failed
 
 - name: reinstall kernel module from wlan1
   modprobe: name="{{ driver.stat.lnk_source | basename }}" state=present
@@ -67,14 +82,22 @@
   notify:
     - restart hostapd
     - restart isc-dhcp-server
+    - revert wifi configuration on errors
+  register: wifi_res
+  changed_when: wifi_res|changed or wifi_res|failed
 
 - name: wait for wlan device to be ready
   wait_for:
     path: "/sys/class/net/wlan0"
+    timeout: 15
   when: plugged|bool
   notify:
     - restart hostapd
     - restart isc-dhcp-server
+    - revert wifi configuration on errors
+  register: wifi_res
+  changed_when: wifi_res|changed or wifi_res|failed
+
 # revert changes
 
 - name: persistently enable internal wlan device
@@ -89,4 +112,4 @@
     - restart isc-dhcp-server
 
 - name: remove lock file
-  file: path=/var/run/wlan.lock state=absent
+  file: path=/var/run/wlan_stick.lock state=absent
