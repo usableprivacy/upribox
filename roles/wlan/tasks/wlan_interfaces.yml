@@ -1,5 +1,4 @@
 ---
-
 - include: ../../tor/tasks/tor_state.yml
 
 - set_fact:

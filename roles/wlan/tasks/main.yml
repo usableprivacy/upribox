@@ -168,7 +168,7 @@
 - name: create directory for wifi script
   file: path=/etc/ansible/network state=directory recurse=yes mode=0755 owner=root group=root
 
-- name: copy ifup script
+- name: copy network interface script
   template: src=ifup_wlan.sh dest=/etc/ansible/network/wlan_stick owner=root group=root mode=754
 
 - name: copy wlan service unit
