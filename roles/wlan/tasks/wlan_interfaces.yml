@@ -1,11 +1,6 @@
 ---
 
-- include: ../../tor/tasks/tor_state.yml tags=ssid,toggle_tor,toggle_silent,network_config,dhcp_server,configure_devices,wlan_device
-
-# - debug:
-#     msg: "{{ ansible_interfaces }}"
-#   tags:
-#     - wlan_device
+- include: ../../tor/tasks/tor_state.yml
 
 - set_fact:
     devices: '[{% for dev in ansible_interfaces if "wlan" in dev %}"{{ dev }}",{% endfor %}]'
@@ -24,11 +19,7 @@
         {{ (devices|length >= 2 and driver is defined and driver.stat.islnk is defined
         and driver.stat.islnk and driver.stat.lnk_source | basename == 'brcmfmac' and 'wlan0'in devices) }}
 
-# - debug:
-#     msg: "{{ devices|length }}"
-#
-# - debug:
-#     msg: "{{ plugged }}"
+# changes for using external wifi stick
 
 - name: disable internal wlan device
   modprobe: name=brcmfmac state=absent
@@ -98,7 +89,7 @@
   register: wifi_res
   changed_when: wifi_res|changed or wifi_res|failed
 
-# revert changes
+# revert changes to use internal wifi
 
 - name: persistently enable internal wlan device
   file: path=/etc/modprobe.d/disable_rpi3_wifi.conf state=absent
@@ -113,3 +104,17 @@
 
 - name: remove lock file
   file: path=/var/run/wlan_stick.lock state=absent
+
+  # disable tor if enabled when wlan stick is unplugged
+
+- name: disable tor
+  shell: '/usr/local/bin/upri-config.py enable_tor no'
+  register: update_result
+  failed_when: update_result.rc != 0
+  when: not plugged|bool and 'wlan0' not in devices and tor|bool
+
+- name: apply tor changes
+  shell: '/usr/local/bin/upri-config.py restart_tor'
+  register: update_result
+  failed_when: update_result.rc != 0
+  when: not plugged|bool and 'wlan0' not in devices and tor|bool
