@@ -51,7 +51,8 @@ INSTALLED_APPS = (
     'vpn',
     'statistics',
     'devices',
-    'more'
+    'more',
+    'setup'
 )
 
 MIDDLEWARE_CLASSES = (

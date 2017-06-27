@@ -28,7 +28,7 @@
 				</h1>
 				<p>{% trans "Usable Privacy Box" %}</p>
 
-                {% onpage request 'upri_login' as onlogin %}
+                {% onpage request 'upri_login upri_setup upri_setup_error upri_setup_success' as onlogin %}
                 {% if not onlogin %}
                 <a href="{% url 'upri_faq' %}" title="{% trans "FAQ" %}" class="faq-link only-mobile">{% trans "Hilfe" %}</a>
 				<button class="btn-menu only-mobile js-menu">{% trans "Menü" %}</button>

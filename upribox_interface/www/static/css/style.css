@@ -216,11 +216,11 @@ a:focus, a:hover, a:active {
     background: rgb(244, 244, 244);
     border-radius: 5px;
     box-shadow: 0 0 15px rgb(45, 49, 57);
+    padding: 20px;
 }
 
 .modal button {
-    float: right;
-    margin: 2%;
+    margin-top: 30px;
 }
 
 
@@ -259,7 +259,6 @@ input {
     height: 30px;
     padding: 2%;
     border-radius: 3px;
-    font-family: inherit;
     font-size: 0.875em;
 }
 
@@ -267,7 +266,7 @@ button, input[type="submit"] {
     -webkit-appearance: none;
     width: 120px;
     height: 40px;
-    padding: 12px;
+    /*padding: 12px;*/
     background-color: rgb(0, 116, 136);
     border: none;
     border-radius: 3px;
@@ -289,6 +288,8 @@ input[type="submit"] {
 input[type="text"], input[type="password"] {
     /**width: 270px;**/
     border: 1px solid rgb(45, 49, 57);
+    padding: 10px;
+    height: inherit;
 }
 
 input[type="text"]:focus,input[type="password"]:focus {
@@ -554,6 +555,9 @@ header nav a:focus, header nav a:hover, header nav a:active, header nav a.active
 @media only screen and (max-width: 850px) {
     header .btn-menu {
         float: right;
+        width: 90px;
+        padding-left: 0px;
+        padding-right: 0px;
     }
     header nav {
         clear: both;
@@ -597,9 +601,9 @@ header nav a:focus, header nav a:hover, header nav a:active, header nav a.active
 
 @media only screen and (max-width: 850px) {
     header nav .icon::before {
-        width: 30px;
-        height: 30px;
-
+        width: 25px;
+        height: 25px;
+        margin-left: 10px;
     }
 }
 
@@ -694,43 +698,66 @@ header nav a:focus, header nav a:hover, header nav a:active, header nav a.active
     float: left;
 }
 
+.i-setup-successful::before {
+    background-position: -120px -392px;
+    float: left;
+    padding-right: 5px;
+    position: absolute;
+}
+
+.i-setup-failed::before {
+    background-position: -180px -392px;
+    float: left;
+    padding-right: 5px;
+    position: absolute;
+}
+
+
+
+
 
 @media only screen and (max-width: 850px) {
 
     .i-device::before {
-        background-position: -135px 0;
+        background-position: -195px -30px;
     }
     .i-device:hover::before, .i-device.active::before {
-        background-position: -108px 0;
+        background-position: -170px -30px;
     }
-    .i-statistic::before {
-    margin-left: 2px;
+     .i-statistic::before {
         margin-right: 13px;
-        background-position: -135px -28px;
+        background-position: -145px -83px;
     }
     .i-statistic:hover::before, .i-statistic.active::before {
-        background-position: -108px -28px;
+        background-position: -117px -83px;
     }
     .i-konfig::before {
-        background-position: -140px -55px;
+        background-position: -195px -5px;
     }
     .i-konfig:hover::before, .i-konfig.active::before {
-        background-position: -112px -55px;
+        background-position: -170px -5px;
     }
     .i-hilfe::before {
-        background-position: -140px -83px;
+        background-position: -195px -55px;
     }
     .i-hilfe:hover::before, .i-hilfe.active::before {
-        background-position: -112px -83px;
+        background-position: -170px -55px;
     }
     .i-device::before, .i-konfig::before, .i-hilfe::before {
-        width: 35px;
+        width: 10px;
+        height: 10px;
         margin: 0 10px 0 5px;
     }
-    .i-more:focus, .i-more:hover, .i-more:active, .i-more.active, .i-logout:focus, .i-logout:hover, .i-logout:active {
+
+    .i-user:hover::before {
+        width: 25px;
+        background-position: -104px -457px;
+}
+
+    .i-user:focus, .i-user:hover, .i-user:active, .i-user.active, .i-logout:focus, .i-logout:hover, .i-logout:active {
         color: rgb(0, 116, 136);
     }
-    .i-more::before, nav .i-logout::before {
+    .i-user::before, nav .i-logout::before {
         width: 35px;
         margin: 0 10px 0 5px;
     }
@@ -969,7 +996,7 @@ main aside .info-out {
     display: inline-block;
     width: 20px;
     height: 20px;
-    background: transparent url('../img/icon-sprite-v2.png') -40px -460px no-repeat scroll;
+    background: transparent url('../img/icon-sprite-v2.png') no-repeat scroll;
     content: ' \203A';
     content: '';
 }
@@ -1077,8 +1104,9 @@ article p strong {
     border: 2px solid red !important;
 }
 
+
 /** Chartist Styling **/
-.ct-chart {
+/*.ct-chart {
     background-color: #f4f4f4;
 }
 
@@ -1137,6 +1165,7 @@ article p strong {
     float: left;
 }
 
+
 @media only screen and (max-width: 650px) {
     .ct-chart .ct-bar {
         stroke-width: 30px;
@@ -1177,7 +1206,7 @@ article p strong {
     .js-blocked-sites {
         float: none;
     }
-}
+}*/
 
 .error-message {
 
@@ -1355,7 +1384,7 @@ select {
 
 .i-keinmodus::before{
     background-position: -110px -550px;
-    width: 48px;
+    width: 50px;
 }
 
 @media only screen and (max-width: 480px) {
@@ -1429,16 +1458,15 @@ select {
 
 .i-Bsilent::before {
     background-position: -80px -650px;
-    width: 48px;
+    width: 50px;
     margin-right: 5px;
 }
 
 .i-Bkeinmodus::before{
     background-position: -10px -650px;
-    width: 48px;
+    width: 50px;
     margin-right: 7px;
 }
-
 
 @media only screen and (max-width: 850px) {
     #info-bar{
@@ -1449,11 +1477,75 @@ select {
 
 
 @media only screen and (max-width: 650px) {
-    /*.divInfoTableCell{
+    *.divInfoTableCell{
         width: 100%;
         display: inherit;
-    }*/
+    }
+}
 
+.setup-text{
+    padding-left: 55px;
+    min-height: 50px;
+}
+
+@-moz-document url-prefix() {
+    .setup-text{
+    height: 70px;
+    }
+}
+
+.multiple-inputs{
+    margin-right: 20px;
 }
 
 
+/* MODAL WINDOWS*/
+
+.modalRow{
+	display: table-row;
+}
+
+.modalCell{
+	display: table-cell;
+	padding: 5px 20px 5px 0px;
+}
+
+
+
+.modal input[type="radio"]{
+	height: inherit;
+    margin-bottom: 20px;
+}
+
+.modal input[type="text"]{
+	width: 150px;
+}
+
+.modal select{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 1px solid rgb(45, 49, 57);
+    border-radius: 3px;
+    background: white;
+    font-size: 0.875em;
+    min-width: 120px;
+    padding: 10px;
+    padding-right: 30px;
+    background-image: url('../img/pfeil.png');
+    background-repeat: no-repeat;
+    background-position: 97% center;
+}
+
+.modal select::-ms-expand {
+    display: none;
+}
+
+@media only screen and (max-width: 480px) {
+    .modalCell{
+        display: inherit;
+    }
+    .modal input[type="text"]{
+	margin-bottom: 20px;
+    }
+}

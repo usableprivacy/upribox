@@ -1,0 +1,39 @@
+{% extends request.is_ajax|yesno:"base_ajax.html,base.html" %}
+
+{% load i18n %}
+{% load widget_tweaks %}
+{% load base_extras %}
+
+{% block title %}{% trans "Einrichtung der upribox" %}{% endblock %}
+
+{% block header %}
+    <h1>{% trans "Einrichtung der upribox" %}</h1>
+{% endblock %}
+
+{% block content %}
+
+    {% if phase == "error"%}
+        <div class="icon i-setup-failed"> </div>
+
+        <div class="setup-text">
+        {% blocktrans with help="" %}
+            <p> Die  Funktionalität der upribox ist derzeit nur das WLAN "upribox" verfügbar. Alternativ kann die upribox <a href="{{ help }}">manuell mittels DHCP</a> vollständig eingerichtet werden.</p>
+        {% endblocktrans %}
+        </div>
+
+        <button onclick="location.href='{% url 'upri_devices' %}';"> {% trans "Geräteübersicht" %} </button>
+    {% elif phase == "success"%}
+        <div class="icon i-setup-successful"></div>
+        <div class="setup-text">
+        <p> {% trans "Ihre upribox wurde erfolgreich eingerichtet!" %} </p>
+        </div>
+
+        <button onclick="location.href='{% url 'upri_devices' %}';"> {% trans "Geräteübersicht" %} </button>
+    {% else %}
+        {% blocktrans with orf="http://www.orf.at"%}
+            <p> Bitte testen Sie mit einem zweiten Gerät, das mit Ihrem Heimnetzwerk verbunden ist, ob eine Internetverbindung weiterhin besteht. Rufen Sie dazu einfach die Seite <a href="{{orf}}">www.orf.at</a> auf. <br> <br>
+            Ist die Seite erreichbar?  </p>
+        {% endblocktrans %}
+        <button class="multiple-inputs" onclick="location.href='{% url 'upri_setup_success' %}';"> {% trans "Ja" %} </button> <button onclick="location.href='{% url 'upri_setup_error' %}';"> {% trans "Nein" %} </button>
+    {% endif %}
+{% endblock %}

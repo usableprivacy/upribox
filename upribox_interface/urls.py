@@ -22,6 +22,7 @@ import wlan.views
 import vpn.views
 import statistics.views
 import devices.views
+import setup.views
 
 urlpatterns = [
 
@@ -64,6 +65,10 @@ urlpatterns = [
 
     # devices
     url(r'^devices/$', devices.views.get_devices, name="upri_devices"),
-    url(r'^devices/change_mode/$', devices.views.set_device_mode, name="upri_devices_mode")
+    url(r'^devices/change_mode/$', devices.views.set_device_mode, name="upri_devices_mode"),
 
+    #setup
+    url(r'^setup/$', setup.views.setup, {"phase": "init"}, name="upri_setup"),
+    url(r'^setup/error$', setup.views.setup, {"phase": "error"}, name="upri_setup_error"),
+    url(r'^setup/success$', setup.views.setup, {"phase": "success"}, name="upri_setup_success")
 ]
