@@ -1,0 +1,124 @@
+---
+- include: ../../tor/tasks/tor_state.yml
+
+- set_fact:
+    devices: '[{% for dev in ansible_interfaces if "wlan" in dev %}"{{ dev }}",{% endfor %}]'
+
+- name: retrieve kernel module name from wlan0
+  stat:
+    path: "/sys/class/net/wlan0/device/driver/module"
+  when: "'wlan0' in devices"
+  notify:
+    - revert wifi configuration on errors
+  register: driver
+  changed_when: driver|changed or driver|failed
+
+- set_fact:
+    plugged: >
+        {{ (devices|length >= 2 and driver is defined and driver.stat.islnk is defined
+        and driver.stat.islnk and driver.stat.lnk_source | basename == 'brcmfmac' and 'wlan0'in devices) }}
+
+# changes for using external wifi stick
+
+- name: disable internal wlan device
+  modprobe: name=brcmfmac state=absent
+  when: plugged|bool
+  notify:
+    - restart hostapd
+    - restart isc-dhcp-server
+    - revert wifi configuration on errors
+  register: wifi_res
+  changed_when: wifi_res|changed or wifi_res|failed
+
+- name: persistently disable internal wlan device
+  copy: src=disable_rpi3_wifi.conf dest=/etc/modprobe.d/disable_rpi3_wifi.conf mode=0644 owner=root group=root
+  when: plugged|bool
+  notify:
+    - restart hostapd
+    - restart isc-dhcp-server
+    - revert wifi configuration on errors
+  register: wifi_res
+  changed_when: wifi_res|changed or wifi_res|failed
+
+- name: retrieve kernel module name from wlan1
+  stat:
+    path: "/sys/class/net/wlan1/device/driver/module"
+  when: plugged|bool and 'wlan1' in devices
+  notify:
+    - revert wifi configuration on errors
+  register: driver
+  changed_when: driver|changed or driver|failed
+
+- name: remove kernel module from wlan1
+  modprobe: name="{{ driver.stat.lnk_source | basename }}" state=absent
+  when: driver.stat.islnk is defined and driver.stat.islnk and plugged|bool
+  notify:
+    - restart hostapd
+    - restart isc-dhcp-server
+    - revert wifi configuration on errors
+  register: wifi_res
+  changed_when: wifi_res|changed or wifi_res|failed
+
+- pause: seconds=3
+  when: plugged|bool
+  notify:
+    - revert wifi configuration on errors
+  register: wifi_res
+  changed_when: wifi_res|changed or wifi_res|failed
+
+- name: reinstall kernel module from wlan1
+  modprobe: name="{{ driver.stat.lnk_source | basename }}" state=present
+  when: driver.stat.islnk is defined and driver.stat.islnk and plugged|bool
+  notify:
+    - restart hostapd
+    - restart isc-dhcp-server
+    - revert wifi configuration on errors
+  register: wifi_res
+  changed_when: wifi_res|changed or wifi_res|failed
+
+- name: wait for wlan device to be ready
+  wait_for:
+    path: "/sys/class/net/wlan0"
+    timeout: 15
+  when: plugged|bool
+  notify:
+    - restart hostapd
+    - restart isc-dhcp-server
+    - revert wifi configuration on errors
+  register: wifi_res
+  changed_when: wifi_res|changed or wifi_res|failed
+
+# revert changes to use internal wifi
+
+- name: persistently enable internal wlan device
+  file: path=/etc/modprobe.d/disable_rpi3_wifi.conf state=absent
+  when: not plugged|bool and 'wlan0' not in devices
+
+- name: enable internal wlan device
+  modprobe: name=brcmfmac state=present
+  when: not plugged|bool and 'wlan0' not in devices
+  notify:
+    - restart hostapd
+    - restart isc-dhcp-server
+
+- name: remove lock file
+  file: path=/var/run/wlan_stick.lock state=absent
+
+  # disable tor if enabled when wlan stick is unplugged
+
+- name: check if internal wifi device exists
+  stat:
+    path: /sys/class/net/wlan0
+  register: st
+
+- name: disable tor
+  shell: '/usr/local/bin/upri-config.py enable_tor no'
+  register: update_result
+  failed_when: update_result.rc != 0
+  when: not plugged|bool and 'wlan0' not in devices and tor|bool and st.stat.exists
+
+- name: apply tor changes
+  shell: '/usr/local/bin/upri-config.py restart_tor'
+  register: update_result
+  failed_when: update_result.rc != 0
+  when: not plugged|bool and 'wlan0' not in devices and tor|bool and st.stat.exists

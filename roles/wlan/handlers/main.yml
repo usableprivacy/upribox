@@ -1,4 +1,21 @@
 ---
+- name: revert wifi configuration on errors
+  file: path=/etc/modprobe.d/disable_rpi3_wifi.conf state=absent
+  when: (wifi_res is defined and wifi_res|failed) or (driver is defined and driver|failed)
+  notify: enable internal wlan device
+
+- name: enable internal wlan device
+  modprobe: name=brcmfmac state=present
+  when: (wifi_res is defined and wifi_res|failed) or (driver is defined and driver|failed)
+  notify:
+    - remove lock file
+    - restart hostapd
+    - restart isc-dhcp-server
+
+- name: remove lock file
+  file: path=/var/run/wlan_stick.lock state=absent
+  when: (wifi_res is defined and wifi_res|failed) or (driver is defined and driver|failed)
+
 - name: restart dnsmasq
   service: name=dnsmasq state=restarted
 
@@ -21,12 +38,14 @@
 - name: fix ip address
   shell: "ip addr add dev wlan0 192.168.55.254/24"
   when: ipaddr.stdout.find("192.168.55.254") == -1
+  register: ip_res
+  failed_when: ip_res.rc != 2 and ip_res.rc != 0
 
 - name: restart systemd-networkd
   shell: systemctl restart systemd-networkd
 
 - name: configure isc-dhcp-server
-  service: name={{ item }} enabled={{ not (tor|bool or silent|bool or dhcpd|bool) }}
+  service: name={{ item }} enabled={{'yes' if silent|bool or tor|bool or (dhcpd|bool and mode=='static') else 'no'}}
   with_items:
     - isc-dhcp-server
 
@@ -35,3 +54,6 @@
 
 - name: restart avahi
   service: name=avahi-daemon state=restarted
+
+- name: restart udev
+  service: name=udev state=restarted

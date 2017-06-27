@@ -35,7 +35,7 @@ def ninja(request):
         form = WlanForm(utils.get_fact('wlan', 'ninja', 'ssid'))
 
     model_info = ModelInfo()
-    pi3 = model_info.runs_on_pi3()
+    pi3 = model_info.runs_on_pi3() and not model_info.uses_external_wifi()
 
     context.update({
         'form': form,

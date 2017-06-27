@@ -1,6 +1,6 @@
 ---
-- include: ../../tor/tasks/tor_state.yml tags=ssid,toggle_tor,toggle_silent,network_config,dhcp_server,configure_devices
-- include: dhcpd_state.yml tags=toggle_tor,toggle_silent,network_config,dhcp_server,configure_devices
+- include: ../../tor/tasks/tor_state.yml tags=ssid,toggle_tor,toggle_silent,network_config,dhcp_server,configure_devices,wlan_device
+- include: dhcpd_state.yml tags=toggle_tor,toggle_silent,network_config,dhcp_server,configure_devices,wlan_device
 
 - name: install required packages
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
@@ -164,3 +164,27 @@
 - name: copy avahi webinterface service
   copy: src=avahi/interface.service dest=/etc/avahi/services/interface.service owner=root group=root mode=644
   notify: restart avahi
+
+- name: create directory for wifi script
+  file: path=/etc/ansible/network state=directory recurse=yes mode=0755 owner=root group=root
+
+- name: copy network interface script
+  template: src=ifup_wlan.sh dest=/etc/ansible/network/wlan_stick owner=root group=root mode=754
+
+- name: copy wlan service unit
+  copy: src=wlan.service dest=/etc/systemd/system/wlan_stick@.service owner=root group=root mode=644
+
+- name: copy wlan_stick udev rule
+  copy: src=95-wlan_stick.rules dest=/etc/udev/rules.d/95-wlan_stick.rules owner=root group=root mode=644
+  notify: restart udev
+
+# ensure that at least one wlan is enabled on boot
+- name: copy initialise_wlan service unit
+  copy: src=initialise_wlan.service dest=/etc/systemd/system/initialise_wlan.service owner=root group=root mode=644
+
+- name: enable wlan_stick service
+  service: name=initialise_wlan.service enabled=yes
+
+- include: wlan_interfaces.yml
+  tags:
+    - wlan_device
