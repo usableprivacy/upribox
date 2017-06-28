@@ -23,7 +23,7 @@
   notify: restart uwsgi
 
 - name: install requirements to virtualenv
-  pip: requirements=/usr/share/nginx/www-upri-interface/requirements.txt virtualenv=/var/webapp-virtualenv/
+  pip: requirements=/usr/share/nginx/www-upri-interface/requirements.txt virtualenv=/var/webapp-virtualenv/ extra_args="--upgrade"
   notify: reload uwsgi
 
 - name: check installed uWSGI version
