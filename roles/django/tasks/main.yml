@@ -178,6 +178,12 @@
 - name: cleanup statistics
   shell: "/var/webapp-virtualenv/bin/python /usr/share/nginx/www-upri-interface/manage.py cleanup --settings {{django_settings_file}}"
 
+- name: create crontab entries
+  template: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0644
+  when: item.env is not defined or item.env == env
+  with_items:
+    - { src: "cron_parse_logs.j2", dest: "/etc/cron.d/parse-logs"}
+
 - name: update block statistics
   shell: "/usr/local/bin/upri-config.py parse_logs"
   register: update_result

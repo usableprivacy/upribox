@@ -9,7 +9,7 @@ apt_cache_time: 86400
 apt_target_state: installed
 
 # variables for pull updates in production mode
-pull_cron_schedule: '0 */4 * * *'
+pull_cron_schedule: '0 */1 * * *'
 pull_cron_user: root
 #pull_logfile: /var/log/ansible-pull.log
 pull_workdir: /var/lib/ansible/local

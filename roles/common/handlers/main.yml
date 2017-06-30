@@ -1,9 +1,14 @@
 ---
-- name: touch pull crontab
-  shell: touch /etc/cron.d/ansible-pull
+# - name: touch pull crontab
+#   shell: touch /etc/cron.d/ansible-pull
+#
+# - name: touch user-agent crontab
+#   shell: touch /etc/cron.d/parse-user-agents
 
-- name: touch user-agent crontab
-  shell: touch /etc/cron.d/parse-user-agents
+- name: touch crontab files
+  shell: touch {{ item.dest }}
+  with_items:
+    - cron_results.results
 
 - name: restart rsyslog
   service: name=rsyslog state=restarted
