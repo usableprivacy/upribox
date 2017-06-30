@@ -81,7 +81,7 @@ def create_argparser():
 
     # create the parser for the "enable_apate" command
     parser_enable_apate = subparser.add_parser('enable_apate',
-                                               help='Enables/disables the Apate (see :ref:`arp-label`) by writing to the fact *apate*')
+                                               help='Enables/disables the Apate (see arp) by writing to the fact *apate*')
     parser_enable_apate.add_argument('arg', help='Whether or not Apate is enabled ("yes" or "no")', metavar="boolean", choices=["yes", "no"]).completer = boolean_completer
 
     # create the parser for the "enable_static_ip" command
@@ -118,12 +118,12 @@ def create_argparser():
 
     # create the parser for the "enable_device" command
     parser_enable_device = subparser.add_parser('enable_device',
-                                                help='Enables ARP spoofing via Apate (see :ref:`arp-label`) for a specific device')
+                                                help='Enables ARP spoofing via Apate (see arp) for a specific device')
     parser_enable_device.add_argument('arg', help='The IP address of the device that shall be enabled', metavar="ip")
 
     # create the parser for the "disable_device" command
     parser_disable_device = subparser.add_parser('disable_device',
-                                                 help='Disables ARP spoofing via Apate (see :ref:`arp-label`) for a specific device')
+                                                 help='Disables ARP spoofing via Apate (see arp) for a specific device')
     parser_disable_device.add_argument('arg', help='The IP address of the device that shall be disabled', metavar="ip")
 
     # create the parser for the "set_ip" command
