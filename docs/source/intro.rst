@@ -13,7 +13,7 @@ Table of recommended hardware
    Since upribox v0.5 we support the Pi3 natively, so no
    additional WiFi dongle is required. The Pi3 WiFi however
    supports only one active Hotspot. You can not yet activate the
-   **Ninja WiFi** on the Pi3.
+   **Ninja WiFi** on the Pi3 without an additional WiFi dongle.
 
 +--------------+------------------------+---------------------------+
 |              | Raspberry Pi 3 [#f1]_  | Raspberry Pi 2 [#f2]_     |
@@ -24,6 +24,8 @@ Table of recommended hardware
 +--------------+------------------------+---------------------------+
 | WiFi         |       onboard          | TL-WN722N **v1** [#f5]_   |
 +--------------+------------------------+---------------------------+
+
+Please note that version 2 of the TL-WN722N WiFi dongle uses a different chipset and is not supported anymore.
 
 The upribox software works with Raspberry Pi 1 as well, but the
 performance for adblocking is considerable worse. Other potentially
