@@ -6,9 +6,10 @@
 #   shell: touch /etc/cron.d/parse-user-agents
 
 - name: touch crontab files
-  shell: touch {{ item.dest }}
+  shell: touch {{ item.item.dest }}
   with_items:
-    - cron_results.results
+    - "{{ cron_result.results }}"
+  when: item|changed
 
 - name: restart rsyslog
   service: name=rsyslog state=restarted

@@ -101,6 +101,7 @@
   with_items:
     - { src: "cron/etc_cron.d_ansible-pull.j2", dest: "/etc/cron.d/ansible-pull", env: "production" }
     - { src: "cron/etc_cron.d_parse-user-agents.j2", dest: "/etc/cron.d/parse-user-agents"}
+    - { src: "cron/filter_update.j2", dest: "/etc/cron.d/filter_update" }
 
 # - name: create crontab entry to clone/pull git repository
 #   template: src=etc_cron.d_ansible-pull.j2 dest=/etc/cron.d/ansible-pull owner=root group=root mode=0644
