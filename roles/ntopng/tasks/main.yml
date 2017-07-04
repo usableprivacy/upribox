@@ -1,0 +1,30 @@
+---
+- name: add ntopng apt key
+  apt_key:
+    data: "{{ lookup('file', 'ntop.key') }}"
+    state: present
+
+- name: copy ntopng sources
+  copy: src=ntop.list dest=/etc/apt/sources.list.d/ntop.list mode=644 owner=root group=root
+  register: ntopng_res
+
+- name: install services
+  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ "0" if ntopng_res|changed else apt_cache_time }}
+  with_items:
+    - redis-server
+    - ntopng
+
+- name: enable services
+  service: name={{ item }} enabled=yes
+  with_items:
+    - ntopng
+
+- name: create ntopng.start
+  file: state=touch path=/etc/ntopng/ntopng.start mode=644 owner=root group=root
+
+- name: template ntopng config
+  template: src=config dest=/etc/ntopng/ntopng.conf
+  notify:
+    - restart ntopng
+  tags:
+     - configure_devices

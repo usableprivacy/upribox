@@ -1,0 +1,3 @@
+---
+- name: restart ntopng
+  systemd: name=ntopng state=restarted daemon-reload=yes

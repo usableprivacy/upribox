@@ -50,6 +50,7 @@ COMMIT
 -A INPUT -p udp -m udp --dport 5301 -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 9040 -j ACCEPT
 -A INPUT -p udp -m udp --dport 5353 -j ACCEPT
+{% if env=="development" %}-A INPUT -p udp -m udp --dport 3000 -j ACCEPT{% endif %}
 -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 
 # tor
