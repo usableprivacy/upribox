@@ -33,6 +33,8 @@
 - name: stop uwsgi for updating
   service: name=django-uwsgi state=stopped
   when: installed_uwsgi_version.stdout != ansible_uwsgi_version
+  register: uwsgi_service
+  failed_when: uwsgi_service|failed and not "Could not find the requested service django-uwsgi" in uwsgi_service.msg
 
 - name: install uWSGI
   pip: name=uwsgi state=present version="{{ansible_uwsgi_version}}"
