@@ -71,10 +71,18 @@ Web Interface
 =============
 
 Once you are connect to either of the upribox wifi networks (Silent or
-Ninja) you can access the upribox Webinterface via the following URI:
-http://upri.box.
+Ninja) you can access the upribox web interface via the following URI:
+http://upri.box. (see :ref:`access`)
 
 .. _customization:
+
+Updates
+=======
+
+The upribox performs an auto-update every **four hours**. This includes:
+
+ * Blocking rules for privoxy and DNS
+ * Software updates via ansible + updates from github
 
 Customization
 =============

@@ -63,9 +63,9 @@ Cryptography
 ************
 
 Raspberry Pi Hardware RNG
-========================
+=========================
 
-A common problem with small devices like the upribox is that the hardware and the operating system do not provide enough entropy for a cryptographically secure generation of random numbers. This is a crucial requirement for a fast and secure calculation of keys. The Raspberry Pi has an included random number generator in its hardware. To feed the Raspberry Pi hardware RNG to the entropy pool at */dev/random* that is used in the upribox' Python scripts the package rng-tools is used.
+A common problem with small devices like the upribox is that the hardware and the operating system do not provide enough entropy for a cryptographically secure generation of random numbers. This is a crucial requirement for a fast and secure calculation of keys. The Raspberry Pi has an included random number generator in its hardware. To feed the Raspberry Pi hardware RNG to the entropy pool at */dev/random* that is used in the upribox' Python scripts the package rng-tools is installed.
 
 Certificate Pinning
 ===================
