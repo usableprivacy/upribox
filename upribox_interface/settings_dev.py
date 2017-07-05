@@ -55,7 +55,19 @@ INSTALLED_APPS = (
     'setup'
 )
 
-MIDDLEWARE_CLASSES = (
+# MIDDLEWARE_CLASSES = (
+#     'django.contrib.sessions.middleware.SessionMiddleware',
+#     'django.middleware.locale.LocaleMiddleware',
+#     'django.middleware.common.CommonMiddleware',
+#     'django.middleware.csrf.CsrfViewMiddleware',
+#     'django.contrib.auth.middleware.AuthenticationMiddleware',
+#     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+#     'django.contrib.messages.middleware.MessageMiddleware',
+#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+#     'django.middleware.security.SecurityMiddleware',
+# )
+
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -65,7 +77,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-)
+    'middleware.setup_middleware.SetupMiddleware',
+]
 
 ROOT_URLCONF = 'urls'
 
@@ -190,7 +203,7 @@ DEFAULT_SETTINGS = 'lib/default_settings.json'
 # /usr/local/bin/upri-config.py is missing
 # this is meant for local debugging where things like SSID changes cannot
 # be tested. In Production, this variable should be set to False
-IGNORE_MISSING_UPRICONFIG = False
+IGNORE_MISSING_UPRICONFIG = True
 
 RQ_QUEUES = {
     'default': {
@@ -211,3 +224,26 @@ SSL_PINNING_PATH = '/usr/local/etc/upri-filter-update/update-server.pem'
 PRIVOXY_LOGFILE = 'privoxy_testlog'  # '/var/log/privoxy/privoxy.log'
 OPENVPN_LOGFILE = '/var/log/log/openvpn.log'
 DNS_FILE = '/etc/dnsmasq-resolv.conf'
+
+SETUP_PREFIX = "interface"
+# """str: Prefix which is used for every key in the redis db."""
+SETUP_DELIMITER = ":"
+# """str: Delimiter used for separating parts of keys in the redis db."""
+SETUP_KEY = "setup"
+
+# from django.urls import reverse
+
+SETUP_NO_REDIRECT = [
+    LOGIN_URL,
+    LOGIN_REDIRECT_URL,
+    "upri_logout",
+    "upri_setup",
+    "upri_setup_error",
+    "upri_setup_success",
+]
+
+REDIS = {
+    'HOST': 'localhost',
+    'PORT': 6379,
+    'DB': 7,
+}

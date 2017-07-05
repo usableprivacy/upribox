@@ -67,7 +67,19 @@ INSTALLED_APPS = (
     'setup'
 )
 
-MIDDLEWARE_CLASSES = (
+# MIDDLEWARE_CLASSES = (
+#     'django.contrib.sessions.middleware.SessionMiddleware',
+#     'django.middleware.locale.LocaleMiddleware',
+#     'django.middleware.common.CommonMiddleware',
+#     'django.middleware.csrf.CsrfViewMiddleware',
+#     'django.contrib.auth.middleware.AuthenticationMiddleware',
+#     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+#     'django.contrib.messages.middleware.MessageMiddleware',
+#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+#     'django.middleware.security.SecurityMiddleware',
+# )
+
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -77,15 +89,15 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-)
+    'middleware.setup_middleware.SetupMiddleware',
+]
 
 ROOT_URLCONF = 'urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'www/templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'www/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,8 +131,8 @@ DATABASES = {
 LANGUAGE_CODE = 'de'
 
 LANGUAGES = (
-  ('de', 'Deutsch'),
-  ('en', 'English'),
+    ('de', 'Deutsch'),
+    ('en', 'English'),
 )
 
 TIME_ZONE = 'UTC'
@@ -179,7 +191,7 @@ LOGGING = {
     'formatters': {
         'simple': {
             'format': '[%(asctime)s]%(message)s',
-            'datefmt' : '%d/%b/%Y %H:%M:%S'
+            'datefmt': '%d/%b/%Y %H:%M:%S'
         }
     },
     'handlers': {
@@ -218,3 +230,26 @@ SSL_PINNING_PATH = '/usr/local/etc/upri-filter-update/update-server.pem'
 PRIVOXY_LOGFILE = '/var/tmp/log/privoxy/privoxy.log'
 OPENVPN_LOGFILE = '/var/tmp/log/openvpn.log'
 DNS_FILE = '/etc/dnsmasq-resolv.conf'
+
+SETUP_PREFIX = "interface"
+# """str: Prefix which is used for every key in the redis db."""
+SETUP_DELIMITER = ":"
+# """str: Delimiter used for separating parts of keys in the redis db."""
+SETUP_KEY = "setup"
+
+# from django.urls import reverse
+
+SETUP_NO_REDIRECT = [
+    LOGIN_URL,
+    LOGIN_REDIRECT_URL,
+    "upri_logout",
+    "upri_setup",
+    "upri_setup_error",
+    "upri_setup_success",
+]
+
+REDIS = {
+    'HOST': 'localhost',
+    'PORT': 6379,
+    'DB': 7,
+}
