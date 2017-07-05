@@ -33,9 +33,11 @@
   when: res|changed or (other_env.default_settings.log.general.path != default_settings.log.general.path or other_env.default_settings.log.dnsmasq_unfiltered.logfiles.logname != default_settings.log.dnsmasq_unfiltered.logfiles.logname)
 
 - name: toggle service dnsmasq-unfiltered
-  service: name={{ item }} enabled=yes state=started
-  with_items:
-    - dnsmasq-unfiltered
+  systemd:
+    daemon-reload: yes
+    name: dnsmasq-unfiltered
+    state: started
+    enabled: yes
 
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/dnsmasq_unfiltered mode=0644
