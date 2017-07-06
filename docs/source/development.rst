@@ -12,7 +12,8 @@ Development environment
 -----------------------
 
 The following guide assumes that you have a Raspberry Pi with the
-upribox image set-up. The following guide explains the steps necessary
+upribox image set-up. If you still need help with that task please read
+the :ref:`intro` guide. The following guide explains the steps necessary
 to setup a development environment for the upribox software.
 
 Prerequisites [on your development machine]

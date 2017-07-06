@@ -28,7 +28,7 @@ Passwords
 =========
 
 If you ordered a fully assembled upribox from our website you will find your passwords for the webinterface, SSH and both WiFis in the included manual. These passwords were generated with a cryptographically secure pseudo-random number generator (CSPRNG) which means that the program that created the passwords used operating system specific randomness sources which leads to high unpredictablity.
-Upriboxes that you assembled yourself with the provided community image are pre-configured with passwords that can be changed in the webinterface. Only secure passwords with a minimum of 8 characters containing lower-case, upper-case, numbers and special characters are accpeted by the system.
+Upriboxes that you assembled yourself with the provided community image are pre-configured with passwords that can be changed in the webinterface. Only secure passwords with a minimum of 8 characters containing lower-case, upper-case, numbers and special characters are accepted by the system.
 
 
 SSH/VPN Keys
@@ -46,6 +46,8 @@ One example for this implementation is that only the central configuration scrip
 *******
 Privacy
 *******
+
+.. _logs:
 
 Logs
 ====
@@ -77,7 +79,9 @@ Strong Ciphers/Hashes for OpenVPN
 
 For the VPN feature of the upribox we use OpenVPN which is *not* executed as root and uses the strong cryptographic hash function SHA384 for the packet HMAC authentication and AES-256 (CBC mode) for encryption.
 
+.. _signed-releases:
+
 Signed Releases
 ===============
 
-On our `website <https://upribox.org/download/>`__ you can download our latest community image and verify its integrity with the provided signature file.
+On our `website <https://upribox.org/download/>`__ you can download our latest community image and verify its integrity and authenticity with the provided signature file.

@@ -6,9 +6,9 @@ Usable Privacy Box (**upribox**)
 
 The upribox software is used to create Raspberry Pi images to turn your Raspberry Pi into a privacy-enhancing Wireless router. Main features:
 
- * Transparent advertisement- and tracker-blocking (Silent WiFi)
- * Transparent adblocking + Tor network (Ninja WiFi)
- * OpenVPN server for privacy on the road
+ * Transparent advertisement- and tracker-blocking (see :ref:`silent`)
+ * Transparent advertisement- and tracker-blocking + Tor network (see :ref:`ninja`)
+ * OpenVPN server for privacy on the road (see :ref:`vpn`)
 
 Table Of Contents
 =================
@@ -17,7 +17,9 @@ Table Of Contents
    :maxdepth: 2
 
    intro
+   features
    access
+   customization
    architecture
    security
    development

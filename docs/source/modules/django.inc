@@ -11,11 +11,4 @@ By deploying this role the upribox also starts a cleanup process for the saved s
 .. note::
     For privacy reasons the upribox does not keep the adblocking logfile with timestamps and URLs but tries to aggregate
     the information as soon as possible to store only the information that is needed for the statistics and to assure
-    anonymity.
-
-In order to apply changes to the configuration of the upribox Django has access to only one configuration script ``upri-config.py`` and its actions:
-
-.. argparse::
-   :filename: ../roles/django/files/argparser.py
-   :func: create_argparser
-   :prog: upri-config.py
+    anonymity. (see :ref:`logs`)

@@ -1,10 +1,39 @@
+.. _intro:
+
 ###############
-Getting started
+Getting Started
 ###############
+
+**Welcome to our upribox Getting Started guide!**
+
+.. note::
+   If you bought a pre-assembled upribox from our online store you don't have to read this guide since everything is
+   already set up and you only have to complete the simple tasks described in the enclosed manual.
+
+In a few easy steps you can build your own upribox and won't get bothered anymore by annoying ads and trackers (see :ref:`silent`).
+Additionally you can use your upribox to surf the web anonymously via Tor (see :ref:`ninja`) and set it up to be your
+OpenVPN server which secures your connection in unprotected WiFis and lets you benefit from the adblocking features
+on the road (see :ref:`vpn`).
+
+
+************
+Installation
+************
+
+You can download the latest upribox image on our `website <https://upribox.org/download/>`__ and verify its integrity and authenticity with the provided signature file and PGP key (see :ref:`signed-releases`).
+See the `official Raspberry Pi documentation <https://www.raspberrypi.org/documentation/installation/installing-images/>`__
+for pointers on how to install the upribox image on the SD card. Upon
+the first boot the SSH/VPN keys are automatically re-generated (this
+will take a couple of minutes), and the system partitions are resized to
+use the entire size of the SD card.
+
 
 *********************
 Hardware requirements
 *********************
+
+In the following you will find a list of required (and tested) hardware for the upribox software. On the Raspberry Pi 2 make
+sure that you use a compatible USB WiFi dongle!
 
 Table of recommended hardware
 =============================
@@ -41,40 +70,29 @@ Wiki <https://piratebox.cc/raspberry_pi:piratebox_wifi_compatibility>`__.
 .. [#f5] TL-WN722N Wireless USB adapter `[Amazon.com] <https://www.amazon.com/TP-LINK-TL-WN722N-Wireless-Adapter-External/dp/B002SZEOLG>`__
 
 
-************
-Installation
-************
-
-See the `official Raspberry Pi
-documentation <https://www.raspberrypi.org/documentation/installation/installing-images/>`__
-for pointers on how to install the upribox image on the SD card. Upon
-the first boot the SSH/VPN keys are automatically re-generated (this
-will take a couple of minutes), and the system partitions are resized to
-use the entire size of the SD card. In the following you also find a
-list of required (and tested hardware) for the upribox software. Make
-sure that you use a compatible USB WiFi dongle!
-
 ***********
 User manual
 ***********
-
-Default passwords
-=================
-
--  **Silent WiFi** (SSID: *upribox* ), **Ninja WiFi** (SSID:
-   *upribox-ninja*), password: *changeme*
--  **SSH/Webinterface** login: *upri* password: *changethedefaults!*
 
 .. _web_interface:
 
 Web Interface
 =============
 
-Once you are connect to either of the upribox wifi networks (Silent or
+Once you are connected to either of the upribox WiFi networks (Silent or
 Ninja) you can access the upribox web interface via the following URI:
 http://upri.box. (see :ref:`access`)
 
-.. _customization:
+Default passwords
+=================
+
+If you used the lates upribox image for setting up your own privacy box you need the following passwords for accessing it:
+
+-  **Silent WiFi** (SSID: *upribox* ), **Ninja WiFi** (SSID:
+   *upribox-ninja*), password: *changeme*
+-  **SSH/web interface** login: *upri* password: *changethedefaults!*
+
+Please change the passwords upon the first login in the admin section of the web interface. New passwords have to be at least 8 characters long containing lower-case, upper-case, numbers and special characters.
 
 Updates
 =======
@@ -84,95 +102,4 @@ The upribox performs an auto-update every **four hours**. This includes:
  * Blocking rules for privoxy and DNS
  * Software updates via ansible + updates from github
 
-Customization
-=============
-
-There are two possible ways to adapt the settings of your upribox: use the Web Interface, or use *custom facts*. Configuration options
-that are important for all users are available in the Web Interface, special configuration options for tech-savvy users can be manually
-set using SSH.
-
-.. note::
-    The upribox Software update mechanisms ensures that the system remains in a consistent state. Manual changes to configuration files
-    are therefore overwritten by the periodic software update process of the upribox.
-
-The custom configuration options of the upribox Software are stored in **/etc/ansible/fact.d/**. Example for these configuration
-facts can be found here: :download:`local_facts.tar.gz <examples/local_facts.tar.gz>`.
-
-Advanced Network Settings
--------------------------
-
-static network configuration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Connect to your upribox via SSH and create a **interfaces.fact** file in
-the */etc/ansible/facts.d* directory. The following interfaces
-configuration, will set the upribox to use a static IP configuration:
-
-::
-
-    {
-        "general": {
-            "mode": "static"
-        },
-        "static": {
-            "ip": "10.203.95.160",
-            "netmask": "255.255.255.0",
-            "gateway": "10.203.95.254",
-            "dns": "10.203.50.233 10.203.95.250"
-        }
-    }
-
-Make sure to adapt the *ip*,\ *netmask*,\ *gateway*, and *dns* values to
-reflect your setup. Once you created the *interfaces.fact* file, run
-``sudo upri-config.py restart_network`` to configure the network device
-and finally ``sudo reboot`` to start the upribox with the static IP
-setup.
-
-custom VPN server port
-----------------------
-
-Connect to your upribox via SSH and use the
-following commands to set a custom *port* and *protocol* for the upribox
-OpenVPN server:
-
-::
-
-    sudo upri-config.py set_vpn_connection 1194/UDP
-    sudo upri-config.py restart_vpn
-    sudo upri_conifg.py restart_firewall
-
-Make sure to use a correct port - protocol combination: valid ports are
-between *1025* and *65535* (**unprivileged ports**), and protocol can be
-either **UDP** or **TCP**. If you want to access your upribox's VPN
-server over **443/TCP** (standard HTTPS port) you need to set a custom
-port-forwarding rule in your router: set your VPN server to a
-unprivileged TCP port e.g. 4300/TCP and then forward port 443/TCP to
-port 4300/TCP of your upribox.
-
-custom wifi channel
--------------------
-
-Connect to your upribox via SSH and use the
-following commands to set a custom *channel* for the upribox
-WiFi:
-
-::
-
-    sudo upri-config.py set_wifi_channel 3
-    sudo upri-config.py restart_wlan
-
-Valid WiFi channels are numbers between 1 and 10.
-
-de/activate WiFi
-----------------
-
-If you have ssh enabled you can connect to your upribox and deactivate both, Ninja and Silent WiFi:
-
-::
-
-    sudo upri-config.py enable_silent no
-    sudo upri-config.py restart_silent
-    sudo upri-config.py enable_tor no
-    sudo upri-config.py restart_tor
-
-To activate them again replace "no" with "yes". If you activate Ninja WiFi, you have to activate Silent WiFi as well.
+Please note that this process overwrites manual changes to configuration files. To realize persistent manual changes you have to use *custom facts* (see :ref:`customization`).
