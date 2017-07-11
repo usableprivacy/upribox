@@ -10,7 +10,7 @@ _DEFAULT_VALUES = {
 }
 
 
-def insert_or_update_fingerprint(conn, logger=None, **kwargs):
+def insert_or_update_fingerprint(conn, **kwargs):
     if kwargs and kwargs.get("ip", None) and kwargs.get("mac", None):
         params = {key: value for key, value in kwargs.iteritems() if key in _COLUMNS}
 
@@ -27,13 +27,8 @@ def insert_or_update_fingerprint(conn, logger=None, **kwargs):
                     else:
                         raise sqlie
         except sqlite3.Error as sqle:
-            if logger:
-                logger.exception(sqle)
-            else:
-                raise sqle
+            raise sqle
     else:
-        if logger:
-            logger.error(insert_or_update_fingerprint.__name__ + " needs keyword-only argument ip")
         raise TypeError(insert_or_update_fingerprint.__name__ + " needs keyword-only argument ip")
 
     # TODO close connection inside function because it is not possible

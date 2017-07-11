@@ -39,7 +39,7 @@ def get_devices(request):
 def set_device_mode(request):
     mode = request.POST.get('mode', None)
     try:
-        device = DeviceEntry.objects.get(id=request.POST.get('dev_id', None))
+        device = DeviceEntry.objects.get(slug=request.POST.get('dev_id', None))
     except DeviceEntry.DoesNotExist:
         device = None
     jobs.queue_job(devicejobs.toggle_device_mode, (mode, device))
@@ -74,7 +74,6 @@ def change_name(request, slug):
                     "error": _("Der gewählte Name darf nicht leer sein")
                 }
                 return HttpResponse(temp.render(message, request), content_type='text/html; charset=utf-8', status=404)
-                # render(request, "name_modal.html", status=500, context={"device": DeviceEntry.objects.get(slug=slug), "href": reverse('upri_device_name', kwargs={'slug': slug}), "error": _("Der gewählte Name darf nicht leer sein")})
             else:
                 dev = DeviceEntry.objects.get(slug=slug)
                 dev.chosen_name = chosen_name

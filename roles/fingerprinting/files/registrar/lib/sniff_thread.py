@@ -46,7 +46,6 @@ class _SniffThread(threading.Thread):
         # but it still decreases the number of packets that need to be processed by the lfilter function
         sniff(prn=self._packet_handler, filter=self._SNIFF_FILTER(), lfilter=self._LFILTER, store=0, iface=self.interface)
 
-
     def _packet_handler(self, pkt):
         """This method should be overriden to define the thread's behaviour."""
         pass
@@ -99,7 +98,12 @@ class RegistrarSniffThread(_SniffThread):
                     params['dhcp_fingerprint'] = ",".join([str(int(num, 16)) for num in hexstr(entry[1], onlyhex=True).split(" ")])
 
             if params.get('message-type', 0) == 3 and params.get('ip', None):
-                insert_or_update_fingerprint(self.conn, self.logger, **params)
+                try:
+                    insert_or_update_fingerprint(self.conn, **params)
+                except TypeError as te:
+                    self.logger.error(insert_or_update_fingerprint.__name__ + " needs keyword-only argument ip")
+                except sqlite3.Error as sqle:
+                    self.logger.exception(sqle)
 
     def run(self):
         # db connection needs to be created in same thead as it is executed
