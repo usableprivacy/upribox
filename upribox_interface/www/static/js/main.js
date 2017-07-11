@@ -274,19 +274,6 @@ UPRIBOX.Main = (function($) {
                     $(this).attr('disabled', false);
                 },
             });
-            // var href = $(this).attr('href');
-            // $(this).attr('disabled', true);
-            // $.ajax({
-            //     url: href,
-            //     dataType: 'html',
-            //     type: 'post',
-            //     data: {'csrfmiddlewaretoken': Cookies.get('csrftoken')},
-            //     context: this,
-            //     success: function (data) {
-            //         $(this).parents('.column').replaceWith($(data))
-            //     },
-            //
-            // });
         });
 
     }

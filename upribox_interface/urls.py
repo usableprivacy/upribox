@@ -40,12 +40,16 @@ urlpatterns = [
     url(r'^login/$', auth_views.login, {"template_name": "login.html"}, name="upri_login"),
     url(r'^logout/$', auth_views.logout, {"next_page": "upri_login"}, name="upri_logout"),
 
-    # WLAN config
+    # index
     url(r'^$', RedirectView.as_view(pattern_name='upri_devices', permanent=False), name='upri_index'),
+
+    # WLAN config
     url(r'^silent/$', wlan.views.silent, name="upri_silent"),
     url(r'^silent/toggle/$', wlan.views.silent_toggle, name="upri_silent_toggle"),
     url(r'^ninja/$', wlan.views.ninja, name="upri_ninja"),
     url(r'^ninja/toggle/$', wlan.views.ninja_toggle, name="upri_ninja_toggle"),
+
+    # jobs
     url(r'^jobstatus/$', www.views.jobstatus, name="upri_jobstatus"),
     url(r'^jobstatus/clear/$', www.views.clear_jobstatus, name="upri_clear_jobstatus"),
 
@@ -68,7 +72,7 @@ urlpatterns = [
     url(r'^devices/change_mode/$', devices.views.set_device_mode, name="upri_devices_mode"),
     url(r'^devices/change_name/(?P<slug>\w+)$', devices.views.change_name, name="upri_device_name"),
 
-    #setup
+    # setup
     url(r'^setup/$', setup.views.setup, {"phase": "init"}, name="upri_setup"),
     url(r'^setup/error$', setup.views.setup, {"phase": "error"}, name="upri_setup_error"),
     url(r'^setup/success$', setup.views.setup, {"phase": "success"}, name="upri_setup_success")

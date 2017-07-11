@@ -10,6 +10,7 @@ from lib import jobs, info
 import redis as redisDB
 from django.conf import settings
 from more import jobs as morejobs
+from lib import utils
 # from . import jobs as morejobs
 
 logger = logging.getLogger('uprilogger')
@@ -24,11 +25,13 @@ def setup(request, phase):
         redis = redisDB.StrictRedis(host=settings.REDIS["HOST"], port=settings.REDIS["PORT"], db=settings.REDIS["DB"])
         redis.set(settings.SETUP_DELIMITER.join((settings.SETUP_PREFIX, settings.SETUP_KEY)), str(True))
         if phase == "error" and not info.check_ipv6():
-            jobs.queue_job(morejobs.toggle_apate, ("no",))
-            context.update({'message': True})
+            if request.method == 'GET' and utils.get_fact('apate', 'general', 'enabled') == 'yes':
+                jobs.queue_job(morejobs.toggle_apate, ("no",))
+                context.update({'message': True})
     elif phase == "init" and not info.check_ipv6():
-        jobs.queue_job(morejobs.toggle_apate, ("yes",))
-        context.update({'message': True})
+        if request.method == 'GET' and utils.get_fact('apate', 'general', 'enabled') == 'no':
+            jobs.queue_job(morejobs.toggle_apate, ("yes",))
+            context.update({'message': True})
 
     if phase == "init" and info.check_ipv6():
         return redirect('upri_setup_error')
