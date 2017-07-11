@@ -14,6 +14,9 @@
 - name: create directory /var/tmp/log
   file: path=/var/tmp/log state=directory recurse=yes
 
+- name: change permissions for /var/tmp/log
+  file: path=/var/tmp/log state=directory owner=root group=tmp-logger mode=0771
+
 - name: create logging directory /var/log/log for development
   file: path=/var/log/log state=directory owner=root group=tmp-logger mode=0771
   when: env == "development"
