@@ -27,7 +27,7 @@ django_settings_file: &django_settings_file settings_prod
 default_settings:
   registrar:
     general:
-      enabled: 'no'
+      enabled: 'yes'
       interface: 'all'
     pid:
       dir: '/var/run/registrar'

@@ -2,8 +2,12 @@ import sqlite3
 
 _COLUMNS = ['ip', 'mac', 'dhcp_fingerprint', 'dhcp_vendor', 'hostname']
 # _COLUMNS = ['ip', 'mac', 'dhcp_fingerprint', 'dhcp_vendor', 'hostname', 'device_name', 'user_agent', 'score']
-_DEFAULT_MODE = "SL"
-_MODE_COLUMN = "mode"
+# _DEFAULT_MODE = "SL"
+# _MODE_COL
+UMN = "mode"
+_DEFAULT_VALUES = {
+    "mode": "SL"
+}
 
 
 def insert_or_update_fingerprint(conn, logger=None, **kwargs):
@@ -16,7 +20,7 @@ def insert_or_update_fingerprint(conn, logger=None, **kwargs):
                 c = conn.cursor()
                 try:
                     c.execute("INSERT INTO devices_deviceentry (%s) VALUES (%s)" %
-                              (",".join(params.keys() + [_MODE_COLUMN]), ",".join("?" * len(params) + len(_DEFAULT_MODE))), params.values() + [_DEFAULT_MODE])
+                              (",".join(params.keys() + _DEFAULT_VALUES.keys()), ",".join("?" * (len(params) + len(_DEFAULT_VALUES)))), params.values() + _DEFAULT_VALUES.values())
                 except sqlite3.IntegrityError as sqlie:
                     if "UNIQUE constraint failed: devices_deviceentry.mac" in sqlie.message:
                         c.execute("UPDATE devices_deviceentry SET %s where mac=?" % ("=?,".join(params.keys()) + "=?",), params.values() + [params['mac']])
@@ -29,8 +33,8 @@ def insert_or_update_fingerprint(conn, logger=None, **kwargs):
                 raise sqle
     else:
         if logger:
-            logger.error(insert_or_update_fingerprint.__name__ + "needs keyword-only argument ip")
-        raise TypeError(insert_or_update_fingerprint.__name__ + "needs keyword-only argument ip")
+            logger.error(insert_or_update_fingerprint.__name__ + " needs keyword-only argument ip")
+        raise TypeError(insert_or_update_fingerprint.__name__ + " needs keyword-only argument ip")
 
     # TODO close connection inside function because it is not possible
     # to close conn in another thread
