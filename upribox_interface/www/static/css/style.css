@@ -1306,6 +1306,10 @@ article p strong {
     vertical-align: middle;
 }
 
+.divTableCell:first-child{
+    text-align: left;
+}
+
 .divTableHead {
     padding-bottom: 20px;
     text-align: center;
@@ -1411,7 +1415,6 @@ select {
 
 /* Info Table */
 
-/* DivTable.com */
 .divInfoTable{
 	display: table;
 	width: 100%;

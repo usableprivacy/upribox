@@ -3,7 +3,7 @@
 
 <div class="divTableRow">
     <div class="divTableCell">
-        <p class="icon i-connected">{{ device.user_agent.first.model | default_if_none:device.mac }}</p>
+        <a href="{% url 'upri_device_name' slug=device.slug %}" class="icon i-connected devname">{{ device|get_device_name }}</a>
     </div>
     <div class="divTableCell"> <input class="radio radio_device" name="{{device.id}}" type="radio" data-href="{% url 'upri_devices_mode' %}" value="NO"{% if device.mode == "NO" %} checked{%endif%}/> </div>
     <div class="divTableCell"> <input class="radio radio_device" name="{{device.id}}" type="radio" data-href="{% url 'upri_devices_mode' %}" value="SL"{% if device.mode == "SL"  or device.mode is none %} checked{%endif%}/> </div>

@@ -41,7 +41,7 @@ urlpatterns = [
     url(r'^logout/$', auth_views.logout, {"next_page": "upri_login"}, name="upri_logout"),
 
     # WLAN config
-    url(r'^$', RedirectView.as_view(pattern_name='upri_silent', permanent=False), name='upri_index'),
+    url(r'^$', RedirectView.as_view(pattern_name='upri_devices', permanent=False), name='upri_index'),
     url(r'^silent/$', wlan.views.silent, name="upri_silent"),
     url(r'^silent/toggle/$', wlan.views.silent_toggle, name="upri_silent_toggle"),
     url(r'^ninja/$', wlan.views.ninja, name="upri_ninja"),
@@ -66,6 +66,7 @@ urlpatterns = [
     # devices
     url(r'^devices/$', devices.views.get_devices, name="upri_devices"),
     url(r'^devices/change_mode/$', devices.views.set_device_mode, name="upri_devices_mode"),
+    url(r'^devices/change_name/(?P<slug>\w+)$', devices.views.change_name, name="upri_device_name"),
 
     #setup
     url(r'^setup/$', setup.views.setup, {"phase": "init"}, name="upri_setup"),

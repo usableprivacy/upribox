@@ -1,0 +1,34 @@
+{% load i18n %}
+{% load base_extras %}
+<div class="modal js-modal">
+    <div class="message clearfix">
+
+    <h3> {% trans "Gerätenamen ändern" %} </h3>
+
+    {% if error %}
+        <p class="error-message"> {{error}} </p>
+    {% endif %}
+<form class="js-form">
+    <!-- <fieldset class="limited"> -->
+    <div class="modalRow">
+        <div class="modalCell"><p>{{ device|get_device_name }}</p></div>
+        <div class="modalCell">
+            <input class="radio" name="changeName" type="radio" value="chosenName" {% if device.chosen_name %}checked{% endif %}/> {% trans "eigener Name" %} <br>
+            <input type="text" name="chosenName" value="{{device.chosen_name|default_if_none:''}}" {% if error %}class="form-input-error"{% endif %} {% if device.chosen_name is None %}disabled{% endif %}/>
+        </div>
+        <div class="modalCell">
+            <input class="radio" name="changeName" type="radio" value="suggestion" {% if device.chosen_name is None %}checked{% endif %}/> {% trans "Vorschlag" %} <br>
+                <select name="suggestion"{% if device.chosen_name %} disabled{% endif %}>
+                    {% get_device_names device as names%}
+                    {% for name in names %}
+                    <option>{{name}}</option>
+                    {% endfor %}
+                </select>
+        </div>
+    </div>
+    {% csrf_token %}
+    <button type="submit" name="submit" class="multiple-inputs js-form-submit-nojob" {% if href %}href="{{href}}"{% endif %}>{% trans "Ändern" %}</button> <a class="js-modal-close-nojob"> {% trans "Abbrechen" %} </a>
+<!-- </fieldset> -->
+</form>
+    </div>
+</div>

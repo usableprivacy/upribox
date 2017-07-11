@@ -94,6 +94,44 @@ UPRIBOX.Main = (function($) {
             updateMainContent(href, 'post', form);
         });
 
+        $('body').on('click', '.js-form-submit-nojob', function(e){
+            e.preventDefault();
+            var href = $(this).attr('href');
+            var form = $(this).closest('form');
+            $(this).attr('disabled', true);
+            var modal = $(this).closest('.js-modal');
+
+            $.ajax({
+                url: href,
+                dataType: 'html',
+                data: form? form.serialize(): null,
+                type: 'post',
+                success: function (data) {
+                    modal.remove();
+                    $('#main-content').html($(data));
+                    // onAjaxUpdate();
+                },
+                error: function(jqXHR){
+                    // $('#main-content').html($(data));
+                    $('.js-modal').replaceWith($(jqXHR.responseText));
+                    // modal.replaceWith($(data));
+                },
+
+            });
+        });
+
+        $('input[type=radio][name=changeName]').change(function() {
+               if (this.value == 'chosenName') {
+                  $('input[type=text][name=chosenName]').prop('disabled', false);
+                  $('input[type=text][name=suggestion]').prop('disabled', true);
+
+               }
+               else if (this.value == 'suggestion') {
+                   $('input[type=text][name=chosenName]').prop('disabled', true);
+                   $('input[type=text][name=suggestion]').prop('disabled', false);
+               }
+           });
+
         $('body').on('click', '.js-toggle-button', toggleServiceState);
         $('body').on('click', '.js-expand-button', function(e) {
             e.preventDefault();
@@ -185,6 +223,11 @@ UPRIBOX.Main = (function($) {
 
         $('body').on('click', '.js-modal-close', clearJobStatus);
 
+        $('body').on('click', '.js-modal-close-nojob', function(e){
+            e.preventDefault();
+            $(this).closest('.js-modal').remove();
+        });
+
         var prevMode = undefined;
 
         $('body').on('click', '.radio_device', function(e) {
@@ -214,6 +257,36 @@ UPRIBOX.Main = (function($) {
         $(document).on('mousedown', '.radio_device', function(e) {
     		// get the value of the current checked radio
                 prevMode = $('.radio_device[name='+$(this).attr('name')+']:checked').val();
+        });
+
+        $('body').on('click', '.devname', function(e) {
+            e.preventDefault();
+            var href = $(this).attr('href');
+            $.ajax({
+                url: href,
+                dataType: 'html',
+                data: {'csrfmiddlewaretoken': Cookies.get('csrftoken')},
+                type: 'get',
+                context: this,
+                success: function (data) {
+                    $('body').append($(data));
+                    onAjaxUpdate();
+                    $(this).attr('disabled', false);
+                },
+            });
+            // var href = $(this).attr('href');
+            // $(this).attr('disabled', true);
+            // $.ajax({
+            //     url: href,
+            //     dataType: 'html',
+            //     type: 'post',
+            //     data: {'csrfmiddlewaretoken': Cookies.get('csrftoken')},
+            //     context: this,
+            //     success: function (data) {
+            //         $(this).parents('.column').replaceWith($(data))
+            //     },
+            //
+            // });
         });
 
     }
