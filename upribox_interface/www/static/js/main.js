@@ -120,15 +120,15 @@ UPRIBOX.Main = (function($) {
             });
         });
 
-        $('input[type=radio][name=changeName]').change(function() {
+        $('body').on('change','input[type=radio][name=changeName]', function(e) {
                if (this.value == 'chosenName') {
                   $('input[type=text][name=chosenName]').prop('disabled', false);
-                  $('input[type=text][name=suggestion]').prop('disabled', true);
+                  $('select[name=suggestion]').prop('disabled', true);
 
                }
                else if (this.value == 'suggestion') {
                    $('input[type=text][name=chosenName]').prop('disabled', true);
-                   $('input[type=text][name=suggestion]').prop('disabled', false);
+                   $('select[name=suggestion]').prop('disabled', false);
                }
            });
 
