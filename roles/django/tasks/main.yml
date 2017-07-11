@@ -113,7 +113,7 @@
   notify: restart supervisor
 
 - name: enable supervisord
-  service: name=supervisor enabled=yes
+  service: name=supervisor enabled=yes use=service
 
 - name: change logdir of supervisor
   lineinfile:
