@@ -167,8 +167,8 @@ def create_argparser():
 
     # create the parser for the "exclude_device" command
     parser_exclude_device = subparser.add_parser('exclude_device',
-                                                 help='Adds iptables rule to disable adblocking for a specific device')
-    parser_exclude_device.add_argument('arg', help='The MAC address of the device whose traffic shall not be adblocked',
+                                                 help='Adds iptables rule to disable ad-blocking for a specific device')
+    parser_exclude_device.add_argument('arg', help='The MAC address of the device whose traffic shall not be ad-blocked',
                                        metavar="mac")
 
     # create the parser for the "untorify_device" command
@@ -180,8 +180,8 @@ def create_argparser():
 
     # create the parser for the "include_device" command
     parser_include_device = subparser.add_parser('include_device',
-                                                 help='Removes iptables rule to enable adblocking for a specific device')
-    parser_include_device.add_argument('arg', help='The MAC address of the device whose traffic shall be adblocked',
+                                                 help='Removes iptables rule to enable ad-blocking for a specific device')
+    parser_include_device.add_argument('arg', help='The MAC address of the device whose traffic shall be ad-blocked',
                                        metavar="mac")
 
     argcomplete.autocomplete(parser)

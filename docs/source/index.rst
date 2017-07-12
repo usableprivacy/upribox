@@ -1,6 +1,6 @@
-********************************
+################################
 Usable Privacy Box (**upribox**)
-********************************
+################################
 
 **Privacy made easy for the Raspberry Pi**
 
@@ -10,16 +10,20 @@ The upribox software is used to create Raspberry Pi images to turn your Raspberr
  * Transparent advertisement- and tracker-blocking + Tor network (see :ref:`ninja`)
  * OpenVPN server for privacy on the road (see :ref:`vpn`)
 
-Table Of Contents
-=================
+.. _intro:
+
+.. include:: intro.inc
+
+#############
+Documentation
+#############
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
-   intro
    features
-   access
+   integration
+   security
    customization
    architecture
-   security
    development

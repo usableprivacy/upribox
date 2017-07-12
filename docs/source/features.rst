@@ -37,18 +37,18 @@ Ninja Mode
 **********
 
 By activating Ninja mode the upribox will create another network (on Raspberry Pi 3 only with an additional WiFi dongle).
-Connected devices benefit from the same ad- and tracker blocking mechanisms as in the Silent mode but additionally the traffic will be anonomized.
+Connected devices benefit from the same ad- and tracker blocking mechanisms as in the Silent mode but additionally the traffic will be anonymized.
 
 The upribox Ninja mode uses the Tor anonymity network to hinder tracking of
-your Internet usage. For example, your internet provider will not be able to
-see which websites you access. Your requests are tunneled through multiple
+your internet usage. For example, your internet provider will not be able to
+see which websites you access. Your requests are tunnelled through multiple
 Tor relays which may cause reduction of your internet speed and websites being displayed in
 foreign languages.
 
 For the best protection of your anonymity we recommend the usage of the Tor Browser (download for
 `Windows <https://www.torproject.org/download/download-easy.html#windows>`__ or
 `macOS <https://www.torproject.org/download/download-easy.html#mac>`__) or alternatively
-`Tails <https://tails.boum.org/>`__. If you can not use the Tor
+`Tails <https://tails.boum.org/>`__. If you cannot use the Tor
 Browser, activate and use the upribox Ninja mode.
 
 .. _vpn:
@@ -67,7 +67,7 @@ profiles. Create a VPN profile in the VPN section of the upribox user interface
 and download it to your device (e.g. smart phone).
 
 Usage of the upribox VPN requires the creation of VPN profiles and
-installation of OpenVPN. For your smartphone, download the official OpenVPN
+installation of OpenVPN. For your smartphone download the official OpenVPN
 software for `Android <https://play.google.com/store/apps/details?id=net.openvpn.openvpn>`__
 or `iOS <https://itunes.apple.com/at/app/openvpn-connect/id590379981?mt=8>`__.
 For your desktop computer we recommend

@@ -9,6 +9,6 @@ setting up the database and installing services like a supervisor (for the rqwor
 By deploying this role the upribox also starts a cleanup process for the saved statistic files removing data older than 6 months.
 
 .. note::
-    For privacy reasons the upribox does not keep the adblocking logfile with timestamps and URLs but tries to aggregate
+    For privacy reasons the upribox does not keep the ad-blocking logfile with timestamps and URLs but tries to aggregate
     the information as soon as possible to store only the information that is needed for the statistics and to assure
     anonymity. (see :ref:`logs`)

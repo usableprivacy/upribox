@@ -14,7 +14,7 @@ using SSH.
     The upribox Software update mechanisms ensures that the system remains in a
     consistent state. Manual changes to configuration files
     are therefore overwritten by the periodic software update process of the upribox.
-    **The only way the persist your changes is by writing to the correspondent custom facts.**
+    **The only way the persist your changes is by writing to the correspondent custom fact.**
 
 The custom configuration options of the upribox Software are stored in **/etc/ansible/fact.d/**.
 Example for these configuration facts can be found here: :download:`local_facts.tar.gz <examples/local_facts.tar.gz>`.
@@ -26,7 +26,7 @@ Advanced Network Settings
 static network configuration
 ============================
 
-Connect to your upribox via SSH and create a **interfaces.fact** file in
+Connect to your upribox via SSH and create an **interfaces.fact** file in
 the */etc/ansible/facts.d* directory. The following interfaces
 configuration, will set the upribox to use a static IP configuration:
 
@@ -73,7 +73,7 @@ Make sure to use a correct port - protocol combination: valid ports are
 between *1025* and *65535* (**unprivileged ports**), and protocol can be
 either **UDP** or **TCP**. If you want to access your upribox's VPN
 server over **443/TCP** (standard HTTPS port) you need to set a custom
-port-forwarding rule in your router: set your VPN server to a
+port-forwarding rule in your router: set your VPN server to an
 unprivileged TCP port e.g. 4300/TCP and then forward port 443/TCP to
 port 4300/TCP of your upribox. (see :ref:`upri-config`)
 
