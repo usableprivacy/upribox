@@ -12,7 +12,7 @@ def reconfigure_network(ip, netmask, gateway, dns, dhcp=None):
     try:
         logger.debug("Static IP activated")
         jobs.job_message(_("Modus zur Vergabe statischer IP Adressen wird aktiviert..."))
-        utils.exec_upri_config('enable_static_ip', "static")
+        utils.exec_upri_config('enable_static_ip', "yes")
         if ip:
             logger.debug("new IP: %s" % ip)
             jobs.job_message(_("IP Adresse wird geändert..."))
@@ -47,7 +47,7 @@ def reconfigure_network(ip, netmask, gateway, dns, dhcp=None):
         jobs.job_message(_("Es ist ein unbekannter Fehler aufgetreten. Fehlercode: %(errorcode)s" % {'errorcode': e.rc}))
 
 def toogle_static(mode):
-    if mode in ['dhcp', 'static']:
+    if mode in ['yes', 'no']:
         utils.exec_upri_config('enable_static_ip', mode)
         utils.exec_upri_config('restart_network')
         utils.exec_upri_config('restart_dhcpd')
@@ -100,9 +100,9 @@ def toggle_apate(state):
 
 def toggle_static(state):
 
-    if state in ['dhcp', 'static']:
+    if state in ['no', 'yes']:
         try:
-            if state == 'static':
+            if state == 'yes':
                 jobs.job_message(_("Statische IP wird aktiviert..."))
             else:
                 jobs.job_message(_("Statische IP wird deaktiviert..."))
@@ -114,7 +114,7 @@ def toggle_static(state):
 
         except utils.AnsibleError as e:
             logger.error("ansible failed with error %d: %s" % (e.rc, e.message))
-            if state == 'static':
+            if state == 'yes':
                 jobs.job_message(_("Aktivierung von statischer IP fehlgeschlagen."))
             else:
                 jobs.job_message(_("Deaktivierung von statischer IP fehlgeschlagen."))

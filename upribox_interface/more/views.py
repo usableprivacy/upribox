@@ -203,7 +203,7 @@ def save_static(request):
     if request.method != 'POST':
         raise Http404()
 
-    jobs.queue_job(sshjobs.toggle_static, ('static',))
+    jobs.queue_job(sshjobs.toggle_static, ('yes',))
 
     return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_more')})
 
@@ -213,6 +213,6 @@ def save_dhcp(request):
     if request.method != 'POST':
         raise Http404()
 
-    jobs.queue_job(sshjobs.toggle_static, ('dhcp',))
+    jobs.queue_job(sshjobs.toggle_static, ('no',))
 
     return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_more')})

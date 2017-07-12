@@ -63,7 +63,10 @@ def exec_upri_config(action, arg=''):
         time.sleep(1)
         return 0
     else:
-        rc = subprocess.call(['/usr/bin/sudo', '/usr/local/bin/upri-config.py', action, arg])
+        cmd = ['/usr/bin/sudo', '/usr/local/bin/upri-config.py', action]
+        if arg:
+            cmd.append(arg)
+        rc = subprocess.call(cmd)
 
         # action_parse_logs returns code 1 if new entries have been added
         if rc > 1:

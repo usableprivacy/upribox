@@ -691,9 +691,10 @@ def action_configure_devices(arg):
     return call_ansible('configure_devices')
 
 def action_set_static_ip(arg):
-    if arg not in ['dhcp', 'static']:
+    if arg not in ['yes', 'no']:
         print 'error: only "dhcp" and "static" are allowed'
         return 10
+    arg = "static" if arg == "yes" else "dhcp"
     print 'interface mode: %s' % arg
     en = {"general": {"mode": arg}}
     write_role('interfaces', en)
