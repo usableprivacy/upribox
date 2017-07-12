@@ -4,26 +4,29 @@ Development
 ===========
 
 The current upribox image is based on Raspbian [#Raspbian]_ Jessie
-Lite and customized
-with Ansible (see :ref:`architecture`). The Raspbian image can be
-staged into *production* or *development* mode.
+Lite and customized with Ansible (see :ref:`architecture`). The
+Raspbian image can be staged into *production* or *development* mode.
 
 Development environment
 -----------------------
 
 The following guide assumes that you have a Raspberry Pi with the
-upribox image set-up. The following guide explains the steps necessary
+upribox image set-up. If you still need help with that task please read
+the :ref:`intro` guide. The following guide explains the steps necessary
 to setup a development environment for the upribox software.
+
+.. _prerequisities:
 
 Prerequisites [on your development machine]
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
--  install *ansible* 2.3.0.0 (``sudo pip install ansible==2.3.0.0``) and
+-  install *ansible* 1.9.6 (``sudo pip install ansible==1.9.6``) and
    *git*
+-  install requirements for the *ansible* modules (``sudo apt-get install python-pip python-dev libffi-dev libssl-dev libxml2-dev libxslt1-dev libjpeg8-dev zlib1g-dev``)
 -  make sure to log into your Raspberry via SSH once because ansible
    uses ~/.ssh/known\_hosts for verification (or disable host
    verification)
--  add your SSH public key to your Raspberry, e.g. with ``ssh-copy-id``
+-  add your SSH public key to your Raspberry, e.g. with ``ssh-copy-id```
 
 If you successfully completed the prerequisites you should be able to
 login into your upribox via SSH without the need of a password. In
@@ -44,6 +47,13 @@ set to production mode by default. In production mode log files are
 deleted on every reboot and the upribox configuration is automatically
 downloaded and updated via github.
 
+.. note::
+    The production mode is also intended for the production of purchasable
+    pre-assembled boxes. In this process we also create a new user and
+    generate a cryptographically secure password. This happens out of scope
+    of the production ansible playbook and therefore you have to create a
+    user on your own when deploying in production mode from scratch.
+
 Development Mode
 ^^^^^^^^^^^^^^^^
 
@@ -53,7 +63,7 @@ Development Mode
    environments/development/inventory
 
 Once you added the IP address of your Raspberry Pi to the development
-inventory, start chaing the upribox source and deploy your local config
+inventory, start changing the upribox source and deploy your local config
 with:
 
 ``ansible-playbook -i environments/development/inventory site.yml``
@@ -73,7 +83,7 @@ Creating an image from scratch
 
 If you want to create the entire upribox image from scratch you can use
 *setup.yml* ansible playbook. Download the latest Raspian Lite image,
-make you sure you have installed all the prerequisites and in addition
+make you sure you have installed all the prerequisites (see :ref:`prerequisities`) and in addition
 install *sshpass*.
 
 Set-up the initial upribox base image

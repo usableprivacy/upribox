@@ -51,10 +51,23 @@ Privacy
 User Interface
 ==============
 
-.. include:: modules/django.inc
 .. include:: modules/ssh.inc
 .. include:: modules/fingerprinting.inc
 .. include:: modules/squid.inc
+.. include:: modules/django.inc
+
+.. _upri-config:
+
+********************
+Configuration Script
+********************
+
+In order to apply changes to the configuration of the upribox Django has access to only one configuration script ``upri-config.py`` and its actions:
+
+.. argparse::
+   :filename: ../roles/django/files/argparser.py
+   :func: create_argparser
+   :prog: upri-config.py
 
 
 .. rubric:: Footnotes
