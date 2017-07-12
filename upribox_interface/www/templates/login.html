@@ -42,7 +42,7 @@
             </form>
         </div>
 
-        <div class="col-2 col-2-info js-col-2-info">
+        <!-- <div class="col-2 col-2-info js-col-2-info">
             <aside>
                 <h2 class="icon i-information js-info-trigger">
                     <a href="#" title="{% trans "Information einklappen" %}" class="i-arrow">{% trans "Wie kann ich mich einloggen?" %}</a>
@@ -51,7 +51,7 @@
 
                 <a href="#" title="{% trans "Information ausblenden" %}" class="info-out i-arrow js-info-trigger">{% trans "Information ausblenden" %}</a>
             </aside>
-        </div>
+        </div> -->
     </div>
     <h2>{% trans "Status" %}</h2>
     <form>
@@ -86,10 +86,23 @@
         </fieldset>
     </form>
 
-    <h2>{% trans "Infos und Tipps" %}</h2>
+    <!-- <h2>{% trans "Infos und Tipps" %}</h2>
     <ul>
         <li>{% trans "Verwenden Sie einen aktuellen Webbrowser, wir empfehlen Mozilla Firefox." %}</li>
         <li>{% trans 'Verwenden Sie den Ninja-Modus zusammen mit dem "Privaten Modus" Ihres Browsers.' %}</li>
         <li>{% trans "Setzen sie ihre Browsereinstellungen zurück, bevor Sie loslegen." %}</li>
-    </ul>
+    </ul> -->
+{% endblock %}
+
+{% block info %}
+<p class="icon i-info infohead"> {% trans "Wie kann ich mich einloggen?" %} </p>
+<p class="infotext"> {% trans 'Die Daten für den Login finden Sie auf ihrer Anleitung "upribox Administration"' %} </p>
+<p class="icon i-info infohead"> {% trans "Infos und Tipps" %} </p>
+<p class="infotext">
+<ul>
+    <li>{% trans "Verwenden Sie einen aktuellen Webbrowser, wir empfehlen Mozilla Firefox." %}</li>
+    <li>{% trans 'Verwenden Sie den Ninja-Modus zusammen mit dem "Privaten Modus" Ihres Browsers.' %}</li>
+    <li>{% trans "Setzen sie ihre Browsereinstellungen zurück, bevor Sie loslegen." %}</li>
+</ul>
+</p>
 {% endblock %}

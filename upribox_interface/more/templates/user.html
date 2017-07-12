@@ -1,0 +1,26 @@
+{% extends request.is_ajax|yesno:"base_ajax.html,base.html" %}
+
+{% load i18n %}
+{% load widget_tweaks %}
+{% load base_extras %}
+
+{% block title %}{% trans "Admin - upribox" %}{% endblock %}
+
+{% block breadcrumb  %}
+    <p>{% trans "Benutzer" %}</p>
+{% endblock %}
+
+{% block header %}
+    <h1>{% trans "Admin" %}</h1>
+    <p>{% trans "Admin-Daten &auml;ndern." %}</p>
+{% endblock %}
+
+{% block content %}
+
+    {% url "upri_more" as href %}
+    {% include "form.html" %}
+
+{% endblock %}
+
+{% block info %}
+{% endblock %}

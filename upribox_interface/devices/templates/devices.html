@@ -2,6 +2,10 @@
 
 {% load i18n %}
 
+{% block breadcrumb  %}
+    <p>{% trans "Geräteübersicht" %}</p>
+{% endblock %}
+
 {% block title %}{% trans "Geräteübersicht - upribox" %}{% endblock %}
 
 {% block header %}
@@ -50,16 +54,16 @@
         <div class="divInfoTableBody">
             <div class="divInfoTableRow">
                 <div class="divInfoTableCell">
-                    <p class="icon i-Bkeinmodus infohead"> Kein Modus: </p>
-                    <p class="infotext"> Wenn kein Modus aktiviert ist, werden weder Werbung ausgeblendet, noch ihre Aktivitäten geschützt. <a class="infotext" href="#">mehr</a> </p>
+                    <p class="icon i-Bkeinmodus infohead"> {% trans "Kein Modus:" %} </p>
+                    <p class="infotext"> {% trans "Wenn kein Modus aktiviert ist, werden weder Werbung ausgeblendet, noch ihre Aktivitäten geschützt." %} <a class="infotext" href="#">{% trans "mehr" %}</a> </p>
                 </div>
                 <div class="divInfoTableCell">
-                    <p class="icon i-Bsilent infohead"> Silent Modus: </p>
-                    <p class="infotext"> Wenn kein Modus aktiviert ist, werden weder Werbung ausgeblendet, noch ihre Aktivitäten geschützt. <a class="infotext" href="#">mehr</a> </p>
+                    <p class="icon i-Bsilent infohead"> {% trans "Silent Modus:" %} </p>
+                    <p class="infotext"> {% trans "Wenn kein Modus aktiviert ist, werden weder Werbung ausgeblendet, noch ihre Aktivitäten geschützt." %} <a class="infotext" href="#">{% trans "mehr" %}</a> </p>
                 </div>
                 <div class="divInfoTableCell">
-                    <p class="icon i-Bninja infohead"> Ninja Modus: </p>
-                    <p class="infotext"> Wenn kein Modus aktiviert ist, werden weder Werbung ausgeblendet, noch ihre Aktivitäten geschützt. <a class="infotext" href="#">mehr</a>  </p>
+                    <p class="icon i-Bninja infohead"> {% trans "Ninja Modus:" %}</p>
+                    <p class="infotext"> {% trans "Wenn kein Modus aktiviert ist, werden weder Werbung ausgeblendet, noch ihre Aktivitäten geschützt." %} <a class="infotext" href="#">{% trans "mehr" %}</a>  </p>
                 </div>
             </div>
         </div>

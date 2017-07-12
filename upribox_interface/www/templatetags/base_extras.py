@@ -51,6 +51,9 @@ def format_seconds_until(d):
         return "%02d:%02d" % (mins, secs)
 
 
+IGNORE = [None, '-']
+
+
 @register.filter
 def get_device_name(device):
     mac_vendor = None
@@ -58,7 +61,17 @@ def get_device_name(device):
         mac_vendor = EUI(device.mac).oui.registration().org
     except Exception:
         pass
-    return device.chosen_name or device.hostname or device.user_agent.first().model or mac_vendor or device.mac
+
+    names = [
+        device.hostname,
+        device.user_agent.filter(model__isnull=False).first().model,
+        mac_vendor,
+        device.mac
+    ]
+    try:
+        return device.chosen_name or filter(lambda x: x not in IGNORE, names)[0]
+    except IndexError:
+        return None
 
 
 @register.assignment_tag
@@ -74,6 +87,7 @@ def get_device_names(device):
     elems.append(mac_vendor)
     elems.append(device.mac)
     names = []
+    # make unique sorted list
     [names.append(x) for x in elems if x not in names]
 
-    return filter(None, names)
+    return filter(lambda x: x not in IGNORE, names)

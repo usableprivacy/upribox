@@ -276,6 +276,26 @@ UPRIBOX.Main = (function($) {
             });
         });
 
+
+    $('body').on('click', '.showpw', function(e) {
+    var inputElement = $(this).prev('input');
+    var spanElement = $(this);
+
+    console.log(inputElement);
+    console.log(spanElement);
+
+    if(inputElement.attr("type")=="password"){
+        inputElement.attr('type', 'text');
+        $(this).removeClass("i-eye-open");
+        $(this).addClass("i-eye-closed");
+    } else {
+        inputElement.attr('type', 'password');
+        $(this).removeClass("i-eye-closed");
+        $(this).addClass("i-eye-open");
+    }
+
+});
+
     }
 
     function updateChart() {

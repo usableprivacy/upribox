@@ -18,7 +18,7 @@ class SetupMiddleware(object):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
 
-        if (self.redis.get(settings.SETUP_DELIMITER.join((settings.SETUP_PREFIX, settings.SETUP_KEY))) != "True" and
+        if (not self.redis.get(settings.SETUP_DELIMITER.join((settings.SETUP_PREFIX, settings.SETUP_KEY))) and
                 request.path not in self.no_redirect):
             return HttpResponseRedirect(reverse("upri_setup"))
         else:

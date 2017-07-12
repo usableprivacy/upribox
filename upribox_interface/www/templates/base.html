@@ -37,7 +37,7 @@
 					<ul>
 						<li><a href="{% url 'upri_devices' %}" title="{% trans "Geräteübersicht" %}" class="icon i-device {% navactive request 'upri_devices' %}">{% trans "Geräteübersicht" %}</a></li>
 						<li><a href="{% url 'upri_statistics' %}" title="{% trans "Statistiken" %}" class="icon i-statistic {% navactive request 'upri_statistics' %}">{% trans "Statistiken" %}</a></li>
-						<li><a href="#" title="{% trans "Konfiguration" %}" class="icon i-konfig">{% trans "Konfiguration" %}</a></li>
+						<li><a href="{% url 'upri_config' %}" title="{% trans "Konfiguration" %}" class="icon i-konfig">{% trans "Konfiguration" %}</a></li>
 						<li><a href="#" title="{% trans "Hilfe" %}" class="icon i-hilfe">{% trans "Hilfe" %}</a></li>
 						<li class="only-mobile"><a href="{% url 'upri_more' %}" title="{% trans "Admin" %}" class="icon i-more">{% trans "Admin" %}</a></li>
 						<li class="only-mobile"><a href="{% url 'upri_logout' %}" title="{% trans "Logout" %}" class="icon i-logout">{% trans "Logout" %}</a></li>
@@ -53,13 +53,14 @@
 
 				<nav>
 					<ul>
-						<li><a href="#" title="User" class="icon i-user">Upri</a></li>
+						<li><a href="{% url 'upri_config_user' %}" title="User" class="icon i-user">{{ request.user.username }}</a></li>
 						<li><a href="{% url 'upri_logout' %}" title="{% trans "Logout" %}" class="icon i-logout">{% trans "Logout" %}</a></li>
 					</ul>
 				</nav>
 
 				<div class="breadcrumb">
-					<p>Geräteübersicht</p>
+					{% block breadcrumb  %}
+                    {% endblock %}
 				</div>
                 {% endif %}
 			</div>

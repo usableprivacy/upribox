@@ -8,17 +8,17 @@ from lib import utils, passwd, ssid
 class WlanForm(forms.Form):
     ssid = forms.CharField(
         required=False,
-        label=ugettext_lazy("Name"),
+        label=ugettext_lazy("SSID:"),
         max_length=100
     )
     password1 = forms.CharField(
         required=False,
-        label=ugettext_lazy("Passwort"),
+        label=ugettext_lazy("Neues Passwort:"),
         widget=forms.PasswordInput(attrs={'placeholder': '*' * 10})
     )
     password2 = forms.CharField(
         required=False,
-        label=ugettext_lazy("Passwort erneut eingeben"),
+        label=ugettext_lazy("Passwort bestätigen:"),
         widget=forms.PasswordInput(attrs={'placeholder': '*' * 10})
     )
 

@@ -6,7 +6,7 @@ from django.utils.translation import ugettext as _
 import logging
 logger = logging.getLogger('uprilogger')
 
-def reconfigure_network(ip, netmask, gateway, dns, dhcp):
+def reconfigure_network(ip, netmask, gateway, dns, dhcp=None):
 
     jobs.job_message(_("Die Netzwerkeinstellungen werden neu konfiguriert..."))
     try:

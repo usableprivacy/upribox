@@ -219,7 +219,7 @@ a:focus, a:hover, a:active {
     padding: 20px;
 }
 
-.modal button {
+button {
     margin-top: 30px;
 }
 
@@ -247,16 +247,14 @@ fieldset {
 }
 
 label {
-
-    display: block;
     padding: 20px 0px 5px 0px;
     text-align: left;
 }
 
 input {
-    width: 96%;
+    /*width: 96%;
     min-width: 120px;
-    height: 30px;
+    height: 30px;*/
     padding: 2%;
     border-radius: 3px;
     font-size: 0.875em;
@@ -712,6 +710,25 @@ header nav a:focus, header nav a:hover, header nav a:active, header nav a.active
     position: absolute;
 }
 
+.i-info::before {
+    background-position: -69px -288px;
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+}
+
+.i-eye-open::before{
+    background-position: -160px -330px;
+    height: 13px;
+    width: 30px;
+}
+
+.i-eye-closed::before{
+    background-position: -160px -353px;
+    height: 15px;
+    width: 30px;
+}
+
 
 
 
@@ -1034,7 +1051,7 @@ article header p {
 }
 
 article h2 {
-    margin: 1.75em 0;
+    margin-top: 1.75em;
     font-size: 1.125em;
     font-weight: normal;
     text-align: left;
@@ -1279,6 +1296,10 @@ article p strong {
 
 /* -------------------------------- ADDED CSS ------------------------------------- */
 
+.js-menu{
+    margin: 0px;
+}
+
 /* Geräteübersicht Tabelle Styles */
 .divTable{
 	display: table;
@@ -1339,12 +1360,23 @@ select {
   width: 100%
 }
 
-.radio{
-    width: inherit;
-    min-width: inherit;
+
+input[type="checkbox"]{
+    width: auto;
+    min-width: 0px;
+    height: auto;
+}
+
+input[type="radio"]{
+    width: auto;
+    min-width: 0px;
+    height: auto;
 }
 
 
+.divTable input[type="radio"]{
+    height: 30px;
+}
 
 
 .divTable p{
@@ -1352,6 +1384,17 @@ select {
     line-height: 1.25em;
 }
 
+@media only screen and (min-width: 480px) {
+    article input[type="text"], input[type="password"] {
+        width: 350px;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    article input[type="text"], input[type="password"] {
+        width: 75%;
+    }
+}
 /* Tabellen Icons */
 
 .i-notconnected{
@@ -1513,8 +1556,6 @@ select {
 	padding: 5px 20px 5px 0px;
 }
 
-
-
 .modal input[type="radio"]{
 	height: inherit;
     margin-bottom: 20px;
@@ -1540,9 +1581,14 @@ select {
     background-position: 97% center;
 }
 
+.modal option{
+    background: white;
+}
+
 .modal select::-ms-expand {
     display: none;
 }
+
 
 @media only screen and (max-width: 480px) {
     .modalCell{
@@ -1551,4 +1597,8 @@ select {
     .modal input[type="text"]{
 	margin-bottom: 20px;
     }
+}
+
+.formLabel{
+    margin-bottom: 10px;
 }

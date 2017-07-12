@@ -36,6 +36,11 @@ urlpatterns = [
     url(r'^more/dhcp$', more.views.save_dhcp, name="upri_dhcp_save"),
     url(r'^more/static$', more.views.more_config, {"save_form": "static_ip"}, name="upri_static_save"),
 
+    # new config
+    url(r'^config/static$', more.views.more_static, name="upri_config_static"),
+    url(r'^config/user$', more.views.more_user, name="upri_config_user"),
+    url(r'^config/$', more.views.more_overview, name="upri_config"),
+
     # Auth config
     url(r'^login/$', auth_views.login, {"template_name": "login.html"}, name="upri_login"),
     url(r'^logout/$', auth_views.logout, {"next_page": "upri_login"}, name="upri_logout"),

@@ -11,6 +11,7 @@ import redis as redisDB
 from django.conf import settings
 from more import jobs as morejobs
 from lib import utils
+import time
 # from . import jobs as morejobs
 
 logger = logging.getLogger('uprilogger')
@@ -23,7 +24,7 @@ def setup(request, phase):
 
     if phase in ["success", "error"]:
         redis = redisDB.StrictRedis(host=settings.REDIS["HOST"], port=settings.REDIS["PORT"], db=settings.REDIS["DB"])
-        redis.set(settings.SETUP_DELIMITER.join((settings.SETUP_PREFIX, settings.SETUP_KEY)), str(True))
+        redis.set(settings.SETUP_DELIMITER.join((settings.SETUP_PREFIX, settings.SETUP_KEY)), time.time())
         if phase == "error" and not info.check_ipv6():
             if request.method == 'GET' and utils.get_fact('apate', 'general', 'enabled') == 'yes':
                 jobs.queue_job(morejobs.toggle_apate, ("no",), unique=True)

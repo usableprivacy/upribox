@@ -3,23 +3,27 @@
 {% load i18n %}
 {% load base_extras %}
 
-{% block title %}{% trans "Silent Modus - upribox" %}{% endblock %}
+{% block breadcrumb  %}
+    <p>{% trans "Konfiguration" %} > {% trans "WLAN" %}</p>
+{% endblock %}
+
+{% block title %}{% trans "Konfiguration" %}{% endblock %}
 
 {% block header %}
-    <h1>{% trans "Silent Modus" %}</h1>
-    <p>{% trans "Ohne Werbung surfen." %}</p>
+    <h1>{% trans "WLAN" %}</h1>
 {% endblock %}
 
 {% block content %}
-    <div class="row clearfix">
-        <div class="col-2 col-2-main js-col-2-main">
-                <fieldset>
+    <!-- <div class="row clearfix">
+        <div class="col-2 col-2-main js-col-2-main"> -->
+                <!-- <fieldset>
 
                     <legend>{% trans "Ein-/Ausschalten" %}</legend>
-
+                        {% comment %}
                     {% get_fact 'wlan' 'general' 'enabled' as silentenabled%}
                     {% get_fact 'ssh' 'general' 'enabled' as sshenabled%}
                     {% get_fact 'apate' 'general' 'enabled' as apateenabled%}
+                    {% endcomment %}
 
                     {% if silentenabled == 'no'%}
                         <div class="switch icon i-off">
@@ -41,14 +45,31 @@
                     {% endif %}
 
 
-                </fieldset>
+                </fieldset> -->
 
             {% url 'upri_silent' as href %}
-            {% trans "WLAN Zugangsdaten" as form_title%}
+
+            <!-- TODO -->
+            {% url 'upri_config' as back %}
+            {% comment %}
+                {% trans "WLAN Zugangsdaten" as form_title%}
+            {% endcomment %}
             {% include "form.html" %}
 
-        </div>
-        <div class="col-2 col-2-info js-col-2-info">
+            <!-- <p class="formLabel"> SSID: </p>
+            <input type="text" name="ssid" id="ssid">
+
+            <p class="formLabel"> Neues Passwort: </p>
+            <input type="password" name="pw" id="pw"> <span id="ipw" class="icon i-eye-open" onclick="showPassword('pw')"></span>
+
+            <p class="formLabel"> Passwort bestätigen: </p>
+            <input type="password" name="pw2" id="pw2"> <span id="ipw2" class="icon i-eye-open" onclick="showPassword('pw2')"></span> <br>
+
+            <button class="multiple-inputs">Speichern</button> <a href=""> Abbrechen </a> -->
+
+
+        <!-- </div> -->
+        <!-- <div class="col-2 col-2-info js-col-2-info">
             <aside>
                 <h2 class="icon i-information js-info-trigger">
                 <a href="#" title="{% trans "Information einklappen" %}" class="i-arrow">{% trans "Was ist der Silent Modus?" %}</a>
@@ -58,6 +79,15 @@
                 <p>{% blocktrans %}H&auml;ufig gestellte Fragen zur upribox finden Sie unter <a href="{{ faq_url }}" title="FAQ">Hilfe</a>{% endblocktrans %}</p>
                 <a href="#" title="{% trans "Information ausblenden" %}" class="info-out i-arrow js-info-trigger">{% trans "Information ausblenden" %}</a>
             </aside>
-        </div>
-     </div>
+        </div> -->
+     <!-- </div> -->
+{% endblock %}
+
+{% block info %}
+    <p class="icon i-info infohead"> {% trans "Sicheres Passwort" %} </p>
+   <p class="infotext"> {% trans "Mindestens 8 Zeichen." %} <br>
+   {% trans "Mindestens 1 Großbuchstabe." %} <br>
+   {% trans "Mindestens 1 Kleinbuchstabe." %}<br>
+   {% trans "Mindestens 1 Ziffer." %}
+   </p>
 {% endblock %}

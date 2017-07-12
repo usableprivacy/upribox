@@ -1,0 +1,40 @@
+{% extends request.is_ajax|yesno:"base_ajax.html,base.html" %}
+
+{% load i18n %}
+{% load widget_tweaks %}
+{% load base_extras %}
+
+{% block title %}{% trans "Konfiguration" %}{% endblock %}
+
+{% block breadcrumb  %}
+    <p>{% trans "Konfiguration" %}</p>
+{% endblock %}
+
+{% block header %}
+     <h1> {% trans "Konfiguration" %} </h1>
+{% endblock %}
+
+{% block content %}
+
+    <h2> {% trans "Funktionen" %} </h2>
+                  <input type="checkbox" name="functions" id="konfigSSH"> {% trans "SSH" %} <br>
+                  <input type="checkbox" name="functions" id="konfigWLAN"> <label id="labelKonfigWLAN" for="konfigWLAN"> {% trans "WLAN" %}</label> <a href="{% url "upri_silent" %}"> {% trans "Einstellungen" %} </a><br>
+                  <input type="checkbox" name="functions" id="konfigVPN"> {% trans "VPN" %} <a href="konfig3-vpn.html"> {% trans "Einstellungen" %} </a><br>
+                  <input type="checkbox" name="functions" id="konfigsIP"> {% trans "Statische IP" %} <a href="{% url "upri_config_static" %}"> {% trans "Einstellungen" %} </a><br>
+
+             <h2> {% trans "upribox-Zugang" %} </h2>
+                  <input type="radio" name="access" id="accessAUTO"> {% trans "Automatisch" %} <br>
+                  <input type="radio" name="access" id="accessMANUELL"> {% trans "Manuell" %} <a href="{% url "upri_config_static" %}"> {% trans "Einstellungen" %} </a><br>
+                  <input type="radio" name="access" id="accessWLAN"> {% trans 'Nur über WLAN "upribox"' %} <br>
+
+
+              {% if setup_date %}
+             <h2> {% trans "Setup" %} </h2>
+             <p> {%  blocktrans with setup_date=setup_date|date:"d.M Y" %}Die upribox wurde am {{ setup_date }} eingerichtet{% endblocktrans %} <br>
+             <a href="{% url 'upri_setup' %}">{% trans "upribox erneut einrichten" %}</a>
+             </p>
+             {% endif %}
+{% endblock %}
+
+{% block info %}
+{% endblock %}
