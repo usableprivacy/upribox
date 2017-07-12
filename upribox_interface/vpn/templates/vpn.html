@@ -101,7 +101,7 @@
 
     <p class="js-profile-placeholder{% if profiles %} hidden{% endif %}">{% trans "Noch kein Profil erstellt. Erstellen Sie gleich ein Profil!" %}</p>
 
-    <p>{% blocktrans with android="https://play.google.com/store/apps/details?id=net.openvpn.openvpn&hl=de" ios="https://itunes.apple.com/at/app/openvpn-connect/id590379981?mt=8" macos="https://tunnelblick.net/" windows="http://openvpn.se/" %}
+    <p>{% blocktrans with android="https://play.google.com/store/apps/details?id=net.openvpn.openvpn&hl=de" ios="https://itunes.apple.com/at/app/openvpn-connect/id590379981?mt=8" macos="https://tunnelblick.net/" windows="https://openvpn.net/" %}
         Die Verwendung des upribox-VPN erfordert die Erstellung von VPN-Profilen und die Installation der OpenVPN Client Software. F&uuml;r Ihr Smartphone k&ouml;nnen Sie einen der offziellen Clients f&uuml;r <a href="{{ android }}">Android</a> oder <a href="  {{ ios }}">iOS</a> herunterladen. Für den Desktop empfehlen wir folgende Programme: <a href="{{ macos }}">Tunnelblick f&uuml;r Mac OS</a> oder <a href="{{ windows }}">OpenVPN GUI f&uuml;r Windows</a>.{% endblocktrans %}</p>
     <div class="row">
         {% for profile in profiles %}

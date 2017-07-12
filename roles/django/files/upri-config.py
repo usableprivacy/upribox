@@ -24,6 +24,7 @@ import netifaces as ni
 from netaddr import IPNetwork, IPAddress, ZEROFILL
 import redis as redisDB
 from os.path import isfile, join, exists
+import argparser
 # import traceback
 
 # directory where facts are located
@@ -922,31 +923,22 @@ def get_fact(role, group, fact=None):
 
 
 def main():
+
+    parser = argparser.create_argparser()
+
+    args = vars(parser.parse_args())
+    print args
     # append empty second parameter if none given
-    if len(sys.argv) == 2:
-        sys.argv.append('')
+    if len(args) == 1:
+        args['arg'] = ''
 
-    if len(sys.argv) != 3:
-        usage(2)
-
-    action = sys.argv[1]
-    args = sys.argv[2]
+    action = args['action']
+    subarg = args['arg']
 
     # check if requested actions is valid
-    if sys.argv[1] in ALLOWED_ACTIONS:
+    if action in ALLOWED_ACTIONS:
         print "action: %s" % action
-        return ALLOWED_ACTIONS[action](args)
-    else:
-        usage(3)
-
-
-def usage(ex):
-    print "usage: %s <action> <args>" % sys.argv[0]
-    print "allowed actions:"
-    for action in ALLOWED_ACTIONS:
-        print "    %s" % action
-    exit(ex)
-
+        return ALLOWED_ACTIONS[action](subarg)
 
 if __name__ == "__main__":
     exit(main())
