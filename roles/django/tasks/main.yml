@@ -165,7 +165,10 @@
   when:  copy_django is defined and copy_django|changed and sv_config is defined and not sv_config|changed
 
 - name: copy management scripts
-  copy: src=upri-config.py dest=/usr/local/bin/upri-config.py owner=root group=root mode=755
+  copy: src="{{ item.src }}" dest="{{ item.dest }}" owner=root group=root mode=755
+  with_items:
+    - { src: 'upri-config.py', dest: '/usr/local/bin/upri-config.py' }
+    - { src: 'argparser.py', dest: '/usr/local/bin/argparser.py' }
   tags:
     - upri_config
 
