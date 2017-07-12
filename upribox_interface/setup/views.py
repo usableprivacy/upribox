@@ -26,11 +26,11 @@ def setup(request, phase):
         redis.set(settings.SETUP_DELIMITER.join((settings.SETUP_PREFIX, settings.SETUP_KEY)), str(True))
         if phase == "error" and not info.check_ipv6():
             if request.method == 'GET' and utils.get_fact('apate', 'general', 'enabled') == 'yes':
-                jobs.queue_job(morejobs.toggle_apate, ("no",))
+                jobs.queue_job(morejobs.toggle_apate, ("no",), unique=True)
                 context.update({'message': True})
     elif phase == "init" and not info.check_ipv6():
         if request.method == 'GET' and utils.get_fact('apate', 'general', 'enabled') == 'no':
-            jobs.queue_job(morejobs.toggle_apate, ("yes",))
+            jobs.queue_job(morejobs.toggle_apate, ("yes",), unique=True)
             context.update({'message': True})
 
     if phase == "init" and info.check_ipv6():

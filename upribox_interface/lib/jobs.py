@@ -29,9 +29,10 @@ def job_message(message):
     job.save()
 
 
-def queue_job(job, args):
+def queue_job(job, args, unique=False):
     # set job description to function name in order to avoid logging parameters
-    q.enqueue(job, *args, description=job.__name__)
+    if not unique or not job.__name__ in [entry.description for entry in q.jobs]:
+        q.enqueue(job, *args, description=job.__name__)
 
 
 def clear_jobs():
