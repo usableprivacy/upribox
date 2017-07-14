@@ -18,7 +18,7 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../roles/django/files/'))
+sys.path.insert(0, os.path.abspath('../roles/django/files/'))
 
 # -- General configuration ------------------------------------------------
 
