@@ -27,7 +27,7 @@
   systemd: name=systemd-networkd state=restarted daemon-reload=yes
 
 - name: configure isc-dhcp-server
-  service: name={{ item }} enabled={{'yes' if silent|bool or (dhcpd|bool and mode=='static') else 'no'}}
+  service: name={{ item }} enabled={{'yes' if silent|bool or (dhcpd|bool and mode=='static') else 'no'}} use=service
   with_items:
     - isc-dhcp-server
 

@@ -15,7 +15,7 @@
     - ntopng
 
 - name: enable services
-  service: name={{ item }} enabled=yes
+  service: name={{ item }} enabled=yes use=service
   with_items:
     - ntopng
 

@@ -10,7 +10,7 @@
   user: name=privoxy groups="tmp-logger" append=yes
 
 - name: enable services
-  service: name={{ item }} enabled=yes
+  service: name={{ item }} enabled=yes use=service
   with_items:
     - privoxy
 

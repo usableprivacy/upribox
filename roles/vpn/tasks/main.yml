@@ -246,10 +246,10 @@
     - restart openvpn-su
 
 - name: disable openvpn service
-  service: name=openvpn enabled=no
+  service: name=openvpn enabled=no use=service
 
 - name: enable openvpn-su service
-  service: name=openvpn-su enabled={{vpn}} state={{"started" if vpn|bool else "stopped"}}
+  service: name=openvpn-su enabled={{vpn}} state={{"started" if vpn|bool else "stopped"}} use=service
   tags:
     - toggle_vpn
 

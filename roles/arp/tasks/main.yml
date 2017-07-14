@@ -48,7 +48,7 @@
   template: src=logrotate.j2 dest=/etc/logrotate.d/apate mode=0644
 
 - name: configure apate service
-  service: name=apate state='{{ "started" if apate_enabled|bool else "stopped" }}' enabled='{{ apate_enabled|bool }}'
+  service: name=apate state='{{ "started" if apate_enabled|bool else "stopped" }}' enabled='{{ apate_enabled|bool }}' use=service
   tags:
     - toggle_apate
 
@@ -60,4 +60,4 @@
   notify: restart redis
 
 - name: enable redis server
-  service: name=redis-server enabled=yes
+  service: name=redis-server enabled=yes use=service

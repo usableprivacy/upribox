@@ -1,16 +1,16 @@
---- 
+---
 - include: ../../wlan/tasks/wlan_state.yml
 - include: ../../common/tasks/other_env.yml
-    
+
 - name: install services
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
   with_items:
     - dnsmasq
-  
+
 - name: enable services
-  service: name={{ item }} enabled=yes
+  service: name={{ item }} enabled=yes use=service
   with_items:
-    - dnsmasq  
+    - dnsmasq
 
 - name: add dnsmasq user to loggers group
   user: name=dnsmasq groups="tmp-logger" append=yes
@@ -32,13 +32,17 @@
   file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
   with_dict: "{{other_env.default_settings.log.dnsmasq_ninja.logfiles}}"
   when: res|changed or (other_env.default_settings.log.general.path != default_settings.log.general.path or other_env.default_settings.log.dnsmasq_ninja.logfiles.logname != default_settings.log.dnsmasq_ninja.logfiles.logname)
-  
+
+  # workaround for broken systemd module (https://github.com/ansible/ansible-modules-core/issues/3764)
+  # (https://github.com/geerlingguy/ansible-role-varnish/pull/65)
+- name: enable service dnsmasq-ninja
+  service: name=dnsmasq-ninja enabled=yes use=service
+
 - name: start service dnsmasq-ninja
   systemd:
     daemon-reload: yes
-    enabled: yes
     name: dnsmasq-ninja
     state: started
-  
+
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/dnsmasq_ninja mode=0644

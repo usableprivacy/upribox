@@ -1,5 +1,5 @@
 ---
-- include: ../../common/tasks/other_env.yml 
+- include: ../../common/tasks/other_env.yml
 
 - name: install services
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
@@ -10,7 +10,7 @@
   user: name="debian-tor" groups="tmp-logger" append=yes
 
 - name: enable services
-  service: name={{ item }} enabled=yes
+  service: name={{ item }} enabled=yes use=service
   with_items:
     - tor
 
@@ -25,11 +25,11 @@
   shell: "/bin/true"
   notify: reload hostapd before tor
   when: hostapd_status is defined and hostapd_status|changed
-    
+
 - name: copy tor config
   template: src=torrc dest=/etc/tor/torrc
   notify: reload hostapd before tor
-  
+
 - name: modify logdir in tor init script
   lineinfile:
     dest: /etc/init.d/tor
@@ -37,10 +37,10 @@
     line: "TORLOGDIR={{default_settings.log.general.path}}/{{default_settings.log.tor.subdir}}"
   notify: reload hostapd before tor
   register: res
-    
+
 - name: remove default logfiles
   file: path=/var/log/tor state=absent
-  when: res|changed or default_settings.log.general.path != "/var/log" or default_settings.log.tor.subdir != "tor" 
+  when: res|changed or default_settings.log.general.path != "/var/log" or default_settings.log.tor.subdir != "tor"
 
 - name: remove log files from other environment
   file: path={{other_env.default_settings.log.general.path}}/{{other_env.default_settings.log.tor.subdir}} state=absent #/{{item.value}}

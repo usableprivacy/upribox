@@ -47,6 +47,6 @@
   template: src=logrotate.j2 dest=/etc/logrotate.d/registrar mode=0644
 
 - name: configure registrar service
-  service: name=registrar state='{{ "started" if registrar_enabled|bool else "stopped" }}' enabled='{{ registrar_enabled|bool }}'
+  service: name=registrar state='{{ "started" if registrar_enabled|bool else "stopped" }}' enabled='{{ registrar_enabled|bool }}' use=service
   tags:
     - toggle_registrar

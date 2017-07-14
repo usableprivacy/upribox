@@ -16,7 +16,7 @@
   apt: name=redis-server state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
 
 - name: enable redis server
-  service: name=redis-server enabled=yes
+  service: name=redis-server enabled=yes use=service
 
 - name: install virtualenv
   apt: name=python-virtualenv state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
@@ -65,7 +65,7 @@
   file: path=/var/upribox-interface/ state=directory mode=755 owner=www-data group=www-data
 
 - name: enable uwsgi django service
-  service: name=django-uwsgi enabled=yes
+  service: name=django-uwsgi enabled=yes use=service
 
 - name: delete development database
   file: path=/usr/share/nginx/www-upri-interface/db.sqlite3 state=absent

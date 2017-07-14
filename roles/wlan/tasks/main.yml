@@ -147,7 +147,7 @@
 
 # disable hostapd if wlan should be disabled
 - name: toggle wlan services
-  service: name=hostapd enabled={{ silent|bool }} state={{ "stopped" if not silent|bool else "started" }}
+  service: name=hostapd enabled={{ silent|bool }} state={{ "stopped" if not silent|bool else "started" }} use=service
   tags:
     - toggle_silent
 

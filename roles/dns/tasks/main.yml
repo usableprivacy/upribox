@@ -13,7 +13,7 @@
     - dnsmasq
 
 - name: enable services
-  service: name={{ item }} enabled=yes
+  service: name={{ item }} enabled=yes use=service
   with_items:
     - dnsmasq
 
@@ -81,7 +81,7 @@
     - toggle_silent
 
 - name: configure systemd-resolved
-  service: name=systemd-resolved state={{'started' if mode == "static" else 'stopped'}} enabled={{mode == "static"}}
+  service: name=systemd-resolved state={{'started' if mode == "static" else 'stopped'}} enabled={{mode == "static"}} 
   tags:
     - network_config
 
