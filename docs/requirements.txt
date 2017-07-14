@@ -1,0 +1,2 @@
+sphinx-argparse==0.2.1
+argcomplete==1.8.2
