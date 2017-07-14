@@ -22,7 +22,7 @@ import os
 path_to_argparser = '../../roles/django/files/argparser.py'
 if os.path.isfile(path_to_argparser):
     from shutil import copyfile
-    copyfile(path_to_argparser, '../argparser.py')
+    copyfile(path_to_argparser, './argparser.py')
 
 # -- General configuration ------------------------------------------------
 
