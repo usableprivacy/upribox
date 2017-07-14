@@ -6,22 +6,25 @@
 :OUTPUT ACCEPT [603:39466]
 :POSTROUTING ACCEPT [252:16709]
 
-# adblocking
+# no adblocking
 {% if ansible_local is defined and ansible_local.devices is defined and ansible_local.devices.no_adblocking is defined %}
 {% for m in ansible_local.devices.no_adblocking %}
 -A PREROUTING -p udp -m udp --dport 53 -m mac --mac-source {{ m }} -j REDIRECT --to-ports 5301
 -A PREROUTING -m mac --mac-source {{ m }} -j ACCEPT
 {% endfor %}
 {% endif %}
--A PREROUTING ! -d fe80::/64 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 3128
+
 
 # tor
 {% if ansible_local is defined and ansible_local.devices is defined and ansible_local.devices.tor is defined %}
 {% for m in ansible_local.devices.tor %}
 -A PREROUTING -m mac --mac-source {{ m }} -p udp -m udp --dport 53 -j REDIRECT --to-ports 5300
 -A PREROUTING -m mac --mac-source {{ m }} ! -d fe80::/64 -p tcp -m tcp --dport 443 -j REDIRECT --to-ports 9040
+-A PREROUTING -m mac --mac-source {{ m }} ! -d fe80::/64 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8119
 {% endfor %}
 {% endif %}
+
+-A PREROUTING ! -d fe80::/64 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 3128
 
 -A PREROUTING -i eth0 -p udp -m udp --dport 53 -j REDIRECT --to-ports 53
 -A POSTROUTING -o eth0 -j MASQUERADE
@@ -49,6 +52,7 @@ COMMIT
 -A INPUT -p udp -m udp --dport 5301 -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 9040 -j ACCEPT
 -A INPUT -p udp -m udp --dport 5353 -j ACCEPT
+-A INPUT -p udp -m udp --dport 8119 -j ACCEPT
 -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
 -A INPUT -p icmpv6 --icmpv6-type router-advertisement -m hl --hl-eq 255 -j ACCEPT
