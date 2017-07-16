@@ -16,9 +16,13 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+#import sys
+#sys.path.insert(0, os.path.abspath('../roles/django/files/'))
+path_to_argparser = '../../roles/django/files/argparser.py'
+if os.path.isfile(path_to_argparser):
+    from shutil import copyfile
+    copyfile(path_to_argparser, './argparser.py')
 
 # -- General configuration ------------------------------------------------
 
