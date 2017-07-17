@@ -88,4 +88,4 @@ never_direct allow all
 httpd_suppress_version_string off
 via off
 
-request_header_add Client-MAC "%>eui"
+#request_header_add Client-MAC "%>eui"

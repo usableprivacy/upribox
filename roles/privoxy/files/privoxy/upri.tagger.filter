@@ -4,6 +4,9 @@ s@^Accept:\s*text/html.*(?!xml)@HTML-REQUEST@i
 CLIENT-HEADER-TAGGER: client-ip-address Tags the request with the client's IP address.
 s@@IP-ADDRESS: $origin@D
 
+CLIENT-HEADER-TAGGER: listen-address Tags the request with the client's IP address.
+s@@LISTEN-ADDRESS: $listen-address@D
+
 CLIENT-HEADER-TAGGER: client-mac-address Tags the request with the MAC address in the Client-MAC header
 s@^Client-MAC: (.*)@MAC-ADDRESS: $1@i
 
