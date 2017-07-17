@@ -12,27 +12,25 @@
 -A PREROUTING -m mac --mac-source {{ m }} -j ACCEPT
 {% endfor %}
 {% endif %}
--A PREROUTING ! -d 192.168.0.0/16 ! -i wlan0_0 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 3128
--A PREROUTING ! -d 10.0.0.0/8 ! -i wlan0_0 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 3128
--A PREROUTING ! -d 172.16.0.0/12 ! -i wlan0_0 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 3128
+-A PREROUTING ! -i wlan0_0 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 3128 -m bpf --bytecode "12,0 0 0 0,32 0 0 16,84 0 0 4278190080,21 6 0 167772160,32 0 0 16,84 0 0 4294901760,21 3 0 3232235520,32 0 0 16,84 0 0 4293918720,21 0 1 2886729728,6 0 0 0,6 0 0 65536"
+#-A PREROUTING ! -d 10.0.0.0/8 ! -i wlan0_0 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 3128
+#-A PREROUTING ! -d 172.16.0.0/12 ! -i wlan0_0 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 3128
 
 # tor
 {% if ansible_local is defined and ansible_local.devices is defined and ansible_local.devices.tor is defined %}
 {% for m in ansible_local.devices.tor %}
 -A PREROUTING -m mac --mac-source {{ m }} -p udp -m udp --dport 53 -j REDIRECT --to-ports 5300
--A PREROUTING -m mac --mac-source {{ m }} ! -d 192.168.0.0/16 -p tcp -m tcp --dport 443 -j REDIRECT --to-ports 9040
--A PREROUTING -m mac --mac-source {{ m }} ! -d 10.0.0.0/8 -p tcp -m tcp --dport 443 -j REDIRECT --to-ports 9040
--A PREROUTING -m mac --mac-source {{ m }} ! -d 172.16.0.0/12 -p tcp -m tcp --dport 443 -j REDIRECT --to-ports 9040
+-A PREROUTING -m mac --mac-source {{ m }} -p tcp -m tcp --dport 443 -j REDIRECT --to-ports 9040 -m bpf --bytecode "12,0 0 0 0,32 0 0 16,84 0 0 4278190080,21 6 0 167772160,32 0 0 16,84 0 0 4294901760,21 3 0 3232235520,32 0 0 16,84 0 0 4293918720,21 0 1 2886729728,6 0 0 0,6 0 0 65536"
 {% endfor %}
 {% endif %}
 
 {% if tor|bool%}
 -A PREROUTING -i wlan0_0 -p udp -m udp --dport 53 -j REDIRECT --to-ports 5300
--A PREROUTING ! -d 192.168.0.0/16 -i wlan0_0 -p tcp -m tcp --dport 443 -j REDIRECT --to-ports 9040
+-A PREROUTING -i wlan0_0 -p tcp -m tcp --dport 443 -j REDIRECT --to-ports 9040 -m bpf --bytecode "12,0 0 0 0,32 0 0 16,84 0 0 4278190080,21 6 0 167772160,32 0 0 16,84 0 0 4294901760,21 3 0 3232235520,32 0 0 16,84 0 0 4293918720,21 0 1 2886729728,6 0 0 0,6 0 0 65536"
 
--A PREROUTING ! -d 192.168.0.0/16 -i wlan0_0 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8118
--A PREROUTING ! -d 10.0.0.0/8 -i wlan0_0 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8118
--A PREROUTING ! -d 172.16.0.0/12 -i wlan0_0 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8118
+-A PREROUTING -i wlan0_0 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8118 -m bpf --bytecode "12,0 0 0 0,32 0 0 16,84 0 0 4278190080,21 6 0 167772160,32 0 0 16,84 0 0 4294901760,21 3 0 3232235520,32 0 0 16,84 0 0 4293918720,21 0 1 2886729728,6 0 0 0,6 0 0 65536"
+#-A PREROUTING ! -d 10.0.0.0/8 -i wlan0_0 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8118
+#-A PREROUTING ! -d 172.16.0.0/12 -i wlan0_0 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8118
 {% endif %}
 
 -A PREROUTING -i eth0 -p udp -m udp --dport 53 -j REDIRECT --to-ports 53
