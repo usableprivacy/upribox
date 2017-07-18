@@ -1,9 +1,11 @@
 ---
 - name: restart uwsgi
   service: name=django-uwsgi state=restarted
+  notify: restart registrar
 
 - name: reload uwsgi
   file: path=/etc/uwsgi/upri_uwsgi.ini state=touch
+  notify: restart registrar
 
 - name: restart supervisor
   service: name=supervisor state=restarted sleep=5 use=service

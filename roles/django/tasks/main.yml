@@ -1,5 +1,6 @@
 ---
 - include: ../../common/tasks/other_env.yml
+- include: ../../fingerprinting/tasks/registrar_state.yml
 
 - name: create dir for django webapp
   file: path=/usr/share/nginx/www-upri-interface state=directory
