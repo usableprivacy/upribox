@@ -30,9 +30,12 @@ def setup(request, phase):
                 jobs.queue_job(morejobs.toggle_apate, ("no",), unique=True)
                 context.update({'message': True})
     elif phase == "init" and not info.check_ipv6():
-        if request.method == 'GET' and utils.get_fact('apate', 'general', 'enabled') == 'no':
-            jobs.queue_job(morejobs.toggle_apate, ("yes",), unique=True)
-            context.update({'message': True})
+        if info.check_connection():
+            if request.method == 'GET' and utils.get_fact('apate', 'general', 'enabled') == 'no':
+                jobs.queue_job(morejobs.toggle_apate, ("yes",), unique=True)
+                context.update({'message': True})
+        else:
+            phase = "isolated"
 
     if phase == "init" and info.check_ipv6():
         return redirect('upri_setup_error')

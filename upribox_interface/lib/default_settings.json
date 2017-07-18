@@ -46,5 +46,10 @@
             "port": 1194,
             "protocol": "UDP"
         }
+    },
+    "apate": {
+        "general": {
+            "enabled": "no"
+        }
     }
 }

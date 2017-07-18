@@ -17,7 +17,7 @@
 
         <div class="setup-text">
         {% blocktrans with help="" %}
-            <p> Die  Funktionalität der upribox ist derzeit nur das WLAN "upribox" verfügbar. Alternativ kann die upribox <a href="{{ help }}">manuell mittels DHCP</a> vollständig eingerichtet werden.</p>
+            <p> Die Funktionalität der upribox ist derzeit nur über das WLAN "upribox" verfügbar. Alternativ kann die upribox <a href="{{ help }}">manuell mittels DHCP</a> vollständig eingerichtet werden.</p>
         {% endblocktrans %}
         </div>
 
@@ -29,6 +29,14 @@
         </div>
 
         <button onclick="location.href='{% url 'upri_devices' %}';"> {% trans "Geräteübersicht" %} </button>
+    {% elif phase == "isolated"%}
+        <div class="icon i-setup-failed"> </div>
+
+        <div class="setup-text">
+        {% blocktrans %}
+            <p> Die upribox verfügt derzeit über keine Internetverbindung. Bitte stellen Sie sicher, dass die upribox mit ihrem Heimnetzwerk verbunden ist.</p>
+        {% endblocktrans %}
+        </div>
     {% else %}
         {% blocktrans with orf="http://www.orf.at"%}
             <p> Bitte testen Sie mit einem zweiten Gerät, das mit Ihrem Heimnetzwerk verbunden ist, ob eine Internetverbindung weiterhin besteht. Rufen Sie dazu einfach die Seite <a href="{{orf}}">www.orf.at</a> auf. <br> <br>
