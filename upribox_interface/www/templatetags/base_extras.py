@@ -62,12 +62,10 @@ def get_device_name(device):
     except Exception:
         pass
 
-    names = [
-        device.hostname,
-        device.user_agent.filter(model__isnull=False).first().model,
-        mac_vendor,
-        device.mac
-    ]
+    names = [device.hostname]
+    if device.user_agent.filter(model__isnull=False).first():
+        names.append(device.user_agent.filter(model__isnull=False).first().model)
+    names.extend([mac_vendor, device.mac])
     try:
         return device.chosen_name or filter(lambda x: x not in IGNORE, names)[0]
     except IndexError:
