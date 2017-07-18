@@ -6,7 +6,7 @@ import threading
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 # suppresses following message
 # WARNING: No route found for IPv6 destination :: (no default route?)
-from scapy.all import sniff, DHCP, hexstr
+from scapy.all import sniff, DHCP, hexstr, BOOTP
 import sqlite3
 from util import insert_or_update_fingerprint, DaemonError
 
@@ -80,6 +80,8 @@ class RegistrarSniffThread(_SniffThread):
             # dhcp request
             # options = dict(pkt[DHCP].options)
             # if options.get('message-type', 0) == 3 and options.get('requested_addr', None):
+            params['mac'] = ":".join(hexstr(pkt[BOOTP].chaddr, onlyhex=True).split(" ")[:6])
+
             for entry in pkt[DHCP].options:
                 if entry[0] == "message-type":
                     params['message-type'] = entry[1]
@@ -90,9 +92,9 @@ class RegistrarSniffThread(_SniffThread):
                     params['ip'] = entry[1]
                 elif entry[0] == 'hostname':
                     params['hostname'] = entry[1]
-                elif entry[0] == "client_id":
+                # elif entry[0] == "client_id":
                     # client_id value is hardware type (0x01) and mac address
-                    params['mac'] = ":".join(hexstr(entry[1], onlyhex=True).split(" ")[-6:])
+                    # params['mac'] = ":".join(hexstr(entry[1], onlyhex=True).split(" ")[-6:])
                 elif entry[0] == 'param_req_list':
                     # DHCP fingerprint in fingerbank format
                     params['dhcp_fingerprint'] = ",".join([str(int(num, 16)) for num in hexstr(entry[1], onlyhex=True).split(" ")])
