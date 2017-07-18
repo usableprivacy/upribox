@@ -1,11 +1,10 @@
-{+client-header-tagger{listen-address}}
+{+client-header-tagger{client-ip-address}}
 /
-{-client-header-tagger{listen-address}}
+{-client-header-tagger{client-ip-address}}
 .upri.box
 
 {+forward-override{forward-socks5 127.0.0.1:9050 .} +hide-user-agent{Mozilla/5.0 (Windows NT 6.1; rv:31.0) Gecko/20100101 Firefox/31.0}}
-LISTEN-ADDRESS: .*:8120
-LISTEN-ADDRESS: .*:8121
+TAG:^IP-ADDRESS: ((?!127\.0\.0\.1).)*$
 
 { +client-header-filter{hide-forwarded} }
 /

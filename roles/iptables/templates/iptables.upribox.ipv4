@@ -18,7 +18,7 @@
 {% for m in ansible_local.devices.tor %}
 -A PREROUTING -m mac --mac-source {{ m }} -p udp -m udp --dport 53 -j REDIRECT --to-ports 5300
 -A PREROUTING -m mac --mac-source {{ m }} -p tcp -m tcp --dport 443 -j REDIRECT --to-ports 9040 -m bpf --bytecode "12,0 0 0 0,32 0 0 16,84 0 0 4278190080,21 6 0 167772160,32 0 0 16,84 0 0 4294901760,21 3 0 3232235520,32 0 0 16,84 0 0 4293918720,21 0 1 2886729728,6 0 0 0,6 0 0 65536"
--A PREROUTING -m mac --mac-source {{ m }} -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8120 -m bpf --bytecode "12,0 0 0 0,32 0 0 16,84 0 0 4278190080,21 6 0 167772160,32 0 0 16,84 0 0 4294901760,21 3 0 3232235520,32 0 0 16,84 0 0 4293918720,21 0 1 2886729728,6 0 0 0,6 0 0 65536"
+-A PREROUTING -m mac --mac-source {{ m }} -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8118 -m bpf --bytecode "12,0 0 0 0,32 0 0 16,84 0 0 4278190080,21 6 0 167772160,32 0 0 16,84 0 0 4294901760,21 3 0 3232235520,32 0 0 16,84 0 0 4293918720,21 0 1 2886729728,6 0 0 0,6 0 0 65536"
 {% endfor %}
 {% endif %}
 
@@ -53,7 +53,7 @@ COMMIT
 # squid
 -A INPUT -p tcp -m tcp --dport 3128 -j ACCEPT
 #privoxy
--A INPUT -p tcp -m tcp --dport 8120 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 8118 -j ACCEPT
 # dnsmasq-ninja
 -A INPUT -p udp -m udp --dport 5300 -j ACCEPT
 # dnsmasq-unfiltered
