@@ -133,6 +133,8 @@ UPRIBOX.Main = (function($) {
            });
 
         $('body').on('click', '.js-toggle-button', toggleServiceState);
+        $('body').on('change', '.js-toggle-box', toggleServiceState2);
+
         $('body').on('click', '.js-expand-button', function(e) {
             e.preventDefault();
             $('.js-static-ip-form').removeClass('hidden');
@@ -437,6 +439,31 @@ UPRIBOX.Main = (function($) {
         //     axisY: {}
         // };
         // new Chartist.Line('.ct-chart', data, options);
+    }
+
+    function toggleServiceState2(e){
+        e.preventDefault();
+        var href = $(this).attr('href');
+        var state = this.checked ? 'yes' : 'no';
+        // $(this).attr('disabled', true);
+        $.ajax({
+            url: href,
+            dataType: 'html',
+            data: {'enabled': state, 'csrfmiddlewaretoken': Cookies.get('csrftoken')},
+            type: 'post',
+            context: this,
+            success: function (data, textstatus, jqXHR) {
+                $('body').append($(data));
+                onAjaxUpdate();
+                // $(this).attr('disabled', false);
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                if (jqXHR.status == 403){
+                    window.location.replace(jqXHR.responseText);
+                }
+            },
+
+        });
     }
 
     /**

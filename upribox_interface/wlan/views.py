@@ -86,4 +86,4 @@ def silent_toggle(request):
     state = request.POST['enabled']
     jobs.queue_job(wlanjobs.toggle_silent, (state,))
 
-    return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_silent')})
+    return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_config')})

@@ -16,7 +16,8 @@
         <div class="icon i-setup-failed"> </div>
 
         <div class="setup-text">
-        {% blocktrans with help="" %}
+        {% url "upri_faq" as help %}
+        {% blocktrans %}
             <p> Die Funktionalität der upribox ist derzeit nur über das WLAN "upribox" verfügbar. Alternativ kann die upribox <a href="{{ help }}">manuell mittels DHCP</a> vollständig eingerichtet werden.</p>
         {% endblocktrans %}
         </div>

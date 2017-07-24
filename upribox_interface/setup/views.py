@@ -25,6 +25,7 @@ def setup(request, phase):
     if phase in ["success", "error"]:
         redis = redisDB.StrictRedis(host=settings.REDIS["HOST"], port=settings.REDIS["PORT"], db=settings.REDIS["DB"])
         redis.set(settings.SETUP_DELIMITER.join((settings.SETUP_PREFIX, settings.SETUP_KEY)), time.time())
+        redis.set(settings.SETUP_DELIMITER.join((settings.SETUP_PREFIX, settings.SETUP_KEY, settings.SETUP_RES)), phase)
         if phase == "error" and not info.check_ipv6():
             if request.method == 'GET' and utils.get_fact('apate', 'general', 'enabled') == 'yes':
                 jobs.queue_job(morejobs.toggle_apate, ("no",), unique=True)

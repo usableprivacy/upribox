@@ -179,4 +179,4 @@ def vpn_toggle(request):
     state=request.POST['enabled']
     jobs.queue_job(vpnjobs.toggle_vpn, (state,))
 
-    return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_vpn')})
+    return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_config')})

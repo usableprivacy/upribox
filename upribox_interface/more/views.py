@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseForbidden
 from lib import jobs, utils
 from lib.info import UpdateStatus
 from .forms import AdminForm, StaticIPForm
@@ -14,6 +14,8 @@ from django.core.urlresolvers import reverse
 import redis as redisDB
 from django.conf import settings
 from datetime import datetime
+from django.shortcuts import redirect
+from wlan import jobs as wlanjobs
 
 # Get an instance of a logger
 logger = logging.getLogger('uprilogger')
@@ -88,6 +90,9 @@ def more_overview(request):
     context = {}
     redis = redisDB.StrictRedis(host=settings.REDIS["HOST"], port=settings.REDIS["PORT"], db=settings.REDIS["DB"])
 
+    context.update({
+        'setup_result': redis.get(settings.SETUP_DELIMITER.join((settings.SETUP_PREFIX, settings.SETUP_KEY, settings.SETUP_RES)))
+    })
     try:
         timestamp = float(redis.get(settings.SETUP_DELIMITER.join((settings.SETUP_PREFIX, settings.SETUP_KEY))))
         setup_date = datetime.utcfromtimestamp(timestamp)
@@ -143,7 +148,7 @@ def more_user(request):
 
 
 @login_required
-def more_static(request):
+def more_static(request, enable=None, dhcpd=None):
     context = {}
 
     net_info = utils.get_system_network_config()
@@ -160,17 +165,19 @@ def more_static(request):
             dns = ip_form.cleaned_data['dns_server']
             # dhcp = ip_form.cleaned_data['dhcp_server']
 
-            # TODO fix queue job (dhcp)
-            jobs.queue_job(sshjobs.reconfigure_network, (ip, netmask, gateway, dns))
+            jobs.queue_job(sshjobs.reconfigure_network, (ip, netmask, gateway, dns, enable))
+            jobs.queue_job(sshjobs.toggle_dhcpd, ("yes" if dhcpd else "no",))
+
             context.update({
                 'message': True,
-                "refresh_url": reverse('upri_config_static'),
+                "refresh_url": request.path,  # reverse('upri_config_static'),
                 'messagestore': jobs.get_messages()
             })
 
     context.update({
         'ip_form': ip_form,
         'messagestore': jobs.get_messages(),
+        'href': request.path,
     })
 
     return render(request, "static.html", context)
@@ -184,7 +191,7 @@ def ssh_toggle(request):
     state = request.POST['enabled']
     jobs.queue_job(sshjobs.toggle_ssh, (state,))
 
-    return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_more')})
+    return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_config')})
 
 
 @login_required
@@ -193,9 +200,10 @@ def apate_toggle(request):
         raise Http404()
 
     state = request.POST['enabled']
+    jobs.queue_job(sshjobs.toggle_dhcpd, ('no',))
     jobs.queue_job(sshjobs.toggle_apate, (state,))
 
-    return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_more')})
+    return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_config')})
 
 
 @login_required
@@ -216,3 +224,59 @@ def save_dhcp(request):
     jobs.queue_job(sshjobs.toggle_static, ('no',))
 
     return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_more')})
+
+
+@login_required
+def static_toggle(request):
+    if request.method != 'POST':
+        raise Http404()
+
+    current = [
+        utils.get_fact('interfaces', 'static', 'ip', defaults=False),
+        utils.get_fact('interfaces', 'static', 'netmask', defaults=False),
+        utils.get_fact('interfaces', 'static', 'dns', defaults=False),
+        utils.get_fact('interfaces', 'static', 'gateway', defaults=False)
+    ]
+
+    state = request.POST.get('enabled', None)
+    if all(current) or state == 'no':
+        # all requirements met or dhcp requested
+        jobs.queue_job(sshjobs.toggle_static, (state,))
+        return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_config')})
+    else:
+        # not all requirements met
+        return HttpResponseForbidden(reverse('upri_config_static_enable'))
+
+
+@login_required
+def manual_toggle(request):
+    if request.method != 'POST':
+        raise Http404()
+
+    current = [
+        utils.get_fact('interfaces', 'static', 'ip', defaults=False),
+        utils.get_fact('interfaces', 'static', 'netmask', defaults=False),
+        utils.get_fact('interfaces', 'static', 'dns', defaults=False),
+        utils.get_fact('interfaces', 'static', 'gateway', defaults=False)
+    ]
+
+    if all(current):
+        # all requirements met or dhcp requested
+        jobs.queue_job(sshjobs.toggle_apate, ('no',))
+        jobs.queue_job(sshjobs.toggle_static, ('yes',))
+        jobs.queue_job(sshjobs.toggle_dhcpd, ('yes',))
+        return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_config')})
+    else:
+        # not all requirements met
+        return HttpResponseForbidden(reverse('upri_config_static_dhcpd'))
+
+
+@login_required
+def wifi_mode(request):
+    if request.method != 'POST':
+        raise Http404()
+
+    jobs.queue_job(wlanjobs.toggle_silent, ('yes',))
+    jobs.queue_job(sshjobs.toggle_apate, ('no',))
+    jobs.queue_job(sshjobs.toggle_dhcpd, ('no',))
+    return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_config')})

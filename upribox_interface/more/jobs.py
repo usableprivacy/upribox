@@ -6,13 +6,15 @@ from django.utils.translation import ugettext as _
 import logging
 logger = logging.getLogger('uprilogger')
 
-def reconfigure_network(ip, netmask, gateway, dns, dhcp=None):
+def reconfigure_network(ip, netmask, gateway, dns, enable=False):
 
     jobs.job_message(_("Die Netzwerkeinstellungen werden neu konfiguriert..."))
     try:
-        logger.debug("Static IP activated")
-        jobs.job_message(_("Modus zur Vergabe statischer IP Adressen wird aktiviert..."))
-        utils.exec_upri_config('enable_static_ip', "yes")
+        if enable:
+            logger.debug("Static IP activated")
+            logger.debug(enable)
+            jobs.job_message(_("Modus zur Vergabe statischer IP Adressen wird aktiviert..."))
+            utils.exec_upri_config('enable_static_ip', "yes")
         if ip:
             logger.debug("new IP: %s" % ip)
             jobs.job_message(_("IP Adresse wird geändert..."))
@@ -30,15 +32,16 @@ def reconfigure_network(ip, netmask, gateway, dns, dhcp=None):
             jobs.job_message(_("DNS Server wird geändert..."))
             utils.exec_upri_config('set_dns_server', dns)
         if ip or netmask or gateway or dns:
-            jobs.job_message(_("Netzwerk wird neu gestartet..."))
-            logger.debug("restarting network")
-            utils.exec_upri_config('restart_network')
-        if dhcp is not None:
-            logger.debug("dhcp server: %s" % dhcp)
-            jobs.job_message(_("DNS Server wird geändert..."))
-            utils.exec_upri_config('set_dhcpd', "yes" if dhcp else "no")
-            jobs.job_message(_("DHCP Server wird konfiguriert..."))
-            utils.exec_upri_config('restart_dhcpd')
+            if utils.get_fact('interfaces', 'general', 'mode') == "static":
+                jobs.job_message(_("Netzwerk wird neu gestartet..."))
+                logger.debug("restarting network")
+                utils.exec_upri_config('restart_network')
+        # if dhcp is not None:
+        #     logger.debug("dhcp server: %s" % dhcp)
+        #     jobs.job_message(_("DNS Server wird geändert..."))
+        #     utils.exec_upri_config('set_dhcpd', "yes" if dhcp else "no")
+        #     jobs.job_message(_("DHCP Server wird konfiguriert..."))
+        #     utils.exec_upri_config('restart_dhcpd')
 
         jobs.job_message(_("Konfiguration von Interfaces erfolgreich."))
 
@@ -111,6 +114,28 @@ def toggle_static(state):
             utils.exec_upri_config('enable_static_ip', state)
             utils.exec_upri_config('restart_network')
             jobs.job_message(_("Konfiguration von Interfaces erfolgreich."))
+
+        except utils.AnsibleError as e:
+            logger.error("ansible failed with error %d: %s" % (e.rc, e.message))
+            if state == 'yes':
+                jobs.job_message(_("Aktivierung von statischer IP fehlgeschlagen."))
+            else:
+                jobs.job_message(_("Deaktivierung von statischer IP fehlgeschlagen."))
+    else:
+        jobs.job_message(_("Es ist ein unbekannter Fehler aufgetreten."))
+
+def toggle_dhcpd(state):
+    if state in ['no', 'yes']:
+        try:
+            logger.debug("dhcp server: %s" % state)
+            if state == 'yes':
+                jobs.job_message(_("DHCP Server wird aktiviert..."))
+            else:
+                jobs.job_message(_("DHCP Server wird deaktiviert..."))
+            utils.exec_upri_config('set_dhcpd', state)
+
+            jobs.job_message(_("DHCP Server wird konfiguriert..."))
+            utils.exec_upri_config('restart_dhcpd')
 
         except utils.AnsibleError as e:
             logger.error("ansible failed with error %d: %s" % (e.rc, e.message))

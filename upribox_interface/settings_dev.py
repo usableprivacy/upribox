@@ -230,6 +230,7 @@ SETUP_PREFIX = "interface"
 SETUP_DELIMITER = ":"
 # """str: Delimiter used for separating parts of keys in the redis db."""
 SETUP_KEY = "setup"
+SETUP_RES = "result"
 
 # from django.urls import reverse
 

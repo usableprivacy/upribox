@@ -12,21 +12,22 @@
 
 {% block content %}
     <div class="row clearfix">
-        <div class="col-2 col-2-main js-col-2-main">
+        <!-- <div class="col-2 col-2-main js-col-2-main"> -->
 
             <form method="post" action="{% url 'upri_login' %}" class="login-form">
-                <fieldset class="limited">
+                <fieldset>
                     <legend>{% trans "Legend" %}</legend>
                     <h2>{% trans "Login" %}</h2>
-                    <label for="Admin">{% trans "Admin" %}: </label>
+                    <p class="formLabel">{% trans "Admin" %}: </p>
 
                     {{ form.username|add_error_class:'form-input-error'}}
                     {% for error in form.username.errors %}
                         <p class="error-message">{{ error|striptags }}</p>
                     {% endfor %}
 
-                    <label for="two">{% trans "Passwort" %}:</label>
+                    <p class="formLabel">{% trans "Passwort" %}:</p>
                     {{ form.password|add_error_class:'form-input-error'}}
+                    <span id="pw{{forloop.counter}}" class="icon i-eye-open showpw" ></span>
                     {% for error in form.password.errors %}
                         <p class="error-message">{{ error|striptags }}</p>
                     {% endfor %}
@@ -37,10 +38,11 @@
 
                     <input type="hidden" name="next" value="{{ next }}" />
                     {% csrf_token %}
-                    <input type="submit" name="submit" id="submit" value="{% trans "Login" %}" class="submit"/>
+                </br>
+                    <button type="submit" name="submit" id="submit" value="{% trans "Login" %}" class="multiple-inputs submit">{% trans "Login" %}</button>
                 </fieldset>
             </form>
-        </div>
+        <!-- </div> -->
 
         <!-- <div class="col-2 col-2-info js-col-2-info">
             <aside>
@@ -57,18 +59,18 @@
     <form>
         <fieldset>
             <legend>{% trans "Status" %}</legend>
-            <div>
+            <!-- <div>
                 <p class="switch icon i-on">{% trans "Silent Modus l&auml;uft." %}</p>
-            </div>
+            </div> -->
 
-            {% get_fact 'tor' 'general' 'enabled' as torenabled%}
-            {% if torenabled == 'yes' %}
+            {% get_fact 'silent' 'general' 'enabled' as wifienabled%}
+            {% if wifienabled == 'yes' %}
                 <div class="switch icon i-on">
-                    <p>{% trans "Ninja Modus l&auml;uft." %}</p>
+                    <p>{% trans "WLAN eingeschaltet." %}</p>
                 </div>
             {% else %}
                 <div class="switch icon i-off">
-                    <p>{% trans "Ninja Modus l&auml;uft nicht." %}</p>
+                    <p>{% trans "WLAN ausgeschaltet." %}</p>
                 </div>
             {% endif %}
 

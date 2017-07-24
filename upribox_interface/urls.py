@@ -32,14 +32,22 @@ urlpatterns = [
     # more config
     url(r'^more/$', more.views.more_config, {"save_form": "user"}, name="upri_more"),
     url(r'^more/ssh/toggle$', more.views.ssh_toggle, name="upri_ssh_toggle"),
+    # automatic mode
     url(r'^more/apate/toggle$', more.views.apate_toggle, name="upri_apate_toggle"),
     url(r'^more/dhcp$', more.views.save_dhcp, name="upri_dhcp_save"),
     url(r'^more/static$', more.views.more_config, {"save_form": "static_ip"}, name="upri_static_save"),
 
     # new config
     url(r'^config/static$', more.views.more_static, name="upri_config_static"),
+    url(r'^config/static/enable$', more.views.more_static, {"enable": True}, name="upri_config_static_enable"),
+    url(r'^config/static/dhcpd$', more.views.more_static, {"enable": True, "dhcpd": True}, name="upri_config_static_dhcpd"),
     url(r'^config/user$', more.views.more_user, name="upri_config_user"),
     url(r'^config/$', more.views.more_overview, name="upri_config"),
+    url(r'^config/static/toggle$', more.views.static_toggle, name="upri_static_toggle"),
+    # manual mode (dhcpd)
+    url(r'^config/manual$', more.views.manual_toggle, name="upri_config_manual"),
+    # wifi only mode
+    url(r'^config/wifi_only$', more.views.wifi_mode, name="upri_config_wifi"),
 
     # Auth config
     url(r'^login/$', auth_views.login, {"template_name": "login.html"}, name="upri_login"),
@@ -76,6 +84,7 @@ urlpatterns = [
     url(r'^devices/$', devices.views.get_devices, name="upri_devices"),
     url(r'^devices/change_mode/$', devices.views.set_device_mode, name="upri_devices_mode"),
     url(r'^devices/change_name/(?P<slug>\w+)$', devices.views.change_name, name="upri_device_name"),
+    url(r'^devices/status/(?P<slug>\w+)$', devices.views.get_device_status, name="upri_device_status"),
 
     # setup
     url(r'^setup/$', setup.views.setup, {"phase": "init"}, name="upri_setup"),

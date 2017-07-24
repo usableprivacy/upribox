@@ -15,7 +15,6 @@
 {% endblock %}
 
 {% block content %}
-                {% url "upri_config_static" as href %}
                 {% url 'upri_config' as back %}
                 {% include "form.html" with form=ip_form %}
 {% endblock %}

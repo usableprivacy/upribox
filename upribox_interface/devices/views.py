@@ -18,6 +18,8 @@ from django.views.decorators.http import require_http_methods
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 from django.template import loader
+from django.http import JsonResponse
+
 
 # Get an instance of a logger
 logger = logging.getLogger('uprilogger')
@@ -82,3 +84,16 @@ def change_name(request, slug):
         return render(request, "devices.html", {'messagestore': jobs.get_messages(), 'devices':  DeviceEntry.objects.all(), })
     else:
         return render(request, "name_modal.html", {"device": DeviceEntry.objects.get(slug=slug), "href": reverse('upri_device_name', kwargs={'slug': slug})})
+
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def get_device_status(request, slug):
+    try:
+        ip = DeviceEntry.objects.get(slug=slug).ip
+    except DeviceEntry.DoesNotExist:
+        res = None
+    else:
+        res = utils.exec_upri_config("check_device", ip)
+
+    return JsonResponse({slug: bool(res)})
