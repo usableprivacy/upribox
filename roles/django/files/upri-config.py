@@ -25,6 +25,9 @@ from netaddr import IPNetwork, IPAddress, ZEROFILL
 import redis as redisDB
 from os.path import isfile, join, exists
 import argparser
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
+# suppresses following message
+# WARNING: No route found for IPv6 destination :: (no default route?)
 # import traceback
 
 # directory where facts are located
@@ -67,6 +70,13 @@ def check_ip(ip):
         except socket.error:
             return None
 
+def action_check_device(arg):
+    # import inside function, because import is slow
+    from scapy.all import arping
+    if not check_ip(arg):
+        return False
+
+    return bool(len(arping(arg, iface=None, verbose=0)[0]))
 
 def get_network(interface, addr_family):
     if_info = None
@@ -692,7 +702,7 @@ def action_configure_devices(arg):
 
 def action_set_static_ip(arg):
     if arg not in ['yes', 'no']:
-        print 'error: only "dhcp" and "static" are allowed'
+        print 'error: only "yes" and "no" are allowed'
         return 10
     arg = "static" if arg == "yes" else "dhcp"
     print 'interface mode: %s' % arg
@@ -838,6 +848,7 @@ ALLOWED_ACTIONS = {
     'untorify_device': action_untorify_device,
     'include_device': action_include_device,
     'silent_device': action_silent_device,
+    'check_device': action_check_device,
 }
 
 #

@@ -1,8 +1,11 @@
 #!/usr/bin/env python
-import argcomplete, argparse
+import argcomplete
+import argparse
+
 
 def boolean_completer(prefix, parsed_args, **kwargs):
     return ["yes", "no"]
+
 
 def create_argparser():
 
@@ -167,9 +170,15 @@ def create_argparser():
 
     # create the parser for the "silent_device" command
     parser_silent_device = subparser.add_parser('silent_device',
-                                                 help='Shortcut for calling of include_device and untorify_device')
+                                                help='Shortcut for calling of include_device and untorify_device')
     parser_silent_device.add_argument('arg', help='The MAC address of the device whose mode shall be set to silent',
-                                       metavar="mac")
+                                      metavar="mac")
+
+    # create the parser for the "check_device" command
+    parser_check_device = subparser.add_parser('check_device', help='Checks if device with given ip address is online')
+    parser_check_device.add_argument('arg',
+                                     help='The IP address of the device to check',
+                                     metavar="ip")
 
     argcomplete.autocomplete(parser)
 
