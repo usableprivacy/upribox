@@ -1602,3 +1602,76 @@ input[type="radio"]{
 .formLabel{
     margin-bottom: 10px;
 }
+
+/* Accordion */
+
+button.accordion {
+    width: 100%;
+    background-color: #f3f3f3;
+    color: black;
+    font-size: 16px;
+    font-weight: 500;
+    border-bottom: 1px solid #999999;
+    border-top: 1px solid #999999;
+    cursor: pointer;
+    padding: 12px;
+    text-align: left;
+    outline: none;
+    transition: 0.4s;
+    border-radius: 0px;
+  }
+
+  /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+  button.accordion.active, button.accordion:hover {
+    background-color: #ddd;
+  }
+
+  /* Style the accordion panel. Note: hidden by default */
+  div.panel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+  }
+
+  button.accordion:after {
+    /*content: '\02795'; Unicode character for "plus" sign (+)
+    font-size: 13px;
+    color: #777;*/
+    vertical-align: middle;
+    display: inline-block;
+    width: 10px;
+    height: 20px;
+    content: '';
+    background-color: transparent;
+    background-image: url('../img/icon-sprite-v2.png');
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: -50px -459px;
+
+
+
+    float: right;
+    margin-right: 10px;
+      margin-top: -2px;
+  }
+
+  button.accordion.active:after {
+      /*content: "\2796"; /* Unicode character for "minus" sign (-) */
+    vertical-align: middle;
+    background: none;
+    display: inline-block;
+    width: 20px;
+    height: 10px;
+    content: '';
+    background-color: transparent;
+    background-image: url('../img/icon-sprite-v2.png');
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: -176px -464px;
+    margin-right: 5px;
+    margin-top: 5px;
+
+
+  }

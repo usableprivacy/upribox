@@ -148,6 +148,16 @@ UPRIBOX.Main = (function($) {
             $('.js-expand-button').removeClass('hidden');
         });
 
+        $('body').on('click', '.accordion', function(e) {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+        });
+
         $('body').on('click', '#button-vpn-generate', function(e) {
             e.preventDefault();
             $('.js-profile-placeholder').addClass('hidden');
