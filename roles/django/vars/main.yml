@@ -1,4 +1,0 @@
----
-cron_parse_schedule: '30 */4 * * *'
-cron_parse_user: root
-parse_syslog_tag: upri-parse-logs

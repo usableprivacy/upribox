@@ -7,11 +7,9 @@
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
   with_items:
     - openvpn
-    - python-miniupnpc
-    - natpmp-utils
 
-- name: add port forwarding script
-  template: src=portfwd.j2 dest=/usr/local/bin/portfwd.py owner=upri group=upri mode=0755
+# - name: add port forwarding script
+  # template: src=portfwd.j2 dest=/usr/local/bin/portfwd.py owner=upri group=upri mode=0755
 
 - name: create crontab entry for port forwarding and dns update
   template: src=etc_cron.d_portfwd.j2 dest=/etc/cron.d/portfwd owner=root group=root mode=0644
@@ -20,7 +18,7 @@
     - toggle_vpn
 
 - name: start port forwarding script
-  command: python /usr/local/bin/portfwd.py
+  command: python /usr/local/bin/upri-config.py vpn_forward
   when: vpn|bool
   tags:
     - toggle_vpn
@@ -31,11 +29,16 @@
   tags:
     - toggle_vpn
 
-- name: copy the port forwarding deletion script
-  template: src=delete_portfwd.j2 dest=/usr/local/bin/delete_portfwd.py owner=root group=root mode=0755
+# - name: copy the port forwarding deletion script
+  # template: src=delete_portfwd.j2 dest=/usr/local/bin/delete_portfwd.py owner=root group=root mode=0755
+- name: remove old portforward scripts
+  file: path="{{ item }}" state=absent
+  with_items:
+    - '/usr/local/bin/portfwd.py'
+    - '/usr/local/bin/delete_portfwd.py'
 
 - name: delete port forwarding
-  command: python /usr/local/bin/delete_portfwd.py
+  command: python /usr/local/bin/upri-config.py vpn_unforward
   when: not vpn|bool
   tags:
     - toggle_vpn

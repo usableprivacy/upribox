@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import json
 import os
 import requests
@@ -52,7 +50,7 @@ def hash_file(path):
         return hsh.hexdigest()
 
 
-def main():
+def update():
     if os.path.isfile(UPDATE_INFO_FILE):
 
         exit_code = 0
@@ -103,10 +101,10 @@ def main():
     else:
         return 4
 
-if __name__ == "__main__":
+def action_filter_update(arg):
     try:
-        exit_code = main()
+        exit_code = update()
     except:
         traceback.print_exc(file=sys.stdout)
-        exit(2)
-    exit(exit_code)
+        return 2
+    return exit_code

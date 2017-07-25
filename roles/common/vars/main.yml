@@ -1,4 +1,0 @@
----
-filter_cron_schedule: '30 */4 * * *'
-filter_cron_user: root
-filter_syslog_tag: upri-filter-update

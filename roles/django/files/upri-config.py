@@ -45,6 +45,7 @@ CONFIG_FILE = "/etc/apate/config.json"
 # default value of mode column of devices_deviceentry table
 _DEVICE_DEFAULT_MODE = "SL"
 
+
 def action_disable_device(arg):
     if not check_ip(arg):
         return 27
@@ -70,6 +71,7 @@ def check_ip(ip):
         except socket.error:
             return None
 
+
 def action_check_device(arg):
     # import inside function, because import is slow
     from scapy.all import arping
@@ -77,6 +79,7 @@ def action_check_device(arg):
         return False
 
     return bool(len(arping(arg, iface=None, verbose=0)[0]))
+
 
 def get_network(interface, addr_family):
     if_info = None
@@ -599,6 +602,7 @@ def action_restart_wlan(arg):
 # return values:
 # 10: invalid argument
 
+
 def action_set_silent(arg):
     if arg not in ['yes', 'no']:
         print 'error: only "yes" and "no" are allowed'
@@ -696,9 +700,11 @@ def action_restart_apate(arg):
     print 'restarting apate...'
     return call_ansible('toggle_apate')
 
+
 def action_configure_devices(arg):
     print 'configuring devices...'
     return call_ansible('configure_devices')
+
 
 def action_set_static_ip(arg):
     if arg not in ['yes', 'no']:
@@ -709,8 +715,10 @@ def action_set_static_ip(arg):
     en = {"general": {"mode": arg}}
     write_role('interfaces', en)
 
+
 def _check_mac(mac):
     return re.match("[0-9a-f]{2}([:])[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", mac.lower())
+
 
 def _config_mac(group, mac, remove=False):
     if _check_mac(mac):
@@ -724,6 +732,7 @@ def _config_mac(group, mac, remove=False):
     else:
         return 30
 
+
 def action_torify_device(arg):
     if _config_mac("tor", arg):
         print 'error: invalid mac address'
@@ -732,6 +741,7 @@ def action_torify_device(arg):
     print 'torified device: %s' % arg
     action_include_device(arg)
 
+
 def action_exclude_device(arg):
     if _config_mac("no_adblocking", arg):
         print 'error: invalid mac address'
@@ -739,6 +749,7 @@ def action_exclude_device(arg):
     # remove from other list
     print 'excluded device: %s' % arg
     action_untorify_device(arg)
+
 
 def action_include_device(arg):
     if _config_mac("no_adblocking", arg, remove=True):
@@ -753,6 +764,7 @@ def action_untorify_device(arg):
         return 30
     print 'untorified device: %s' % arg
 
+
 def action_silent_device(arg):
     if _check_mac(arg):
         action_include_device(arg)
@@ -760,6 +772,7 @@ def action_silent_device(arg):
     else:
         print 'error: invalid mac address'
         return 30
+
 
 def check_passwd(arg):
     pw = passwd.Password(arg)
@@ -873,7 +886,6 @@ def write_role(rolename, data, schema={}):
         js = {}
 
     js = merge(js, data, schema)
-    merge
     with open(p, 'w+') as data_file:
         json.dump(js, data_file, indent=4)
 
