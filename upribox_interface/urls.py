@@ -82,12 +82,15 @@ urlpatterns = [
 
     # devices
     url(r'^devices/$', devices.views.get_devices, name="upri_devices"),
+    url(r'^devices/refresh/$', devices.views.refresh_devices, name="upri_devices_refresh"),
     url(r'^devices/change_mode/$', devices.views.set_device_mode, name="upri_devices_mode"),
     url(r'^devices/change_name/(?P<slug>\w+)$', devices.views.change_name, name="upri_device_name"),
     url(r'^devices/status/(?P<slug>\w+)$', devices.views.get_device_status, name="upri_device_status"),
 
     # setup
-    url(r'^setup/$', setup.views.setup, {"phase": "init"}, name="upri_setup"),
-    url(r'^setup/error$', setup.views.setup, {"phase": "error"}, name="upri_setup_error"),
-    url(r'^setup/success$', setup.views.setup, {"phase": "success"}, name="upri_setup_success")
+    url(r'^setup/$', setup.views.setup_init, name="upri_setup"),
+    url(r'^setup/evaluation$', setup.views.setup_eval, name="upri_setup_eval"),
+    url(r'^setup/error$', setup.views.setup_error, name="upri_setup_error"),
+    url(r'^setup/failed$', setup.views.setup_failed, name="upri_setup_failed"),
+    url(r'^setup/success$', setup.views.setup_success, name="upri_setup_success")
 ]

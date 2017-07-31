@@ -6,7 +6,11 @@
 
 {% block header %}
     <h1>{% trans "Statistik" %}</h1>
-    <p>{% trans "Geblockete Domains und gefilterte Inhalte." %}</p>
+    <p>{% trans "Geblockte Domains und gefilterte Inhalte." %}</p>
+{% endblock %}
+
+{% block breadcrumb  %}
+    <p><a href="{% url 'upri_index' %}">{% trans "Start" %}</a> > {% trans "Statistik" %}</p>
 {% endblock %}
 
 {% block content %}

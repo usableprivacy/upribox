@@ -6,6 +6,7 @@ from django.utils.translation import ugettext as _
 import logging
 logger = logging.getLogger('uprilogger')
 
+
 def reconfigure_network(ip, netmask, gateway, dns, enable=False):
 
     jobs.job_message(_("Die Netzwerkeinstellungen werden neu konfiguriert..."))
@@ -49,11 +50,13 @@ def reconfigure_network(ip, netmask, gateway, dns, enable=False):
         logger.error("ansible failed with error %d: %s" % (e.rc, e.message))
         jobs.job_message(_("Es ist ein unbekannter Fehler aufgetreten. Fehlercode: %(errorcode)s" % {'errorcode': e.rc}))
 
+
 def toogle_static(mode):
     if mode in ['yes', 'no']:
         utils.exec_upri_config('enable_static_ip', mode)
         utils.exec_upri_config('restart_network')
         utils.exec_upri_config('restart_dhcpd')
+
 
 def toggle_ssh(state):
 
@@ -78,28 +81,35 @@ def toggle_ssh(state):
     else:
         jobs.job_message(_("Es ist ein unbekannter Fehler aufgetreten."))
 
-def toggle_apate(state):
+
+def toggle_apate(state, messages=True):
 
     if state in ['yes', 'no']:
         try:
             if state == 'yes':
-                jobs.job_message(_("Apate ARP Spoofing Daemon wird gestartet..."))
+                if messages:
+                    jobs.job_message(_("Apate ARP Spoofing Daemon wird gestartet..."))
             else:
-                jobs.job_message(_("Apate ARP Spoofing Daemon wird gestoppt..."))
+                if messages:
+                    jobs.job_message(_("Apate ARP Spoofing Daemon wird gestoppt..."))
 
             logger.debug("restarting apate")
             utils.exec_upri_config('enable_apate', state)
             utils.exec_upri_config('restart_apate')
-            jobs.job_message(_("Konfiguration von Apate ARP Spoofing Daemon erfolgreich."))
+            if messages:
+                jobs.job_message(_("Konfiguration von Apate ARP Spoofing Daemon erfolgreich."))
 
         except utils.AnsibleError as e:
             logger.error("ansible failed with error %d: %s" % (e.rc, e.message))
             if state == 'yes':
-                jobs.job_message(_("Starten von Apate ARP Spoofing Daemon fehlgeschlagen."))
+                if messages:
+                    jobs.job_message(_("Starten von Apate ARP Spoofing Daemon fehlgeschlagen."))
             else:
-                jobs.job_message(_("Stoppen von Apate ARP Spoofing Daemon fehlgeschlagen."))
+                if messages:
+                    jobs.job_message(_("Stoppen von Apate ARP Spoofing Daemon fehlgeschlagen."))
     else:
         jobs.job_message(_("Es ist ein unbekannter Fehler aufgetreten."))
+
 
 def toggle_static(state):
 
@@ -123,6 +133,7 @@ def toggle_static(state):
                 jobs.job_message(_("Deaktivierung von statischer IP fehlgeschlagen."))
     else:
         jobs.job_message(_("Es ist ein unbekannter Fehler aufgetreten."))
+
 
 def toggle_dhcpd(state):
     if state in ['no', 'yes']:

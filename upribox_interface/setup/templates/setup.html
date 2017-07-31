@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load widget_tweaks %}
 {% load base_extras %}
+{% load static from staticfiles %}
 
 {% block title %}{% trans "Einrichtung der upribox" %}{% endblock %}
 
@@ -12,7 +13,7 @@
 
 {% block content %}
 
-    {% if phase == "error"%}
+    {% if phase == "failed"%}
         <div class="icon i-setup-failed"> </div>
 
         <div class="setup-text">
@@ -38,11 +39,25 @@
             <p> Die upribox verfügt derzeit über keine Internetverbindung. Bitte stellen Sie sicher, dass die upribox mit ihrem Heimnetzwerk verbunden ist.</p>
         {% endblocktrans %}
         </div>
-    {% else %}
+    {% elif phase == "eval" %}
         {% blocktrans with orf="http://www.orf.at"%}
             <p> Bitte testen Sie mit einem zweiten Gerät, das mit Ihrem Heimnetzwerk verbunden ist, ob eine Internetverbindung weiterhin besteht. Rufen Sie dazu einfach die Seite <a href="{{orf}}">www.orf.at</a> auf. <br> <br>
             Ist die Seite erreichbar?  </p>
         {% endblocktrans %}
-        <button class="multiple-inputs" onclick="location.href='{% url 'upri_setup_success' %}';"> {% trans "Ja" %} </button> <button onclick="location.href='{% url 'upri_setup_error' %}';"> {% trans "Nein" %} </button>
+        <button class="multiple-inputs" onclick="location.href='{% url 'upri_setup_success' %}';"> {% trans "Ja" %} </button> <button onclick="location.href='{% url 'upri_setup_failed' %}';"> {% trans "Nein" %} </button>
+    {% elif phase == "init" %}
+         <p class="icon i-update init_jobs" data-refresh-url="{{ refresh_url }}" data-error-url="{{ error_url }}" > {% trans "Bitte warten, das Setup wird gestartet." %} </p>
+     {% else %}
+         <div class="icon i-setup-failed"> </div>
+
+         <div class="setup-text">
+             <p> {% trans "Es ist leider ein Fehler während des Setups der upribox aufgetreten." %}</p>
+         </div>
+    {% endif %}
+{% endblock %}
+
+{% block script %}
+    {% if phase == "init" %}
+        <script type="text/javascript" src="{% static "js/init_page.js" %}"></script>
     {% endif %}
 {% endblock %}

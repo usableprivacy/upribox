@@ -28,12 +28,26 @@ logger = logging.getLogger('uprilogger')
 @require_http_methods(["GET", "POST"])
 @login_required
 def get_devices(request):
+    # TODO remove
     try:
         utils.exec_upri_config('parse_user_agents')
     except utils.AnsibleError as ae:
         logger.exception(ae)
 
     return render(request, "devices.html", {'messagestore': jobs.get_messages(), 'devices':  DeviceEntry.objects.all(), })
+
+
+@require_http_methods(["GET","POST"])
+@login_required
+def refresh_devices(request):
+    try:
+        utils.exec_upri_config('parse_user_agents')
+    except utils.AnsibleError as ae:
+        logger.exception(ae)
+
+    devices = DeviceEntry.objects.all()
+
+    return JsonResponse({dev.slug: dev.mode for dev in devices})
 
 
 @login_required

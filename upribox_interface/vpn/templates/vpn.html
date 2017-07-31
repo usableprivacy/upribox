@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block breadcrumb  %}
-    <p>{% trans "Konfiguration" %} > {% trans "VPN" %}</p>
+    <p><a href="{% url 'upri_index' %}">{% trans "Start" %}</a> > <a href="{% url 'upri_config' %}">{% trans "Konfiguration" %}</a> > {% trans "VPN" %}</p>
 {% endblock %}
 
 {% block content %}

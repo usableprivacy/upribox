@@ -27,7 +27,7 @@
 				</h1>
 				<p>{% trans "Usable Privacy Box" %}</p>
 
-                {% onpage request 'upri_login upri_setup upri_setup_error upri_setup_success' as onlogin %}
+                {% onpage request 'upri_login upri_setup upri_setup_error upri_setup_success upri_setup_failed upri_setup_eval' as onlogin %}
                 {% if not onlogin %}
                 <a href="{% url 'upri_faq' %}" title="{% trans "FAQ" %}" class="faq-link only-mobile">{% trans "Hilfe" %}</a>
 				<button class="btn-menu only-mobile js-menu">{% trans "Menü" %}</button>
@@ -97,5 +97,7 @@
         <script type="text/javascript" src="{% static "js/vendor/qrcode.min.js" %}"></script>
 
 		<script type="text/javascript" src="{% static "js/main.js" %}"></script>
+        {% block script %}
+        {% endblock %}
 	</body>
 </html>

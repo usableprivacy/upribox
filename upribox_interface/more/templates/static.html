@@ -7,7 +7,7 @@
 {% block title %}{% trans "Konfiguration" %}{% endblock %}
 
 {% block breadcrumb  %}
-    <p>{% trans "Konfiguration" %} > {% trans "Static IP" %}</p>
+    <p><a href="{% url 'upri_index' %}">{% trans "Start" %}</a> > <a href="{% url 'upri_config' %}">{% trans "Konfiguration" %}</a> > {% trans "Static IP" %}</p>
 {% endblock %}
 
 {% block header %}

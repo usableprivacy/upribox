@@ -7,7 +7,7 @@
 {% block title %}{% trans "Konfiguration" %}{% endblock %}
 
 {% block breadcrumb  %}
-    <p>{% trans "Konfiguration" %}</p>
+    <p><a href="{% url 'upri_index' %}">{% trans "Start" %}</a> > {% trans "Konfiguration" %}</p>
 {% endblock %}
 
 {% block header %}
@@ -62,7 +62,7 @@
 {% endblock %}
 
 {% block info %}
-<div class="divInfoTable">
+<!-- <div class="divInfoTable">
     <div class="divInfoTableBody">
         <div class="divInfoTableRow">
             <div class="divInfoTableCell">
@@ -71,5 +71,5 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 {% endblock %}

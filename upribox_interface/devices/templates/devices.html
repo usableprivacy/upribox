@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block breadcrumb  %}
-    <p>{% trans "Geräteübersicht" %}</p>
+    <p><a href="{% url 'upri_index' %}">{% trans "Start" %}</a> > {% trans "Geräteübersicht" %}</p>
 {% endblock %}
 
 {% block title %}{% trans "Geräteübersicht - upribox" %}{% endblock %}
@@ -55,15 +55,15 @@
             <div class="divInfoTableRow">
                 <div class="divInfoTableCell">
                     <p class="icon i-Bkeinmodus infohead"> {% trans "Kein Modus:" %} </p>
-                    <p class="infotext"> {% trans "Wenn kein Modus aktiviert ist, werden weder Werbung ausgeblendet, noch ihre Aktivitäten geschützt." %} <a class="infotext" href="#">{% trans "mehr" %}</a> </p>
+                    <p class="infotext"> {% trans "Ist dieser Modus aktiviert, werden weder Werbung ausgeblendet, noch ihre Aktivitäten geschützt." %} <a class="infotext" href="{% url 'upri_faq' %}">{% trans "mehr" %}</a> </p>
                 </div>
                 <div class="divInfoTableCell">
                     <p class="icon i-Bsilent infohead"> {% trans "Silent Modus:" %} </p>
-                    <p class="infotext"> {% trans "Wenn kein Modus aktiviert ist, werden weder Werbung ausgeblendet, noch ihre Aktivitäten geschützt." %} <a class="infotext" href="#">{% trans "mehr" %}</a> </p>
+                    <p class="infotext"> {% trans "Ermöglicht werbefreie Nutzung von Internetseiten. Außerdem wird Ihr Verhalten nicht beobachtet." %} <a class="infotext" href="{% url 'upri_faq' %}">{% trans "mehr" %}</a> </p>
                 </div>
                 <div class="divInfoTableCell">
                     <p class="icon i-Bninja infohead"> {% trans "Ninja Modus:" %}</p>
-                    <p class="infotext"> {% trans "Wenn kein Modus aktiviert ist, werden weder Werbung ausgeblendet, noch ihre Aktivitäten geschützt." %} <a class="infotext" href="#">{% trans "mehr" %}</a>  </p>
+                    <p class="infotext"> {% trans "Ermöglicht anonyme Nutzung. Ihre Aktivitäten können nur schwer nachverfolgt werden." %} <a class="infotext" href="{% url 'upri_faq' %}">{% trans "mehr" %}</a>  </p>
                 </div>
             </div>
         </div>

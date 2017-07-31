@@ -219,6 +219,8 @@ a:focus, a:hover, a:active {
     padding: 20px;
 }
 
+
+
 button {
     margin-top: 30px;
 }
@@ -1334,6 +1336,7 @@ article p strong {
 .divTableHead {
     padding-bottom: 20px;
     text-align: center;
+    min-width: 55px;
 }
 
 .divTableHeading {
@@ -1421,17 +1424,21 @@ input[type="radio"]{
 }
 
 .i-ninja::before {
-    background-position: -2px -56px;
+    background-position: -0px -57px;
+    width: 56px;
+    margin-left: -7px;
 }
 
 .i-silent::before {
-    background-position: 0 0;
-    width: 48px;
+    background-position: -7px 0;
+    width: 41px;
+    margin-top: 5px;
 }
 
 .i-keinmodus::before{
     background-position: -110px -550px;
-    width: 50px;
+    width: 51px;
+    margin-right: -12px;
 }
 
 @media only screen and (max-width: 480px) {
@@ -1589,7 +1596,6 @@ input[type="radio"]{
     display: none;
 }
 
-
 @media only screen and (max-width: 480px) {
     .modalCell{
         display: inherit;
@@ -1636,9 +1642,6 @@ button.accordion {
   }
 
   button.accordion:after {
-    /*content: '\02795'; Unicode character for "plus" sign (+)
-    font-size: 13px;
-    color: #777;*/
     vertical-align: middle;
     display: inline-block;
     width: 10px;
@@ -1650,15 +1653,12 @@ button.accordion {
     background-attachment: scroll;
     background-position: -50px -459px;
 
-
-
     float: right;
     margin-right: 10px;
-      margin-top: -2px;
+    margin-top: -2px;
   }
 
   button.accordion.active:after {
-      /*content: "\2796"; /* Unicode character for "minus" sign (-) */
     vertical-align: middle;
     background: none;
     display: inline-block;
@@ -1672,6 +1672,25 @@ button.accordion {
     background-position: -176px -464px;
     margin-right: 5px;
     margin-top: 5px;
-
-
   }
+
+
+@media only screen and (max-width: 600px) {
+    .modal .message {
+        width: auto;
+        max-width: inherit;
+        margin: 20px;
+
+    }
+}
+
+/* Formatierungen Radio & Checkboxen */
+
+/*input[type="checkbox"], input[type="radio"] {
+  position: absolute;
+  clip: rect(0,0,0,0);
+}
+
+input[type="checkbox"]:focus + label , input[type="radio"]:focus + label{
+  font-weight: bold;
+}*/

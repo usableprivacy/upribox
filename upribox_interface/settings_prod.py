@@ -247,6 +247,8 @@ SETUP_NO_REDIRECT = [
     "upri_setup",
     "upri_setup_error",
     "upri_setup_success",
+    "upri_setup_failed",
+    "upri_setup_eval",
     "upri_jobstatus",
     "upri_clear_jobstatus",
 ]
