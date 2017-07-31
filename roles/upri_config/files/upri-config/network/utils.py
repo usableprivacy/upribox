@@ -3,14 +3,12 @@ import socket
 import sys
 sys.path.insert(0, "/usr/share/nginx/www-upri-interface/lib/")
 sys.path.insert(0, "/opt/apate/lib/")
-import passwd
-import ssid
-import domain
 import netifaces as ni
 from netaddr import IPNetwork
 
 
 def check_passwd(arg):
+    import passwd
     pw = passwd.Password(arg)
     if not pw.is_valid():
         if not pw.has_digit():
@@ -32,6 +30,7 @@ def check_passwd(arg):
 
 
 def check_ssid(arg):
+    import ssid
     ssid_value = ssid.SSID(arg)
     if not ssid_value.is_valid():
         if not ssid_value.has_allowed_length():
@@ -45,6 +44,7 @@ def check_ssid(arg):
 
 
 def check_domain(arg):
+    import domain
     domain_value = domain.Domain(arg)
     if not domain_value.is_valid():
         if not domain_value.has_allowed_length():

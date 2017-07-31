@@ -7,9 +7,10 @@ from os.path import exists
 
 from lib.utils import check_fact
 
+
 # Port for OpenVPN
-PORT = check_fact('vpn', 'connection', 'port')
-PROTOCOL = check_fact('vpn', 'connection', 'protocol')
+PORT = check_fact('vpn', 'connection', 'port', debug=False)
+PROTOCOL = check_fact('vpn', 'connection', 'protocol', debug=False)
 
 # Regex for parsing NATPMP output
 PUB_IP_REGEX = r'\bPublic IP address : (?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b'

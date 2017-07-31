@@ -1,6 +1,9 @@
 import logging
 from network.utils import check_ip, check_mac
+from network.apate import action_disable_device, action_enable_device
 from lib.utils import call_ansible, write_role, get_fact
+import sqlite3
+import json
 
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 # suppresses following message
@@ -51,6 +54,7 @@ def action_exclude_device(arg):
     # remove from other list
     print 'excluded device: %s' % arg
     action_untorify_device(arg)
+    return action_disable_device(get_ip(arg))
 
 
 def action_include_device(arg):
@@ -58,6 +62,7 @@ def action_include_device(arg):
         print 'error: invalid mac address'
         return 30
     print 'included device: %s' % arg
+    return action_enable_device(get_ip(arg))
 
 
 def action_untorify_device(arg):
@@ -74,3 +79,27 @@ def action_silent_device(arg):
     else:
         print 'error: invalid mac address'
         return 30
+
+
+def get_ip(mac):
+    with open('/etc/ansible/default_settings.json', 'r') as f:
+        config = json.load(f)
+
+    dbfile = config['django']['db']
+
+    try:
+        conn = sqlite3.connect(dbfile)
+        c = conn.cursor()
+        c.execute("SELECT ip FROM devices_deviceentry WHERE mac=?", (mac,))
+        data = c.fetchone()
+        if not data:
+            # invalid profile id
+            print 'profile id does not exist in database'
+            return 21
+        else:
+            return data[0]
+    except Exception as e:
+        print "failed to write to database"
+        print str(e)
+        return 16
+    return None

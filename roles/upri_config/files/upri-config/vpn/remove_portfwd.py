@@ -4,10 +4,11 @@ import subprocess
 from lib.utils import check_fact
 
 # Port for OpenVPN
-PORT = check_fact('vpn', 'connection', 'port')
-PROTOCOL = check_fact('vpn', 'connection', 'protocol')
+PORT = check_fact('vpn', 'connection', 'port', debug=False)
+PROTOCOL = check_fact('vpn', 'connection', 'protocol', debug=False)
 
 debug = False
+
 
 def action_remove_forward(arg):
     if arg == True:

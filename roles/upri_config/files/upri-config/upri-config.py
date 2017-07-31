@@ -5,7 +5,7 @@ from lib.settings import VENV
 activate_script = join(VENV, "bin", "activate_this.py")
 execfile(activate_script, dict(__file__=activate_script))
 
-from lib import argparser, filter_update
+from lib import argparser, filter_update, backup
 from lib import parser as logparser
 from network import wlan, apate, misc, net, device
 from vpn import vpn, port_forward, remove_portfwd
@@ -54,7 +54,9 @@ ALLOWED_ACTIONS = {
     'check_device': device.action_check_device,
     'filter_update': filter_update.action_filter_update,
     'vpn_forward': port_forward.action_forward,
-    'vpn_unforward':remove_portfwd.action_remove_forward,
+    'vpn_unforward': remove_portfwd.action_remove_forward,
+    'backup_settings': backup.action_backup,
+    "restore_settings": backup.action_restore,
 }
 
 

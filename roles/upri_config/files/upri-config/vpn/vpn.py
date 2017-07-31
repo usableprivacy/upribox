@@ -8,7 +8,7 @@ from lib.settings import CLIENT_TEMPLATE
 from lib.utils import write_role, call_ansible
 
 sys.path.insert(0, "/usr/share/nginx/www-upri-interface/lib/")
-import domain
+
 
 
 #
@@ -46,6 +46,7 @@ def action_delete_profile(slug):
 
 
 def action_generate_profile(profile_id):
+    import domain
     with open('/etc/ansible/default_settings.json', 'r') as f:
         config = json.load(f)
 

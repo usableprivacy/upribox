@@ -5,7 +5,6 @@ sys.path.insert(0, "/opt/apate/lib/")
 from network.utils import check_ip, get_network
 from lib.settings import CONFIG_FILE
 from lib.utils import write_role, call_ansible
-from apate_redis import ApateRedis
 
 
 def action_disable_device(arg):
@@ -23,6 +22,7 @@ def action_enable_device(arg):
 
 
 def toggle_device(ip, enabled):
+    from apate_redis import ApateRedis
     try:
         with open(CONFIG_FILE) as config:
             data = json.load(config)

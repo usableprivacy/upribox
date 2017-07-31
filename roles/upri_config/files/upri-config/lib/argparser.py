@@ -190,6 +190,12 @@ def create_argparser():
     parser_vpn_unforward = subparser.add_parser('vpn_unforward', help='removes vpn port forwarding')
     parser_vpn_unforward.add_argument('--debug', action='store_true', help='Print additional debug messages', dest="arg")
 
+    subparser.add_parser('backup_settings', help='Saves settings and logs to a backup archive')
+
+    parser_restore = subparser.add_parser('restore_settings', help="Restore settings from backup archive")
+    parser_restore.add_argument('arg', help='The path of the backup archive',
+                                metavar="path")
+
     argcomplete.autocomplete(parser)
 
     return parser
