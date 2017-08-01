@@ -38,5 +38,6 @@ class DeviceEntry(models.Model):
     mode = models.CharField(max_length=2, choices=MODES, default='SL')
     chosen_name = models.CharField(max_length=256, null=True)
     slug = autoslug.AutoSlugField(unique=True, populate_from=utils.secure_random_id, always_update=False, null=True)
+    changing = models.NullBooleanField(null=True, default=False)
 
     objects = DeviceManager()

@@ -11,6 +11,7 @@ from django.db import DatabaseError
 import sqlite3
 import json
 
+
 def toggle_device_mode(mode, device):
 
     if mode in [entry[0] for entry in DeviceEntry.MODES]:
@@ -28,7 +29,6 @@ def toggle_device_mode(mode, device):
 
                 utils.exec_upri_config('configure_devices')
 
-
                 try:
                     with open('/etc/ansible/default_settings.json', 'r') as f:
                         config = json.load(f)
@@ -41,7 +41,7 @@ def toggle_device_mode(mode, device):
                     conn = sqlite3.connect(dbfile)
                     # conn = sqlite3.connect(settings.DATABASES['default']['NAME'])
                     c = conn.cursor()
-                    c.execute("Update devices_deviceentry set mode=? where id=?;", (mode, device.id))
+                    c.execute("Update devices_deviceentry set mode=?, changing=? where id=?;", (mode, False, device.id))
                     conn.commit()
                     conn.close()
                 except DatabaseError as dbe:

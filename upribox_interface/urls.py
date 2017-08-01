@@ -65,6 +65,7 @@ urlpatterns = [
     # jobs
     url(r'^jobstatus/$', www.views.jobstatus, name="upri_jobstatus"),
     url(r'^jobstatus/clear/$', www.views.clear_jobstatus, name="upri_clear_jobstatus"),
+    url(r'^jobstatus/count/$', www.views.jobcounter, name="upri_count_jobstatus"),
 
     # VPN config
     url(r'^vpn/$', vpn.views.vpn_config, name="upri_vpn"),
@@ -86,6 +87,8 @@ urlpatterns = [
     url(r'^devices/change_mode/$', devices.views.set_device_mode, name="upri_devices_mode"),
     url(r'^devices/change_name/(?P<slug>\w+)$', devices.views.change_name, name="upri_device_name"),
     url(r'^devices/status/(?P<slug>\w+)$', devices.views.get_device_status, name="upri_device_status"),
+    url(r'^devices/processing/$', devices.views.changing_devices, name="upri_devices_processing"),
+    url(r'^devices/entry/$', devices.views.device_entry, name="upri_device_entry"),
 
     # setup
     url(r'^setup/$', setup.views.setup_init, name="upri_setup"),

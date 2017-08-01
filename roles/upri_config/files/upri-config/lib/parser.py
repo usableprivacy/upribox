@@ -8,6 +8,7 @@ import os
 import sqlite3
 import redis as redisDB
 from lib.settings import DEVICE_DEFAULT_MODE
+from netaddr import EUI, IPAddress, AddrFormatError
 
 redis = redisDB.StrictRedis(host="localhost", port=6379, db=7)
 
@@ -211,50 +212,59 @@ def action_parse_user_agents(arg):
         print "parsing squid logfile %s" % logfile
         with open(logfile, 'r') as squid:
             try:
-                conn = sqlite3.connect(dbfile)
-                c = conn.cursor()
-                for line in squid:
-                    with conn:
+                # conn = sqlite3.connect(dbfile)
+                # c = conn.cursor()
+                with sqlite3.connect(dbfile) as conn:
+                    c = conn.cursor()
+                    for line in squid:
+                        # with conn:
                         parts = line.strip().split(";|;")
-                        agent_id = None
-                        try:
-                            c.execute("INSERT INTO devices_useragent (agent) VALUES (?)", (parts[2],))
-                            agent_id = c.lastrowid
-                        except sqlite3.IntegrityError as sqlie:
-                            if "UNIQUE constraint failed: devices_useragent.agent" in sqlie.message:
-                                c.execute("SELECT id FROM devices_useragent WHERE agent=?", (parts[2],))
-                                try:
-                                    agent_id = c.fetchone()[0]
-                                except (TypeError, IndexError):
-                                    raise ValueError("Unable to retrieve id of useragent string")
-                            else:
-                                raise sqlie
-
-                        device_id = None
-                        try:
-                            c.execute("INSERT INTO devices_deviceentry (ip, mac, mode) VALUES (?, ?, ?)", (parts[1], parts[0], DEVICE_DEFAULT_MODE))
-                            device_id = c.lastrowid
-                        except sqlite3.IntegrityError as sqlie:
-                            if "UNIQUE constraint failed: devices_deviceentry.mac" in sqlie.message:
-                                c.execute("SELECT id, ip from devices_deviceentry where mac=?", (parts[0],))
-                                res = c.fetchone()
-                                if not res:
-                                    raise ValueError("Unable to retrieve id of device")
-
-                                device_id = res[0]
-                                if res[1] != parts[1]:
-                                    c.execute("UPDATE devices_deviceentry SET ip=? where mac=?", (parts[1], parts[0]))
-                            else:
-                                raise sqlie
 
                         try:
-                            if agent_id is not None and device_id is not None:
-                                c.execute("INSERT INTO devices_deviceentry_user_agent (deviceentry_id, useragent_id) values (?, ?)", (str(device_id), str(agent_id)))
-                        except sqlite3.IntegrityError:
-                            # entry already exists
-                            pass
+                            EUI(parts[0])
+                            IPAddress(parts[1])
+                        except AddrFormatError:
+                            continue
+                        else:
+                            agent_id = None
+                            try:
+                                c.execute("INSERT INTO devices_useragent (agent) VALUES (?)", (parts[2],))
+                                agent_id = c.lastrowid
+                            except sqlite3.IntegrityError as sqlie:
+                                if "UNIQUE constraint failed: devices_useragent.agent" in sqlie.message:
+                                    c.execute("SELECT id FROM devices_useragent WHERE agent=?", (parts[2],))
+                                    try:
+                                        agent_id = c.fetchone()[0]
+                                    except (TypeError, IndexError):
+                                        raise ValueError("Unable to retrieve id of useragent string")
+                                else:
+                                    raise sqlie
 
-                conn.close()
+                            device_id = None
+                            try:
+                                c.execute("INSERT INTO devices_deviceentry (ip, mac, mode) VALUES (?, ?, ?)", (parts[1], parts[0], DEVICE_DEFAULT_MODE))
+                                device_id = c.lastrowid
+                            except sqlite3.IntegrityError as sqlie:
+                                if "UNIQUE constraint failed: devices_deviceentry.mac" in sqlie.message:
+                                    c.execute("SELECT id, ip from devices_deviceentry where mac=?", (parts[0],))
+                                    res = c.fetchone()
+                                    if not res:
+                                        raise ValueError("Unable to retrieve id of device")
+
+                                    device_id = res[0]
+                                    if res[1] != parts[1]:
+                                        c.execute("UPDATE devices_deviceentry SET ip=? where mac=?", (parts[1], parts[0]))
+                                else:
+                                    raise sqlie
+
+                            try:
+                                if agent_id is not None and device_id is not None:
+                                    c.execute("INSERT INTO devices_deviceentry_user_agent (deviceentry_id, useragent_id) values (?, ?)", (str(device_id), str(agent_id)))
+                            except sqlite3.IntegrityError:
+                                # entry already exists
+                                pass
+
+                # conn.close()
             except sqlite3.Error as sqle:
                 print sqle.message
                 errors = True

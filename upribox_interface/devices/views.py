@@ -19,6 +19,7 @@ from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 from django.template import loader
 from django.http import JsonResponse
+from www.templatetags.base_extras import get_device_name
 
 
 # Get an instance of a logger
@@ -28,16 +29,10 @@ logger = logging.getLogger('uprilogger')
 @require_http_methods(["GET", "POST"])
 @login_required
 def get_devices(request):
-    # TODO remove
-    try:
-        utils.exec_upri_config('parse_user_agents')
-    except utils.AnsibleError as ae:
-        logger.exception(ae)
-
     return render(request, "devices.html", {'messagestore': jobs.get_messages(), 'devices':  DeviceEntry.objects.all(), })
 
 
-@require_http_methods(["GET","POST"])
+@require_http_methods(["POST"])
 @login_required
 def refresh_devices(request):
     try:
@@ -46,8 +41,16 @@ def refresh_devices(request):
         logger.exception(ae)
 
     devices = DeviceEntry.objects.all()
+    response = [{
+        'slug': dev.slug,
+        'mode': dev.mode,
+        'mode_url': reverse('upri_devices_mode'),
+        'name_url': reverse('upri_device_name', kwargs={'slug': dev.slug}),
+        'name': get_device_name(dev),
+        'changing': dev.changing
+    } for dev in devices]
 
-    return JsonResponse({dev.slug: dev.mode for dev in devices})
+    return JsonResponse(response, safe=False)
 
 
 @login_required
@@ -58,6 +61,8 @@ def set_device_mode(request):
         device = DeviceEntry.objects.get(slug=request.POST.get('dev_id', None))
     except DeviceEntry.DoesNotExist:
         device = None
+    device.changing = True
+    device.save()
     jobs.queue_job(devicejobs.toggle_device_mode, (mode, device))
 
     return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_devices')})
@@ -111,3 +116,15 @@ def get_device_status(request, slug):
         res = utils.exec_upri_config("check_device", ip)
 
     return JsonResponse({slug: bool(res)})
+
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def changing_devices(request):
+    devices = DeviceEntry.objects.filter(changing=True)
+    return JsonResponse([dev.slug for dev in devices], safe=False)
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def device_entry(request):
+    return render(request, "device_entry.html", {'messagestore': jobs.get_messages(), 'devices':  {'mode':None, 'slug':"", 'changing':''}, })

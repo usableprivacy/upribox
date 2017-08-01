@@ -60,3 +60,23 @@ def clear_jobstatus(request):
 
     else:
         return HttpResponse(status=503)
+
+
+@login_required
+def jobcounter(request):
+    # if request.method != 'POST':
+    #     raise Http404()
+
+    if job_lock.acquire(False):
+        count = 0
+        try:
+            if jobs.check_jobs_finished():
+                jobs.clear_jobs()
+            count = len(jobs.get_messages())
+        finally:
+            job_lock.release()
+
+        return JsonResponse({'count': count})
+
+    else:
+        return HttpResponse(status=503)
