@@ -415,9 +415,9 @@ debug  8192 # Non-fatal errors
 #
 #        listen-address [::1]:8118
 #
-listen-address  127.0.0.1:8118
+listen-address  0.0.0.0:8118
 # privoxy fails if trying to listen on same port on ipv6 and ipv4
-listen-address [::1]:8119
+listen-address [::]:8119
 
 #
 #  4.2. toggle
