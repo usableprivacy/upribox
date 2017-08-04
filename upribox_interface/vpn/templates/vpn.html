@@ -32,8 +32,8 @@
                 </div> -->
             {% get_fact 'vpn' 'connection' 'port' as vpn_port%}
             {% get_fact 'vpn' 'connection' 'protocol' as vpn_protocol%}
-                <div class="switch icon i-bad" id="vpn_connection_button">
-                    <p id="vpn_connection_text">{% trans "VPN Verbindung wird getestet..." %}</p>
+                <div class="switch" id="vpn_connection_button">
+                    <p id="vpn_connection_text" class="icon i-notconnected">{% trans "VPN Verbindung wird getestet..." %}</p>
                 </div>
                 <div id="vpn_connection_help" style="display:none">{% trans "Ihre upribox ist nicht aus dem Internet erreichbar. Ermöglichen Sie den Zugriff indem Sie:" %}
                 <ul>
@@ -61,14 +61,14 @@
                         if(http.readyState == 4 && http.status == 200) {
                             result = JSON.parse(http.responseText);
                             if (result['status'].localeCompare("failure") == 0) {
-                                document.getElementById("vpn_connection_button").className = "switch icon i-bad";
+                                document.getElementById("vpn_connection_text").className = "icon i-notconnected";
                                 document.getElementById("vpn_connection_text").innerHTML = {% trans '"Die upribox ist nicht erreichbar."' %};
                                 document.getElementById("vpn_connection_help").style.display = "block";
                             } else if (result['status'].localeCompare("success") == 0) {
-                                document.getElementById("vpn_connection_button").className = "switch icon i-good";
+                                document.getElementById("vpn_connection_text").className = "icon i-connected";
                                 document.getElementById("vpn_connection_text").innerHTML = {% trans '"Die upribox ist erreichbar."' %};
                             } else if (result['status'].localeCompare("error") == 0) {
-                                document.getElementById("vpn_connection_button").className = "switch icon i-ugly";
+                                document.getElementById("vpn_connection_text").className = "icon i-notconnected";
                                 document.getElementById("vpn_connection_text").innerHTML = {% trans '"Fehler beim Testen der Verbindung: "' %} + result['msg'];
                             }
                         }

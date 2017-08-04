@@ -1,30 +1,31 @@
 import json
-import subprocess
-import re
-from datetime import datetime
-import time
-from urlparse import urlparse
 import os
+import re
 import sqlite3
+import subprocess
+import time
+from datetime import datetime
+from urlparse import urlparse
+
 import redis as redisDB
 from lib.settings import DEVICE_DEFAULT_MODE
-from netaddr import EUI, IPAddress, AddrFormatError
+from netaddr import EUI, AddrFormatError, IPAddress
 
 redis = redisDB.StrictRedis(host="localhost", port=6379, db=7)
 
 # syntax for keys in redis db for statistics
-__PREFIX = "stats"
-"""str: Prefix which is used for every key in the redis db."""
-__DELIMITER = ":"
+_DELIMITER = ":"
 """str: Delimiter used for separating parts of keys in the redis db."""
-__DNSMASQ = "dnsmasq"
-__PRIVOXY = "privoxy"
-__BLOCKED = "blocked"
-__ADFREE = "adfree"
-__MONTH = "month"
-__DAY = "day"
-__DOMAIN = "domain"
+_PREFIX = _DELIMITER.join(("stats", "v2"))
+"""str: Prefix which is used for every key in the redis db."""
+_DNSMASQ = "dnsmasq"
+_PRIVOXY = "privoxy"
+_BLOCKED = "blocked"
+_WEEK = "week"
+_DOMAIN = "domain"
 
+# 6 weeks in seconds
+_TTL = 3629000
 
 #
 # parse the privoxy and dnsmasq logfiles and insert data into django db
@@ -44,6 +45,7 @@ def action_parse_logs(arg):
     else:
         return 0
 
+
 #
 # parse the privoxy logfiles and insert data into django db
 # return values:
@@ -59,8 +61,7 @@ def parse_privoxy_logs(arg):
     with open('/etc/ansible/default_settings.json', 'r') as f:
         config = json.load(f)
 
-    logfile = os.path.join(config['log']['general']['path'], config['log']['privoxy']['subdir'],
-                           config['log']['privoxy']['logfiles']['logname'])
+    logfile = os.path.join(config['log']['general']['path'], config['log']['privoxy']['subdir'], config['log']['privoxy']['logfiles']['logname'])
 
     if os.path.isfile(logfile):
         print "parsing privoxy logfile %s" % logfile
@@ -72,13 +73,21 @@ def parse_privoxy_logs(arg):
                         sdate = res.group(1)
                         ssite = res.group(3)
                         pdate = datetime.strptime(sdate, '%Y-%m-%d %H:%M:%S')
-                        month = pdate.month
                         psite = urlparse(ssite).netloc
-                        # increments value of domain by 1 or sets to 1 if domain does not exist yet
-                        redis.incr(__DELIMITER.join((__PREFIX, __PRIVOXY, __BLOCKED, __DOMAIN, psite)))
 
-                        # increments value of month by 1 or sets to 1 if the month does not exist yet
-                        redis.incr(__DELIMITER.join((__PREFIX, __PRIVOXY, __BLOCKED, __MONTH, str(month))))
+                        # calendar week
+                        week = pdate.date().isocalendar()[1]
+
+                        # filtered overall counter
+                        redis.incr(_DELIMITER.join((_PREFIX, _PRIVOXY, _BLOCKED)))
+
+                        # filtered counter per calendar week
+                        redis.incr(_DELIMITER.join((_PREFIX, _PRIVOXY, _BLOCKED, _WEEK, str(week))))
+                        redis.expire(_DELIMITER.join((_PREFIX, _PRIVOXY, _BLOCKED, _WEEK, str(week))), _TTL)
+
+                        # store filtered domain count per week
+                        redis.hincrby(_DELIMITER.join((_PREFIX, _PRIVOXY, _BLOCKED, _WEEK, str(week), _DOMAIN)), psite, 1)
+                        redis.expire(_DELIMITER.join((_PREFIX, _PRIVOXY, _BLOCKED, _WEEK, str(week), _DOMAIN)), _TTL)
 
                         changed = True
                         print "found new block: [%s] %s" % (sdate, psite)
@@ -90,7 +99,6 @@ def parse_privoxy_logs(arg):
                 # truncate logfile
                 with open(logfile, "a") as lf:
                     lf.truncate(0)
-                #subprocess.call(["/usr/sbin/service", "privoxy", "restart"])
             except Exception as e:
                 print "failed to write to redis database"
                 return 16
@@ -100,10 +108,10 @@ def parse_privoxy_logs(arg):
         return 16
 
     return 0
+
+
 #
-# parse the dnsmasq logfile and insert data into django db
-# DnsmasqQueryLogEntry contains all queries (blocked and unblocked)
-# DnsmasqFilteredLogEntry contains only blocked queries
+# parse the dnsmasq logfile and insert data into redis db
 # return values:
 # 16: error
 # 1: new entries have been added
@@ -111,15 +119,14 @@ def parse_privoxy_logs(arg):
 
 
 def parse_dnsmasq_logs(arg):
-    queryPattern = re.compile('([a-zA-Z]{3} ? \d{1,2} (\d{2}:?){3}) dnsmasq\[[0-9]*\]: query\[[A-Z]*\] (.*) from ([0-9]+.?){4}')
+    # queryPattern = re.compile('([a-zA-Z]{3} ? \d{1,2} (\d{2}:?){3}) dnsmasq\[[0-9]*\]: query\[[A-Z]*\] (.*) from ([0-9]+.?){4}')
     blockedPattern = re.compile('([a-zA-Z]{3} ? \d{1,2} (\d{2}:?){3}) dnsmasq\[[0-9]*\]: config (.*) is 192.168.55.254')
 
     changed = False
     with open('/etc/ansible/default_settings.json', 'r') as f:
         config = json.load(f)
 
-    logfile = os.path.join(config['log']['general']['path'], config['log']['dnsmasq']['subdir'],
-                           config['log']['dnsmasq']['logfiles']['logname'])
+    logfile = os.path.join(config['log']['general']['path'], config['log']['dnsmasq']['subdir'], config['log']['dnsmasq']['logfiles']['logname'])
 
     if os.path.isfile(logfile):
         print "parsing dnsmasq logfile %s" % logfile
@@ -127,50 +134,28 @@ def parse_dnsmasq_logs(arg):
         with open(logfile, 'r') as dnsmasq:
             for line in dnsmasq:
                 try:
-                    res = re.match(queryPattern, line)
-                    if res:
-                        sdate = res.group(1)
-                        ssite = res.group(3)
-                        psite = str(ssite)
-                        pdate = datetime.strptime(sdate, '%b %d %H:%M:%S')
-                        pdate = pdate.replace(year=cur_year)
-                        date = pdate.strftime('%Y-%m-%d')
-                        month = pdate.month
-
-                        # increments value of today's date by 1 or sets to 1 if the date does not exist yet
-                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __ADFREE, __DAY, date)))
-
-                        # increments value of month by 1 or sets to 1 if the month does not exist yet
-                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __ADFREE, __MONTH, str(month))))
-
-                        changed = True
-
-                        print "found new query: [%s] %s" % (psite, pdate)
-                except Exception as e:
-                    print "failed to parse query \"%s\": %s" % (line, e.message)
-
-                try:
                     res = re.match(blockedPattern, line)
                     if res:
                         sdate = res.group(1)
                         ssite = res.group(3)
                         psite = str(ssite)
-                        pdate = datetime.strptime(sdate, '%b %d %H:%M:%S')
-                        pdate = pdate.replace(year=cur_year)
-                        date = pdate.strftime('%Y-%m-%d')
-                        month = pdate.month
+                        pdate = datetime.strptime(sdate, '%b %d %H:%M:%S').replace(year=cur_year)
 
-                        # increments value of today's date by 1 or sets to 1 if the date does not exist yet
-                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __BLOCKED, __DAY, date)))
+                        # calendar week
+                        week = pdate.date().isocalendar()[1]
 
-                        # increments value of domain by 1 or sets to 1 if domain does not exist yet
-                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __BLOCKED, __DOMAIN, psite)))
+                        # blocked overall counter
+                        redis.incr(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED)))
 
-                        # increments value of month by 1 or sets to 1 if the month does not exist yet
-                        redis.incr(__DELIMITER.join((__PREFIX, __DNSMASQ, __BLOCKED, __MONTH, str(month))))
+                        # filtered counter per calendar week
+                        redis.incr(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED, _WEEK, str(week))))
+                        redis.expire(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED, _WEEK, str(week))), _TTL)
+
+                        # store filtered domain count per week
+                        redis.hincrby(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED, _WEEK, str(week), _DOMAIN)), psite, 1)
+                        redis.expire(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED, _WEEK, str(week), _DOMAIN)), _TTL)
 
                         changed = True
-
                         print "found new blocked query: [%s] %s" % (psite, pdate)
                 except Exception as e:
                     print "failed to parse blocked query \"%s\": %s" % (line, e.message)
@@ -180,7 +165,6 @@ def parse_dnsmasq_logs(arg):
                 # truncate logfile
                 with open(logfile, "a") as lf:
                     lf.truncate(0)
-                #subprocess.call(["/usr/sbin/service", "dnsmasq", "restart"])
             except Exception as e:
                 print "failed to write to redis database"
                 return 16
@@ -190,8 +174,10 @@ def parse_dnsmasq_logs(arg):
         return 16
 
     return 0
+
+
 #
-# parse the squid logfile and insert new user-agents into django db
+# parse the squid logfile and insert new user-agents into redis db
 # return values:
 # 16: error
 # 1: new entries have been added
@@ -205,8 +191,7 @@ def action_parse_user_agents(arg):
         config = json.load(f)
 
     dbfile = config['django']['db']
-    logfile = os.path.join(config['log']['general']['path'], config['log']['squid']['subdir'],
-                           config['log']['squid']['logfiles']['logname'])
+    logfile = os.path.join(config['log']['general']['path'], config['log']['squid']['subdir'], config['log']['squid']['logfiles']['logname'])
 
     if os.path.isfile(logfile):
         print "parsing squid logfile %s" % logfile
@@ -228,11 +213,11 @@ def action_parse_user_agents(arg):
                         else:
                             agent_id = None
                             try:
-                                c.execute("INSERT INTO devices_useragent (agent) VALUES (?)", (parts[2],))
+                                c.execute("INSERT INTO devices_useragent (agent) VALUES (?)", (parts[2], ))
                                 agent_id = c.lastrowid
                             except sqlite3.IntegrityError as sqlie:
                                 if "UNIQUE constraint failed: devices_useragent.agent" in sqlie.message:
-                                    c.execute("SELECT id FROM devices_useragent WHERE agent=?", (parts[2],))
+                                    c.execute("SELECT id FROM devices_useragent WHERE agent=?", (parts[2], ))
                                     try:
                                         agent_id = c.fetchone()[0]
                                     except (TypeError, IndexError):
@@ -242,11 +227,14 @@ def action_parse_user_agents(arg):
 
                             device_id = None
                             try:
-                                c.execute("INSERT INTO devices_deviceentry (ip, mac, mode) VALUES (?, ?, ?)", (parts[1], parts[0], DEVICE_DEFAULT_MODE))
+                                c.execute(
+                                    "INSERT INTO devices_deviceentry (ip, mac, mode) VALUES (?, ?, ?)",
+                                    (parts[1], parts[0], DEVICE_DEFAULT_MODE)
+                                )
                                 device_id = c.lastrowid
                             except sqlite3.IntegrityError as sqlie:
                                 if "UNIQUE constraint failed: devices_deviceentry.mac" in sqlie.message:
-                                    c.execute("SELECT id, ip from devices_deviceentry where mac=?", (parts[0],))
+                                    c.execute("SELECT id, ip from devices_deviceentry where mac=?", (parts[0], ))
                                     res = c.fetchone()
                                     if not res:
                                         raise ValueError("Unable to retrieve id of device")
@@ -259,7 +247,10 @@ def action_parse_user_agents(arg):
 
                             try:
                                 if agent_id is not None and device_id is not None:
-                                    c.execute("INSERT INTO devices_deviceentry_user_agent (deviceentry_id, useragent_id) values (?, ?)", (str(device_id), str(agent_id)))
+                                    c.execute(
+                                        "INSERT INTO devices_deviceentry_user_agent (deviceentry_id, useragent_id) values (?, ?)",
+                                        (str(device_id), str(agent_id))
+                                    )
                             except sqlite3.IntegrityError:
                                 # entry already exists
                                 pass
@@ -281,7 +272,12 @@ def action_parse_user_agents(arg):
                 print "failed to restart service"
                 return 16
 
-            rc = subprocess.call(["/var/webapp-virtualenv/bin/python", "/usr/share/nginx/www-upri-interface/manage.py", "fingerprint", "--settings", config['django']['settings']])
+            rc = subprocess.call(
+                [
+                    "/var/webapp-virtualenv/bin/python", "/usr/share/nginx/www-upri-interface/manage.py", "fingerprint", "--settings",
+                    config['django']['settings']
+                ]
+            )
             if rc != 0:
                 print "user agent parsing failed"
                 return 16

@@ -46,7 +46,7 @@ This creates a process that receives tasks from the Django task queue. The worke
 Command to create the English language files:
 
  ```bash
- python manage.py makemessages -l en --settings=settings_prod -e html,py -i settings_prod.py -i urls.py -i settings_dev.py -i manage.py -i wsgi.py
+ python manage.py makemessages -l en --settings=settings_prod -e html,py -i settings_prod.py -i urls.py -i settings_dev.py -i manage.py -i wsgi.py -i middleware
  ```
 
  -------------------------------------------------------------------------------------------

@@ -1,2 +1,0 @@
-# Cron job to cleanup statistics
-{{ cleanup_schedule }} {{ cleanup_user }} /var/webapp-virtualenv/bin/python /usr/share/nginx/www-upri-interface/manage.py cleanup --settings {{ django_settings_file }} 2>&1 | /usr/bin/logger -t {{ cleanup_syslog_tag }}

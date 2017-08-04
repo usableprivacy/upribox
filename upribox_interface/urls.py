@@ -30,12 +30,12 @@ urlpatterns = [
     url(r'^help/$', www.views.faq, name="upri_faq"),
 
     # more config
-    url(r'^more/$', more.views.more_config, {"save_form": "user"}, name="upri_more"),
+    # url(r'^more/$', more.views.more_config, {"save_form": "user"}, name="upri_more"),
     url(r'^more/ssh/toggle$', more.views.ssh_toggle, name="upri_ssh_toggle"),
     # automatic mode
     url(r'^more/apate/toggle$', more.views.apate_toggle, name="upri_apate_toggle"),
-    url(r'^more/dhcp$', more.views.save_dhcp, name="upri_dhcp_save"),
-    url(r'^more/static$', more.views.more_config, {"save_form": "static_ip"}, name="upri_static_save"),
+    # url(r'^more/dhcp$', more.views.save_dhcp, name="upri_dhcp_save"),
+    # url(r'^more/static$', more.views.more_config, {"save_form": "static_ip"}, name="upri_static_save"),
 
     # new config
     url(r'^config/static$', more.views.more_static, name="upri_config_static"),
@@ -59,13 +59,15 @@ urlpatterns = [
     # WLAN config
     url(r'^silent/$', wlan.views.silent, name="upri_silent"),
     url(r'^silent/toggle/$', wlan.views.silent_toggle, name="upri_silent_toggle"),
-    url(r'^ninja/$', wlan.views.ninja, name="upri_ninja"),
-    url(r'^ninja/toggle/$', wlan.views.ninja_toggle, name="upri_ninja_toggle"),
+    # url(r'^ninja/$', wlan.views.ninja, name="upri_ninja"),
+    # url(r'^ninja/toggle/$', wlan.views.ninja_toggle, name="upri_ninja_toggle"),
 
     # jobs
     url(r'^jobstatus/$', www.views.jobstatus, name="upri_jobstatus"),
     url(r'^jobstatus/clear/$', www.views.clear_jobstatus, name="upri_clear_jobstatus"),
     url(r'^jobstatus/count/$', www.views.jobcounter, name="upri_count_jobstatus"),
+    url(r'^jobstatus/failed/$', www.views.jobstatus_failed, name="upri_jobstatus_failed"),
+    url(r'^jobstatus/failed/clear/$', www.views.clear_failed, name="upri_clear_failed"),
 
     # VPN config
     url(r'^vpn/$', vpn.views.vpn_config, name="upri_vpn"),
@@ -79,7 +81,8 @@ urlpatterns = [
 
     # statistics config
     url(r'^statistics/$', statistics.views.get_statistics, name="upri_statistics"),
-    url(r'^statistics/get$', statistics.views.json_statistics, name="upri_get_statistics"),
+    url(r'^statistics/complete$', statistics.views.json_statistics, name="upri_complete_statistics"),
+    url(r'^statistics/update/(?P<week>[0-9]{1,2})/$', statistics.views.statistics_update, name="upri_update_statistics"),
 
     # devices
     url(r'^devices/$', devices.views.get_devices, name="upri_devices"),
@@ -89,6 +92,8 @@ urlpatterns = [
     url(r'^devices/status/(?P<slug>\w+)$', devices.views.get_device_status, name="upri_device_status"),
     url(r'^devices/processing/$', devices.views.changing_devices, name="upri_devices_processing"),
     url(r'^devices/entry/$', devices.views.device_entry, name="upri_device_entry"),
+
+    url(r'^fail/$', devices.views.fail, name="upri_fail"),
 
     # setup
     url(r'^setup/$', setup.views.setup_init, name="upri_setup"),

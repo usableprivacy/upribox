@@ -2,18 +2,16 @@
 from __future__ import unicode_literals
 
 import logging
-from django.shortcuts import render
-from django.views.decorators.http import require_http_methods
-from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
-from lib import jobs, info
+import time
+
 import redis as redisDB
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
+from django.shortcuts import redirect, render
+from django.views.decorators.http import require_http_methods
+from lib import info, jobs, utils
 from more import jobs as morejobs
-from lib import utils
-import time
-# from . import jobs as morejobs
 
 logger = logging.getLogger('uprilogger')
 
@@ -27,7 +25,7 @@ def setup_init(request):
     if not info.check_ipv6():
         if info.check_connection():
             if request.method == 'GET' and utils.get_fact('apate', 'general', 'enabled') == 'no':
-                jobs.queue_job(morejobs.toggle_apate, ("yes",), unique=True)
+                jobs.queue_job(morejobs.toggle_apate, ("yes", ), unique=True)
                 # context.update({'message': True})
         else:
             phase = "isolated"
@@ -35,20 +33,20 @@ def setup_init(request):
     if info.check_ipv6():
         return redirect('upri_setup_failed')
     else:
-        context.update({
-            'phase': phase,  # init, failed, success
-            'refresh_url': reverse('upri_setup_eval'),
-            'error_url': reverse('upri_setup_error')
-        })
+        context.update(
+            {
+                'phase': phase,  # init, failed, success
+                'refresh_url': reverse('upri_setup_eval'),
+                'error_url': reverse('upri_setup_error')
+            }
+        )
         return render(request, "setup.html", context)
 
 
 @login_required
 @require_http_methods(["GET"])
 def setup_eval(request):
-    context = {
-        'phase': "eval"
-    }
+    context = {'phase': "eval"}
 
     return render(request, "setup.html", context)
 

@@ -692,9 +692,20 @@ header nav a:focus, header nav a:hover, header nav a:active, header nav a.active
     background-position: -104px -457px;
 }
 
-.i-update::before {
+.i-update-l::before {
     width: 30px;
-    background-position: -140px -457px;
+    height: 30px;
+    background: url('../img/loading_spinner-s.gif') 0px 0px/30px 30px no-repeat;
+    /*background-position: -140px -457px;*/
+    padding-right: 5px;
+    float: left;
+}
+
+.i-update::before {
+    width: 20px;
+    height: 20px;
+    background: url('../img/loading_spinner-s.gif') 0px 0px/20px 20px no-repeat;
+    padding-right: 5px;
     float: left;
 }
 
@@ -863,6 +874,10 @@ main {
 
     #top-bar a{
         display: none;
+    }
+
+    #top-bar div.breadcrumb a {
+        display: inline;
     }
 
     .breadcrumb{
@@ -1412,6 +1427,7 @@ input[type="radio"]{
     float: left;
     margin: 0px;
     margin-right: 5px;
+    margin-top: 5px;
 }
 
 .i-notconnected::before {
@@ -1421,6 +1437,7 @@ input[type="radio"]{
     float: left;
     margin: 0px;
     margin-right: 5px;
+    margin-top: 5px;
 }
 
 .i-ninja::before {

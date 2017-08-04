@@ -44,9 +44,6 @@
     - "{{default_settings.log.general.path}}/{{default_settings.log.privoxy.subdir}}/{{default_settings.log.privoxy.logfiles.logname}}"
   register: log_files
 
-# - name: cleanup statistics
-#   shell: "/var/webapp-virtualenv/bin/python /usr/share/nginx/www-upri-interface/manage.py cleanup --settings {{django_settings_file}}"
-
 - name: update block statistics
   shell: "/usr/local/bin/upri-config.py parse_logs"
   register: update_result
@@ -76,4 +73,8 @@
     - { src: "cron/etc_cron.d_parse-user-agents.j2", dest: "/etc/cron.d/parse-user-agents"}
     - { src: "cron/filter_update.j2", dest: "/etc/cron.d/filter_update" }
     - { src: "cron/cron_parse_logs.j2", dest: "/etc/cron.d/parse-logs"}
-    - { src: "cron/cleanup_statistics.j2", dest: "/etc/cron.d/cleanup-statistics"}
+
+- name: remove old cron jobs
+  file: path={{ item }} state=absent
+  with_items:
+    - /etc/cron.d/cleanup-statistics

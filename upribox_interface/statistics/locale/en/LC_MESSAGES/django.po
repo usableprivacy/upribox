@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-04 13:02+0000\n"
+"POT-Creation-Date: 2017-08-04 00:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,46 +22,53 @@ msgid "Statistiken - upribox"
 msgstr "statistics - upribox"
 
 #: statistics/templates/statistics.html:8
+#: statistics/templates/statistics.html:13
 msgid "Statistik"
 msgstr "statistics"
 
 #: statistics/templates/statistics.html:9
-msgid "Geblockete Domains und gefilterte Inhalte."
+#, fuzzy
+#| msgid "Geblockete Domains und gefilterte Inhalte."
+msgid "Geblockte Domains und gefilterte Inhalte."
 msgstr "overview on blocked domains and filtered content."
 
 #: statistics/templates/statistics.html:13
+msgid "Start"
+msgstr ""
+
+#: statistics/templates/statistics.html:17
 msgid ""
 "Die Statistiken liefern einen &Uuml;berblick &uuml;ber geblockte Domains und "
 "gefilterte Webinhalte."
 msgstr ""
 "Statistics offer an overview on blocked domains and filtered web content."
 
-#: statistics/templates/statistics.html:17
+#: statistics/templates/statistics.html:21
 msgid "Anzahl der geblockten (rosa) vs. werbefreien (rot) Domains"
 msgstr "amount of blocked (lightred) vs. ad free (red) domains"
 
-#: statistics/templates/statistics.html:19
-#: statistics/templates/statistics.html:21
+#: statistics/templates/statistics.html:23
+#: statistics/templates/statistics.html:25
 msgid "in den letzten 6 Monaten"
 msgstr "last 6 months"
 
-#: statistics/templates/statistics.html:22
+#: statistics/templates/statistics.html:26
 msgid "heute"
 msgstr "today"
 
-#: statistics/templates/statistics.html:27
+#: statistics/templates/statistics.html:31
 msgid "Gefilterte Inhalte"
 msgstr "filtered content"
 
-#: statistics/templates/statistics.html:28
+#: statistics/templates/statistics.html:32
 msgid "Geblockte Domains"
 msgstr "blocked domains"
 
-#: statistics/templates/statistics.html:33
+#: statistics/templates/statistics.html:37
 msgid "Top gefilterte Inhalte"
 msgstr "most filtered content"
 
-#: statistics/templates/statistics.html:61
+#: statistics/templates/statistics.html:65
 msgid "Top geblockte Domains"
 msgstr "most blocked domains"
 

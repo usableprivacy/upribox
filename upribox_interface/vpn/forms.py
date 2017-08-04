@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django import forms
-from django.utils.translation import ugettext_lazy
-from .models import VpnProfile
-from lib import domain
-from lib.utils import get_fact
+
 import logging
 
+from django import forms
+from django.utils.translation import ugettext_lazy
+from lib import domain
+from lib.utils import get_fact
+
+from .models import VpnProfile
+
 logger = logging.getLogger('uprilogger')
+
 
 class VpnProfileForm(forms.Form):
 
@@ -38,8 +42,6 @@ class VpnProfileForm(forms.Form):
             self.fields['dyndomain'].initial = upri_dns_domain
             self.fields['dyndomain'].label = ""
 
-
-
     def clean_profilename(self):
         profilename = self.cleaned_data['profilename']
         try:
@@ -59,12 +61,10 @@ class VpnProfileForm(forms.Form):
             if not check.has_allowed_length():
                 errors.append(forms.ValidationError(ugettext_lazy("Die Domain darf maximal 255 Zeichen lang sein")))
             if not check.has_only_allowed_chars():
-                errors.append(forms.ValidationError(ugettext_lazy(
-                    "Die Domain darf lediglich Buchstaben, Ziffern, Punkte und Minusse enthalten")))
+                errors.append(forms.ValidationError(ugettext_lazy("Die Domain darf lediglich Buchstaben, Ziffern, Punkte und Minusse enthalten")))
             if not errors:
-                errors.append(forms.ValidationError(ugettext_lazy(
-                    "Die Domain ist nicht gültig" )))
+                errors.append(forms.ValidationError(ugettext_lazy("Die Domain ist nicht gültig")))
 
             raise forms.ValidationError(errors)
 
-        return check.get_match() #dyndomain
+        return check.get_match()  #dyndomain

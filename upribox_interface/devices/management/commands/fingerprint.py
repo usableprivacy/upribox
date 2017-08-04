@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # coding=utf-8
+import logging
+
+from devices.models import DeviceEntry
 from django.core.management.base import BaseCommand, CommandError
 from django.db import DatabaseError
-from devices.models import DeviceEntry
 from user_agents import parse
-import logging
+
 logger = logging.getLogger('uprilogger')
 
 #

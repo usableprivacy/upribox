@@ -1,25 +1,26 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
 from django import forms
 from django.utils.translation import ugettext_lazy
-from lib import utils, passwd, ssid
+from lib import passwd, ssid, utils
 
 
 class WlanForm(forms.Form):
     ssid = forms.CharField(
         required=False,
         label=ugettext_lazy("SSID:"),
-        max_length=100
+        max_length=100,
     )
     password1 = forms.CharField(
         required=False,
         label=ugettext_lazy("Neues Passwort:"),
-        widget=forms.PasswordInput(attrs={'placeholder': '*' * 10})
+        widget=forms.PasswordInput(attrs={'placeholder': '*' * 10}),
     )
     password2 = forms.CharField(
         required=False,
         label=ugettext_lazy("Passwort bestätigen:"),
-        widget=forms.PasswordInput(attrs={'placeholder': '*' * 10})
+        widget=forms.PasswordInput(attrs={'placeholder': '*' * 10}),
     )
 
     def __init__(self, ssid, *args, **kwargs):
@@ -42,8 +43,9 @@ class WlanForm(forms.Form):
             if not check.has_allowed_length():
                 errors.append(forms.ValidationError(ugettext_lazy("Die SSID muss zwischen 1 und 32 Zeichen lang sein")))
             if not check.has_only_allowed_chars():
-                errors.append(forms.ValidationError(ugettext_lazy(
-                    "Die SSID darf lediglich die Sonderzeichen %s enthalten" % check.get_allowed_chars())))
+                errors.append(
+                    forms.ValidationError(ugettext_lazy("Die SSID darf lediglich die Sonderzeichen %s enthalten" % check.get_allowed_chars()))
+                )
 
             raise forms.ValidationError(errors)
 

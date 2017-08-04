@@ -29,7 +29,7 @@
 
                 {% onpage request 'upri_login upri_setup upri_setup_error upri_setup_success upri_setup_failed upri_setup_eval' as onlogin %}
                 {% if not onlogin %}
-                <a href="{% url 'upri_faq' %}" title="{% trans "FAQ" %}" class="faq-link only-mobile">{% trans "Hilfe" %}</a>
+                <a href="{% url 'upri_faq' %}" title="{% trans "Status" %}" class="status-link only-mobile icon i-update ">{% trans "2 Änderungen" %}</a>
 				<button class="btn-menu only-mobile js-menu">{% trans "Menü" %}</button>
 
 				<nav class="clearfix">
@@ -48,7 +48,7 @@
 			<!-- Top Bar Header (Aenderungen, Submenu, Breadcrumbs) -->
 			<div id="top-bar">
                 {% if not onlogin %}
-				<a href="#" title="Update" class="icon i-update">2 Änderungen</a>
+				<a href="#" title="Update" class="icon i-update">{% trans "2 Änderungen" %}</a>
 
 				<nav>
 					<ul>
