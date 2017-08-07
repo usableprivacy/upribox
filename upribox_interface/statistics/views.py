@@ -34,7 +34,7 @@ def json_statistics(request):
             "week": stats.sub_week(cur_week, cur_year, i),
             "ugly": stats.get_week_counters(stats.sub_week(cur_week, cur_year, i))[0],
             "bad": stats.get_week_counters(stats.sub_week(cur_week, cur_year, i))[1]
-        } for i in range(1, SHOW_WEEKS)
+        } for i in range(1, SHOW_WEEKS) if stats.week_exists(stats.sub_week(cur_week, cur_year, i))
     ]
 
     detailed = detailed_week(cur_week)
