@@ -19,7 +19,7 @@
 		<link rel="stylesheet" href="{% static "css/fonts.css" %}" type="text/css" />
 		<link rel="stylesheet" href="{% static "css/style.css" %}" type="text/css" />
 	</head>
-	<body data-poll-url="{% url 'upri_jobstatus' %}" data-clear-url="{% url 'upri_clear_jobstatus' %}">
+	<body data-template-modal="{% url 'upri_modal' %}" data-poll-counter-url="{% url 'upri_counter_jobstatus' %}" data-poll-messages-url="{% url 'upri_jobstatus' %}" data-clear-url="{% url 'upri_clear_jobstatus' %}" {% block additional-data-urls %} {% endblock %}>
 		<div id="site-container">
 			<header id="site-header">
 				<h1>
@@ -29,8 +29,8 @@
 
                 {% onpage request 'upri_login upri_setup upri_setup_error upri_setup_success' as onlogin %}
                 {% if not onlogin %}
-                <a href="{% url 'upri_faq' %}" title="{% trans "FAQ" %}" class="faq-link only-mobile">{% trans "Hilfe" %}</a>
-				<button class="btn-menu only-mobile js-menu">{% trans "Menü" %}</button>
+                <!-- <a href="{% url 'upri_faq' %}" title="{% trans "FAQ" %}" class="faq-link only-mobile">{% trans "Hilfe" %}</a>-->
+				<button class="btn-menu only-mobile js-menu"><span class="menu-text">{% trans "Menü" %}</span></button>
 
 				<nav class="clearfix">
 					<ul>
@@ -48,7 +48,7 @@
 			<!-- Top Bar Header (Aenderungen, Submenu, Breadcrumbs) -->
 			<div id="top-bar">
                 {% if not onlogin %}
-				<a href="#" title="Update" class="icon i-update">2 Änderungen</a>
+				<a href="#" title="Update" id="changes-container" class="icon i-update"><span id="changes-count">0</span> <span id="changes-text-singular">{% trans "Änderung" %}</span><span id="changes-text-plural">{% trans "Änderungen" %}</span></a>
 
 				<nav>
 					<ul>
@@ -80,9 +80,11 @@
 				</article>
 			</main>
 
+			{% block info_wrapper %}
 			<div id="info-bar">
 				{% block info %}{% endblock %}
 			</div>
+			{% endblock %}
 
             {% block extra %}
             {% endblock %}
@@ -90,10 +92,22 @@
                 {% include 'modal.html' %}
             {% endif %}
 		</div>
-		<script type="text/javascript" src="{% static "js/vendor/chartist.min.js" %}"></script>
-		<script type="text/javascript" src="{% static "js/vendor/chartist-plugin-fill-donut.min.js" %}"></script>
+		<!--<script type="text/javascript" src="{% static "js/vendor/chartist.min.js" %}"></script>
+		<script type="text/javascript" src="{% static "js/vendor/chartist-plugin-fill-donut.min.js" %}"></script>-->
+
+		<script type="text/javascript" src="{% static "js/vendor/plotly_customized.js" %}"></script>
+		<!--
+            there are two things customized in ploty.js.
+             For this two changes, three (very small) parts in the code have been added and one line has been slightly changed.
+             You can easily find these new/changed parts by searching for the comment "//customized" in plotly_customized.js
+             three lines have been added, so links in the SVG graphic can now also have an id attribute
+             one function is changed a bit, so the onhover-tooltips are closer to the bars, when you hover them
+        -->
+
 		<script type="text/javascript" src="{% static "js/vendor/jquery-1.11.3.min.js" %}"></script>
-		<script type="text/javascript" src="{% static "js/vendor/js-cookie-2.0.2.js" %}"></script>
+		<script type="text/javascript" src="{% static "js/vendor/zxcvbn.js" %}"></script>
+
+        <script type="text/javascript" src="{% static "js/vendor/js-cookie-2.0.2.js" %}"></script>
         <script type="text/javascript" src="{% static "js/vendor/qrcode.min.js" %}"></script>
 
 		<script type="text/javascript" src="{% static "js/main.js" %}"></script>

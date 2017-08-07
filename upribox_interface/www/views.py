@@ -60,3 +60,7 @@ def clear_jobstatus(request):
 
     else:
         return HttpResponse(status=503)
+
+@login_required
+def counter_jobstatus(request):
+    return render(request, "counterDummy.js")

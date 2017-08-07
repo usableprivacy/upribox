@@ -21,10 +21,66 @@ UPRIBOX.Main = (function($) {
     var xBound = 850;
 
     var pollingTimeout = 300;
+    var pollingTimeoutCounter = 1200;
+    var pollingTimeoutStatistics = 4000;
     var wlanWarningTimeout = 30000;
 
     //Will be set to true if polling timeouts occur
     var upriboxUnreachable = false;
+
+    //forces continuous update of modal dialog (required when modal dialog is opened by user and we want to see new messages)
+    var forceContinuousModalUpdate = false;
+
+    //includes the template for a single device entry in device list
+    var singleDeviceListHtmlTemplate = null;
+
+    //a list which holds all devices, that are "in progress"
+    var deviceInProgressList = {};
+
+    //indicates if polling for devices in progress is running
+    var pollingForDevicesInProgress = false;
+
+    //ordered list for devices where the online status has to be checked (this is a queue)
+    //var checkOnlineStatusList = {};
+    var checkOnlineStatusList = [];
+
+
+    //key value list for devices, which holds the index of each device from the list above
+    //var checkOnlineStatusList = {};
+    //var checkOnlineStatusIndexList = {};
+
+    //sets how many devices are polled for their online status at once
+    var onlineStatusPolling = 2;
+
+    //sets the index of the last polling element
+    var statOnlinePollingLastElementIndex = -1;
+
+    //stores how many devices have already been checked completely for their online status
+    var checkedDevicesForOnlineStatusCounter = 0;
+
+    //holds data and layout for the statistics
+    var statisticInformation = {
+        data: [],
+        layout: {}
+    };
+
+    //holds the calendar-weeks for the single links on the x axis of the plot
+    var clickableWeeks = [];
+
+    //holds the last week in the graphic (the one which is updated continuously
+    var lastWeek;
+
+    //the DOM Container which holds the plot graphic
+    var gd;
+
+    //indicates which week is currently selected
+    var currentSelectedWeek = null;
+
+    //indicates which week was clicked on -> when its clicked, it isn't yet the selected week (it becomes the selected week, when the package is received)
+    var currentClickedWeek = null;
+
+
+    //defining some urls for polling and html rendering-templates
 
     /**  **/
     /**
@@ -63,7 +119,7 @@ UPRIBOX.Main = (function($) {
             var qrimage = $(this).parent().children('.qr-image');
             var link = $(this).parent().find('a').text();
             qrimage.toggleClass('hidden');
-            console.log(link);
+            //console.log(link);
             if(qrimage.children().length == 0){
                 new QRCode(qrimage.get(0), link);
             }
@@ -243,27 +299,33 @@ UPRIBOX.Main = (function($) {
         var prevMode = undefined;
 
         $('body').on('click', '.radio_device', function(e) {
-            var href = $(this).attr('data-href');
-            var mode = $(this).val();
-            var dev_id = $(this).attr('name');
-            if(prevMode != mode){
-                $(this).attr('disabled', true);
-                $.ajax({
-                    url: href,
-                    dataType: 'html',
-                    data: {'mode': mode, 'dev_id': dev_id, 'csrfmiddlewaretoken': Cookies.get('csrftoken')},
-                    type: 'post',
-                    context: this,
-                    success: function (data) {
-                        $('body').append($(data));
-                        onAjaxUpdate();
-                        $(this).attr('disabled', false);
-                    },
+            this.caller = function () {
+                var href = $(this).attr('data-href');
+                var mode = $(this).val();
+                var dev_id = $(this).attr('name');
 
-                });
-            }
-            prevMode = undefined;
-
+                setSingleDeviceAsInProgress(dev_id);
+                if(prevMode != mode){
+                    $(this).attr('disabled', true);
+                    $.ajax({
+                        url: href,
+                        dataType: 'html',
+                        data: {'mode': mode, 'dev_id': dev_id, 'csrfmiddlewaretoken': Cookies.get('csrftoken')},
+                        type: 'post',
+                        context: this,
+                        success: function (data) {
+                            //$('body').append($(data));
+                            onAjaxUpdate();
+                            $(this).attr('disabled', false);
+                        },
+                        error: function () {
+                            this.caller();
+                        }
+                    });
+                }
+                prevMode = undefined;
+            }.bind(this);
+            this.caller();
         });
 
         $(document).on('mousedown', '.radio_device', function(e) {
@@ -289,28 +351,110 @@ UPRIBOX.Main = (function($) {
         });
 
 
-    $('body').on('click', '.showpw', function(e) {
-    var inputElement = $(this).prev('input');
-    var spanElement = $(this);
+        $('body').on('click', '.showpw', function(e) {
+            var inputElement = $(this).prev('input');
+            var spanElement = $(this);
 
-    console.log(inputElement);
-    console.log(spanElement);
+            if(inputElement.attr("type")=="password"){
+                inputElement.attr('type', 'text');
+                $(this).removeClass("i-eye-open");
+                $(this).addClass("i-eye-closed");
+            } else {
+                inputElement.attr('type', 'password');
+                $(this).removeClass("i-eye-closed");
+                $(this).addClass("i-eye-open");
+            }
 
-    if(inputElement.attr("type")=="password"){
-        inputElement.attr('type', 'text');
-        $(this).removeClass("i-eye-open");
-        $(this).addClass("i-eye-closed");
-    } else {
-        inputElement.attr('type', 'password');
-        $(this).removeClass("i-eye-closed");
-        $(this).addClass("i-eye-open");
+        });
+
+        $("#changes-container").on('click', showModal);
+
+        $(document).ready(function ()  {
+            pollForRequestedInformation({
+                pollUrl: "data-poll-counter-url",
+                domManipulator: updateUpriboxActionCount,
+                errorHandler: errorUpriboxActionCount,
+                pollIntervall: pollingTimeoutCounter
+            });
+
+            if ($('body').attr("data-template-single-device")) {
+                checkProgressDevicesOnStart();
+                getAllDevices();
+            }
+
+            if($('body').attr("data-poll-statistics-main-url")) {
+                getStatistic();
+            }
+
+            if ($("[type='password']").length > 0) {
+                var pw1 = $("[name='password1']")[0];
+                var pw2 = $("[name='password2']")[0];
+
+                $("[type='password']").each(function(index, element) {
+                   $(element).bind("propertychange change click keyup input paste", function () {
+                       var result = zxcvbn(element.value);
+                       if (element.value == "")
+                           result.score = -1;
+
+                       var passwordsMatch = null;
+                       var passwordLengthOk = null;
+                       var passwordLengthCheckRequired = ($("#string8to64needed").length > 0);
+
+                       var checkPasswordLength = function () {
+                           if (passwordLengthCheckRequired) {
+                               if (pw1.value.length >= 8 && pw1.value.length <=64) {
+                                   passwordLengthOk = true;
+                               }
+                               else {
+                                   passwordLengthOk = false;
+                               }
+                           }
+                       }
+
+                       if (element.name == "password1") {
+                           passwordsMatch = (element.value == pw2.value && element.value != "");
+                           checkPasswordLength();
+                       }
+                       if (element.name == "password2") {
+                           passwordsMatch = (element.value == pw1.value && element.value != "");
+                           checkPasswordLength();
+                       }
+
+                       if (passwordsMatch !== null && ((passwordLengthCheckRequired && passwordLengthOk !== null ) || !passwordLengthCheckRequired)) {
+                           if (passwordsMatch && ((passwordLengthCheckRequired && passwordLengthOk === true) || !passwordLengthCheckRequired)) {
+                               $("[name='submit']").removeAttr("disabled");
+                               $("#passwordsDontMatch").css("display", "none");
+                               if (passwordLengthCheckRequired) $("#string8to64needed").css("display", "none");
+                           }
+                           else {
+                               if (!passwordsMatch) {
+                                   $("[name='submit']").attr("disabled", "disabled");
+                                   if (pw1.value != "" && pw2.value != "" ) $("#passwordsDontMatch").css("display", "block");
+                                   else if (pw1.value == "" || pw2.value == "") $("#passwordsDontMatch").css("display", "none");
+                               }
+                               else {
+                                   $("#passwordsDontMatch").css("display", "none");
+                               }
+                               if (passwordLengthCheckRequired && passwordLengthOk === true) {
+                                   $("#string8to64needed").css("display", "none");
+                               }
+                               else if (passwordLengthCheckRequired && passwordLengthOk === false) {
+                                   $("[name='submit']").attr("disabled", "disabled");
+                                   $("#string8to64needed").css("display", "block");
+                               }
+
+                           }
+                       }
+                           // Update the password strength meter
+                       $("meter:eq(" + index + " )").attr("value", result.score + 1);
+                   });
+                });
+            }
+
+        });
     }
 
-});
-
-    }
-
-    function updateChart() {
+    /*function updateChart() {
 
         if($('.ct-chart').length ) {
             var href = '/statistics/get';
@@ -357,12 +501,12 @@ UPRIBOX.Main = (function($) {
 
             });
         }
-    }
+    }*/
     /**
      * Draw Chartist charts
      * @param chartdata
      */
-    function drawChart(chartdata) {
+    /*function drawChart(chartdata) {
         //Chartist js-library (https://gionkunz.github.io/chartist-js/)
 
         var padding = 15;
@@ -449,7 +593,7 @@ UPRIBOX.Main = (function($) {
         //     axisY: {}
         // };
         // new Chartist.Line('.ct-chart', data, options);
-    }
+    }*/
 
     function toggleServiceState2(e){
         e.preventDefault();
@@ -507,26 +651,79 @@ UPRIBOX.Main = (function($) {
      * @param {Object} form data (optional)
      */
     function updateMainContent(href, type, form) {
-        $.ajax({
-            url: href,
-            dataType: 'html',
-            data: form? form.serialize(): null,
-            type: type,
-            success: function (data) {
-                $('#main-content').html($(data));
-                onAjaxUpdate();
-            },
+        clearJobStatus(null, function () {
 
+            $.ajax({
+                url: href,
+                dataType: 'html',
+                data: form? form.serialize(): null,
+                type: type,
+                success: function (data) {
+                    $('#main-content').html($(data));
+                    onAjaxUpdate();
+                }
+            });
         });
     }
 
+    function showModal(type) {
+        clearJobStatus(null, function () {
+            $.ajax({
+                url: $('body').attr("data-template-modal"),
+                dataType: 'html',
+                //data: form? form.serialize(): null,
+                success: function (data) {
+                    $('#main-content').append($(data));
+                    pollForRequestedInformation();
+                    forceContinuousModalUpdate = true;
+                    $('.js-modal-close').attr('disabled', false);
+                }
+            });
+        });
+    }
+
+    function checkProgressDevicesOnStart() {
+        $(".single-device-row").each(function (index, element) {
+            if ($(element).attr("data-changing") === "True") {
+                setSingleDeviceAsInProgress($(element).attr("id"), true);
+            }
+        });
+    }
+
+    function setSingleDeviceAsInProgress(id, isAlreadyMarked) {
+        if (!isAlreadyMarked) {
+            $("#" + id).attr("data-changing", "True");
+        }
+        $("#" + id).find(".device-link").removeClass("i-connected").removeClass("i-notconnected").addClass("i-status");
+
+        deviceInProgressList[id] = true;
+        if (!pollingForDevicesInProgress) {
+            pollForRequestedInformation({
+                pollUrl: "data-poll-device-activeprogress-url",
+                domManipulator: checkInProgressDevices,
+                errorHandler: errorCheckInProgressDevices,
+                stopPollingIfEmpty: true
+            })
+        }
+    }
+
+    function unsetSingleDeviceInProgress(id){
+        delete deviceInProgressList[id];
+        var entry = $("#" + id).find(".device-link");
+        $("#" + id).attr("data-changing", "False");
+        var onlineStat=entry.hasClass("is-online")?true:(entry.hasClass("is-offline")?true:null);
+        if (onlineStat !== null)
+            entry.removeClass("i-status").addClass(onlineStat?"i-connected":"i-notconnected");
+    }
+
     /**
-     * Should be called whenever the site is updated via AJAX (but not from inside pollJobStatus)
+     * Should be called whenever the site is updated via AJAX (but not from inside pollForRequestedInformation)
      * Also gets executed once on page load
      */
     function onAjaxUpdate() {
         checkInfoCookie();
-        pollJobStatus();
+        //alert(1);
+        pollForRequestedInformation();
     }
 
     function triggerWlanWarning() {
@@ -538,7 +735,7 @@ UPRIBOX.Main = (function($) {
      /**
      * Gets executed when the user closes the modal dialog
      */
-    function clearJobStatus(e) {
+    function clearJobStatus(e, cb) {
 
         if(e) {
             e.preventDefault();
@@ -553,14 +750,16 @@ UPRIBOX.Main = (function($) {
             type: 'post',
 
             success: function (data) {
-                $(this).closest('.js-modal').remove();
 
+                $(this).closest('.js-modal').remove();
+                forceContinuousModalUpdate = false;
                 //reload main content if refesh url was given
                 var refreshUrl = $(this).attr('data-refresh-url');
                 if(refreshUrl){
                     updateMainContent(refreshUrl, 'get');
                 }
                 console.log('messages cleared')
+                if (cb) cb();
             },
 
             //retry in case of error
@@ -571,12 +770,531 @@ UPRIBOX.Main = (function($) {
 
         });
     }
-    /**
-     * Poll the server for info about tasks in queue
-     */
-    function pollJobStatus() {
 
-        var href= $('body').attr('data-poll-url');
+    function updateModal(data, pollRequest) {
+        //console.log(data);
+        if(data.message) {
+            var tag = $('.message').find('ul').first();
+            tag.empty();
+            for (var i = 0; i < data.message.length; i++) {
+                var litag = $('<li class="success-message"></li>');
+                tag.append(litag.html(data.message[i]));
+            }
+        }
+        if(data.status === "done" || forceContinuousModalUpdate) {
+            $('.js-modal-close').attr('disabled', false);
+        }
+        var tag = $('.message').find('ul').first();
+        if (data.status === "done") {
+            tag.addClass("all-done");
+        }
+        else {
+            tag.removeClass("all-done");
+        }
+        if (forceContinuousModalUpdate) {
+            setTimeout(function () {
+                pollForRequestedInformation(pollRequest);
+            }, pollingTimeout);
+        }
+            //var litag = $('<li class="success-message hidden"></li>');
+            // tag.append(litag);
+    }
+
+    function errorModal() {
+        //alert(1);
+        var closebutton = $('.js-modal-close');
+        if(closebutton.attr('disabled')){
+            closebutton.attr('disabled', false);
+            //add a on click listener that reloads the page so the user
+            //gets redirected to the login site
+            closebutton.on('click', function() {
+                location.reload();
+            })
+        }
+    }
+
+    function updateUpriboxActionCount(data) {
+        if (parseInt(data.count)>0) {
+            if (parseInt(data.count)==1) {
+                $("#changes-text-plural").css("display", "none");
+                $("#changes-text-singular").css("display", "inline");
+            }
+            else {
+                $("#changes-text-singular").css("display", "none");
+                $("#changes-text-plural").css("display", "inline");
+            }
+            $("#changes-container").css("visibility", "visible");
+        }
+        else {
+            $("#changes-container").css("visibility", "hidden");
+        }
+        $("#changes-count").text(data.count);
+
+    }
+
+    function errorUpriboxActionCount() {
+
+    }
+
+    function getStatistic() {
+        pollForRequestedInformation({
+            pollUrl: "data-poll-statistics-main-url",
+            domManipulator: completeStatistics,
+            errorHandler: errorGetStatistics,
+            pollOnce: true
+        })
+    }
+
+    function completeStatistics(data) {
+
+        var trace1 = {
+            hoverinfo: "y",
+            x: [/*'<a ><span class="kw-desc">KW </span>10</a>', '<a ><span class="kw-desc">KW </span>11</a>', '<a ><span class="kw-desc">KW </span>12</a>'*/],
+            y: [/*20, 14, 23*/],
+            width:[/*.6, .6, .6*/],
+            marker: {color: '#007589'},
+            name: 'gefiltert',
+            type: 'bar'
+        };
+        var trace2 = {
+            hoverinfo: "y",
+            x: [/*'<a ><span class="kw-desc">KW </span>10</a>', '<a ><span class="kw-desc">KW </span>11</a>', '<a ><span class="kw-desc">KW </span>12</a>'*/],
+            y: [/*12, 18, 29*/],
+            width:[/*.6, .6, .6*/],
+            marker: {color: '#8CC8C8'},
+            type: 'bar',
+            name: 'geblockt'
+        };
+
+
+        var trace3 = {
+            hoverinfo: "none",
+            x: [/*'<a ><span class="kw-desc">KW </span>10</a>', '<a ><span class="kw-desc">KW </span>11</a>', '<a ><span class="kw-desc">KW </span>12</a>', '<span class="kw-desc">KW </span>14', '<span class="kw-desc">KW </span>15'*/],
+            y: [/*0,0,0,0,0*/],
+            width:[/*.6, .6, .6*/],
+            /*width:[.75*(3/5), .75*(3/5), .75*(3/5),.75*(3/5), .75*(3/5)],*/
+            name: 'dummy',
+            type: 'bar'
+        };
+        statisticInformation.data = [trace1, trace2, trace3];
+
+        var layout = {
+            xaxis: {
+                autorange: true,
+                showgrid: false,
+                showline: true,
+                fixedrange: true
+            },
+            yaxis: {
+                autorange: true,
+                showgrid: false,
+                showline: true,
+                showticklabels: false,
+                fixedrange: true
+            },
+            barmode: 'stack',
+            showlegend: false,
+            /*legend: {
+             "x": "0",
+             "margin.r": "120"
+             },*/
+            margin: {
+                l: 22,
+                r: 0,
+                b: 50,
+                t: 0,
+                pad: 0
+            },
+            annotations: [
+                /*{
+                 x: 0,
+                 y: trace1.y[0] + trace2.y[0],
+                 xref: 'x',
+                 yref: 'y',
+                 text: '47049',
+                 showarrow: true,
+                 arrowcolor: "transparent",
+                 arrowhead: 0,
+                 ax: 0,
+                 ay: -10
+                 }*/
+            ]
+        };
+
+        statisticInformation.layout = layout;
+
+        initializeStatistics(data);
+
+        /*trace1.y[0] =10;
+        layout.annotations[0].y = trace1.y[0] + trace2.y[0];
+
+        Plotly.Plots.resize(gd);*/
+        // var week = $(".xtick").find("text").text;
+        //console.log($(".xtick").find("text a"));
+        //$(".xtick").find("text a").on("click", function () {alert(1)});
+    }
+
+    function initializeStatistics(data) {
+        updateOverallCount(data[0].filtered.overallCount);
+        updateLists(data[0].filtered.bad, data[0].filtered.ugly);
+        var totalWeeks = 5;
+        var weeksToDo =  data.length;
+        var dummyWeeksTodo =  totalWeeks - weeksToDo;
+
+        var fillStatisticInformation = function (countBad, countUgly, week, index, onlyDummy, width) {
+            if (!width)
+                width = .6;
+
+            var weekDomString = getWeekDomString(week, onlyDummy);
+            if (!onlyDummy) {
+                //statisticInformation.data[0].y[index] = countBad;
+                statisticInformation.data[0].x[index] = weekDomString;
+                statisticInformation.data[0].width[index] = width;
+
+                //statisticInformation.data[1].y[index] = countUgly;
+                statisticInformation.data[1].x[index] = weekDomString;
+                statisticInformation.data[1].width[index] = width;
+
+                statisticInformation.layout.annotations[index] = {
+                    x: index,
+                    //y: countBad + countUgly,
+                    xref: 'x',
+                    yref: 'y',
+                    text: '',
+                    showarrow: true,
+                    arrowcolor: "transparent",
+                    arrowhead: 0,
+                    ax: 0,
+                    ay: -10
+                }
+                updateBarValue(index, countBad, countUgly, true);
+            }
+            statisticInformation.data[2].y[index] = 0;
+            statisticInformation.data[2].x[index] = weekDomString;
+            statisticInformation.data[2].width[index] = width;
+        }
+
+        var getWeekDomString = function (week, dontCreateLink) {
+            var calendarWeekShortText = $("#calendar-week-short-text").text();
+            var defaultDomString = "<span>" + calendarWeekShortText + " </span>" + week;
+            var retVal = dontCreateLink?defaultDomString:"<a id='week" + week + "'>" + defaultDomString + "</a>";
+            return retVal;
+        }
+
+        var getWeekCountOfYear = function () {
+            /*according to
+              https://de.wikipedia.org/w/index.php?title=Woche&oldid=167637426#Z.C3.A4hlweise_nach_ISO_8601
+              and
+              https://en.wikipedia.org/w/index.php?title=ISO_week_date&oldid=793798377#Weeks_per_year
+              a common year has 53 Weeks, when it starts with a thursday and ends with a thursday
+              and
+              a leap year has 53 Weeks, when it starts with a Wednesday and ends with a Thursday or when it starts with a Thursday and ends with a Friday
+            */
+            var currentYear = new Date().getFullYear();
+            var isLeapYear = (new Date(currentYear, 1, 29).getMonth()==1);
+            var has53Weeks = false;
+            var yearsFirstDay = new Date(currentYear, 0, 1).getDay(); // 4 would be Thursday
+            var yearsLastDay = new Date(currentYear, 11, 31).getDay(); // 4 would be Thursday
+            if (!isLeapYear) {
+                has53Weeks = (yearsFirstDay == 4 && yearsLastDay == 4);
+            }
+            else {
+                has53Weeks = ((yearsFirstDay == 3 && yearsLastDay == 4) || (yearsFirstDay == 4 && yearsLastDay == 5));
+            }
+            return (has53Weeks?53:52);
+        }
+
+        for (var i = 0; i < weeksToDo; i++) {
+            fillStatisticInformation(0, 0, "", i);
+        }
+        for (var i = weeksToDo - 1; i >= 0; i--) {
+
+            clickableWeeks.push(data[i].week);
+
+            var bad = 0;
+            var ugly = 0;
+            if (i == 0) {
+                lastWeek = data[i].week;
+                currentClickedWeek = data[i].week;
+                currentSelectedWeek = data[i].week;
+                for (var entry in data[i].filtered.bad) {
+                   bad += data[i].filtered.bad[entry];
+                }
+                for (var entry in data[i].filtered.ugly) {
+                   ugly += data[i].filtered.ugly[entry];
+                }
+            }
+            else {
+                bad = data[i].bad;
+                ugly = data[i].ugly;
+            }
+            fillStatisticInformation(bad, ugly, data[i].week, weeksToDo-1-i);
+        }
+        for (var i = 0; i < dummyWeeksTodo; i++) {
+            //alert(1);
+            var followWeek = (parseInt(data[0].week) + i + 1);
+            var weeksInThisYear = getWeekCountOfYear();
+            if (followWeek > weeksInThisYear)
+                followWeek = weeksInThisYear - followWeek;
+            fillStatisticInformation(0, 0, followWeek, i + weeksToDo, true);
+        }
+        var d3 = Plotly.d3;
+
+        var WIDTH_IN_PERCENT_OF_PARENT = 73,
+            HEIGHT_IN_PERCENT_OF_PARENT = 80;
+
+        var gd3 = d3.select('#stats');
+        /*.style({
+         width: WIDTH_IN_PERCENT_OF_PARENT + '%',
+         height: HEIGHT_IN_PERCENT_OF_PARENT + '%'
+         });*/
+
+        gd = gd3.node();
+        window.onresize = function() {
+            requestAnimationFrame(function() {
+                Plotly.Plots.resize(gd);
+                createLinksForWeeks();
+            });
+        };
+
+        $(".loading").css("opacity", "0");
+        setTimeout(function () {
+            $(".loading").css("display", "none");
+            $(".statistics-content").css("display", "block");
+            Plotly.newPlot(gd, statisticInformation.data, statisticInformation.layout, {displayModeBar: false});
+            Plotly.Plots.resize(gd);
+            setActiveWeekLink();
+            createLinksForWeeks();
+            $(".statistics-content").css("opacity", "1");
+            doStatisticsUpdate(lastWeek, true);
+        }, 450);
+    }
+
+    function createLinksForWeeks() {
+        setTimeout(function() {
+            $(".xtick").find("text").each(function (index, element) {
+                $(element).find("a").on("click", function (ev) {
+                    changeWeek(clickableWeeks[index]);
+                });
+            });
+            //setActiveWeekLink();
+        },200);
+    }
+
+    function changeWeek (week) {
+        currentClickedWeek = week;
+        doStatisticsUpdate(week);
+    }
+
+    function setActiveWeekLink() {
+       /* $(".xtick").find("text").find("a").attr("class","");
+        $(".xtick").find("text").find("a")[clickableWeeks.indexOf(currentSelectedWeek)].setAttribute("class", "activeWeekLink");
+        console.log($(".xtick").find("text").find("a")[clickableWeeks.indexOf(currentSelectedWeek)]);*/
+
+       $("body #activePlotLinkStyle").remove();
+       $("body").append("<style id='activePlotLinkStyle'>" +
+                "\t.statistics-content #week" + currentSelectedWeek + ", .statistics-content #week" + currentSelectedWeek + ":active, .statistics-content #week" + currentSelectedWeek + ":hover, .statistics-content #week" + currentSelectedWeek + ":visited {" +
+                "\t\tfill: rgb(0, 0, 0) !important;\n" +
+                "\t\ttext-decoration: none !important;\n" +
+                "\t\tpointer-events: none !important;\n" +
+                "\t}\n" +
+            "</style>");
+    }
+
+    function updateOverallCount(overallCount) {
+        $("#total-blocked").text(overallCount.bad);
+        $("#total-filtered").text(overallCount.ugly);
+    }
+
+    function updateLists(badList, uglyList) {
+        $("#blocked-pages").empty();
+        for (var detailUrl in badList) {
+            $("#blocked-pages").append("<li>" + detailUrl + ": " + badList[detailUrl] + "</li>")
+        }
+        $("#filtered-pages").empty();
+        for (var detailUrl in uglyList) {
+            $("#filtered-pages").append("<li>" + detailUrl + ": " + uglyList[detailUrl] + "</li>")
+        }
+    }
+
+    function updateBarValue (index, bad, ugly, ignoreRedraw) {
+       // if (statisticInformation.data[0].y[index] == bad && statisticInformation.data[1].y[index] == ugly)
+        //    return;
+        statisticInformation.data[0].y[index] = bad;
+        statisticInformation.data[1].y[index] = ugly;
+        statisticInformation.layout.annotations[index].y = bad + ugly;
+        statisticInformation.layout.annotations[index].text = bad + ugly;
+        if (ignoreRedraw)
+            return;
+        Plotly.redraw(gd);
+        Plotly.relayout(gd);
+        createLinksForWeeks();
+    }
+
+    function errorGetStatistics() {
+
+    }
+
+    function doStatisticsUpdate(week, doInfinite) {
+        pollForRequestedInformation({
+            pollUrl: "data-poll-statistics-update-url",
+            additionalUrl: week,
+            domManipulator: updateStatistics,
+            errorHandler: errorUpdateStatistics,
+            pollOnce: !doInfinite,
+            pollIntervall: pollingTimeoutStatistics
+        })
+    }
+
+    function updateStatistics(data) {
+        if (data.week == currentClickedWeek && currentClickedWeek != currentSelectedWeek) {
+            currentSelectedWeek = currentClickedWeek;
+            setActiveWeekLink();
+        }
+        var bad = 0;
+        var ugly = 0;
+        if (data.week == lastWeek) {
+            for (var entry in data.filtered.bad) {
+                bad += data.filtered.bad[entry];
+            }
+            for (var entry in data.filtered.ugly) {
+                ugly += data.filtered.ugly[entry];
+            }
+            updateBarValue(statisticInformation.data[0].y.length-1, bad, ugly);
+        }
+        updateOverallCount(data.filtered.overallCount);
+        if (data.week != currentSelectedWeek)
+            return;
+        updateLists(data.filtered.bad, data.filtered.ugly);
+    }
+
+    function errorUpdateStatistics() {
+
+    }
+
+    function getAllDevices() {
+        $.ajax({
+            url: $('body').attr("data-template-single-device"),
+            dataType: 'html',
+            //data: form? form.serialize(): null,
+            success: function (data) {
+                singleDeviceListHtmlTemplate = data;
+                //console.log(singleDeviceListHtmlTemplate)
+                pollForRequestedInformation({
+                    pollUrl: "data-poll-device-list-url",
+                    domManipulator: completeDeviceList,
+                    errorHandler: errorGetDeviceList,
+                    pollOnce: true
+                });
+            },
+            error: function () {
+                getAllDevices();
+            }
+        });
+    }
+
+    function completeDeviceList(data) {
+        $("#device-sync-text1").addClass("device-sync-invisible-element");
+        $("#device-sync-text2").removeClass("device-sync-invisible-element");
+        if(data.length>0) {
+            $(".no-devices-row").remove();
+        }
+        for (var i = 0; i < data.length; i++) {
+            //checkOnlineStatusList[data[i].slug] = true;
+            checkOnlineStatusList.push(data[i].slug);
+            //checkOnlineStatusIndexList[data[i].slug] = i;
+            if ($("#" + data[i].slug).length>0)
+                continue;
+            var currentDeviceElement = $(singleDeviceListHtmlTemplate);
+            $(currentDeviceElement).attr("id", data[i].slug);
+            $(currentDeviceElement).find(".radio-" + data[i].mode).attr("checked", "checked");
+            $(currentDeviceElement).find(".device-link").attr("href", data[i].name_url);
+            $(currentDeviceElement).find(".device-link").text(data[i].name);
+            $(".divTableBody").append(currentDeviceElement);
+        }
+        startCheckOnlineStatus();
+    }
+
+    function errorGetDeviceList() {
+
+    }
+
+    function checkInProgressDevices(data) {
+        if (!data.length)
+            data=[];
+
+        for (var id in deviceInProgressList) {
+            if (data.indexOf(id) == -1) {
+                unsetSingleDeviceInProgress(id);
+            }
+        }
+    }
+
+    function errorCheckInProgressDevices() {
+
+    }
+
+    function startCheckOnlineStatus() {
+        for (var i = 0; i < onlineStatusPolling; i++) {
+            checkOnlineStatus();
+        }
+    }
+
+    function checkOnlineStatus(deviceId) {
+        if (!deviceId) {
+            statOnlinePollingLastElementIndex++;
+            if (statOnlinePollingLastElementIndex  >= checkOnlineStatusList.length) {
+                return;
+            }
+            deviceId = checkOnlineStatusList[statOnlinePollingLastElementIndex];
+        }
+        pollForRequestedInformation({
+            pollUrl: "data-poll-device-online-state-url",
+            pollOnce: true,
+            domManipulator: updateOnlineStatus,
+            errorHandler: errorCheckOnlineStatus,
+            additionalUrl: deviceId
+        });
+    }
+
+    function updateOnlineStatus(data) {
+        // if ....  --> is there a scenario where you get a
+        // "please request again, because I'm still checking the device..." response?
+        // In this case call checkOnlineStatus(deviceId) from here and return.
+        var id;
+        var onlineStat;
+        for (var key in data) {
+            id = key;
+            onlineStat = data[key];
+        }
+        var entry = $("#" + id).find(".device-link");
+        entry.addClass(onlineStat?"is-online":"is-offline");
+        checkedDevicesForOnlineStatusCounter++;
+
+        if ($("#" + id).attr("data-changing") !== "True")
+            entry.removeClass("i-status").addClass(onlineStat?"i-connected":"i-notconnected");
+
+        if (checkedDevicesForOnlineStatusCounter >= checkOnlineStatusList.length) {
+            $(".device-sync").css("display", "none");
+            return;
+        }
+        checkOnlineStatus();
+    }
+
+    function errorCheckOnlineStatus() {
+    }
+
+    /**
+     * Poll the server for requested Information
+     */
+    function pollForRequestedInformation(pollRequest) {
+        var additionalUrl = pollRequest&&pollRequest.additionalUrl?("/" + pollRequest.additionalUrl):"";
+        var href = (pollRequest&&pollRequest.pollUrl?$('body').attr(pollRequest.pollUrl):$('body').attr('data-poll-messages-url')) + additionalUrl;
+        var domManipulationCall = pollRequest&&pollRequest.domManipulator?pollRequest.domManipulator:updateModal;
+        var pollErrorCall = pollRequest&&pollRequest.errorHandler?pollRequest.errorHandler:errorModal;
+        var pollOnce = pollRequest&&pollRequest.pollOnce?pollRequest.pollOnce:false;
+        var stopPollingIfEmpty = pollRequest&&pollRequest.stopPollingIfEmpty?pollRequest.stopPollingIfEmpty:false
+        var intervallForPolling = pollRequest&&pollRequest.pollIntervall?pollRequest.pollIntervall:pollingTimeout;
 
         $.ajax({
             url: href,
@@ -585,27 +1303,17 @@ UPRIBOX.Main = (function($) {
             type: 'post',
 
             success: function (data) {
-                console.log("queue " + href + " status: " + data.status);
+               // console.log("queue " + href + " status: " + data.status);
                 upriboxUnreachable = false;
-
                 //we received data - hide warning again if visible
                 $('.js-connection-warning').addClass('hidden');
-                if(data.message){
-                    var tag = $('.message').find('ul').first();
-                    tag.empty();
-                    for(var i=0;i<data.message.length;i++) {
-                        var litag = $('<li class="success-message"></li>');
-                        tag.append(litag.html(data.message[i]));
-                    }
-                }
 
-                if(data.status === 'done'){
-                    $('.js-modal-close').attr('disabled', false);
-                    var tag = $('.message').find('ul').first();
-                    var litag = $('<li class="success-message hidden"></li>');
-                    tag.append(litag);;
-                }else{
-                    setTimeout(pollJobStatus, pollingTimeout);
+                domManipulationCall(data, pollRequest);
+
+                if(data.status !== 'done' && !pollOnce && (!stopPollingIfEmpty || (stopPollingIfEmpty && data.length && data.length > 0 ))) {
+                    setTimeout(function ()  {
+                        pollForRequestedInformation(pollRequest)
+                    }, intervallForPolling);
                 }
             },
             error: function(jqXHR, textStatus, errorThrown){
@@ -619,15 +1327,7 @@ UPRIBOX.Main = (function($) {
                     $('.js-session-lost-warning').removeClass('hidden');
                     //if the modal dialog is currently being show and the close button is disabled,
                     //enable it
-                    var closebutton = $('.js-modal-close');
-                    if(closebutton.attr('disabled')){
-                        closebutton.attr('disabled', false);
-                        //add a on click listener that reloads the page so the user
-                        //gets redirected to the login site
-                        closebutton.on('click', function() {
-                            location.reload();
-                        })
-                    }
+                    pollErrorCall(pollRequest);
                     return
                 }
                 if(!upriboxUnreachable){
@@ -635,7 +1335,10 @@ UPRIBOX.Main = (function($) {
                     setTimeout(triggerWlanWarning, wlanWarningTimeout);
                 }
                 upriboxUnreachable = true;
-                setTimeout(pollJobStatus, pollingTimeout);
+                setTimeout(function ()
+                {
+                    pollForRequestedInformation(pollRequest)
+                }, pollingTimeout);
             }
 
         });
@@ -740,8 +1443,8 @@ UPRIBOX.Main = (function($) {
             pageIdentifier = 'id-' + hashCode(window.location.pathname).toString();
             initListeners();
             checkInfoCookie();
-            pollJobStatus();
-            updateChart();
+            pollForRequestedInformation();
+            //updateChart();
         }
     }
 }(jQuery));

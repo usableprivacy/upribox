@@ -97,3 +97,23 @@ def get_device_status(request, slug):
         res = utils.exec_upri_config("check_device", ip)
 
     return JsonResponse({slug: bool(res)})
+
+@login_required
+def single_device_template(request):
+    return render(request, "device_entry.html")
+
+@login_required
+def complete_device_list(request):
+    return render (request, "deviceListDummy.js")
+
+@login_required
+def in_progress_devices (request):
+    return render (request, "deviceProgressListDummy.js")
+
+@login_required
+def get_online_state (request):
+    return get_online_state_with_slug(request, -1)
+
+@login_required
+def get_online_state_with_slug (request, slug):
+    return render (request, "devicesOnlineReq.js")

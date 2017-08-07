@@ -18,6 +18,7 @@
                 {{ field|add_error_class:'form-input-error'}}
                 {% if field.field.widget.input_type == "password" %}
                 <span id="pw{{forloop.counter}}" class="icon i-eye-open showpw" ></span>
+                <div style="color:#666666; width: 350px; margin-top: 5px; margin-bottom: -8px; font-size: 12px;">{% trans "Schwach" %} <meter max="5"></meter>{% trans "Stark" %}</div>
                 {% endif %}
                 {% for error in field.errors %}
                     <p class="error-message">{{ error|striptags }}</p>
@@ -25,8 +26,13 @@
             {% endfor %}
 
             {% csrf_token %}
+            <p id="passwordsDontMatch">{% trans "Die Passwörter stimmen nicht überein" %}</p>
+            {% if string_length_8_to_64_needed == True %}
+                 <p id="string8to64needed">{% trans "Das Passwort muss zwischen 8 und 64 Zeichen lang sein" %}</p>
+            {% endif %}
 <!-- <button class="multiple-inputs">Speichern</button> -->
             <br>
-            <button type="submit" name="submit" href="{{ href }}" class="multiple-inputs js-form-submit">{% trans "Speichern" %}</button> {% if back %}<a href="{{ back }}"> {% trans "Abbrechen" %} </a>{% endif %}
+
+            <button disabled="disabled" type="submit" name="submit" href="{{ href }}" class="multiple-inputs js-form-submit">{% trans "Speichern" %}</button> {% if back %}<a href="{{ back }}"> {% trans "Abbrechen" %} </a>{% endif %}
         </fieldset>
 </form>

@@ -54,7 +54,7 @@
             {% comment %}
                 {% trans "WLAN Zugangsdaten" as form_title%}
             {% endcomment %}
-            {% include "form.html" %}
+            {% include "form.html" with string_length_8_to_64_needed=True%}
 
             <!-- <p class="formLabel"> SSID: </p>
             <input type="text" name="ssid" id="ssid">
@@ -84,7 +84,7 @@
 {% endblock %}
 
 {% block info %}
-    <p class="icon i-info infohead"> {% trans "Sicheres Passwort" %} </p>
+    <p class="icon i-info infohead"> {% trans "Tipps für sichere Passwörter:" %} </p>
    <p class="infotext"> {% trans "Mindestens 8 Zeichen." %} <br>
    {% trans "Mindestens 1 Großbuchstabe." %} <br>
    {% trans "Mindestens 1 Kleinbuchstabe." %}<br>

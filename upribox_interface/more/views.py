@@ -280,3 +280,7 @@ def wifi_mode(request):
     jobs.queue_job(sshjobs.toggle_apate, ('no',))
     jobs.queue_job(sshjobs.toggle_dhcpd, ('no',))
     return render(request, "modal.html", {"message": True, "refresh_url": reverse('upri_config')})
+
+@login_required
+def show_modal(request):
+    return render(request, "modal.html")

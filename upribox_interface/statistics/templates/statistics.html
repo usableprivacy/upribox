@@ -2,88 +2,162 @@
 
 {% load i18n %}
 
-{% block title %}{% trans "Statistiken - upribox" %}{% endblock %}
+{% block breadcrumb  %}
+<p>{% trans "Statistik" %}</p>
+{% endblock %}
+
+{% block title %}{% trans "Statistik - upribox" %}{% endblock %}
 
 {% block header %}
     <h1>{% trans "Statistik" %}</h1>
-    <p>{% trans "Geblockete Domains und gefilterte Inhalte." %}</p>
 {% endblock %}
 
+{% block additional-data-urls %}data-poll-statistics-main-url="{% url 'upri_get_statistics' %}" data-poll-statistics-update-url="{% url 'upri_update_statistics' %}"{% endblock %}
+
 {% block content %}
-    <p><strong>{% trans "Die Statistiken liefern einen &Uuml;berblick &uuml;ber geblockte Domains und gefilterte Webinhalte." %}</strong></p>
+<div class="loading" style="display: block;"></div>
+<div class="statistics-content" style="display: none;">
+    <!--This span is not visible. Its only purpose is to hold the translated string for "KW", which is later needed for the plot-->
+    <span id="calendar-week-short-text">{% trans "KW" %}</span>
 
-    <div class="loading"></div>
-    <div class="ct-pies">
-        <p>{% trans "Anzahl der geblockten (rosa) vs. werbefreien (rot) Domains" %}</p>
-        <div class="ct-pie1 ct-perfect-fourth"></div>
-        <div class="ct-pie1-label-mobile">{% trans "in den letzten 6 Monaten" %}</div>
-        <div class="ct-pie2 ct-perfect-fourth"></div>
-        <div class="ct-pie1-label">{% trans "in den letzten 6 Monaten" %}</div>
-        <div class="ct-pie2-label">{% trans "heute" %}</div>
-    </div>
 
-    <div class="ct-chart ct-perfect-fourth"></div>
-    <p class="legend">
-        <span class="legend-filtered-content"></span>{% trans "Gefilterte Inhalte" %}<br/>
-        <span class="legend-blocked-domains"></span>{% trans "Geblockte Domains" %}
+    <p class="overall-count">{% trans "Gesamtanzahl geblockter Anfragen" %}: <span id="total-blocked">2290</span><br>
+        {% trans "Gesamtanzahl gefilterter Inhalte" %}: <span id="total-filtered">2290</span>
     </p>
-
-    <div class="lists">
-
-        <div class="column column-4 statistics js-filtered-sites"><p class="icon i-bad">{% trans "Top gefilterte Inhalte" %}</p>
-            <ol></ol>
+    <div class="legend">
+        <div class="legend-inner">
+            <span class="legend-blocked-domains"></span>{%trans "geblockt" %}<br>
+            <span class="legend-filtered-content"></span>{%trans "gefiltert" %}
         </div>
-
-{#        <div class="column column-4 statistics js-filtered-sites"><p class="icon i-good">{% trans "Good" %}</p>#}
-{#        {% comment %} {% blocktrans with name=page.name count=page.count %}{{ name }} - {{ count }} geblockte Inhalte{% endblocktrans %}{% endcomment %}#}
-{#        {% comment %} TODO: Translation der li-Bloecke an den Aufbau der Views anpassen (auf Vars zugreifen + for + etc.) {% endcomment %}#}
-{#        <ol><li>{% blocktrans with name="orf.at" count="200 000" %}{{ name }} - {{ count }} geblockte Inhalte{% endblocktrans %}</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li></ol></div>#}
-{##}
-{#        <div class="column column-4 statistics"><p class="icon i-bad">{% trans "Bad" %}</p>#}
-{#        <ol><li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li></ol>#}
-{#        </div>#}
-{##}
-{#        <div class="column column-4 statistics"><p class="icon i-ugly">{% trans "Ugly" %}</p>#}
-{#        <ol><li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li></ol></div>#}
-
-        <div class="column column-4 statistics js-blocked-sites"><p class="icon i-ugly">{% trans "Top geblockte Domains" %}</p>
-            <ol></ol>
-        </div>
-{#        <div class="column column-4 statistics js-blocked-sites"><p class="icon i-good">{% trans "Good" %}</p>#}
-{#        {% comment %} {% blocktrans with name=page.name count=page.count %}{{ name }} - {{ count }} geblockte Domains{% endblocktrans %}{% endcomment %}#}
-{#        {% comment %} TODO: Translation der li-Bloecke an den Aufbau der Views anpassen (auf Vars zugreifen + for + etc.) {% endcomment %}#}
-{#        <ol><li>{% blocktrans with name="orf.at" count="200 000" %}{{ name }} - {{ count }} geblockte Domains{% endblocktrans %}</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li></ol></div>#}
-{##}
-{#        <div class="column column-4 statistics"><p class="icon i-bad">{% trans "Bad" %}</p>#}
-{#        <ol><li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li></ol>#}
-{#        </div>#}
-{##}
-{#        <div class="column column-4 statistics"><p class="icon i-ugly">{% trans "Ugly" %}</p>#}
-{#        <ol><li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li></ol></div>#}
-
     </div>
+    <div class="y-axis-desc">{% trans "Anzahl" %}</div>
+    <div id="stats"></div>
+    <div class="x-axis-desc"><span class="weeks-full-text">{% trans "Kalenderwochen" %}</span><span class="weeks-short-text">{% trans "KW" %}</span></div>
+    <div class="lists">
+        <p class="lists-headline">{%trans "Details für Kalenderwoche 10" %}</p>
+
+        <div class="statistics js-blocked-sites">
+            <p class="">{%trans "Top geblockte Domains" %}</p>
+            <ol id="blocked-pages">
+
+            </ol>
+        </div>
+        <div class="statistics js-filtered-sites">
+            <p>{%trans "Top gefilterte Inhalte" %}</p>
+            <ol id="filtered-pages">
+
+            </ol>
+        </div>
+    </div>
+</div>
+
+
+<!-- $(document).ready(function () {
+      var d3 = Plotly.d3;
+
+      var WIDTH_IN_PERCENT_OF_PARENT = 73;
+      HEIGHT_IN_PERCENT_OF_PARENT = 80;
+
+      var gd3 = d3.select('#stats');
+      /*.style({
+       width: WIDTH_IN_PERCENT_OF_PARENT + '%',
+       height: HEIGHT_IN_PERCENT_OF_PARENT + '%'
+       });*/
+
+      var gd = gd3.node();
+
+      var trace1 = {
+          hoverinfo: "y",
+          x: ['<a ><span class="kw-desc">KW </span>10</a>', '<a ><span class="kw-desc">KW </span>11</a>', '<a ><span class="kw-desc">KW </span>12</a>'],
+          y: [20, 14, 23],
+          width:[.6, .6, .6],
+          marker: {color: '#007589'},
+          name: 'gefiltert',
+          type: 'bar'
+      };
+      var trace2 = {
+          hoverinfo: "y",
+          x: ['<a ><span class="kw-desc">KW </span>10</a>', '<a ><span class="kw-desc">KW </span>11</a>', '<a ><span class="kw-desc">KW </span>12</a>'],
+          y: [12, 18, 29],
+          width:[.6, .6, .6],
+          marker: {color: '#8CC8C8'},
+          type: 'bar',
+          name: 'geblockt'
+      };
+
+
+      var trace3 = {
+          hoverinfo: "none",
+          x: ['<a ><span class="kw-desc">KW </span>10</a>', '<a ><span class="kw-desc">KW </span>11</a>', '<a ><span class="kw-desc">KW </span>12</a>', '<span class="kw-desc">KW </span>14', '<span class="kw-desc">KW </span>15'],
+          y: [0,0,0, 0, 0],
+          width:[.6, .6, .6],
+          /*width:[.75*(3/5), .75*(3/5), .75*(3/5),.75*(3/5), .75*(3/5)],*/
+          name: 'dummy',
+          type: 'bar'
+      };
+      var data = [trace1, trace2, trace3];
+
+      var layout = {
+          xaxis: {
+              autorange: true,
+              showgrid: false,
+              showline: true,
+              fixedrange: true
+          },
+          yaxis: {
+              autorange: true,
+              showgrid: false,
+              showline: true,
+              showticklabels: false,
+              fixedrange: true
+          },
+          barmode: 'stack',
+          showlegend: false,
+          legend: {
+              "x": "0",
+              "margin.r": "120"
+          },
+          margin: {
+              l: 25,
+              r: 0,
+              b: 50,
+              t: 0,
+              pad: 0
+          },
+          annotations: [
+              {
+                  x: 0,
+                  y: trace1.y[0] + trace2.y[0],
+                  xref: 'x',
+                  yref: 'y',
+                  text: '47049',
+                  showarrow: true,
+                  arrowcolor: "transparent",
+                  arrowhead: 0,
+                  ax: 0,
+                  ay: -10
+              }
+          ]
+      };
+
+      Plotly.newPlot(gd, data, layout, {	displayModeBar: false});
+
+      window.onresize = function() {
+          requestAnimationFrame(function() {Plotly.Plots.resize(gd);});
+      };
+
+      trace1.y[0] =10;
+      layout.annotations[0].y = trace1.y[0] + trace2.y[0];
+      Plotly.redraw(gd);
+      Plotly.relayout(gd);
+      Plotly.Plots.resize(gd);
+      var week = $(".xtick").find("text").text
+      console.log($(".xtick").find("text a"));
+      $(".xtick").find("text a").on("click", function () { changeWeek(week)});
+      //$(".xtick").find("text a").on("click", function () {alert(1)});
+  });-->
+
+{% endblock %}
+
+{% block info_wrapper %}
 {% endblock %}

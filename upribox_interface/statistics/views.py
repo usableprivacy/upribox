@@ -10,6 +10,7 @@ from django.db.models import Sum, Count
 from django.template.defaultfilters import date as _localdate
 import time
 import logging
+import datetime
 from django.shortcuts import render
 import redis as redisDB
 
@@ -114,3 +115,14 @@ def json_statistics(request):
                                         'labels': months,
                                         'series': monthly
                                     }}),  content_type="application/json")
+@login_required
+def json_statistics_new(request):
+    return render(request, "statisticsDummy.js")
+
+@login_required
+def json_statistics_update(request):
+    return json_statistics_update_w_slug(request, datetime.datetime.now().isocalendar()[1])
+
+@login_required
+def json_statistics_update_w_slug(request, slug):
+    return render(request, "statisticsUpdateDummy.js")

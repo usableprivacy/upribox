@@ -82,14 +82,14 @@ html, body {
     margin: 5px;
 }
 
+/* old statistics:
 .statistics {
     background-color: white;
 }
 .statistics p {
-
     margin: 0;
-
 }
+*/
 
 @media only screen and (max-width: 1000px) {
     .column-4 {
@@ -126,6 +126,7 @@ html, body {
     max-width: 1100px;
     min-height: 100%;
     margin: 0 auto;
+    padding-bottom: 10px;
 }
 
 #site-container::before {
@@ -151,7 +152,11 @@ html, body {
 
 @media screen and (max-width: 850px) {
     .only-mobile {
-        display: block;
+        display: inline-block;
+    }
+    .faq-link.only-mobile {
+        margin-top: 8px;
+        margin-left: 15px;
     }
 }
 
@@ -209,7 +214,7 @@ a:focus, a:hover, a:active {
 }
 
 .modal .message {
-    width: 90%;
+    width: 85%;
     max-width: 500px;
     height: auto;
     margin: 100px auto 0 auto;
@@ -349,12 +354,62 @@ input[type="text"]:focus,input[type="password"]:focus {
     /**width: 200px;**/
 }
 
+#string8to64needed, #passwordsDontMatch {
+    margin-bottom: -12px;
+}
+
+#passwordsDontMatch {
+    display: none;
+}
+
 @media only screen and (max-width: 850px) {
     /**.switch p {
         width: 150px;
     }**/
 }
 
+
+/* Password indicator */
+
+meter {
+    width: 90px;
+    margin-left: 15px;
+    margin-right: 15px;
+    height: 3px;
+    vertical-align: middle;
+
+}
+
+meter::-webkit-meter-bar {
+
+}
+
+/* Webkit based browsers */
+meter[value="1"]::-webkit-meter-optimum-value { background: red !important; }
+meter[value="2"]::-webkit-meter-optimum-value { background: #ff4500; }
+meter[value="3"]::-webkit-meter-optimum-value { background: orange; }
+meter[value="4"]::-webkit-meter-optimum-value { background: yellow; }
+meter[value="5"]::-webkit-meter-optimum-value { background: green; }
+
+/* Gecko based browsers */
+meter[value="1"]::-moz-meter-bar { background: red; }
+meter[value="2"]::-moz-meter-bar { background: #ff4500; }
+meter[value="3"]::-moz-meter-bar { background: orange; }
+meter[value="4"]::-moz-meter-bar { background: yellow; }
+meter[value="5"]::-moz-meter-bar { background: green; }
+
+input[name="oldpassword"] + span + div {
+    display: none;
+}
+
+input[name="password2"] + span + div {
+    display: none;
+}
+
+button .disabled {
+    opacity: .3;
+    pointer-events: none;
+}
 
 /**
  * ********** HTML5BP Snippets **********
@@ -506,7 +561,7 @@ header .btn-menu::after {
     display: inline-block;
     width: 14px;
     height: 1px;
-    margin: -5px 0 0 10px;
+    margin: -10px 0 0 10px;
     background-color: rgba(45, 49, 57, 0.7);
     box-shadow: 0 4px 0 0 rgb(45, 49, 57), 0 8px 0 0 rgb(45, 49, 57);
     content: '';
@@ -555,7 +610,7 @@ header nav a:focus, header nav a:hover, header nav a:active, header nav a.active
         float: right;
         width: 90px;
         padding-left: 0px;
-        padding-right: 0px;
+        padding-right: 8px;
     }
     header nav {
         clear: both;
@@ -860,7 +915,11 @@ main {
     }
 
     #top-bar a{
-        display: none;
+        position: absolute;
+        margin-left: 10px;
+        left: 30%;
+        top: 9px;
+        font-size: 0.875em;
     }
 
     .breadcrumb{
@@ -1024,6 +1083,10 @@ main aside .info-out {
     }
 }
 
+#changes-container {
+    visibility: hidden;
+}
+
 
 /**
  * ********** Article **********
@@ -1074,7 +1137,8 @@ article p strong {
         line-height: 1.25em;
     }
     article p {
-        max-width: 100%;
+        /* max-width: 100%; */
+        max-width: 300px;
     }
 }
 
@@ -1243,6 +1307,12 @@ article p strong {
     clear: both;
 }
 
+ul.all-done .success-message:last-child{
+    color:#307800 !important;
+    background-color: #ddeed1 !important;;
+    border-left: 3px solid #307800 !important;
+}
+
 .success-message:last-child {
     color:#232323;
     background-color: #dfdfdf;
@@ -1296,11 +1366,272 @@ article p strong {
 
 /* -------------------------------- ADDED CSS ------------------------------------- */
 
+/* Statistic page styles */
+
+.loading {
+    -webkit-transition: opacity .45s;
+    transition: opacity .45s;
+}
+
+.statistics-content {
+    opacity: 0;
+    -webkit-transition: opacity 1.24s;
+    transition: opacity 1.29s;
+    transition: opacity 1.29s;
+}
+
+.statistics-content #calendar-week-short-text {
+    display: none;
+}
+
+.statistics-content .js-plotly-plot .plotly svg a.activeWeekLink {
+    fill: #000 !important;
+    text-decoration: none !important;
+    pointer-events: none !important;
+}
+
+.statistics-content .js-plotly-plot .plotly svg a.activeWeekLink:hover {
+    fill: #000 !important;
+    text-decoration: none !important;
+    pointer-events: none !important;
+}
+
+.statistics-content .js-plotly-plot .plotly svg a.activeWeekLink:active {
+    fill: #000 !important;
+    text-decoration: none !important;
+    pointer-events: none !important;
+}
+
+.statistics-content .js-plotly-plot .plotly svg a.activeWeekLink:visited {
+    fill: #000 !important;
+    text-decoration: none !important;
+    pointer-events: none !important;
+}
+
+.statistics-content .js-plotly-plot .plotly .xtick text {
+    fill: #899 !important;
+}
+
+.statistics-content svg text {
+    font-weight:bold;
+}
+.statistics-content .xtick tspan {
+    display: inline;
+}
+.statistics-content .js-plotly-plot {
+    display: inline-block;
+    max-width: 605px;
+}
+.statistics-content .legend-inner {
+    display: inline-block;
+    text-align: left;
+}
+.statistics-content .y-axis-desc {
+    margin-left: 2px;
+    margin-bottom:9px;
+    font-size: 12px;
+    font-weight: bold;
+}
+.statistics-content .x-axis-desc {
+    padding-left: 9px;
+    font-size: 12px;
+    display: inline-block;
+    position: relative;
+    top: -45px;
+    font-weight: bold;
+}
+.statistics-content .legend {
+    display: block;
+    text-align: right;
+    /*margin-right: 15px;*/
+    margin-top: 15px;
+    /* margin-left: 5px; */
+    margin-bottom: -28px;
+}
+.statistics-content .legend-filtered-content, .legend-blocked-domains {
+    max-width: 0;
+    float: none;
+    display: inline-block;
+}
+.statistics-content .legend-blocked-domains {
+    border: 5px solid #8CC8C8;
+}
+.statistics-content .legend-filtered-content {
+    border: 5px solid #007589;
+}
+.statistics-content .lists {
+    width: auto !important;
+    display: block;
+}
+.statistics-content .lists-headline {
+    /* margin-left: 4px; */
+    margin-top: 9px;
+    margin-bottom: -4px !important;
+    font-size: 18px;
+}
+.statistics-content .overall-count {
+    width: 280px;
+    font-size: 14px;
+    margin-bottom: -12px;
+    margin-top: 20px;
+}
+.statistics-content #total-blocked {
+    font-weight: bold;
+    float: right;
+}
+.statistics-content #total-filtered {
+    font-weight: bold;
+    float: right;
+}
+.statistics-content .statistics  li {
+    padding-left: 0;
+    font-style: normal;
+    font-weight: normal;
+    list-style-type: none;
+    margin-left: 0;
+}
+.statistics-content .statistics  ol {
+    padding-left: 0;
+}
+.statistics-content .js-blocked-sites {
+    display: inline-block;
+    margin-right: 19%;
+}
+.statistics-content .js-filtered-sites {
+    display: inline-block;
+}
+.statistics-content .lists p {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.statistics-content .hoverlayer text{
+    fill: #fff !important;
+}
+.statistics-content .hoverlayer path{
+    /*fill: #888 !important;*/
+    stroke: rgba(241,243,254,.95) !important;
+    stroke-width: 2 !important;
+}
+.statistics-content .drag {
+    display: none;
+}
+.statistics-content .drag.nsewdrag {
+    display: block;
+}
+.statistics-content .js-plotly-plot .plotly svg a {
+    fill: rgb(73, 175, 192) !important;
+    text-decoration: underline !important;
+}
+.statistics-content .js-plotly-plot .plotly svg a:active {
+    fill: rgb(73, 175, 192) !important;
+    text-decoration: underline !important;
+}
+.statistics-content .js-plotly-plot .plotly svg a:hover {
+    fill: rgb(73, 175, 192) !important;
+    text-decoration: underline !important;
+}
+.statistics-content .js-plotly-plot .plotly svg a:visited {
+    fill: rgb(73, 175, 192) !important;
+    text-decoration: underline !important;
+}
+.statistics-content .js-plotly-plot .plotly svg a.active {
+    fill: #000000 !important;
+    text-decoration: none !important;
+    pointer-events: none !important;
+}
+.statistics-content #stats {
+    width: 83% !important;
+    height: 380px;
+}
+.statistics-content .weeks-short-text {
+    display: none;
+}
+@media only screen and (max-width: 1080px) {
+    .statistics-content #stats {
+        width: 91% !important;
+    }
+    .statistics-content .weeks-short-text {
+        display: inline;
+    }
+    .statistics-content .weeks-full-text {
+        display: none;
+    }
+}
+@media only screen and (max-width: 850px) {
+    .statistics-content #stats {
+        width: 93% !important;
+        max-width: 760px;
+    }
+    .statistics-content .legend {
+        /* margin-right: 15px; */
+        margin-top: 14px;
+    }
+    .statistics-content .lists-headline {
+        margin-top: 9px;
+    }
+}
+@media only screen and (max-width: 550px) {
+    .statistics-content #stats {
+        width: 88% !important;
+    }
+    .statistics-content .xtick tspan {
+        display: none;
+    }
+    .statistics-content .lists-headline {
+        margin-top: 7px;
+    }
+}
+@media only screen and (max-width: 430px) {
+    .statistics-content .annotation-text {
+        font-size: 10px !important;
+    }
+    .statistics-content .legend {
+        display: block;
+        text-align: left;
+        margin-right: 0;
+        /* margin-top: 15px;*/
+        margin-top: 22px;
+        margin-left: 3px;
+        /*margin-bottom: 12px; */
+        margin-bottom: 15px;
+    }
+    .statistics-content .legend br {
+        display: none;
+    }
+    .statistics-content .legend-filtered-content {
+        margin-left: 34px;
+    }
+    .statistics-content .lists-headline {
+        margin-top: 7px;
+    }
+    .statistics-content .overall-count {
+        margin-top: 15px;
+    }
+}
+
+
+/*Js Menu style*/
 .js-menu{
     margin: 0px;
 }
 
-/* Geräteübersicht Tabelle Styles */
+/* Device overview table Styles */
+.device-sync {
+    width: 100%;
+    text-align: center;
+    display: block;
+}
+
+.device-sync img {
+    height: 37px;
+    margin-bottom: 4px;
+    margin-top: 4px;
+}
+
+.device-sync-invisible-element {
+    display: none;
+}
+
 .divTable{
 	display: table;
 	width: 100%;
@@ -1384,6 +1715,24 @@ input[type="radio"]{
     line-height: 1.25em;
 }
 
+.divTableRow[data-changing="True"] {
+    pointer-events: none;
+}
+
+.divTableRow[data-changing="True"] a {
+    opacity: .6;
+    color: #c9c9c9 !important;
+}
+
+.divTableRow[data-changing="True"] a::before {
+    /*opacity: .48;*/
+    opacity: .36;
+}
+
+.divTableRow[data-changing="True"] input {
+    opacity: .25;
+}
+
 @media only screen and (min-width: 480px) {
     article input[type="text"], input[type="password"] {
         width: 350px;
@@ -1392,12 +1741,24 @@ input[type="radio"]{
 
 @media only screen and (max-width: 480px) {
     article input[type="text"], input[type="password"] {
-        width: 75%;
+        width: 66%;
     }
 }
 /* Tabellen Icons */
 
-.i-notconnected{
+.i-status::before {
+    background-color: transparent;
+    background-image: url(../img/loading_132_small.gif) !important;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: 21px;
+    height: 32px;
+    width: 27px;
+    margin-left: -2px;
+    opacity: .38;
+}
+
+.i-notconnected {
     color: #c9c9c9
 }
 
@@ -1495,6 +1856,7 @@ input[type="radio"]{
 
 .infotext{
     line-height: 1.25em;
+    max-width: 37.5em;
 }
 
 .i-Bninja::before {

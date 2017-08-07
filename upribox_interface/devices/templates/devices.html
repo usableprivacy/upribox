@@ -1,6 +1,7 @@
 {% extends request.is_ajax|yesno:"base_ajax.html,base.html" %}
 
 {% load i18n %}
+{% load static %}
 
 {% block breadcrumb  %}
     <p>{% trans "Geräteübersicht" %}</p>
@@ -12,10 +13,16 @@
     <h1>{% trans "Geräteübersicht" %}</h1>
 {% endblock %}
 
+
+{% block additional-data-urls %}data-template-single-device="{% url 'upri_device_single_device_template' %}" data-poll-device-list-url="{% url 'upri_complete_device_list' %}" data-poll-device-online-state-url="{% url 'upri_get_online_state' %}" data-poll-device-activeprogress-url="{% url 'upri_in_progress_devices' %}"{% endblock %}
 {% block content %}
 
     <!-- Main, Content Bereich -->
-
+        <div class="device-sync">
+            <img src="{% static "img/loading_132_x.gif" %}"><br>
+            <span id="device-sync-text1">{% trans "Die Geräteliste wird noch mit dem Server synchonisiert..." %}</span>
+            <span id="device-sync-text2" class="device-sync-invisible-element">{% trans "Es wird noch überprüft welche Geräte online sind..." %}</span>
+        </div>
         <div class="divTable">
             <div class="divTableBody">
                 <div class="divTableRow">
@@ -33,7 +40,7 @@
                 {% for device in devices %}
                     {% include 'device_entry.html' %}
                 {% empty %}
-                <div class="divTableRow">
+                <div class="divTableRow no-devices-row">
                     <div class="divTableCell">
                         <p class="icon i-connected">{% trans "Keine Geräte verfügbar" %}</p>
                     </div>
