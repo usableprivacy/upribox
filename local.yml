@@ -5,6 +5,7 @@
   become_method: sudo
   roles:
     - { role: common, tags: ["common"] }
+    - { role: upri_config, tags: ["upri_config"] }
     - { role: iptables, tags: ["iptables"] }
     - { role: unattended_upgrades, tags: ["unattended_upgrades"] }
     - { role: wlan, tags: ["wlan"] }

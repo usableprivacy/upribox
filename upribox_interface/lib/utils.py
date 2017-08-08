@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
 import json
-from os import listdir
-from os.path import isfile, join, exists
 import logging
 import subprocess
 import time
+from os import listdir
+from os.path import exists, isfile, join
+
 import dns.resolver
-import passwd
-from django.conf import settings
-from django.utils.translation import ugettext_lazy
-from django.utils.crypto import get_random_string
-from django import forms
 import netifaces as ni
+import passwd
+from django import forms
+from django.conf import settings
+from django.utils.crypto import get_random_string
+from django.utils.translation import ugettext_lazy
 from netaddr import IPAddress
 
 logger = logging.getLogger('uprilogger')
@@ -90,19 +92,17 @@ def check_passwords(password1, password2):
         if not pw2.has_digit():
             errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Ziffer beinhalten.")))
         if not pw2.has_lowercase_char():
-            errors.append(
-                forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Kleinbuchstaben beinhalten.")))
+            errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Kleinbuchstaben beinhalten.")))
         if not pw2.has_uppercase_char():
-            errors.append(
-                forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Großbuchstaben beinhalten.")))
+            errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Großbuchstaben beinhalten.")))
         if not pw2.has_symbol():
-            errors.append(
-                forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Sonderzeichen beinhalten.")))
+            errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Sonderzeichen beinhalten.")))
         if not pw2.has_allowed_length():
             errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss zwischen 8 und 63 Zeichen lang sein.")))
         if not pw2.has_only_allowed_chars():
-            errors.append(forms.ValidationError(ugettext_lazy(
-                "Das Passwort darf lediglich die Sonderzeichen %s enthalten." % pw2.get_allowed_chars())))
+            errors.append(
+                forms.ValidationError(ugettext_lazy("Das Passwort darf lediglich die Sonderzeichen %s enthalten." % pw2.get_allowed_chars()))
+            )
 
         raise forms.ValidationError(errors)
 
@@ -164,8 +164,12 @@ def get_system_network_config():
 
 
 def get_default_network_config():
-    return {'ip': get_fact('interfaces', 'static', 'ip'), 'netmask': get_fact('interfaces', 'static', 'netmask'),
-            'gateway': get_fact('interfaces', 'static', 'gateway'), 'dns_servers': [get_fact('interfaces', 'static', 'dns')]}
+    return {
+        'ip': get_fact('interfaces', 'static', 'ip'),
+        'netmask': get_fact('interfaces', 'static', 'netmask'),
+        'gateway': get_fact('interfaces', 'static', 'gateway'),
+        'dns_servers': [get_fact('interfaces', 'static', 'dns')]
+    }
 
 
 class AnsibleError(Exception):

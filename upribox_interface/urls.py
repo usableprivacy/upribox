@@ -30,12 +30,12 @@ urlpatterns = [
     url(r'^help/$', www.views.faq, name="upri_faq"),
 
     # more config
-    url(r'^more/$', more.views.more_config, {"save_form": "user"}, name="upri_more"),
+    # url(r'^more/$', more.views.more_config, {"save_form": "user"}, name="upri_more"),
     url(r'^more/ssh/toggle$', more.views.ssh_toggle, name="upri_ssh_toggle"),
     # automatic mode
     url(r'^more/apate/toggle$', more.views.apate_toggle, name="upri_apate_toggle"),
-    url(r'^more/dhcp$', more.views.save_dhcp, name="upri_dhcp_save"),
-    url(r'^more/static$', more.views.more_config, {"save_form": "static_ip"}, name="upri_static_save"),
+    # url(r'^more/dhcp$', more.views.save_dhcp, name="upri_dhcp_save"),
+    # url(r'^more/static$', more.views.more_config, {"save_form": "static_ip"}, name="upri_static_save"),
     url(r'^more/modal$', more.views.show_modal, name="upri_modal"),
 
     # new config
@@ -60,12 +60,15 @@ urlpatterns = [
     # WLAN config
     url(r'^silent/$', wlan.views.silent, name="upri_silent"),
     url(r'^silent/toggle/$', wlan.views.silent_toggle, name="upri_silent_toggle"),
-    url(r'^ninja/$', wlan.views.ninja, name="upri_ninja"),
-    url(r'^ninja/toggle/$', wlan.views.ninja_toggle, name="upri_ninja_toggle"),
+    # url(r'^ninja/$', wlan.views.ninja, name="upri_ninja"),
+    # url(r'^ninja/toggle/$', wlan.views.ninja_toggle, name="upri_ninja_toggle"),
 
     # jobs
     url(r'^jobstatus/$', www.views.jobstatus, name="upri_jobstatus"),
     url(r'^jobstatus/clear/$', www.views.clear_jobstatus, name="upri_clear_jobstatus"),
+    url(r'^jobstatus/count/$', www.views.jobcounter, name="upri_counter_jobstatus"),
+    url(r'^jobstatus/failed/$', www.views.jobstatus_failed, name="upri_jobstatus_failed"),
+    url(r'^jobstatus/failed/clear/$', www.views.clear_failed, name="upri_clear_failed"),
 
     # VPN config
     url(r'^vpn/$', vpn.views.vpn_config, name="upri_vpn"),
@@ -79,31 +82,28 @@ urlpatterns = [
 
     # statistics config
     url(r'^statistics/$', statistics.views.get_statistics, name="upri_statistics"),
-    url(r'^statistics/get$', statistics.views.json_statistics_new, name="upri_get_statistics"),
-    url(r'^statistics/update/(?P<slug>\w+)$', statistics.views.json_statistics_update_w_slug, name="upri_update_statistics_with_slug"),
-    url(r'^statistics/update$', statistics.views.json_statistics_update, name="upri_update_statistics"),
+    url(r'^statistics/complete$', statistics.views.json_statistics, name="upri_get_statistics"),
+    url(r'^statistics/update/(?P<week>[0-9]{1,2})/$', statistics.views.statistics_update, name="upri_update_statistics"),
+    url(r'^statistics/update$', statistics.views.statistics_update_without_week, name="upri_update_statistics_without_week"),
+
 
     # devices
     url(r'^devices/$', devices.views.get_devices, name="upri_devices"),
+    url(r'^devices/refresh/$', devices.views.refresh_devices, name="upri_complete_device_list"),
     url(r'^devices/change_mode/$', devices.views.set_device_mode, name="upri_devices_mode"),
     url(r'^devices/change_name/(?P<slug>\w+)$', devices.views.change_name, name="upri_device_name"),
     url(r'^devices/status/(?P<slug>\w+)$', devices.views.get_device_status, name="upri_device_status"),
+    url(r'^devices/status$', devices.views.get_device_status_without_slug, name="upri_device_status_without_slug"),
+    url(r'^devices/processing/$', devices.views.changing_devices, name="upri_in_progress_devices"),
     url(r'^devices/single_device_template', devices.views.single_device_template, name="upri_device_single_device_template"),
+    url(r'^devices/entry/$', devices.views.device_entry, name="upri_device_entry"),
 
-    #dummy
-    url(r'^devices/complete_device_list', devices.views.complete_device_list, name="upri_complete_device_list"),
-    url(r'^devices/in_progress_devices', devices.views.in_progress_devices, name="upri_in_progress_devices"),
-    url(r'^devices/isOnline/(?P<slug>\w+)$', devices.views.get_online_state_with_slug, name="upri_get_online_state_with_slug"),
-    url(r'^devices/isOnline$', devices.views.get_online_state, name="upri_get_online_state"),
-    url(r'^jobstatus/counter/$', www.views.counter_jobstatus, name="upri_counter_jobstatus"),
-
+    url(r'^fail/$', devices.views.fail, name="upri_fail"),
 
     # setup
-    url(r'^setup/$', setup.views.setup, {"phase": "init"}, name="upri_setup"),
-    url(r'^setup/error$', setup.views.setup, {"phase": "error"}, name="upri_setup_error"),
-    url(r'^setup/success$', setup.views.setup, {"phase": "success"}, name="upri_setup_success")
-
-
-
-
+    url(r'^setup/$', setup.views.setup_init, name="upri_setup"),
+    url(r'^setup/evaluation$', setup.views.setup_eval, name="upri_setup_eval"),
+    url(r'^setup/error$', setup.views.setup_error, name="upri_setup_error"),
+    url(r'^setup/failed$', setup.views.setup_failed, name="upri_setup_failed"),
+    url(r'^setup/success$', setup.views.setup_success, name="upri_setup_success")
 ]

@@ -1,0 +1,6 @@
+---
+- name: touch crontab files
+  shell: touch {{ item.item.dest }}
+  with_items:
+    - "{{ cron_result.results }}"
+  when: item|changed

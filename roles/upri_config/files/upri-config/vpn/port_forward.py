@@ -1,7 +1,3 @@
-#!/usr/bin/python
-#
-#------------------------------------------
-
 import miniupnpc
 import sys
 import requests
@@ -9,9 +5,12 @@ import subprocess
 import re
 from os.path import exists
 
+from lib.utils import check_fact
+
+
 # Port for OpenVPN
-PORT = {{vpn_port}}
-PROTOCOL = '{{vpn_protocol}}'
+PORT = check_fact('vpn', 'connection', 'port', debug=False)
+PROTOCOL = check_fact('vpn', 'connection', 'protocol', debug=False)
 
 # Regex for parsing NATPMP output
 PUB_IP_REGEX = r'\bPublic IP address : (?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b'
@@ -22,6 +21,8 @@ debug = False
 # Comparison of public IP with saved one, if new is found, update dns
 # return values:
 # 1: error in file handling(read/write)
+
+
 def update_public_ip(pub_ip):
     # Load saved public IP
     try:
@@ -52,6 +53,8 @@ def update_public_ip(pub_ip):
 # DNS update
 # return values:
 # 1: HTTPS request failed
+
+
 def dns_update():
     if debug:
         print 'Send DNS update'
@@ -75,7 +78,7 @@ def dns_update():
 
 
 def get_upnp_devices():
-    ### Check if UPNP is available and set port forwarding
+    # Check if UPNP is available and set port forwarding
     upnpc = miniupnpc.UPnP()
 
     # Discover UPNP devices
@@ -192,9 +195,9 @@ def set_natpmp_mapping():
     return True
 
 
-def main():
+def action_forward(arg):
 
-    if len(sys.argv) > 1 and sys.argv[1] == '--debug':
+    if arg == True:
         global debug
         debug = True
 
@@ -213,7 +216,7 @@ def main():
     if public_ip is not None and upnpn_mapping_successful:
         update_public_ip(public_ip)
         dns_update()
-        sys.exit(0)
+        return 0
 
     if check_natpmp_support():
         natpmp_mapping_successful = set_natpmp_mapping()
@@ -222,10 +225,6 @@ def main():
 
     if natpmp_mapping_successful:
         dns_update()
-        sys.exit(0)
+        return 0
 
     dns_update()
-
-
-if __name__ == "__main__":
-    main()

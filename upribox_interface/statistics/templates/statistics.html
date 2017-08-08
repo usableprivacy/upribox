@@ -2,28 +2,43 @@
 
 {% load i18n %}
 
-{% block breadcrumb  %}
-<p>{% trans "Statistik" %}</p>
-{% endblock %}
-
 {% block title %}{% trans "Statistik - upribox" %}{% endblock %}
 
 {% block header %}
-    <h1>{% trans "Statistik" %}</h1>
+<h1>{% trans "Statistik" %}</h1>
 {% endblock %}
 
-{% block additional-data-urls %}data-poll-statistics-main-url="{% url 'upri_get_statistics' %}" data-poll-statistics-update-url="{% url 'upri_update_statistics' %}"{% endblock %}
+{% block additional-data-urls %}data-poll-statistics-main-url="{% url 'upri_get_statistics' %}" data-poll-statistics-update-url="{% url 'upri_update_statistics_without_week' %}"{% endblock %}
+
+{% block breadcrumb  %}
+<p><a href="{% url 'upri_index' %}">{% trans "Start" %}</a> > {% trans "Statistik" %}</p>
+{% endblock %}
+
 
 {% block content %}
+
+
+
 <div class="loading" style="display: block;"></div>
 <div class="statistics-content" style="display: none;">
+    <h2> {% trans "Gesamtstatistik" %} </h2>
+
+    <div class="totalstat-div icon i-blockiert">
+        <p class="totalstat"> <span id="total-blocked" class="totalstat-numb blockiert"> </span> <br> {% trans "Domains blockiert" %}</p>
+    </div>
+    <div class="totalstat-div icon i-gefiltert">
+        <p class="totalstat"> <span id="total-filtered" class="totalstat-numb gefiltert"> </span> <br> {% trans "Inhalte gefiltert" %}</p>
+    </div>
+
+
+    <h2 class="statistic-plot-heading clear">{% trans "Wochenstatistik" %} </h2>
     <!--This span is not visible. Its only purpose is to hold the translated string for "KW", which is later needed for the plot-->
     <span id="calendar-week-short-text">{% trans "KW" %}</span>
 
 
-    <p class="overall-count">{% trans "Gesamtanzahl geblockter Anfragen" %}: <span id="total-blocked">2290</span><br>
+    <!--<p class="overall-count">{% trans "Gesamtanzahl geblockter Anfragen" %}: <span id="total-blocked">2290</span><br>
         {% trans "Gesamtanzahl gefilterter Inhalte" %}: <span id="total-filtered">2290</span>
-    </p>
+    </p>-->
     <div class="legend">
         <div class="legend-inner">
             <span class="legend-blocked-domains"></span>{%trans "geblockt" %}<br>
@@ -34,7 +49,7 @@
     <div id="stats"></div>
     <div class="x-axis-desc"><span class="weeks-full-text">{% trans "Kalenderwochen" %}</span><span class="weeks-short-text">{% trans "KW" %}</span></div>
     <div class="lists">
-        <p class="lists-headline">{%trans "Details für Kalenderwoche 10" %}</p>
+        <p class="lists-headline">{%trans "Details für Kalenderwoche" %} <span id="statistic-details-calendar-week"></span></p>
 
         <div class="statistics js-blocked-sites">
             <p class="">{%trans "Top geblockte Domains" %}</p>
@@ -50,112 +65,6 @@
         </div>
     </div>
 </div>
-
-
-<!-- $(document).ready(function () {
-      var d3 = Plotly.d3;
-
-      var WIDTH_IN_PERCENT_OF_PARENT = 73;
-      HEIGHT_IN_PERCENT_OF_PARENT = 80;
-
-      var gd3 = d3.select('#stats');
-      /*.style({
-       width: WIDTH_IN_PERCENT_OF_PARENT + '%',
-       height: HEIGHT_IN_PERCENT_OF_PARENT + '%'
-       });*/
-
-      var gd = gd3.node();
-
-      var trace1 = {
-          hoverinfo: "y",
-          x: ['<a ><span class="kw-desc">KW </span>10</a>', '<a ><span class="kw-desc">KW </span>11</a>', '<a ><span class="kw-desc">KW </span>12</a>'],
-          y: [20, 14, 23],
-          width:[.6, .6, .6],
-          marker: {color: '#007589'},
-          name: 'gefiltert',
-          type: 'bar'
-      };
-      var trace2 = {
-          hoverinfo: "y",
-          x: ['<a ><span class="kw-desc">KW </span>10</a>', '<a ><span class="kw-desc">KW </span>11</a>', '<a ><span class="kw-desc">KW </span>12</a>'],
-          y: [12, 18, 29],
-          width:[.6, .6, .6],
-          marker: {color: '#8CC8C8'},
-          type: 'bar',
-          name: 'geblockt'
-      };
-
-
-      var trace3 = {
-          hoverinfo: "none",
-          x: ['<a ><span class="kw-desc">KW </span>10</a>', '<a ><span class="kw-desc">KW </span>11</a>', '<a ><span class="kw-desc">KW </span>12</a>', '<span class="kw-desc">KW </span>14', '<span class="kw-desc">KW </span>15'],
-          y: [0,0,0, 0, 0],
-          width:[.6, .6, .6],
-          /*width:[.75*(3/5), .75*(3/5), .75*(3/5),.75*(3/5), .75*(3/5)],*/
-          name: 'dummy',
-          type: 'bar'
-      };
-      var data = [trace1, trace2, trace3];
-
-      var layout = {
-          xaxis: {
-              autorange: true,
-              showgrid: false,
-              showline: true,
-              fixedrange: true
-          },
-          yaxis: {
-              autorange: true,
-              showgrid: false,
-              showline: true,
-              showticklabels: false,
-              fixedrange: true
-          },
-          barmode: 'stack',
-          showlegend: false,
-          legend: {
-              "x": "0",
-              "margin.r": "120"
-          },
-          margin: {
-              l: 25,
-              r: 0,
-              b: 50,
-              t: 0,
-              pad: 0
-          },
-          annotations: [
-              {
-                  x: 0,
-                  y: trace1.y[0] + trace2.y[0],
-                  xref: 'x',
-                  yref: 'y',
-                  text: '47049',
-                  showarrow: true,
-                  arrowcolor: "transparent",
-                  arrowhead: 0,
-                  ax: 0,
-                  ay: -10
-              }
-          ]
-      };
-
-      Plotly.newPlot(gd, data, layout, {	displayModeBar: false});
-
-      window.onresize = function() {
-          requestAnimationFrame(function() {Plotly.Plots.resize(gd);});
-      };
-
-      trace1.y[0] =10;
-      layout.annotations[0].y = trace1.y[0] + trace2.y[0];
-      Plotly.redraw(gd);
-      Plotly.relayout(gd);
-      Plotly.Plots.resize(gd);
-      var week = $(".xtick").find("text").text
-      console.log($(".xtick").find("text a"));
-      $(".xtick").find("text a").on("click", function () { changeWeek(week)});
-      //$(".xtick").find("text a").on("click", function () {alert(1)});
-  });-->
 
 {% endblock %}
 

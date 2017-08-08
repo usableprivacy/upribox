@@ -92,17 +92,6 @@
 - name: collect static
   django_manage: settings="{{ django_settings_file }}" command=collectstatic app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
 
-- name: install dependency for management script via pip
-  pip: name="{{ item.name }}" state=present version="{{ item.version }}"
-  with_items:
-    - { name: 'jsonmerge', version: '1.3.0' }
-    - { name: 'functools32', version: '3.2.3-2' }
-    - { name: 'redis', version: '2.10.5' }
-    - { name: 'netifaces', version: '0.10.5' }
-    - { name: 'netaddr', version: '0.7.19' }
-    - { name: 'argcomplete', version: '1.8.2'}
-    - { name: 'scapy', version: '2.3.3'}
-
 - name: install supervisor for rqworker
   apt: name=supervisor state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
 
@@ -166,38 +155,6 @@
 - name: restart supervisor myworker task
   shell: "supervisorctl restart myworker"
   when:  copy_django is defined and copy_django|changed and sv_config is defined and not sv_config|changed
-
-- name: copy management scripts
-  copy: src="{{ item.src }}" dest="{{ item.dest }}" owner=root group=root mode=755
-  with_items:
-    - { src: 'upri-config.py', dest: '/usr/local/bin/upri-config.py' }
-    - { src: 'argparser.py', dest: '/usr/local/bin/argparser.py' }
-  tags:
-    - upri_config
-
-- name: check if log files already exist
-  stat:
-    path: "{{ item }}"
-  with_items:
-    - "{{default_settings.log.general.path}}/{{default_settings.log.dnsmasq.subdir}}/{{default_settings.log.dnsmasq.logfiles.logname}}"
-    - "{{default_settings.log.general.path}}/{{default_settings.log.privoxy.subdir}}/{{default_settings.log.privoxy.logfiles.logname}}"
-  register: log_files
-
-- name: cleanup statistics
-  shell: "/var/webapp-virtualenv/bin/python /usr/share/nginx/www-upri-interface/manage.py cleanup --settings {{django_settings_file}}"
-
-- name: create crontab entries
-  template: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0644
-  when: item.env is not defined or item.env == env
-  with_items:
-    - { src: "cron_parse_logs.j2", dest: "/etc/cron.d/parse-logs"}
-
-- name: update block statistics
-  shell: "/usr/local/bin/upri-config.py parse_logs"
-  register: update_result
-  changed_when: "update_result.rc == 1"
-  failed_when: "update_result.rc != 0 and update_result.rc != 1"
-  when: not False in (log_files.results | map(attribute='stat.exists') | list)
 
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/supervisor mode=0644

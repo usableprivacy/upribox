@@ -18,7 +18,15 @@
                 {{ field|add_error_class:'form-input-error'}}
                 {% if field.field.widget.input_type == "password" %}
                 <span id="pw{{forloop.counter}}" class="icon i-eye-open showpw" ></span>
-                <div style="color:#666666; width: 350px; margin-top: 5px; margin-bottom: -8px; font-size: 12px;">{% trans "Schwach" %} <meter max="5"></meter>{% trans "Stark" %}</div>
+                <div class="meter-container">{% trans "Schwach" %}
+                    <div class="meter-display">
+                        <div class="meter-indicator meter-indicator1"></div>
+                        <div class="meter-indicator meter-indicator2"></div>
+                        <div class="meter-indicator meter-indicator3"></div>
+                        <div class="meter-indicator meter-indicator4"></div>
+                        <div class="meter-indicator meter-indicator5"></div>
+                    </div>{% trans "Stark" %}
+                </div>
                 {% endif %}
                 {% for error in field.errors %}
                     <p class="error-message">{{ error|striptags }}</p>

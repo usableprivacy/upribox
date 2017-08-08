@@ -1,9 +1,9 @@
 {% load base_extras %}
 {% load i18n %}
 
-<div {% if device.slug %} id="{{ device.slug }}"{% endif %} class="divTableRow single-device-row">
+<div {% if device.slug %}id="{{ device.slug }}" data-slug="{{device.slug}}" {% endif %}data-changing="{{device.changing}}" class="divTableRow single-device-row">
     <div class="divTableCell">
-        <a class="device-link icon i-status devname"{% if device.slug %} href="{% url 'upri_device_name' slug=device.slug %}"{% else %} href=""{% endif %}>{% if device %}{{ device|get_device_name }}{% endif %}</a>
+        <a href="{% if device.slug %}{% url 'upri_device_name' slug=device.slug %}{% endif %}" class="device-link icon i-status devname">{% if device.slug %}{{ device|get_device_name }}{% endif %}</a>
     </div>
     <div class="divTableCell"> <input class="radio radio_device radio-NO" name="{{device.slug}}" type="radio" data-href="{% url 'upri_devices_mode' %}" value="NO"{% if device.mode == "NO" %} checked{%endif%}/> </div>
     <div class="divTableCell"> <input class="radio radio_device radio-SL" name="{{device.slug}}" type="radio" data-href="{% url 'upri_devices_mode' %}" value="SL"{% if device.mode == "SL" or device.mode is none %} checked{%endif%}/> </div>

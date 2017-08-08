@@ -1,0 +1,2 @@
+# Cron job to update filter rules
+{{ filter_cron_schedule }} {{ filter_cron_user }} /usr/local/bin/upri-config.py filter_update 2>&1 | /usr/bin/logger -t {{ filter_syslog_tag }}

@@ -19,7 +19,7 @@
 		<link rel="stylesheet" href="{% static "css/fonts.css" %}" type="text/css" />
 		<link rel="stylesheet" href="{% static "css/style.css" %}" type="text/css" />
 	</head>
-	<body data-template-modal="{% url 'upri_modal' %}" data-poll-counter-url="{% url 'upri_counter_jobstatus' %}" data-poll-messages-url="{% url 'upri_jobstatus' %}" data-clear-url="{% url 'upri_clear_jobstatus' %}" {% block additional-data-urls %} {% endblock %}>
+	<body data-template-modal="{% url 'upri_modal' %}" data-poll-counter-url="{% url 'upri_counter_jobstatus' %}" data-poll-messages-url="{% url 'upri_jobstatus' %}" data-clear-url="{% url 'upri_clear_jobstatus' %}" data-poll-errors-url="{% url 'upri_jobstatus_failed' %}" data-clear-errors-url="{% url 'upri_clear_failed' %}" {% block additional-data-urls %} {% endblock %}>
 		<div id="site-container">
 			<header id="site-header">
 				<h1>
@@ -27,10 +27,12 @@
 				</h1>
 				<p>{% trans "Usable Privacy Box" %}</p>
 
-                {% onpage request 'upri_login upri_setup upri_setup_error upri_setup_success' as onlogin %}
+                {% onpage request 'upri_login upri_setup upri_setup_error upri_setup_success upri_setup_failed upri_setup_eval' as onlogin %}
                 {% if not onlogin %}
                 <!-- <a href="{% url 'upri_faq' %}" title="{% trans "FAQ" %}" class="faq-link only-mobile">{% trans "Hilfe" %}</a>-->
-				<button class="btn-menu only-mobile js-menu"><span class="menu-text">{% trans "Menü" %}</span></button>
+				<!--<a href="{% url 'upri_faq' %}" title="{% trans "Status" %}" class="status-link only-mobile icon i-update ">{% trans "2 Änderungen" %}</a>-->
+
+				<button class="btn-menu only-mobile js-menu">{% trans "Menü" %}</button>
 
 				<nav class="clearfix">
 					<ul>
@@ -49,6 +51,7 @@
 			<div id="top-bar">
                 {% if not onlogin %}
 				<a href="#" title="Update" id="changes-container" class="icon i-update"><span id="changes-count">0</span> <span id="changes-text-singular">{% trans "Änderung" %}</span><span id="changes-text-plural">{% trans "Änderungen" %}</span></a>
+				<a href="#" title="Update" id="error-container" class="icon i-error"><span id="error-count">0</span><span> {% trans "Fehler" %}</span></a>
 
 				<nav>
 					<ul>
@@ -111,5 +114,7 @@
         <script type="text/javascript" src="{% static "js/vendor/qrcode.min.js" %}"></script>
 
 		<script type="text/javascript" src="{% static "js/main.js" %}"></script>
+        {% block script %}
+        {% endblock %}
 	</body>
 </html>

@@ -1,0 +1,77 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-08-04 00:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: setup/templates/setup.html:8 setup/templates/setup.html:11
+msgid "Einrichtung der upribox"
+msgstr ""
+
+#: setup/templates/setup.html:21
+#, python-format
+msgid ""
+"\n"
+"            <p> Die Funktionalität der upribox ist derzeit nur über das WLAN "
+"\"upribox\" verfügbar. Alternativ kann die upribox <a href=\"%(help)s"
+"\">manuell mittels DHCP</a> vollständig eingerichtet werden.</p>\n"
+"        "
+msgstr ""
+
+#: setup/templates/setup.html:26 setup/templates/setup.html:33
+msgid "Geräteübersicht"
+msgstr ""
+
+#: setup/templates/setup.html:30
+msgid "Ihre upribox wurde erfolgreich eingerichtet!"
+msgstr ""
+
+#: setup/templates/setup.html:38
+msgid ""
+"\n"
+"            <p> Die upribox verfügt derzeit über keine Internetverbindung. "
+"Bitte stellen Sie sicher, dass die upribox mit ihrem Heimnetzwerk verbunden "
+"ist.</p>\n"
+"        "
+msgstr ""
+
+#: setup/templates/setup.html:43
+#, python-format
+msgid ""
+"\n"
+"            <p> Bitte testen Sie mit einem zweiten Gerät, das mit Ihrem "
+"Heimnetzwerk verbunden ist, ob eine Internetverbindung weiterhin besteht. "
+"Rufen Sie dazu einfach die Seite <a href=\"%(orf)s\">www.orf.at</a> auf. "
+"<br> <br>\n"
+"            Ist die Seite erreichbar?  </p>\n"
+"        "
+msgstr ""
+
+#: setup/templates/setup.html:47
+msgid "Ja"
+msgstr ""
+
+#: setup/templates/setup.html:47
+msgid "Nein"
+msgstr ""
+
+#: setup/templates/setup.html:49
+msgid "Bitte warten, das Setup wird gestartet."
+msgstr ""
+
+#: setup/templates/setup.html:54
+msgid "Es ist leider ein Fehler während des Setups der upribox aufgetreten."
+msgstr ""

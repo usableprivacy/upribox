@@ -180,6 +180,22 @@ def create_argparser():
                                      help='The IP address of the device to check',
                                      metavar="ip")
 
+    # create the parser for the "filter_update" command
+    subparser.add_parser('filter_update', help='updates the filter files')
+
+    # create the parser for the "vpn_forward" command
+    parser_vpn_forward = subparser.add_parser('vpn_forward', help='enables vpn port forwarding if possible')
+    parser_vpn_forward.add_argument('--debug', action='store_true', help='Print additional debug messages', dest="arg")
+
+    parser_vpn_unforward = subparser.add_parser('vpn_unforward', help='removes vpn port forwarding')
+    parser_vpn_unforward.add_argument('--debug', action='store_true', help='Print additional debug messages', dest="arg")
+
+    subparser.add_parser('backup_settings', help='Saves settings and logs to a backup archive')
+
+    parser_restore = subparser.add_parser('restore_settings', help="Restore settings from backup archive")
+    parser_restore.add_argument('arg', help='The path of the backup archive',
+                                metavar="path")
+
     argcomplete.autocomplete(parser)
 
     return parser

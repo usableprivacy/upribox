@@ -222,7 +222,10 @@ a:focus, a:hover, a:active {
     border-radius: 5px;
     box-shadow: 0 0 15px rgb(45, 49, 57);
     padding: 20px;
+    max-height: 75vh;
 }
+
+
 
 button {
     margin-top: 30px;
@@ -371,32 +374,57 @@ input[type="text"]:focus,input[type="password"]:focus {
 
 /* Password indicator */
 
-meter {
+.meter-container {
+    color:#666666;
+    width: 350px;
+    margin-top: 5px;
+    margin-bottom: -8px;
+    font-size: 12px;
+}
+
+.meter-display {
+    position: relative;
+    display: inline-block;
+    background-color: #aaaaaa;
     width: 90px;
     margin-left: 15px;
     margin-right: 15px;
     height: 3px;
     vertical-align: middle;
-
 }
 
-meter::-webkit-meter-bar {
-
+.meter-indicator  {
+    display: none;
+    position: absolute;
+    left:0;
+    top: 0;
+    height: 3px;
 }
 
-/* Webkit based browsers */
-meter[value="1"]::-webkit-meter-optimum-value { background: red !important; }
-meter[value="2"]::-webkit-meter-optimum-value { background: #ff4500; }
-meter[value="3"]::-webkit-meter-optimum-value { background: orange; }
-meter[value="4"]::-webkit-meter-optimum-value { background: yellow; }
-meter[value="5"]::-webkit-meter-optimum-value { background: green; }
+.meter-indicator1 {
+    width: 17px;
+    background-color: #f45b41;
+}
 
-/* Gecko based browsers */
-meter[value="1"]::-moz-meter-bar { background: red; }
-meter[value="2"]::-moz-meter-bar { background: #ff4500; }
-meter[value="3"]::-moz-meter-bar { background: orange; }
-meter[value="4"]::-moz-meter-bar { background: yellow; }
-meter[value="5"]::-moz-meter-bar { background: green; }
+.meter-indicator2 {
+    width: 34px;
+    background-color: #f4b241;
+}
+
+.meter-indicator3 {
+    width: 51px;
+    background-color: #f4df41;
+}
+
+.meter-indicator4 {
+    width: 70px;
+    background-color: #e2fa41;
+}
+
+.meter-indicator5 {
+    width: 90px;
+    background-color: #70f441;
+}
 
 input[name="oldpassword"] + span + div {
     display: none;
@@ -745,9 +773,20 @@ header nav a:focus, header nav a:hover, header nav a:active, header nav a.active
     background-position: -104px -457px;
 }
 
-.i-update::before {
+.i-update-l::before {
     width: 30px;
-    background-position: -140px -457px;
+    height: 30px;
+    background: url('../img/loading_spinner-s.gif') 0px 0px/30px 30px no-repeat;
+    /*background-position: -140px -457px;*/
+    padding-right: 5px;
+    float: left;
+}
+
+.i-update::before {
+    width: 20px;
+    height: 20px;
+    background: url('../img/loading_spinner-s.gif') 0px 0px/20px 20px no-repeat;
+    padding-right: 5px;
     float: left;
 }
 
@@ -784,11 +823,40 @@ header nav a:focus, header nav a:hover, header nav a:active, header nav a.active
     width: 30px;
 }
 
+.i-gefiltert::before{
+    background-position: -175px -680px;
+    width: 65px;
+    height: 75px;
+    margin-left: 25px;
+}
 
+.i-blockiert::before{
+    background-position: -175px -595px;
+    width: 65px;
+    height: 75px;
+    margin-left: 27px;
+}
 
+.i-error::before {
+    padding-right: 17px;
+    width: 6px;
+    height: 20px;
+    /* margin-left: -10px; */
+    background-size: 96px;
+    background-position: -23px -149px;
+}
 
 
 @media only screen and (max-width: 850px) {
+
+    .i-error::before {
+        padding-right: 5px;
+        width: 15px;
+        height: 18px;
+        /* margin-left: -10px; */
+        background-size: 84px;
+        background-position: -20px -131px;
+    }
 
     .i-device::before {
         background-position: -195px -30px;
@@ -797,11 +865,11 @@ header nav a:focus, header nav a:hover, header nav a:active, header nav a.active
         background-position: -170px -30px;
     }
      .i-statistic::before {
-        margin-right: 13px;
-        background-position: -145px -83px;
+        margin-right: 11px;
+        background-position: -148px -88px;
     }
     .i-statistic:hover::before, .i-statistic.active::before {
-        background-position: -117px -83px;
+        background-position: -120px -88px;
     }
     .i-konfig::before {
         background-position: -195px -5px;
@@ -832,6 +900,14 @@ header nav a:focus, header nav a:hover, header nav a:active, header nav a.active
     .i-user::before, nav .i-logout::before {
         width: 35px;
         margin: 0 10px 0 5px;
+    }
+
+    .i-update::before {
+        width: 15px;
+        height: 18px;
+        background: url(../img/loading_spinner-s.gif) 1px 1px/15px 15px no-repeat;
+        padding-right: 5px;
+        float: none;
     }
 }
 
@@ -915,15 +991,36 @@ main {
     }
 
     #top-bar a{
-        position: absolute;
+       /* position: absolute;
         margin-left: 10px;
         left: 30%;
         top: 9px;
-        font-size: 0.875em;
+        font-size: 0.875em;*/
+    }
+
+    #changes-container {
+        position: absolute;
+        margin-left: 10px;
+        left: 29.5%;
+        top: 0px;
+        font-size: 12px;
+        float: none;
+    }
+
+    #error-container {
+        position: absolute;
+        margin-left: 10px !important;
+        left: 29.5%;
+        top: 23px;
+        font-size: 12px;
+    }
+
+    #top-bar div.breadcrumb a {
+        display: inline;
     }
 
     .breadcrumb{
-        margin-top: 0px;
+        margin-top: -8px;
         padding-bottom: 5px;
         margin-right: 20px;
     }
@@ -1084,6 +1181,15 @@ main aside .info-out {
 }
 
 #changes-container {
+    display: none;
+    margin-right: 28px;
+}
+
+#changes-text-singular {
+    display: none;
+}
+
+#error-container {
     visibility: hidden;
 }
 
@@ -1338,6 +1444,8 @@ ul.all-done .success-message:last-child{
 .modal ul {
     margin: 0;
     padding: 0;
+    overflow-y: auto;
+    max-height: 60vh;
 }
 
 .ct-label {
@@ -1378,6 +1486,42 @@ ul.all-done .success-message:last-child{
     -webkit-transition: opacity 1.24s;
     transition: opacity 1.29s;
     transition: opacity 1.29s;
+}
+
+.statistics-content .container-weekdetails {
+    float: left;
+    margin-right: 20px;
+}
+
+.statistics-content .totalstat {
+    text-align: center;
+}
+
+.statistics-content .totalstat-numb {
+    font-size: 1.9em;
+    font-weight: 600;
+}
+
+.statistics-content .gefiltert {
+    color: rgb(0, 116, 136);
+}
+
+.statistics-content .blockiert {
+    color: rgb(73, 175, 192);
+}
+
+.statistics-content .totalstat-div {
+    float: left;
+    margin-right: 20px;
+}
+
+.statistics-content .clear {
+    clear: both;
+}
+
+.statistics-content .statistic-plot-heading {
+    margin-top: 210px;
+    margin-bottom: -33px;
 }
 
 .statistics-content #calendar-week-short-text {
@@ -1465,7 +1609,7 @@ ul.all-done .success-message:last-child{
 }
 .statistics-content .lists-headline {
     /* margin-left: 4px; */
-    margin-top: 9px;
+    margin-top: -8px;
     margin-bottom: -4px !important;
     font-size: 18px;
 }
@@ -1477,11 +1621,11 @@ ul.all-done .success-message:last-child{
 }
 .statistics-content #total-blocked {
     font-weight: bold;
-    float: right;
+
 }
 .statistics-content #total-filtered {
     font-weight: bold;
-    float: right;
+
 }
 .statistics-content .statistics  li {
     padding-left: 0;
@@ -1567,7 +1711,7 @@ ul.all-done .success-message:last-child{
         margin-top: 14px;
     }
     .statistics-content .lists-headline {
-        margin-top: 9px;
+        margin-top: 3px;
     }
 }
 @media only screen and (max-width: 550px) {
@@ -1578,7 +1722,7 @@ ul.all-done .success-message:last-child{
         display: none;
     }
     .statistics-content .lists-headline {
-        margin-top: 7px;
+        margin-top: 0px;
     }
 }
 @media only screen and (max-width: 430px) {
@@ -1590,7 +1734,7 @@ ul.all-done .success-message:last-child{
         text-align: left;
         margin-right: 0;
         /* margin-top: 15px;*/
-        margin-top: 22px;
+        margin-top: 38px;
         margin-left: 3px;
         /*margin-bottom: 12px; */
         margin-bottom: 15px;
@@ -1602,10 +1746,13 @@ ul.all-done .success-message:last-child{
         margin-left: 34px;
     }
     .statistics-content .lists-headline {
-        margin-top: 7px;
+        margin-top: 1px;
     }
     .statistics-content .overall-count {
         margin-top: 15px;
+    }
+    .statistics-content .statistic-plot-heading {
+        margin-top: 211px;
     }
 }
 
@@ -1665,6 +1812,7 @@ ul.all-done .success-message:last-child{
 .divTableHead {
     padding-bottom: 20px;
     text-align: center;
+    min-width: 55px;
 }
 
 .divTableHeading {
@@ -1770,6 +1918,7 @@ input[type="radio"]{
     float: left;
     margin: 0px;
     margin-right: 5px;
+    margin-top: 5px;
 }
 
 .i-notconnected::before {
@@ -1779,20 +1928,25 @@ input[type="radio"]{
     float: left;
     margin: 0px;
     margin-right: 5px;
+    margin-top: 5px;
 }
 
 .i-ninja::before {
-    background-position: -2px -56px;
+    background-position: -0px -57px;
+    width: 56px;
+    margin-left: -7px;
 }
 
 .i-silent::before {
-    background-position: 0 0;
-    width: 48px;
+    background-position: -7px 0;
+    width: 41px;
+    margin-top: 5px;
 }
 
 .i-keinmodus::before{
     background-position: -110px -550px;
-    width: 50px;
+    width: 51px;
+    margin-right: -12px;
 }
 
 @media only screen and (max-width: 480px) {
@@ -1857,6 +2011,10 @@ input[type="radio"]{
 .infotext{
     line-height: 1.25em;
     max-width: 37.5em;
+}
+
+a.infotext{
+   display: block;
 }
 
 .i-Bninja::before {
@@ -1951,7 +2109,6 @@ input[type="radio"]{
     display: none;
 }
 
-
 @media only screen and (max-width: 480px) {
     .modalCell{
         display: inherit;
@@ -1998,9 +2155,6 @@ button.accordion {
   }
 
   button.accordion:after {
-    /*content: '\02795'; Unicode character for "plus" sign (+)
-    font-size: 13px;
-    color: #777;*/
     vertical-align: middle;
     display: inline-block;
     width: 10px;
@@ -2012,15 +2166,12 @@ button.accordion {
     background-attachment: scroll;
     background-position: -50px -459px;
 
-
-
     float: right;
     margin-right: 10px;
-      margin-top: -2px;
+    margin-top: -2px;
   }
 
   button.accordion.active:after {
-      /*content: "\2796"; /* Unicode character for "minus" sign (-) */
     vertical-align: middle;
     background: none;
     display: inline-block;
@@ -2034,6 +2185,25 @@ button.accordion {
     background-position: -176px -464px;
     margin-right: 5px;
     margin-top: 5px;
-
-
   }
+
+
+@media only screen and (max-width: 600px) {
+    .modal .message {
+        width: auto;
+        max-width: inherit;
+        margin: 20px;
+
+    }
+}
+
+/* Formatierungen Radio & Checkboxen */
+
+/*input[type="checkbox"], input[type="radio"] {
+  position: absolute;
+  clip: rect(0,0,0,0);
+}
+
+input[type="checkbox"]:focus + label , input[type="radio"]:focus + label{
+  font-weight: bold;
+}*/

@@ -19,7 +19,7 @@
 import os
 #import sys
 #sys.path.insert(0, os.path.abspath('../roles/django/files/'))
-path_to_argparser = '../../roles/django/files/argparser.py'
+path_to_argparser = '../../roles/upri_config/files/upri-config/lib/argparser.py'
 if os.path.isfile(path_to_argparser):
     from shutil import copyfile
     copyfile(path_to_argparser, './argparser.py')

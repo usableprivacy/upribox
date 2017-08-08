@@ -1,0 +1,80 @@
+---
+- include: ../../common/tasks/other_env.yml
+
+- name: install services
+  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
+  with_items:
+    - redis-server
+    - python-virtualenv
+    - natpmp-utils
+
+- name: enable redis server
+  service: name=redis-server enabled=yes use=service
+
+- name: create working directory for upri-config
+  file: path=/opt/upri-config state=directory recurse=yes mode=0771 owner=root group=root
+
+- name: copy the upri-config files
+  copy: src=upri-config/ dest=/opt/upri-config owner=root group=root mode=0774
+
+- name: install requirements to virtualenv
+  pip: requirements=/opt/upri-config/requirements.txt virtualenv=/opt/upri-config/venv
+
+- name: remove old management scripts
+  file: path="{{ item }}" state=absent
+  with_items:
+    - '/usr/local/bin/upri-config.py'
+    - '/usr/local/bin/argparser.py'
+    - '/usr/local/bin/upri-filter-update.py'
+  tags:
+    - upri_config
+
+- name: link management scripts
+  file: src="{{ item.src }}" dest="{{ item.dest }}" state=link owner=root group=root
+  with_items:
+    - { src: '/opt/upri-config/upri-config.py', dest: '/usr/local/bin/upri-config.py' }
+  tags:
+    - upri_config
+
+- name: check if log files already exist
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{default_settings.log.general.path}}/{{default_settings.log.dnsmasq.subdir}}/{{default_settings.log.dnsmasq.logfiles.logname}}"
+    - "{{default_settings.log.general.path}}/{{default_settings.log.privoxy.subdir}}/{{default_settings.log.privoxy.logfiles.logname}}"
+  register: log_files
+
+- name: update block statistics
+  shell: "/usr/local/bin/upri-config.py parse_logs"
+  register: update_result
+  changed_when: "update_result.rc == 1"
+  failed_when: "update_result.rc != 0 and update_result.rc != 1"
+  when: not False in (log_files.results | map(attribute='stat.exists') | list)
+
+- name: copy filter update config
+  copy: src=etc_upri-filter-update/ dest=/usr/local/etc/upri-filter-update owner=root group=root mode=644
+
+- name: create dnsmasq ninja directory for dnsblacklist rules
+  file: path=/etc/dnsmasq.d.ninja/ state=directory owner=root group=root
+
+- name: update filter rules
+  shell: "/usr/local/bin/upri-config.py filter_update"
+  register: update_result
+  changed_when: "update_result.rc == 1"
+  failed_when: "update_result.rc > 1"
+
+- name: create crontab entries
+  template: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0644
+  when: item.env is not defined or item.env == env
+  notify: touch crontab files
+  register: cron_result
+  with_items:
+    - { src: "cron/etc_cron.d_ansible-pull.j2", dest: "/etc/cron.d/ansible-pull", env: "production" }
+    - { src: "cron/etc_cron.d_parse-user-agents.j2", dest: "/etc/cron.d/parse-user-agents"}
+    - { src: "cron/filter_update.j2", dest: "/etc/cron.d/filter_update" }
+    - { src: "cron/cron_parse_logs.j2", dest: "/etc/cron.d/parse-logs"}
+
+- name: remove old cron jobs
+  file: path={{ item }} state=absent
+  with_items:
+    - /etc/cron.d/cleanup-statistics
