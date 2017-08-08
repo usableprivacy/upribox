@@ -39,6 +39,13 @@ def get_week_counters(week):
     )
 
 
+def week_exists(week):
+    try:
+        return sum(int(entry) for entry in get_week_counters(week)) > 0
+    except ValueError:
+        return False
+
+
 # limit only when sorted
 def get_domains(week, sort=False, limit=None):
     filtered, blocked = get_domain_counters(week, sort, limit)
