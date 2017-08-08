@@ -92,7 +92,8 @@
             {% block extra %}
             {% endblock %}
             {% if message or messagestore%}
-                {% include 'modal.html' %}
+                <div class="messages-to-show"/>
+                {# {% include 'modal.html' %} #}
             {% endif %}
 		</div>
 		<!--<script type="text/javascript" src="{% static "js/vendor/chartist.min.js" %}"></script>

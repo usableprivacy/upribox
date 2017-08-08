@@ -20,7 +20,7 @@ UPRIBOX.Main = (function($) {
     var $x = 0;
     var xBound = 850;
 
-    var pollingTimeout = 400;
+    var pollingTimeout = 1000;
     var pollingTimeoutCounter = 1200;
     var pollingTimeoutStatistics = 4000;
     var wlanWarningTimeout = 30000;
@@ -313,7 +313,6 @@ UPRIBOX.Main = (function($) {
                 var mode = $(this).val();
                 var dev_id = $(this).attr('name');
 
-                setSingleDeviceAsInProgress(dev_id);
                 if(prevMode != mode){
                     $(this).attr('disabled', true);
                     $.ajax({
@@ -323,8 +322,9 @@ UPRIBOX.Main = (function($) {
                         type: 'post',
                         context: this,
                         success: function (data) {
+                            setSingleDeviceAsInProgress(dev_id);
                             //$('body').append($(data));
-                            onAjaxUpdate();
+                            //onAjaxUpdate();
                             $(this).attr('disabled', false);
                         },
                         error: function () {
@@ -353,7 +353,7 @@ UPRIBOX.Main = (function($) {
                 context: this,
                 success: function (data) {
                     $('body').append($(data));
-                    onAjaxUpdate();
+                    //onAjaxUpdate();
                     $(this).attr('disabled', false);
                 },
             });
@@ -376,7 +376,9 @@ UPRIBOX.Main = (function($) {
 
         });
 
-        $("#changes-container").on('click', showModal);
+        $("#changes-container").on('click', function () {
+            showModal("message");
+        });
         $("#error-container").on('click', function () {
             showModal("error");
         });
@@ -397,6 +399,10 @@ UPRIBOX.Main = (function($) {
 
             if($('body').attr("data-poll-statistics-main-url")) {
                 getStatistic();
+            }
+
+            if ($('.messages-to-show').length > 0) {
+                showModal("messages");
             }
 
             if ($('.statistics-content').length > 0) {
@@ -698,7 +704,7 @@ UPRIBOX.Main = (function($) {
                 success: function(t) {
                     return function(data) {
                         $('#main-content').append($(data));
-                        if (!t) {
+                        if (t === "message") {
                             modalMode = "default";
                             pollForRequestedInformation({
                                 pollOnce: true
@@ -750,7 +756,7 @@ UPRIBOX.Main = (function($) {
         delete deviceInProgressList[id];
         var entry = $("#" + id).find(".device-link");
         $("#" + id).attr("data-changing", "False");
-        var onlineStat=entry.hasClass("is-online")?true:(entry.hasClass("is-offline")?true:null);
+        var onlineStat=entry.hasClass("is-online")?true:(entry.hasClass("is-offline")?false:null);
         if (onlineStat !== null)
             entry.removeClass("i-status").addClass(onlineStat?"i-connected":"i-notconnected");
     }
@@ -804,10 +810,12 @@ UPRIBOX.Main = (function($) {
                     modalMode = null;
 
                     if (mm === "error") {
-                        $("#error-container").css("visibility", "hidden");
+                        if ($("#error-count").text() == "0")
+                            $("#error-container").css("visibility", "hidden");
                     }
                     else {
-                        $("#changes-container").css("display", "none");
+                        if ($("#changes-count").text() == "0")
+                            $("#changes-container").css("display", "none");
                     }
                     forceContinuousModalUpdate = false;
                     //reload main content if refesh url was given
@@ -1118,15 +1126,15 @@ UPRIBOX.Main = (function($) {
                 currentClickedWeek = data[i].week;
                 currentSelectedWeek = data[i].week;
                 for (var entry in data[i].filtered.bad) {
-                    bad += data[i].filtered.bad[entry];
+                    bad += parseInt(data[i].filtered.bad[entry]);
                 }
                 for (var entry in data[i].filtered.ugly) {
-                    ugly += data[i].filtered.ugly[entry];
+                    ugly += parseInt(data[i].filtered.ugly[entry]);
                 }
             }
             else {
-                bad = data[i].bad;
-                ugly = data[i].ugly;
+                bad = parseInt(data[i].bad);
+                ugly = parseInt(data[i].ugly);
             }
             //fillStatisticInformation(bad, ugly, data[i].week, totalWeeks-(i+1));
             fillStatisticInformation(bad, ugly, data[i].week, weeksToDo-1-i);
@@ -1271,10 +1279,10 @@ UPRIBOX.Main = (function($) {
         var ugly = 0;
         if (data.week == lastWeek) {
             for (var entry in data.filtered.bad) {
-                bad += data.filtered.bad[entry];
+                bad += parseInt(data.filtered.bad[entry]);
             }
             for (var entry in data.filtered.ugly) {
-                ugly += data.filtered.ugly[entry];
+                ugly += parseInt(data.filtered.ugly[entry]);
             }
             updateBarValue(statisticInformation.data[1].y.length-1, bad, ugly);
         }
@@ -1425,20 +1433,22 @@ UPRIBOX.Main = (function($) {
             data: {'csrfmiddlewaretoken': Cookies.get('csrftoken')},
             type: 'post',
 
-            success: function (data) {
-                // console.log("queue " + href + " status: " + data.status);
-                upriboxUnreachable = false;
-                //we received data - hide warning again if visible
-                $('.js-connection-warning').addClass('hidden');
+            success: function (pR) {
+                return function (data) {
+                    // console.log("queue " + href + " status: " + data.status);
+                    upriboxUnreachable = false;
+                    //we received data - hide warning again if visible
+                    $('.js-connection-warning').addClass('hidden');
 
-                domManipulationCall(data, pollRequest);
+                    domManipulationCall(data, pR);
 
-                if(data.status !== 'done' && !pollOnce && (!stopPollingIfEmpty || (stopPollingIfEmpty && data.length && data.length > 0 ))) {
-                    setTimeout(function ()  {
-                        pollForRequestedInformation(pollRequest)
-                    }, intervallForPolling);
+                    if(data.status !== 'done' && !pollOnce && (!stopPollingIfEmpty || (stopPollingIfEmpty && data.length && data.length > 0 ))) {
+                        setTimeout(function ()  {
+                            pollForRequestedInformation(pR)
+                        }, intervallForPolling);
+                    }
                 }
-            },
+            }(pollRequest),
             error: function(jqXHR, textStatus, errorThrown){
 
                 console.log("queue check request failed: " + textStatus);
@@ -1566,7 +1576,7 @@ UPRIBOX.Main = (function($) {
             pageIdentifier = 'id-' + hashCode(window.location.pathname).toString();
             initListeners();
             checkInfoCookie();
-            pollForRequestedInformation();
+            //pollForRequestedInformation();
             //updateChart();
         }
     }

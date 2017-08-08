@@ -426,6 +426,10 @@ input[type="text"]:focus,input[type="password"]:focus {
     background-color: #70f441;
 }
 
+[name="meter-value1"] .meter-indicator1, [name="meter-value2"] .meter-indicator2, [name="meter-value3"] .meter-indicator3, [name="meter-value4"] .meter-indicator4, [name="meter-value5"] .meter-indicator5 {
+    display: inline-block !important;
+}
+
 input[name="oldpassword"] + span + div {
     display: none;
 }

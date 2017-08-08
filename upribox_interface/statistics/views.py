@@ -66,6 +66,8 @@ def detailed_week(week):
 def statistics_update(request, week=None):
     try:
         datetime.strptime(week, '%W')
+        logger.debug("parsing logs")
+        utils.exec_upri_config('parse_logs')
         if int(week) == 0:
             raise ValueError()
     except (ValueError, TypeError):
