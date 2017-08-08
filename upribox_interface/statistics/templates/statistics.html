@@ -8,7 +8,7 @@
 <h1>{% trans "Statistik" %}</h1>
 {% endblock %}
 
-{% block additional-data-urls %}data-poll-statistics-main-url="{% url 'upri_get_statistics' %}" data-poll-statistics-update-url="{% url 'upri_update_statistics_without_week' %}"{% endblock %}
+{% block additional-data-urls %}data-poll-statistics-main-url="{% url 'upri_get_statistics' %}" data-poll-statistics-update-url="{% url 'upri_update_statistics' %}"{% endblock %}
 
 {% block breadcrumb  %}
 <p><a href="{% url 'upri_index' %}">{% trans "Start" %}</a> > {% trans "Statistik" %}</p>

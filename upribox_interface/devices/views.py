@@ -129,13 +129,6 @@ def get_device_status(request, slug):
     return JsonResponse({slug: bool(res)})
 
 
-#this is just dummy to get the url without the slug in the frontend
-@login_required
-@require_http_methods(["GET", "POST"])
-def get_device_status_without_slug(request, slug):
-    return get_device_status(request, "0")
-
-
 @login_required
 @require_http_methods(["GET", "POST"])
 def changing_devices(request):

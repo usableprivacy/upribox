@@ -20,13 +20,17 @@ failed_queue = django_rq.get_failed_queue()
 #
 
 
-def job_message(message):
+def job_message(message, status="success"):
     job = get_current_job(connection=django_rq.get_connection())
     if not job.meta.get('messages'):
         job.meta['messages'] = deque()
-    job.meta['messages'].append(message)
+    job.meta['messages'].append({"message": message, "status": status})
     job.save_meta()
     job.save()
+
+
+def job_error(message):
+    job_message(message, status="failed")
 
 
 def job_clear_messages():

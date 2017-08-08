@@ -36,8 +36,8 @@ def reconfigure_wlan(ssid, password):
 
     except Exception as e:
         logger.exception(e)
-        jobs.job_clear_messages()
-        jobs.job_message(_("Konfiguration des WLANs fehlgeschlagen."))
+        # jobs.job_clear_messages()
+        jobs.job_error(_("Konfiguration des WLANs fehlgeschlagen."))
         raise jobs.JobFailedError()
 
 
@@ -68,6 +68,6 @@ def toggle_silent(state):
 
     except Exception as e:
         logger.exception(e)
-        jobs.job_clear_messages()
-        jobs.job_message(_("Konfiguration des WLANs fehlgeschlagen."))
+        # jobs.job_clear_messages()
+        jobs.job_error(_("Konfiguration des WLANs fehlgeschlagen."))
         raise jobs.JobFailedError()

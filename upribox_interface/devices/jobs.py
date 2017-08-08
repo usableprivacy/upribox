@@ -63,11 +63,11 @@ def toggle_device_mode(mode, device):
             raise jobs.JobFailedError()
     except Exception as e:
         logger.exception(e)
-        jobs.job_clear_messages()
-        jobs.job_message(_("Ändern des Gerätemodus fehlgeschlagen."))
+        # jobs.job_clear_messages()
+        jobs.job_error(_("Ändern des Gerätemodus fehlgeschlagen."))
         raise jobs.JobFailedError()
 
 def fail_dummy(test):
-    jobs.job_clear_messages()
-    jobs.job_message(_("Job fehlgeschlagen."))
+    # jobs.job_clear_messages()
+    jobs.job_error(_("Job fehlgeschlagen."))
     raise jobs.JobFailedError()

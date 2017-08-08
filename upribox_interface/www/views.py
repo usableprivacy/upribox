@@ -27,12 +27,15 @@ def jobstatus(request):
             # set to "done" if queue is empty (enables "close" button for modal dialog on client-side)
             # set to "processing" otherwise
             status = "done" if jobs.check_jobs_finished() else "processing"
+            if jobs.check_jobs_failed():
+                status = "failed"
 
             # add your new messages here
             newmessages = jobs.get_messages()
+            newmessages.extend(jobs.get_failed_messages())
 
-            for i in range(len(newmessages)):
-                newmessages[i] = ugettext(newmessages[i])
+            # for i in range(len(newmessages)):
+            #     newmessages[i] = ugettext(newmessages[i])
 
         finally:
             job_lock.release()

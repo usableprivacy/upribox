@@ -49,8 +49,8 @@ def reconfigure_network(ip, netmask, gateway, dns, enable=False):
             raise
     except Exception as e:
         logger.exception(e)
-        jobs.job_clear_messages()
-        jobs.job_message(_("Konfiguration der Netzwerkeinstellungen fehlgeschlagen."))
+        # jobs.job_clear_messages()
+        jobs.job_error(_("Konfiguration der Netzwerkeinstellungen fehlgeschlagen."))
         raise jobs.JobFailedError()
 
 
@@ -77,8 +77,8 @@ def toggle_ssh(state):
             raise jobs.JobFailedError()
     except Exception as e:
         logger.exception(e)
-        jobs.job_clear_messages()
-        jobs.job_message(_("Konfiguration von SSH fehlgeschlagen."))
+        # jobs.job_clear_messages()
+        jobs.job_error(_("Konfiguration von SSH fehlgeschlagen."))
         raise jobs.JobFailedError()
 
 
@@ -109,8 +109,8 @@ def toggle_apate(state, messages=True):
 
     except Exception as e:
         logger.exception(e)
-        jobs.job_clear_messages()
-        jobs.job_message(_("Konfiguration von Apate ARP Spoofing Daemon fehlgeschlagen."))
+        # jobs.job_clear_messages()
+        jobs.job_error(_("Konfiguration von Apate ARP Spoofing Daemon fehlgeschlagen."))
         raise jobs.JobFailedError()
 
 
@@ -137,8 +137,8 @@ def toggle_static(state):
 
     except Exception as e:
         logger.exception(e)
-        jobs.job_clear_messages()
-        jobs.job_message(_("Konfiguration der statischen IP fehlgeschlagen."))
+        # jobs.job_clear_messages()
+        jobs.job_error(_("Konfiguration der statischen IP fehlgeschlagen."))
         raise jobs.JobFailedError()
 
 
@@ -166,6 +166,6 @@ def toggle_dhcpd(state):
 
     except Exception as e:
         logger.exception(e)
-        jobs.job_clear_messages()
-        jobs.job_message(_("Konfiguration des DHCP Servers fehlgeschlagen."))
+        # jobs.job_clear_messages()
+        jobs.job_error(_("Konfiguration des DHCP Servers fehlgeschlagen."))
         raise jobs.JobFailedError()

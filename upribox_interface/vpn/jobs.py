@@ -33,8 +33,8 @@ def toggle_vpn(state):
             raise jobs.JobFailedError()
     except Exception as e:
         logger.exception(e)
-        jobs.job_clear_messages()
-        jobs.job_message(_("Konfiguration des VPNs fehlgeschlagen."))
+        # jobs.job_clear_messages()
+        jobs.job_error(_("Konfiguration des VPNs fehlgeschlagen."))
         raise jobs.JobFailedError()
 
 
@@ -54,8 +54,8 @@ def generate_profile(profile_id):
             #profile.delete()
     except Exception as e:
         logger.exception(e)
-        jobs.job_clear_messages()
-        jobs.job_message(_("Generieren des VPN Profiles fehlgeschlagen."))
+        # jobs.job_clear_messages()
+        jobs.job_error(_("Generieren des VPN Profiles fehlgeschlagen."))
         raise jobs.JobFailedError()
 
 
@@ -74,6 +74,6 @@ def delete_profile(profile_id):
 
     except Exception as e:
         logger.exception(e)
-        jobs.job_clear_messages()
-        jobs.job_message(_("Entfernen des VPN Profiles fehlgeschlagen."))
+        # jobs.job_clear_messages()
+        jobs.job_error(_("Entfernen des VPN Profiles fehlgeschlagen."))
         raise jobs.JobFailedError()

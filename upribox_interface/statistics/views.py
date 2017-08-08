@@ -64,6 +64,8 @@ def detailed_week(week):
 
 @login_required()
 def statistics_update(request, week=None):
+    if not week:
+        week = datetime.now().date().isocalendar()[1]
     try:
         datetime.strptime(week, '%W')
         logger.debug("parsing logs")
@@ -74,9 +76,3 @@ def statistics_update(request, week=None):
         return HttpResponse(status=412)
 
     return JsonResponse(detailed_week(week))
-
-
-#this is just dummy to get the url without slug in the frontend
-@login_required
-def statistics_update_without_week(request):
-    return statistics_update(request, datetime.datetime.now().isocalendar()[1])

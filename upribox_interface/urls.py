@@ -83,17 +83,17 @@ urlpatterns = [
     # statistics config
     url(r'^statistics/$', statistics.views.get_statistics, name="upri_statistics"),
     url(r'^statistics/complete$', statistics.views.json_statistics, name="upri_get_statistics"),
-    url(r'^statistics/update/(?P<week>[0-9]{1,2})/$', statistics.views.statistics_update, name="upri_update_statistics"),
-    url(r'^statistics/update$', statistics.views.statistics_update_without_week, name="upri_update_statistics_without_week"),
-
+    url(r'^statistics/update(?:/(?P<week>[0-9]{1,2}))?$', statistics.views.statistics_update, name="upri_update_statistics"),
+    # url(r'^statistics/update$', statistics.views.statistics_update_without_week, name="upri_update_statistics_without_week"),
+# url(r'^statistics/update/(?:(?P<week>[0-9]{1,2})/)?$', statistics.views.statistics_update, name="upri_update_statistics"),
 
     # devices
     url(r'^devices/$', devices.views.get_devices, name="upri_devices"),
     url(r'^devices/refresh/$', devices.views.refresh_devices, name="upri_complete_device_list"),
     url(r'^devices/change_mode/$', devices.views.set_device_mode, name="upri_devices_mode"),
     url(r'^devices/change_name/(?P<slug>\w+)$', devices.views.change_name, name="upri_device_name"),
-    url(r'^devices/status/(?P<slug>\w+)$', devices.views.get_device_status, name="upri_device_status"),
-    url(r'^devices/status$', devices.views.get_device_status_without_slug, name="upri_device_status_without_slug"),
+    url(r'^devices/status(?:/(?P<slug>\w+))?$', devices.views.get_device_status, name="upri_device_status"),
+    # url(r'^devices/status$', devices.views.get_device_status_without_slug, name="upri_device_status_without_slug"),
     url(r'^devices/processing/$', devices.views.changing_devices, name="upri_in_progress_devices"),
     url(r'^devices/single_device_template', devices.views.single_device_template, name="upri_device_single_device_template"),
     url(r'^devices/entry/$', devices.views.device_entry, name="upri_device_entry"),

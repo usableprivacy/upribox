@@ -14,7 +14,7 @@
 {% endblock %}
 
 
-{% block additional-data-urls %}data-template-single-device="{% url 'upri_device_single_device_template' %}" data-poll-device-list-url="{% url 'upri_complete_device_list' %}" data-poll-device-online-state-url="{% url 'upri_device_status_without_slug' %}" data-poll-device-activeprogress-url="{% url 'upri_in_progress_devices' %}"{% endblock %}
+{% block additional-data-urls %}data-template-single-device="{% url 'upri_device_single_device_template' %}" data-poll-device-list-url="{% url 'upri_complete_device_list' %}" data-poll-device-online-state-url="{% url 'upri_device_status' %}" data-poll-device-activeprogress-url="{% url 'upri_in_progress_devices' %}"{% endblock %}
 {% block content %}
 
     <!-- Main, Content Bereich -->
