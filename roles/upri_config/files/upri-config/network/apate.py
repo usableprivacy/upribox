@@ -2,27 +2,30 @@ import json
 import sys
 import logging
 sys.path.insert(0, "/opt/apate/lib/")
-from network.utils import check_ip, get_network
+from network.utils import check_ip, get_network, check_mac
 from lib.settings import CONFIG_FILE
 from lib.utils import write_role, call_ansible
 
 
-def action_disable_device(arg):
-    if not check_ip(arg):
-        return 27
+# def action_disable_device(arg):
+#     if not check_ip(arg):
+#         return 27
+#
+#     return toggle_device(arg, False)
+#
+#
+# def action_enable_device(arg):
+#     if not check_ip(arg):
+#         return 27
+#
+#     return toggle_device(arg, True)
 
-    return toggle_device(arg, False)
 
-
-def action_enable_device(arg):
-    if not check_ip(arg):
-        return 27
-
-    return toggle_device(arg, True)
-
-
-def toggle_device(ip, enabled):
+def toggle_device(mac, ip, enabled):
     from apate_redis import ApateRedis
+    if not check_ip(ip) or not check_mac(mac):
+        return 27
+
     try:
         with open(CONFIG_FILE) as config:
             data = json.load(config)
@@ -46,9 +49,9 @@ def toggle_device(ip, enabled):
     try:
         redis = ApateRedis(network, logging.getLogger('config'))
         if enabled:
-            redis.enable_device(ip, network)
+            redis.enable_device(mac, ip, network)
         else:
-            redis.disable_device(ip, network)
+            redis.disable_device(mac, ip, network)
     except:
         return 32
 

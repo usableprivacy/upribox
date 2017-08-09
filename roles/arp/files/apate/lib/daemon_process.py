@@ -124,8 +124,8 @@ class SelectiveIPv4Process(mp.Process):
     @staticmethod
     def spoof_devices(ip, devs, logger):
         for entry in devs:
-            dev_ip = util.get_device_ip(entry)
-            dev_hw = ip.redis.get_device_mac(dev_ip, network=util.get_device_net(entry))
+            dev_hw = util.get_device_mac(entry)
+            dev_ip = devs[entry] # ip.redis.get_device_ip(dev_hw, network=util.get_device_net(entry))
             if util.get_device_enabled(entry) == "1":
                 sendp(Ether(dst=dev_hw) / ARP(op=2, psrc=ip.gateway, pdst=dev_ip, hwdst=dev_hw))
                 # sendp(Ether(dst=ip.gate_mac) / ARP(op=2, psrc=dev_ip, pdst=ip.gateway, hwdst=ip.gate_mac))
@@ -253,8 +253,8 @@ class SelectiveIPv6Process(mp.Process):
         tgt = (ip.gateway, ip.dns_servers[0]) if util.is_spoof_dns(ip) else (ip.gateway,)
 
         for entry in devs:
-            dev_ip = util.get_device_ip(entry)
-            dev_hw = ip.redis.get_device_mac(dev_ip, network=util.get_device_net(entry))
+            dev_hw = util.get_device_mac(entry)
+            dev_ip = devs[entry] # ip.redis.get_device_ip(dev_hw, network=util.get_device_net(entry))
 
             for source in tgt:
                 if util.get_device_enabled(entry) == "1":

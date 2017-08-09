@@ -100,15 +100,15 @@ def create_argparser():
     # create the parser for the "restart_firewall" command
     subparser.add_parser('restart_firewall', help='Triggers the Ansible tasks with the tag *iptables*')
 
-    # create the parser for the "enable_device" command
-    parser_enable_device = subparser.add_parser('enable_device',
-                                                help='Enables ARP spoofing via Apate (see arp) for a specific device')
-    parser_enable_device.add_argument('arg', help='The IP address of the device that shall be enabled', metavar="ip")
-
-    # create the parser for the "disable_device" command
-    parser_disable_device = subparser.add_parser('disable_device',
-                                                 help='Disables ARP spoofing via Apate (see arp) for a specific device')
-    parser_disable_device.add_argument('arg', help='The IP address of the device that shall be disabled', metavar="ip")
+    # # create the parser for the "enable_device" command
+    # parser_enable_device = subparser.add_parser('enable_device',
+    #                                             help='Enables ARP spoofing via Apate (see arp) for a specific device')
+    # parser_enable_device.add_argument('arg', help='The IP address of the device that shall be enabled', metavar="ip")
+    #
+    # # create the parser for the "disable_device" command
+    # parser_disable_device = subparser.add_parser('disable_device',
+    #                                              help='Disables ARP spoofing via Apate (see arp) for a specific device')
+    # parser_disable_device.add_argument('arg', help='The IP address of the device that shall be disabled', metavar="ip")
 
     # create the parser for the "set_ip" command
     parser_set_ip = subparser.add_parser('set_ip', help='Sets a static IP by writing to the fact *interfaces*')
