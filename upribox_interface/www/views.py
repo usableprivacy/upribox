@@ -34,8 +34,8 @@ def jobstatus(request):
             newmessages = jobs.get_messages()
             newmessages.extend(jobs.get_failed_messages())
 
-            # for i in range(len(newmessages)):
-            #     newmessages[i] = ugettext(newmessages[i])
+            for i in range(len(newmessages)):
+                newmessages[i]['message'] = ugettext(newmessages[i]['message'])
 
         finally:
             job_lock.release()
@@ -128,7 +128,7 @@ def jobstatus_failed(request):
             newmessages = jobs.get_failed_messages()
 
             for i in range(len(newmessages)):
-                newmessages[i] = ugettext(newmessages[i])
+                newmessages[i]['message'] = ugettext(newmessages[i]['message'])
 
         finally:
             job_lock.release()

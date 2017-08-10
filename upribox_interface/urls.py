@@ -85,7 +85,7 @@ urlpatterns = [
     url(r'^statistics/complete$', statistics.views.json_statistics, name="upri_get_statistics"),
     url(r'^statistics/update(?:/(?P<week>[0-9]{1,2}))?$', statistics.views.statistics_update, name="upri_update_statistics"),
     # url(r'^statistics/update$', statistics.views.statistics_update_without_week, name="upri_update_statistics_without_week"),
-# url(r'^statistics/update/(?:(?P<week>[0-9]{1,2})/)?$', statistics.views.statistics_update, name="upri_update_statistics"),
+    # url(r'^statistics/update/(?:(?P<week>[0-9]{1,2})/)?$', statistics.views.statistics_update, name="upri_update_statistics"),
 
     # devices
     url(r'^devices/$', devices.views.get_devices, name="upri_devices"),

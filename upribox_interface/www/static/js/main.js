@@ -402,7 +402,7 @@ UPRIBOX.Main = (function($) {
             }
 
             if ($('.messages-to-show').length > 0) {
-                showModal("messages");
+                showModal("message");
             }
 
             if ($('.statistics-content').length > 0) {

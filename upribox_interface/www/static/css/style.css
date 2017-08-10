@@ -1867,6 +1867,13 @@ input[type="radio"]{
     line-height: 1.25em;
 }
 
+.divTable label{
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+    margin-left: -10px;
+}
+
 .divTableRow[data-changing="True"] {
     pointer-events: none;
 }
@@ -2203,11 +2210,111 @@ button.accordion {
 
 /* Formatierungen Radio & Checkboxen */
 
-/*input[type="checkbox"], input[type="radio"] {
-  position: absolute;
-  clip: rect(0,0,0,0);
+/* Statistics Site */
+
+.container-weekdetails{
+    float: left;
+    margin-right: 20px;
 }
 
-input[type="checkbox"]:focus + label , input[type="radio"]:focus + label{
-  font-weight: bold;
-}*/
+.totalstat{
+    text-align: center;
+}
+
+.totalstat-numb{
+    font-size: 1.9em;
+    font-weight: 600;
+}
+
+.gefiltert{
+    color: rgb(0, 116, 136);
+}
+
+.blockiert{
+    color: rgb(73, 175, 192);
+}
+
+.totalstat-div{
+    float: left;
+    margin-right: 20px;
+}
+
+
+.clear{
+    clear: both;
+}
+
+/* Formatierungen Radio & Checkboxen */
+
+/* Ausblenden Standard-Styles */
+input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border:none;
+  border-radius: 0;
+  font-size: 1em;
+  width: 100%
+}
+
+/* graceful degradation for ie8 */
+input[type='checkbox'],
+input[type='radio'] {
+  width:auto;
+  float:left;
+  margin-right: .75em;
+  background:transparent;
+  border:none;
+}
+
+input[type='checkbox']:checked,
+input[type='checkbox']:not(:checked),
+input[type='radio']:checked,
+input[type='radio']:not(:checked) {
+  background: transparent;
+  position: relative;
+  visibility: hidden;
+  margin:0;
+  padding:0;
+}
+
+input[type='checkbox'] + label,
+input[type='radio'] + label {
+  cursor: pointer;
+}
+
+
+
+/* Formartierung der Checkboxen und Radiobuttons */
+
+input[type='checkbox']:checked + label::before,
+input[type='checkbox']:not(:checked) + label::before,
+input[type='radio']:checked + label::before,
+input[type='radio']:not(:checked) + label::before {
+    content:' ';
+    display:inline-block;
+    width: 17px;
+    height: 17px;
+    position: relative;
+    top:4px;
+    border: 1px solid black;
+    background: white;
+    margin-right: 1em;
+    box-shadow: inset 0 1px 1px 0 rgba(0,0,0,.1);
+}
+
+input[type=radio]:checked + label::before,
+input[type=radio]:not(:checked) + label::before {
+  border-radius: 30px;
+}
+
+input[type='checkbox']:hover  + label::before,
+input[type='radio']:hover  + label::before {
+  background:#ddd;
+  box-shadow: inset 0 0 0 3px white;
+}
+
+input[type='checkbox']:checked  + label::before,
+input[type='radio']:checked  + label::before {
+  background:black;
+  box-shadow: inset 0 0 0 3px white;

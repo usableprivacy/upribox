@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-04 00:30+0000\n"
+"POT-Creation-Date: 2017-08-09 17:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,27 +100,30 @@ msgstr "configuration successful"
 msgid "WLAN"
 msgstr ""
 
-#: wlan/templates/silent.html:28
-#, fuzzy
-#| msgid "Passwort"
-msgid "Sicheres Passwort"
-msgstr "password"
-
 #: wlan/templates/silent.html:29
-msgid "Mindestens 8 Zeichen."
+msgid "Tipps für sichere Passwörter:"
 msgstr ""
 
 #: wlan/templates/silent.html:30
-msgid "Mindestens 1 Großbuchstabe."
+msgid "Mindestens 8 Zeichen."
 msgstr ""
 
 #: wlan/templates/silent.html:31
-msgid "Mindestens 1 Kleinbuchstabe."
+msgid "Mindestens 1 Großbuchstabe."
 msgstr ""
 
 #: wlan/templates/silent.html:32
+msgid "Mindestens 1 Kleinbuchstabe."
+msgstr ""
+
+#: wlan/templates/silent.html:33
 msgid "Mindestens 1 Ziffer."
 msgstr ""
+
+#, fuzzy
+#~| msgid "Passwort"
+#~ msgid "Sicheres Passwort"
+#~ msgstr "password"
 
 #~ msgid "Konfiguration erfolgreich"
 #~ msgstr "configuration successful"

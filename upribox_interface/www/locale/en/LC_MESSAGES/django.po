@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-04 00:30+0000\n"
+"POT-Creation-Date: 2017-08-09 17:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,42 +33,59 @@ msgstr ""
 msgid "Usable Privacy Box"
 msgstr ""
 
-#: www/templates/base.html:32 www/templates/login.html:58
+#: www/templates/base.html:32
+msgid "FAQ"
+msgstr ""
+
+#: www/templates/base.html:32 www/templates/base.html:42
+#: www/templates/faq.html:7
+msgid "Hilfe"
+msgstr "Help"
+
+#: www/templates/base.html:33 www/templates/login.html:58
 #: www/templates/login.html:61
 msgid "Status"
 msgstr "status"
 
-#: www/templates/base.html:32 www/templates/base.html:51
+#: www/templates/base.html:33
 msgid "2 Änderungen"
 msgstr ""
 
-#: www/templates/base.html:33
+#: www/templates/base.html:35
 msgid "Menü"
 msgstr "menu"
 
-#: www/templates/base.html:37
+#: www/templates/base.html:39
 msgid "Geräteübersicht"
 msgstr ""
 
-#: www/templates/base.html:38
+#: www/templates/base.html:40
 msgid "Statistiken"
 msgstr "statistics"
 
-#: www/templates/base.html:39
+#: www/templates/base.html:41
 msgid "Konfiguration"
 msgstr ""
 
-#: www/templates/base.html:40 www/templates/faq.html:7
-msgid "Hilfe"
-msgstr "Help"
-
-#: www/templates/base.html:41 www/templates/login.html:21
+#: www/templates/base.html:43 www/templates/login.html:21
 msgid "Admin"
 msgstr "Admin"
 
-#: www/templates/base.html:42 www/templates/base.html:56
+#: www/templates/base.html:44 www/templates/base.html:59
 msgid "Logout"
 msgstr "logout"
+
+#: www/templates/base.html:53
+msgid "Änderung"
+msgstr ""
+
+#: www/templates/base.html:53
+msgid "Änderungen"
+msgstr ""
+
+#: www/templates/base.html:54
+msgid "Fehler"
+msgstr ""
 
 #: www/templates/faq.html:10
 msgid "Hilfe - upribox"
@@ -161,11 +178,27 @@ msgstr "cancel"
 msgid "&auml;ndern"
 msgstr "change"
 
-#: www/templates/form.html:30
+#: www/templates/form.html:21
+msgid "Schwach"
+msgstr ""
+
+#: www/templates/form.html:28
+msgid "Stark"
+msgstr ""
+
+#: www/templates/form.html:37
+msgid "Die Passwörter stimmen nicht überein"
+msgstr ""
+
+#: www/templates/form.html:39
+msgid "Das Passwort muss zwischen 8 und 64 Zeichen lang sein"
+msgstr ""
+
+#: www/templates/form.html:44
 msgid "Speichern"
 msgstr "save"
 
-#: www/templates/form.html:30
+#: www/templates/form.html:44
 #, fuzzy
 #| msgid "abbrechen"
 msgid "Abbrechen"

@@ -25,32 +25,32 @@
                 {% get_fact 'dhcpd' 'general' 'enabled' as dhcpdenabled%}
                 {% get_fact 'interfaces' 'general' 'mode' as mode%}
                   <input type="checkbox" name="functions" id="konfigSSH" class="js-toggle-box" {% if sshenabled == 'yes'%}checked{% endif %} href="{% url 'upri_ssh_toggle' %}">
-                  <span id="labelKonfigSSH" for="konfigSSH"
-                  > {% trans "SSH" %}</span> <br>
+                  <label id="labelKonfigSSH" for="konfigSSH"
+                  > {% trans "SSH" %}</label> <br>
 
                   <input type="checkbox" name="functions" id="konfigWLAN" class="js-toggle-box" href="{% url 'upri_silent_toggle' %}" {% if silentenabled == 'yes'%}checked{% endif %}
                   {% if dhcpdenabled == "no" and apateenabled == "no" %}disabled{% endif %}>
-                  <span id="labelKonfigWLAN" for="konfigWLAN" {% if dhcpdenabled == "no" and apateenabled == "no" %}style="color: rgb(202, 202, 202);"{% endif %}>
-                      {% trans "WLAN" %}</span> <a href="{% url "upri_silent" %}"> {% trans "Einstellungen" %}</a><br>
+                  <label id="labelKonfigWLAN" for="konfigWLAN" {% if dhcpdenabled == "no" and apateenabled == "no" %}style="color: rgb(202, 202, 202);"{% endif %}>
+                      {% trans "WLAN" %}</label> <a href="{% url "upri_silent" %}"> {% trans "Einstellungen" %}</a><br>
 
                   <input type="checkbox" name="functions" id="konfigVPN" class="js-toggle-box" href="{% url 'upri_vpn_toggle' %}" {% if vpnenabled == 'yes'%}checked{% endif %}>
-                   <span id="labelKonfigVPN" for="konfiVPN">  {% trans "VPN" %} </span> <a href="{% url "upri_vpn" %}">
+                   <label id="labelKonfigVPN" for="konfiVPN">  {% trans "VPN" %} </label> <a href="{% url "upri_vpn" %}">
                      {% trans "Einstellungen" %}</a><br>
 
                   <input type="checkbox" name="functions" id="konfigSIP" class="js-toggle-box" href="{% url 'upri_static_toggle' %}" {% if mode == 'static'%}checked{% endif %} {% if dhcpdenabled == "yes" %}disabled{% endif %}>
-                  <span id="labelKonfigSIP" for="konfigSIP"  {% if dhcpdenabled == "yes" %}style="color: rgb(202, 202, 202);"{% endif %}>
-                      {% trans "Statische IP" %} {% if dhcpdenabled == "yes" %}({% trans 'Deaktivieren nicht möglich, weil upribox-Zugang "Manuell" ausgewählt' %}){% endif %}</span>
+                  <label id="labelKonfigSIP" for="konfigSIP"  {% if dhcpdenabled == "yes" %}style="color: rgb(202, 202, 202);"{% endif %}>
+                      {% trans "Statische IP" %} {% if dhcpdenabled == "yes" %}({% trans 'Deaktivieren nicht möglich, weil upribox-Zugang "Manuell" ausgewählt' %}){% endif %}</label>
                   {% if dhcpdenabled == "no" %}<a href="{% url "upri_config_static" %}">{% trans "Einstellungen" %} </a>{% endif %}<br>
 
              <h2> {% trans "upribox-Zugang" %} </h2>
-                  <input type="radio" name="access" id="accessAUTO" class="js-toggle-box" href="{% url 'upri_apate_toggle' %}" {% if apateenabled == "yes" %}checked{% endif %} {% if setup_result == "error" %}disabled{% endif %}> <span id="labelaccessAUTO" for="accessAUTO"
-                  {% if setup_result == "error" %}style="color: rgb(202, 202, 202);"{% endif %}> {% trans "Automatisch" %} {% if setup_result == "error" %}({% trans "Wird vom Router nicht unterstützt" %}){% endif %}</span> <br>
+                  <input type="radio" name="access" id="accessAUTO" class="js-toggle-box" href="{% url 'upri_apate_toggle' %}" {% if apateenabled == "yes" %}checked{% endif %} {% if setup_result == "error" %}disabled{% endif %}> <label id="labelaccessAUTO" for="accessAUTO"
+                  {% if setup_result == "error" %}style="color: rgb(202, 202, 202);"{% endif %}> {% trans "Automatisch" %} {% if setup_result == "error" %}({% trans "Wird vom Router nicht unterstützt" %}){% endif %}</label> <br>
 
-                  <input type="radio" name="access" id="accessMANUELL" class="js-toggle-box" href="{% url 'upri_config_manual' %}" {% if dhcpdenabled == "yes" %}checked{% endif %}> <span id="labelaccessMANUELL" for="accessMANUELL"> {% trans "Manuell" %} </span>
+                  <input type="radio" name="access" id="accessMANUELL" class="js-toggle-box" href="{% url 'upri_config_manual' %}" {% if dhcpdenabled == "yes" %}checked{% endif %}> <label id="labelaccessMANUELL" for="accessMANUELL"> {% trans "Manuell" %} </label>
                   <a href="{% url "upri_config_static" %}"> {% trans "Einstellungen" %} </a><br>
 
-                  <input type="radio" name="access" id="accessWLAN" class="js-toggle-box" href="{% url 'upri_config_wifi' %}" {% if dhcpdenabled == "no" and apateenabled == "no" %}checked{% endif %}> <span id="labelaccessWLAN" for="accessWLAN">
-                      {% trans 'Nur über WLAN "upribox"' %} </span> <br>
+                  <input type="radio" name="access" id="accessWLAN" class="js-toggle-box" href="{% url 'upri_config_wifi' %}" {% if dhcpdenabled == "no" and apateenabled == "no" %}checked{% endif %}> <label id="labelaccessWLAN" for="accessWLAN">
+                      {% trans 'Nur über WLAN "upribox"' %} </label> <br>
 
 
               {% if setup_date %}
