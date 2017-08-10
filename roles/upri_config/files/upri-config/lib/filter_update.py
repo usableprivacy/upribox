@@ -21,7 +21,7 @@ RESTART_WHITELIST = {
     "restart-dnsmasq": ["/usr/sbin/service", "dnsmasq", "restart"],
     "restart-dnsmasq-ninja": ["/usr/sbin/service", "dnsmasq-ninja", "restart"],
     "restart-nginx": ["/usr/sbin/service", "nginx", "reload"],
-    "generate-tor-blocklist": ["/bin/bash", "-c", "/bin/sed 's/\.55\./\.56\./' /etc/dnsmasq.d/dnsblacklist.conf > /etc/dnsmasq.d.ninja/dnsblacklist.conf"]
+    #"generate-tor-blocklist": ["/bin/bash", "-c", "/bin/sed 's/\.55\./\.56\./' /etc/dnsmasq.d/dnsblacklist.conf > /etc/dnsmasq.d.ninja/dnsblacklist.conf"]
 }
 
 
