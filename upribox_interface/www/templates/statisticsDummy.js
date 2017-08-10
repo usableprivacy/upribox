@@ -3,27 +3,27 @@
         "week": 4,
         "filtered": {
             "ugly": {
-                "www.orf.at": 220,
-                "www.derstandard.at": 100
+                "www.orf.at": 100,
+                "www.derstandard.at": 22
             },
             "bad": {
-                "xxx.ndke.com": 20,
-                "polkd.akselle.ru": 20
-            },
-            "overallCount": {
-                "bad": 34323,
-                "ugly": 3482
+                "xxx.ndke.com": 29,
+                "polkd.akselle.ru": 28
             }
+        },
+        "overallCount": {
+            "bad": 34323,
+            "ugly": 3482
         }
     },
     {
         "week": 3,
-        "ugly": 900,
-        "bad": 200
+        "ugly": 20,
+        "bad": 100
     },
     {
         "week": 2,
-        "ugly": 900,
+        "ugly": 1,
         "bad": 200
     }
 ]

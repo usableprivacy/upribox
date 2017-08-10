@@ -1452,6 +1452,10 @@ ul.all-done .success-message:last-child{
     max-height: 60vh;
 }
 
+.modal #generalErrorText {
+    display: none;
+}
+
 .ct-label {
     font-size: 1em;
 }
@@ -1481,8 +1485,21 @@ ul.all-done .success-message:last-child{
 /* Statistic page styles */
 
 .loading {
-    -webkit-transition: opacity .45s;
-    transition: opacity .45s;
+    -webkit-transition: opacity .46s;
+    transition: opacity .46s;
+}
+.loading.update-weeks-statistik {
+    background-color: white;
+    position:absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    opacity: 1;
+    z-index: 10;
+    width: 100%;
+    min-height:200px;
+    height:100%;
+    background-position: center 25px;
 }
 
 .statistics-content {
@@ -1610,6 +1627,7 @@ ul.all-done .success-message:last-child{
 .statistics-content .lists {
     width: auto !important;
     display: block;
+    position: relative;
 }
 .statistics-content .lists-headline {
     /* margin-left: 4px; */
@@ -1644,9 +1662,11 @@ ul.all-done .success-message:last-child{
 .statistics-content .js-blocked-sites {
     display: inline-block;
     margin-right: 19%;
+    vertical-align: top;
 }
 .statistics-content .js-filtered-sites {
     display: inline-block;
+    vertical-align: top;
 }
 .statistics-content .lists p {
     font-weight: bold;
