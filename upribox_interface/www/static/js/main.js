@@ -20,8 +20,8 @@ UPRIBOX.Main = (function($) {
     var $x = 0;
     var xBound = 850;
 
-    var pollingTimeout = 1000;
-    var pollingTimeoutCounter = 1200;
+    var pollingTimeout = 600;
+    var pollingTimeoutCounter = 400;
     var pollingTimeoutStatistics = 4000;
     var wlanWarningTimeout = 30000;
 
@@ -30,6 +30,9 @@ UPRIBOX.Main = (function($) {
 
     //forces continuous update of modal dialog (required when modal dialog is opened by user and we want to see new messages)
     var forceContinuousModalUpdate = false;
+
+    //this pauses the counter from updating
+    var pauseCounter = false;
 
     //stores in which mode the modal diaglog currently is
     var modalMode = null;
@@ -389,7 +392,8 @@ UPRIBOX.Main = (function($) {
                 pollUrl: "data-poll-counter-url",
                 domManipulator: updateUpriboxActionCount,
                 errorHandler: errorUpriboxActionCount,
-                pollIntervall: pollingTimeoutCounter
+                pollIntervall: pollingTimeoutCounter,
+                pollProxy: upriboxActionCountProxy
             });
 
             if ($('body').attr("data-template-single-device")) {
@@ -703,11 +707,14 @@ UPRIBOX.Main = (function($) {
                 //data: form? form.serialize(): null,
                 success: function(t) {
                     return function(data) {
+                        forceContinuousModalUpdate = true;
+                        pauseCounter = true;
                         $('#main-content').append($(data));
                         if (t === "message") {
                             modalMode = "default";
                             pollForRequestedInformation({
-                                pollOnce: true
+                                //pollOnce: true
+                                pollProxy: modalUpdateProxy
                             });
                         }
                         else if (t === "error") {
@@ -716,10 +723,10 @@ UPRIBOX.Main = (function($) {
                                 pollUrl: "data-poll-errors-url",
                                 domManipulator: updateModal,
                                 errorHandler: errorModal,
-                                pollOnce: true
+                                //pollOnce: true
+                                pollProxy: modalUpdateProxy
                             });
                         }
-                        forceContinuousModalUpdate = true;
                         $('.js-modal-close').attr('disabled', false);
                     }
                 }(type)
@@ -818,6 +825,7 @@ UPRIBOX.Main = (function($) {
                             $("#changes-container").css("display", "none");
                     }
                     forceContinuousModalUpdate = false;
+                    pauseCounter = false;
                     //reload main content if refesh url was given
                     var refreshUrl = $(this).attr('data-refresh-url');
                     if (refreshUrl) {
@@ -843,33 +851,44 @@ UPRIBOX.Main = (function($) {
 
     function updateModal(data, pollRequest) {
 
-        var messageClass = (modalMode==="error")?"error-message":"success-message";
         //console.log(data);
         if(data.message) {
             var tag = $('.message').find('ul').first();
             tag.empty();
             for (var i = 0; i < data.message.length; i++) {
+                var messageClass = (data.message[i].status==="error")?"error-message":"success-message";//(modalMode==="error")?"error-message":"success-message";
                 var litag = $('<li class="' + messageClass + '"></li>');
-                tag.append(litag.html(data.message[i]));
+                if (modalMode !== "error" && data.message[i].status === "error") {
+                    data.message[i].message = $("#generalErrorText").text();
+                }
+                tag.append(litag.html(data.message[i].message));
             }
         }
-        if(data.status === "done" || forceContinuousModalUpdate) {
+        if(data.status === "done" || data.status === "failed" || forceContinuousModalUpdate) {
             $('.js-modal-close').attr('disabled', false);
         }
         var tag = $('.message').find('ul').first();
-        if (data.status === "done") {
+        if (data.status === "done" || data.status === "failed") {
             tag.addClass("all-done");
         }
         else {
             tag.removeClass("all-done");
         }
-        if (forceContinuousModalUpdate) {
+        /*if (forceContinuousModalUpdate) {
             setTimeout(function () {
                 pollForRequestedInformation(pollRequest);
             }, pollingTimeout);
-        }
+        }*/
         //var litag = $('<li class="success-message hidden"></li>');
         // tag.append(litag);
+    }
+
+    function modalUpdateProxy(cb) {
+         if (forceContinuousModalUpdate) {
+            setTimeout(function () {
+                cb();
+            }, pollingTimeout);
+         }
     }
 
     function errorModal() {
@@ -911,6 +930,15 @@ UPRIBOX.Main = (function($) {
         }
     }
 
+    function upriboxActionCountProxy(cb) {
+        if (!pauseCounter)
+            cb();
+        else {
+            setTimeout(function () {
+                upriboxActionCountProxy(cb);
+            }, pollingTimeoutCounter)
+        }
+    }
     function errorUpriboxActionCount() {
 
     }
@@ -1180,12 +1208,15 @@ UPRIBOX.Main = (function($) {
         setTimeout(function () {
             $(".loading").css("display", "none");
             $(".statistics-content").css("display", "block");
+            $(".loading").detach().appendTo(".statistics-content .lists").addClass("update-weeks-statistik").css("visibility", "hidden").css("display", "block" );
             Plotly.newPlot(gd, statisticInformation.data, statisticInformation.layout, {displayModeBar: false});
             Plotly.Plots.resize(gd);
             setActiveWeekLink();
             createLinksForWeeks();
             $(".statistics-content").css("opacity", "1");
-            doStatisticsUpdate(lastWeek, true);
+            setTimeout(function() {
+                doStatisticsUpdate(lastWeek, true);
+            }, 550);
         }, 450);
     }
 
@@ -1202,17 +1233,34 @@ UPRIBOX.Main = (function($) {
 
     function changeWeek (week) {
         currentClickedWeek = week;
+        setActiveWeekLink();
+        addStatisticsWaitingSpinner();
         doStatisticsUpdate(week);
     }
 
+    function addStatisticsWaitingSpinner() {
+        $(".statistics-content .js-blocked-sites").css("visibility", "hidden");
+        $(".statistics-content .js-filtered-sites").css("visibility", "hidden");
+        $(".loading").css("visibility", "visible");
+        $(".loading").css("opacity", "1");
+    }
+
+    function removeStatisticsWaitingSpinner() {
+        $(".loading").css("opacity", "0");
+        setTimeout(function () {
+            $(".loading").css("visibility", "hidden");
+        }, 450);
+        $(".statistics-content .js-blocked-sites").css("visibility", "visible");
+        $(".statistics-content .js-filtered-sites").css("visibility", "visible");
+    }
     function setActiveWeekLink() {
         /* $(".xtick").find("text").find("a").attr("class","");
          $(".xtick").find("text").find("a")[clickableWeeks.indexOf(currentSelectedWeek)].setAttribute("class", "activeWeekLink");
          console.log($(".xtick").find("text").find("a")[clickableWeeks.indexOf(currentSelectedWeek)]);*/
-        $("body #statistic-details-calendar-week").text(currentSelectedWeek);
+        $("body #statistic-details-calendar-week").text(currentClickedWeek);
         $("body #activePlotLinkStyle").remove();
         $("body").append("<style id='activePlotLinkStyle'>" +
-            "\t.statistics-content #week" + currentSelectedWeek + ", .statistics-content #week" + currentSelectedWeek + ":active, .statistics-content #week" + currentSelectedWeek + ":hover, .statistics-content #week" + currentSelectedWeek + ":visited {" +
+            "\t.statistics-content #week" + currentClickedWeek + ", .statistics-content #week" + currentClickedWeek + ":active, .statistics-content #week" + currentClickedWeek + ":hover, .statistics-content #week" + currentClickedWeek + ":visited {" +
             "\t\tfill: rgb(0, 0, 0) !important;\n" +
             "\t\ttext-decoration: none !important;\n" +
             "\t\tpointer-events: none !important;\n" +
@@ -1269,7 +1317,7 @@ UPRIBOX.Main = (function($) {
 
         if (data.week == currentClickedWeek && currentClickedWeek != currentSelectedWeek) {
             currentSelectedWeek = currentClickedWeek;
-            setActiveWeekLink();
+            removeStatisticsWaitingSpinner();
         }
         if (data.overallCount.bad == null)
             data.overallCount.bad = 0;
@@ -1442,7 +1490,14 @@ UPRIBOX.Main = (function($) {
 
                     domManipulationCall(data, pR);
 
-                    if(data.status !== 'done' && !pollOnce && (!stopPollingIfEmpty || (stopPollingIfEmpty && data.length && data.length > 0 ))) {
+                    if (pollRequest.pollProxy) {
+                        pollRequest.pollProxy(function(p) {
+                            return function() {
+                                pollForRequestedInformation(p)
+                            }
+                        }(pR));
+                    }
+                    else if(data.status !== 'done' && data.status !== 'failed' && !pollOnce && (!stopPollingIfEmpty || (stopPollingIfEmpty && data.length && data.length > 0 ))) {
                         setTimeout(function ()  {
                             pollForRequestedInformation(pR)
                         }, intervallForPolling);
