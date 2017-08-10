@@ -4,7 +4,8 @@
     <div class="message clearfix">
 
         {% get_fact 'wlan' 'upri' 'ssid' as upri_ssid_fact %}
-        <div class="generalErrorText">{% trans "Bei der Verarbeitung ist ein Fehler aufgetreten.\n Bitte öffnen sie das 'Fehlerprotokoll' im Hauptfenster für genauere Informationen." %}</div>
+        <div class="error-message generalErrorText hidden" >{% trans "Bei der Verarbeitung ist ein Fehler aufgetreten." %}<br>
+            {% trans "Bitte öffnen sie das 'Fehlerprotokoll' im Hauptfenster für genauere Informationen." %}</div>
 
         <div class="warning-message js-session-lost-warning hidden">
             {% blocktrans %}

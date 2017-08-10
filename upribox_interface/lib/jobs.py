@@ -30,7 +30,7 @@ def job_message(message, status="success"):
 
 
 def job_error(message):
-    job_message(message, status="failed")
+    job_message(message, status="error")
 
 
 def job_clear_messages():

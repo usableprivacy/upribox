@@ -859,9 +859,12 @@ UPRIBOX.Main = (function($) {
                 var messageClass = (data.message[i].status==="error")?"error-message":"success-message";//(modalMode==="error")?"error-message":"success-message";
                 var litag = $('<li class="' + messageClass + '"></li>');
                 if (modalMode !== "error" && data.message[i].status === "error") {
-                    data.message[i].message = $("#generalErrorText").text();
+                    // data.message[i].message = $(".generalErrorText").text();
+                    $('.generalErrorText').removeClass('hidden');
                 }
-                tag.append(litag.html(data.message[i].message));
+                else{
+                    tag.append(litag.html(data.message[i].message));
+                }
             }
         }
         if(data.status === "done" || data.status === "failed" || forceContinuousModalUpdate) {
@@ -931,9 +934,9 @@ UPRIBOX.Main = (function($) {
     }
 
     function upriboxActionCountProxy(cb) {
-        if (!pauseCounter)
-            cb();
-        else {
+        if (!pauseCounter){
+            setTimeout(cb, pollingTimeoutCounter);
+        } else {
             setTimeout(function () {
                 upriboxActionCountProxy(cb);
             }, pollingTimeoutCounter)

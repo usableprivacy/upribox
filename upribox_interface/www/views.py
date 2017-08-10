@@ -32,7 +32,7 @@ def jobstatus(request):
 
             # add your new messages here
             newmessages = jobs.get_messages()
-            newmessages.extend(jobs.get_failed_messages())
+            newmessages.extend([entry for entry in jobs.get_failed_messages() if entry['status'] == "error"])
 
             for i in range(len(newmessages)):
                 newmessages[i]['message'] = ugettext(newmessages[i]['message'])
@@ -125,7 +125,7 @@ def jobstatus_failed(request):
             status = "failed" if jobs.check_jobs_failed() else "ok"
 
             # add your new messages here
-            newmessages = jobs.get_failed_messages()
+            newmessages = [entry for entry in jobs.get_failed_messages() if entry['status'] == "error"]
 
             for i in range(len(newmessages)):
                 newmessages[i]['message'] = ugettext(newmessages[i]['message'])
