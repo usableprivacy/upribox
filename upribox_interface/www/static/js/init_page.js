@@ -57,7 +57,7 @@ INIT_JOBS.Main = (function($) {
      */
     function pollJobStatus() {
 
-        var href= $('body').attr('data-poll-url');
+        var href= $('body').attr('data-poll-messages-url');
 
         $.ajax({
             url: href,

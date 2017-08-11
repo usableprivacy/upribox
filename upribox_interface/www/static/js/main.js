@@ -188,13 +188,14 @@ UPRIBOX.Main = (function($) {
             });
         });
 
-        $('body').on('change','input[type=radio][name=changeName]', function(e) {
-            if (this.value == 'chosenName') {
+        $('body').on('click','label[name=changeName]', function(e) {
+        // $('body').on('change','input[type=radio][name=changeName]', function(e) {
+            if ($(this).attr("value") == 'chosenName') {
                 $('input[type=text][name=chosenName]').prop('disabled', false);
                 $('select[name=suggestion]').prop('disabled', true);
 
             }
-            else if (this.value == 'suggestion') {
+            else if ($(this).attr("value") == 'suggestion') {
                 $('input[type=text][name=chosenName]').prop('disabled', true);
                 $('select[name=suggestion]').prop('disabled', false);
             }
@@ -362,7 +363,6 @@ UPRIBOX.Main = (function($) {
             });
         });
 
-
         $('body').on('click', '.showpw', function(e) {
             var inputElement = $(this).prev('input');
             var spanElement = $(this);
@@ -419,214 +419,143 @@ UPRIBOX.Main = (function($) {
 
             }
 
-            if ($("[type='password']").length > 0) {
-                var pw1 = $("[name='password1']")[0];
-                var pw2 = $("[name='password2']")[0];
+            initialisePasswordFields();
 
-                $("[type='password']").each(function(index, element) {
-                    $(element).bind("propertychange change click keyup input paste", function () {
-                        var result = zxcvbn(element.value);
-                        if (element.value == "")
-                            result.score = -1;
-
-                        var passwordsMatch = null;
-                        var passwordLengthOk = null;
-                        var passwordLengthCheckRequired = ($("#string8to64needed").length > 0);
-
-                        var checkPasswordLength = function () {
-                            if (passwordLengthCheckRequired) {
-                                if (pw1.value.length >= 8 && pw1.value.length <=64) {
-                                    passwordLengthOk = true;
-                                }
-                                else {
-                                    passwordLengthOk = false;
-                                }
-                            }
-                        }
-
-                        if (element.name == "password1") {
-                            passwordsMatch = (element.value == pw2.value && element.value != "");
-                            checkPasswordLength();
-                        }
-                        if (element.name == "password2") {
-                            passwordsMatch = (element.value == pw1.value && element.value != "");
-                            checkPasswordLength();
-                        }
-
-                        if (passwordsMatch !== null && ((passwordLengthCheckRequired && passwordLengthOk !== null ) || !passwordLengthCheckRequired)) {
-                            if (passwordsMatch && ((passwordLengthCheckRequired && passwordLengthOk === true) || !passwordLengthCheckRequired)) {
-                                $("[name='submit']").removeAttr("disabled");
-                                $("#passwordsDontMatch").css("display", "none");
-                                if (passwordLengthCheckRequired) $("#string8to64needed").css("display", "none");
-                            }
-                            else {
-                                if (!passwordsMatch) {
-                                    $("[name='submit']").attr("disabled", "disabled");
-                                    if (pw1.value != "" && pw2.value != "" ) $("#passwordsDontMatch").css("display", "block");
-                                    else if (pw1.value == "" || pw2.value == "") $("#passwordsDontMatch").css("display", "none");
-                                }
-                                else {
-                                    $("#passwordsDontMatch").css("display", "none");
-                                }
-                                if (passwordLengthCheckRequired && passwordLengthOk === true) {
-                                    $("#string8to64needed").css("display", "none");
-                                }
-                                else if (passwordLengthCheckRequired && passwordLengthOk === false) {
-                                    $("[name='submit']").attr("disabled", "disabled");
-                                    $("#string8to64needed").css("display", "block");
-                                }
-
-                            }
-                        }
-                        // Update the password strength meter
-                        $(".meter-container:eq(" + index + " )").attr("name", "meter-value" + (result.score + 1).toString());
-                    });
-                });
-            }
+            // if ($("[type='password']").length > 0) {
+            //     var pw1 = $("[name='password1']")[0];
+            //     var pw2 = $("[name='password2']")[0];
+            //
+            //     $("[type='password']").each(function(index, element) {
+            //         $(element).bind("propertychange change click keyup input paste", function () {
+            //             var result = zxcvbn(element.value);
+            //             if (element.value == "")
+            //                 result.score = -1;
+            //
+            //             var passwordsMatch = null;
+            //             var passwordLengthOk = null;
+            //             var passwordLengthCheckRequired = ($("#string8to64needed").length > 0);
+            //
+            //             var checkPasswordLength = function () {
+            //                 if (passwordLengthCheckRequired) {
+            //                     if (pw1.value.length >= 8 && pw1.value.length <=64) {
+            //                         passwordLengthOk = true;
+            //                     }
+            //                     else {
+            //                         passwordLengthOk = false;
+            //                     }
+            //                 }
+            //             }
+            //
+            //             if (element.name == "password1") {
+            //                 passwordsMatch = (element.value == pw2.value && element.value != "");
+            //                 checkPasswordLength();
+            //             }
+            //             if (element.name == "password2") {
+            //                 passwordsMatch = (element.value == pw1.value && element.value != "");
+            //                 checkPasswordLength();
+            //             }
+            //
+            //             if (passwordsMatch !== null && ((passwordLengthCheckRequired && passwordLengthOk !== null ) || !passwordLengthCheckRequired)) {
+            //                 if (passwordsMatch && ((passwordLengthCheckRequired && passwordLengthOk === true) || !passwordLengthCheckRequired)) {
+            //                     $("[name='submit']").removeAttr("disabled");
+            //                     $("#passwordsDontMatch").css("display", "none");
+            //                     if (passwordLengthCheckRequired) $("#string8to64needed").css("display", "none");
+            //                 }
+            //                 else {
+            //                     if (!passwordsMatch) {
+            //                         $("[name='submit']").attr("disabled", "disabled");
+            //                         if (pw1.value != "" && pw2.value != "" ) $("#passwordsDontMatch").css("display", "block");
+            //                         else if (pw1.value == "" || pw2.value == "") $("#passwordsDontMatch").css("display", "none");
+            //                     }
+            //                     else {
+            //                         $("#passwordsDontMatch").css("display", "none");
+            //                     }
+            //                     if (passwordLengthCheckRequired && passwordLengthOk === true) {
+            //                         $("#string8to64needed").css("display", "none");
+            //                     }
+            //                     else if (passwordLengthCheckRequired && passwordLengthOk === false) {
+            //                         $("[name='submit']").attr("disabled", "disabled");
+            //                         $("#string8to64needed").css("display", "block");
+            //                     }
+            //
+            //                 }
+            //             }
+            //             // Update the password strength meter
+            //             $(".meter-container:eq(" + index + " )").attr("name", "meter-value" + (result.score + 1).toString());
+            //         });
+            //     });
+            // }
 
         });
     }
 
-    /*function updateChart() {
+function initialisePasswordFields(){
+    if ($("[type='password']").length > 0) {
+        var pw1 = $("[name='password1']")[0];
+        var pw2 = $("[name='password2']")[0];
 
-     if($('.ct-chart').length ) {
-     var href = '/statistics/get';
+        $("[type='password']").each(function(index, element) {
+            $(element).bind("propertychange change click keyup input paste", function () {
+                var result = zxcvbn(element.value);
+                if (element.value == "")
+                    result.score = -1;
 
-     $(".loading").show();
-     $(".ct-pies").hide();
-     $(".ct-chart").hide();
-     $(".legend").hide();
-     $(".lists").hide();
+                var passwordsMatch = null;
+                var passwordLengthOk = null;
+                var passwordLengthCheckRequired = ($("#string8to64needed").length > 0);
 
-     $.ajax({
-     url: href,
-     dataType: 'json',
-     data: {'csrfmiddlewaretoken': Cookies.get('csrftoken')},
-     type: 'post',
+                var checkPasswordLength = function () {
+                    if (passwordLengthCheckRequired) {
+                        if (pw1.value.length >= 8 && pw1.value.length <=64) {
+                            passwordLengthOk = true;
+                        }
+                        else {
+                            passwordLengthOk = false;
+                        }
+                    }
+                }
 
-     success: function (chartdata) {
-     var chart_str = JSON.stringify(chartdata, null, 4);
-     console.log(chart_str);
+                if (element.name == "password1") {
+                    passwordsMatch = (element.value == pw2.value && element.value != "");
+                    checkPasswordLength();
+                }
+                if (element.name == "password2") {
+                    passwordsMatch = (element.value == pw1.value && element.value != "");
+                    checkPasswordLength();
+                }
 
-     drawChart(chartdata);
-     var ol = $('.js-filtered-sites').find('ol');
-     ol.empty();
-     for(var i=0;i<chartdata.filtered_pages.length;i++){
-     var li = $('<li></li>');
-     li.text(chartdata.filtered_pages[i]['url'] + ' - ' + chartdata.filtered_pages[i]['count']);
-     ol.append(li);
-     }
-     var ol = $('.js-blocked-sites').find('ol');
-     ol.empty();
-     for(var i=0;i<chartdata.blocked_pages.length;i++){
-     var li = $('<li></li>');
-     li.text(chartdata.blocked_pages[i]['url'] + ' - ' + chartdata.blocked_pages[i]['count']);
-     ol.append(li);
-     }
+                if (passwordsMatch !== null && ((passwordLengthCheckRequired && passwordLengthOk !== null ) || !passwordLengthCheckRequired)) {
+                    if (passwordsMatch && ((passwordLengthCheckRequired && passwordLengthOk === true) || !passwordLengthCheckRequired)) {
+                        $("[name='submit']").removeAttr("disabled");
+                        $("#passwordsDontMatch").css("display", "none");
+                        if (passwordLengthCheckRequired) $("#string8to64needed").css("display", "none");
+                    }
+                    else {
+                        if (!passwordsMatch) {
+                            $("[name='submit']").attr("disabled", "disabled");
+                            if (pw1.value != "" && pw2.value != "" ) $("#passwordsDontMatch").css("display", "block");
+                            else if (pw1.value == "" || pw2.value == "") $("#passwordsDontMatch").css("display", "none");
+                        }
+                        else {
+                            $("#passwordsDontMatch").css("display", "none");
+                        }
+                        if (passwordLengthCheckRequired && passwordLengthOk === true) {
+                            $("#string8to64needed").css("display", "none");
+                        }
+                        else if (passwordLengthCheckRequired && passwordLengthOk === false) {
+                            $("[name='submit']").attr("disabled", "disabled");
+                            $("#string8to64needed").css("display", "block");
+                        }
 
-     $(".loading").hide();
-     $(".ct-pies").fadeIn();
-     $(".ct-chart").fadeIn();
-     $(".legend").fadeIn();
-     $(".lists").fadeIn();
+                    }
+                }
+                // Update the password strength meter
+                $(".meter-container:eq(" + index + " )").attr("name", "meter-value" + (result.score + 1).toString());
+            });
+        });
+    }
+}
 
-     }
-
-     });
-     }
-     }*/
-    /**
-     * Draw Chartist charts
-     * @param chartdata
-     */
-    /*function drawChart(chartdata) {
-     //Chartist js-library (https://gionkunz.github.io/chartist-js/)
-
-     var padding = 15;
-     var y_axis_width = Math.max.apply( Math, chartdata.bar_data.series[0].concat(chartdata.bar_data.series[1] ) ).toString().length;
-     if (y_axis_width > 4) {
-     padding = (y_axis_width - 3) * 10;
-     }
-
-     var bar_options = {
-     stackBars: true,
-     chartPadding: padding,
-     axisY: {
-     onlyInteger: true
-     }
-     };
-
-     new Chartist.Bar('.ct-chart', chartdata.bar_data, bar_options);
-
-     var pie1_percentage = 0;
-     if (chartdata.pie1_data.series[0] + chartdata.pie1_data.series[1] > 0) {
-     pie1_percentage = Math.round((chartdata.pie1_data.series[1] / (chartdata.pie1_data.series[0] + chartdata.pie1_data.series[1]) * 100) * 100) / 100;
-     }
-
-     var pie2_percentage = 0;
-     if (chartdata.pie2_data.series[0] + chartdata.pie2_data.series[1] > 0) {
-     pie2_percentage = Math.round((chartdata.pie2_data.series[1] / (chartdata.pie2_data.series[0] + chartdata.pie2_data.series[1]) * 100) * 100) / 100;
-     }
-
-     var pie1_options = {
-     donut: true,
-     donutWidth: 60,
-     width: '300px',
-     hight: '300px',
-     labelInterpolationFnc: function(value) {
-     return value;
-     },
-     plugins: [
-     Chartist.plugins.fillDonut({
-     items: [{
-     content: '<i class="fa fa-tachometer"></i>',
-     position: 'bottom',
-     offsetY : 10,
-     offsetX: -2
-     }, {
-     content: '<h3>' + pie1_percentage + '%<br><span class="small">blocked</span></h3>'
-     }]
-     })
-     ],
-     };
-
-     var pie2_options = {
-     donut: true,
-     donutWidth: 60,
-     width: '300px',
-     hight: '300px',
-     labelInterpolationFnc: function(value) {
-     return value;
-     },
-     plugins: [
-     Chartist.plugins.fillDonut({
-     items: [{
-     content: '<i class="fa fa-tachometer"></i>',
-     position: 'bottom',
-     offsetY : 10,
-     offsetX: -2
-     }, {
-     content: '<h3>' + pie2_percentage + '%<br><span class="small">blocked</span></h3>'
-     }]
-     })
-     ],
-     };
-
-     new Chartist.Pie('.ct-pie1', chartdata.pie1_data, pie1_options);
-     new Chartist.Pie('.ct-pie2', chartdata.pie2_data, pie2_options);
-
-     // var options = {
-     //     scaleMinSpace: 1000,
-     //     showPoint: false,
-     //     lineSmooth: false,
-     //     axisX: {
-     //         showGrid: true,
-     //         showLabel: true
-     //     },
-     //     axisY: {}
-     // };
-     // new Chartist.Line('.ct-chart', data, options);
-     }*/
 
     function toggleServiceState2(e){
         e.preventDefault();
@@ -640,7 +569,7 @@ UPRIBOX.Main = (function($) {
             type: 'post',
             context: this,
             success: function (data, textstatus, jqXHR) {
-                $('body').append($(data));
+                //$('body').append($(data));
                 onAjaxUpdate();
                 // $(this).attr('disabled', false);
             },
@@ -671,6 +600,7 @@ UPRIBOX.Main = (function($) {
             context: this,
             success: function (data) {
                 $('body').append($(data));
+                initialisePasswordFields();
                 onAjaxUpdate();
                 $(this).attr('disabled', false);
             },
@@ -693,6 +623,7 @@ UPRIBOX.Main = (function($) {
                 type: type,
                 success: function (data) {
                     $('#main-content').html($(data));
+                    initialisePasswordFields();
                     onAjaxUpdate();
                 }
             });
@@ -775,7 +706,8 @@ UPRIBOX.Main = (function($) {
     function onAjaxUpdate() {
         checkInfoCookie();
         //alert(1);
-        pollForRequestedInformation();
+        showModal("message");
+        //pollForRequestedInformation();
     }
 
     function triggerWlanWarning() {
@@ -858,13 +790,15 @@ UPRIBOX.Main = (function($) {
             for (var i = 0; i < data.message.length; i++) {
                 var messageClass = (data.message[i].status==="error")?"error-message":"success-message";//(modalMode==="error")?"error-message":"success-message";
                 var litag = $('<li class="' + messageClass + '"></li>');
-                if (modalMode !== "error" && data.message[i].status === "error") {
-                    // data.message[i].message = $(".generalErrorText").text();
-                    $('.generalErrorText').removeClass('hidden');
-                }
-                else{
+                if (!(modalMode !== "error" && data.message[i].status === "error")) {
                     tag.append(litag.html(data.message[i].message));
+                    // data.message[i].message = $(".generalErrorText").text();
+                    // $('.generalErrorText').removeClass('hidden');
                 }
+                // else{
+                //     // data.message[i].message = $(".generalErrorText").text();
+                //     // $('.generalErrorText').removeClass('hidden');
+                // }
             }
         }
         if(data.status === "done" || data.status === "failed" || forceContinuousModalUpdate) {
@@ -1451,6 +1385,11 @@ UPRIBOX.Main = (function($) {
         }
         var entry = $("#" + id).find(".device-link");
         entry.addClass(onlineStat?"is-online":"is-offline");
+        if (onlineStat){
+            var siblings = $(entry).parents('.single-device-row').prevAll('.single-device-row');
+            $(entry).parents('.single-device-row').insertBefore(siblings[siblings.length-1]);
+            // console.log($(entry).parents('.single-device-row').prevAll());
+        }
         checkedDevicesForOnlineStatusCounter++;
 
         if ($("#" + id).attr("data-changing") !== "True")
@@ -1493,7 +1432,7 @@ UPRIBOX.Main = (function($) {
 
                     domManipulationCall(data, pR);
 
-                    if (pollRequest.pollProxy) {
+                    if  (pollRequest && pollRequest.pollProxy) {
                         pollRequest.pollProxy(function(p) {
                             return function() {
                                 pollForRequestedInformation(p)

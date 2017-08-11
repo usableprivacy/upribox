@@ -56,6 +56,9 @@
     {% endif %}
 {% endblock %}
 
+{% block mainjs %}
+{% endblock %}
+
 {% block script %}
     {% if phase == "init" %}
         <script type="text/javascript" src="{% static "js/init_page.js" %}"></script>

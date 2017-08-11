@@ -19,7 +19,7 @@ msgstr ""
 
 #: setup/templates/setup.html:8 setup/templates/setup.html:11
 msgid "Einrichtung der upribox"
-msgstr ""
+msgstr "upribox Setup"
 
 #: setup/templates/setup.html:21
 #, python-format
@@ -29,15 +29,16 @@ msgid ""
 "\"upribox\" verfügbar. Alternativ kann die upribox <a href=\"%(help)s"
 "\">manuell mittels DHCP</a> vollständig eingerichtet werden.</p>\n"
 "        "
-msgstr ""
+msgstr "The functionality of your upribox is currently only available via the \"upribox\" WLAN. Alternatively, you can complete the setup of your upribox manually by <a href=\"%(help)s"
+"\">configuring DHCP</a>."
 
 #: setup/templates/setup.html:26 setup/templates/setup.html:33
 msgid "Geräteübersicht"
-msgstr ""
+msgstr "Device Overview"
 
 #: setup/templates/setup.html:30
 msgid "Ihre upribox wurde erfolgreich eingerichtet!"
-msgstr ""
+msgstr "Your upribox has been successfully setup!"
 
 #: setup/templates/setup.html:38
 msgid ""
@@ -62,16 +63,16 @@ msgstr ""
 
 #: setup/templates/setup.html:47
 msgid "Ja"
-msgstr ""
+msgstr "Yes"
 
 #: setup/templates/setup.html:47
 msgid "Nein"
-msgstr ""
+msgstr "No"
 
 #: setup/templates/setup.html:49
 msgid "Bitte warten, das Setup wird gestartet."
-msgstr ""
+msgstr "Please wait, while the setup is being started."
 
 #: setup/templates/setup.html:54
 msgid "Es ist leider ein Fehler während des Setups der upribox aufgetreten."
-msgstr ""
+msgstr "Unfortunately, an error occurred while setting up the upribox."

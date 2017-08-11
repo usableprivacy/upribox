@@ -89,14 +89,14 @@ def check_passwords(password1, password2):
     # password2 not empty string and valid
     if password2 and not pw2.is_valid():
         errors = []
-        if not pw2.has_digit():
-            errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Ziffer beinhalten.")))
-        if not pw2.has_lowercase_char():
-            errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Kleinbuchstaben beinhalten.")))
-        if not pw2.has_uppercase_char():
-            errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Großbuchstaben beinhalten.")))
-        if not pw2.has_symbol():
-            errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Sonderzeichen beinhalten.")))
+        # if not pw2.has_digit():
+        #     errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Ziffer beinhalten.")))
+        # if not pw2.has_lowercase_char():
+        #     errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Kleinbuchstaben beinhalten.")))
+        # if not pw2.has_uppercase_char():
+        #     errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Großbuchstaben beinhalten.")))
+        # if not pw2.has_symbol():
+        #     errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Sonderzeichen beinhalten.")))
         if not pw2.has_allowed_length():
             errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss zwischen 8 und 63 Zeichen lang sein.")))
         if not pw2.has_only_allowed_chars():

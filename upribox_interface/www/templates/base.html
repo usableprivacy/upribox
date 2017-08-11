@@ -114,7 +114,9 @@
         <script type="text/javascript" src="{% static "js/vendor/js-cookie-2.0.2.js" %}"></script>
         <script type="text/javascript" src="{% static "js/vendor/qrcode.min.js" %}"></script>
 
-		<script type="text/javascript" src="{% static "js/main.js" %}"></script>
+        {% block mainjs %}
+		      <script type="text/javascript" src="{% static "js/main.js" %}"></script>
+        {% endblock %}
         {% block script %}
         {% endblock %}
 	</body>

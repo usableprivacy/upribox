@@ -2107,6 +2107,14 @@ a.infotext{
 	padding: 5px 20px 5px 0px;
 }
 
+.modalCell input[type="text"]{
+	margin-top: 10px;
+}
+
+.modalCell select{
+	margin-top: 10px;
+}
+
 .modal input[type="radio"]{
 	height: inherit;
     margin-bottom: 20px;
