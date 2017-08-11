@@ -18,6 +18,17 @@
   copy: src=dnsmasq-unfiltered/default/dnsmasq-unfiltered dest=/etc/default
   notify: restart dnsmasq_unfiltered
 
+- name: check if /var/run/dnsmasq-unfiltered exists
+  stat: path=/var/run/dnsmasq-unfiltered
+  register: res
+
+- name: stop service
+  systemd:
+    daemon-reload: yes
+    name: dnsmasq-unfiltered
+    state: stopped
+  when: res.stat.exists
+
 - name: copy dnsmasq unfiltered init.d
   copy: src=dnsmasq-unfiltered/init.d/dnsmasq-unfiltered dest=/etc/init.d mode="755"
   notify: restart dnsmasq_unfiltered

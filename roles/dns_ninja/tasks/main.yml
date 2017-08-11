@@ -19,6 +19,17 @@
   copy: src=dnsmasq-ninja/default/dnsmasq-ninja dest=/etc/default
   notify: restart dnsmasq_ninja
 
+- name: check if /var/run/dnsmasq-ninja exists
+  stat: path=/var/run/dnsmasq-ninja
+  register: res
+
+- name: stop service
+  systemd:
+    daemon-reload: yes
+    name: dnsmasq-ninja
+    state: stopped
+  when: res.stat.exists
+
 - name: copy dnsmasq ninja init.d
   copy: src=dnsmasq-ninja/init.d/dnsmasq-ninja dest=/etc/init.d mode="755"
   notify: restart dnsmasq_ninja
