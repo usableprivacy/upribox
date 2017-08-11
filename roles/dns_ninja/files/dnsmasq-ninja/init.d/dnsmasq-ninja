@@ -13,6 +13,7 @@ set +e   # Don't exit on error status
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/sbin/dnsmasq
 NAME=dnsmasq-ninja
+RUN=/var/run/dnsmasq-ninja
 DESC="DNS server over Tor"
 
 # Most configuration options in /etc/default/dnsmasq are deprecated
@@ -99,14 +100,14 @@ start()
 
         # /var/run may be volatile, so we need to ensure that
         # /var/run/dnsmasq exists here as well as in postinst
-        if [ ! -d /var/run/dnsmasq ]; then
-           mkdir /var/run/dnsmasq || return 2
-           chown dnsmasq:nogroup /var/run/dnsmasq || return 2
+        if [ ! -d $RUN ]; then
+           mkdir $RUN || return 2
+           chown dnsmasq:nogroup $RUN || return 2
         fi
 
-	start-stop-daemon --start --quiet --pidfile /var/run/dnsmasq/$NAME.pid --exec $DAEMON --test > /dev/null || return 1
-	start-stop-daemon --start --quiet --pidfile /var/run/dnsmasq/$NAME.pid --exec $DAEMON -- \
-		-x /var/run/dnsmasq/$NAME.pid \
+	start-stop-daemon --start --quiet --pidfile $RUN/$NAME.pid --exec $DAEMON --test > /dev/null || return 1
+	start-stop-daemon --start --quiet --pidfile $RUN/$NAME.pid --exec $DAEMON -- \
+		-x $RUN/$NAME.pid \
 	        ${MAILHOSTNAME:+ -m $MAILHOSTNAME} \
 		${MAILTARGET:+ -t $MAILTARGET} \
 		${DNSMASQ_USER:+ -u $DNSMASQ_USER} \
@@ -143,7 +144,7 @@ stop()
 	#   1 if daemon was already stopped
 	#   2 if daemon could not be stopped
 	#   other if a failure occurred
-	start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile /var/run/dnsmasq/$NAME.pid
+	start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $RUN/$NAME.pid
     #the following was removed because the process name is "dnsmasq" and not "dnsmasq-ninja"
     #therefore stopping the process did not work
     #--name $NAME
@@ -167,9 +168,9 @@ status()
 	#   1 if daemon is dead and pid file exists
 	#   3 if daemon is not running
 	#   4 if daemon status is unknown
-	start-stop-daemon --start --quiet --pidfile /var/run/dnsmasq/$NAME.pid --exec $DAEMON --test > /dev/null
+	start-stop-daemon --start --quiet --pidfile $RUN/$NAME.pid --exec $DAEMON --test > /dev/null
 	case "$?" in
-		0) [ -e "/var/run/dnsmasq/$NAME.pid" ] && return 1 ; return 3 ;;
+		0) [ -e "$RUN/$NAME.pid" ] && return 1 ; return 3 ;;
 		1) return 0 ;;
 		*) return 4 ;;
 	esac
@@ -260,7 +261,7 @@ case "$1" in
 	esac
 	;;
   dump-stats)
-        kill -s USR1 `cat /var/run/dnsmasq/$NAME.pid`
+        kill -s USR1 `cat $RUN/$NAME.pid`
 	;;
   systemd-start-resolvconf)
 	start_resolvconf

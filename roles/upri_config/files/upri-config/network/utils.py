@@ -71,6 +71,8 @@ def check_ip(ip):
             return socket.AF_INET6
         except socket.error:
             return None
+    except TypeError:
+        return None
 
 
 def get_network(interface, addr_family):
