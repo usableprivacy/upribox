@@ -1213,11 +1213,11 @@ function initialisePasswordFields(){
     function updateLists(badList, uglyList) {
         $("#blocked-pages").empty();
         for (var detailUrl in badList) {
-            $("#blocked-pages").append("<li>" + detailUrl + ": " + badList[detailUrl] + "</li>")
+            $("#blocked-pages").append("<li>" + badList[detailUrl][0] + ": " + badList[detailUrl][1] + "</li>")
         }
         $("#filtered-pages").empty();
         for (var detailUrl in uglyList) {
-            $("#filtered-pages").append("<li>" + detailUrl + ": " + uglyList[detailUrl] + "</li>")
+            $("#filtered-pages").append("<li>" + uglyList[detailUrl][0] + ": " + uglyList[detailUrl][1] + "</li>")
         }
     }
 

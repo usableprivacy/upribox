@@ -1618,10 +1618,10 @@ ul.all-done .success-message:last-child{
     float: none;
     display: inline-block;
 }
-.statistics-content .legend-blocked-domains {
+.statistics-content .legend-filtered-content {
     border: 5px solid #8CC8C8;
 }
-.statistics-content .legend-filtered-content {
+.statistics-content .legend-blocked-domains {
     border: 5px solid #007589;
 }
 .statistics-content .lists {

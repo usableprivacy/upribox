@@ -46,7 +46,7 @@ def json_statistics(request):
 
 def detailed_week(week):
     filtered, blocked = stats.get_overall_counters()
-    filtered_domains, blocked_domains = stats.get_domain_counters(week, sort=True)
+    filtered_domains, blocked_domains = stats.get_domain_counters(week, sort=True, limit=5)
 
     detailed = {
         "week": week,

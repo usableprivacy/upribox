@@ -49,13 +49,12 @@ def week_exists(week):
 # limit only when sorted
 def get_domains(week, sort=False, limit=None):
     filtered, blocked = get_domain_counters(week, sort, limit)
-
-    return (filtered.keys(), blocked.keys())
+    # return (filtered.keys(), blocked.keys())
     # else:
-    #     return (
-    #         [entry[0] for entry in filtered],
-    #         [entry[0] for entry in blocked],
-    #     )
+    return (
+        [entry[0] for entry in filtered],
+        [entry[0] for entry in blocked],
+    )
 
 
 # limit only when sorted
@@ -64,11 +63,11 @@ def get_domain_counters(week, sort=False, limit=None):
     blocked = redis.hgetall(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED, _WEEK, str(week), _DOMAIN)))
 
     if not sort:
-        return (filtered, blocked)
+        return (filtered.items(), blocked.items())
     else:
         return (
-            dict(sorted(filtered.items(), key=operator.itemgetter(1), reverse=True)[:limit]),
-            dict(sorted(blocked.items(), key=operator.itemgetter(1), reverse=True)[:limit]),
+            sorted(filtered.items(), key=operator.itemgetter(1), reverse=True)[:limit],
+            sorted(blocked.items(), key=operator.itemgetter(1), reverse=True)[:limit],
         )
 
 
