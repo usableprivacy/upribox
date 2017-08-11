@@ -22,7 +22,7 @@ ENABLED=1
 # Comment out this line if you don't want this. The dpkg-* are file
 # endings which cause dnsmasq to skip that file. This avoids pulling
 # in backups made by dpkg.
-CONFIG_DIR=/etc/dnsmasq.d.ninja,.dpkg-dist,.dpkg-old,.dpkg-new
+CONFIG_DIR=/etc/dnsmasq.d,.dpkg-dist,.dpkg-old,.dpkg-new
 
 # If the resolvconf package is installed, dnsmasq will use its output
 # rather than the contents of /etc/resolv.conf to find upstream
