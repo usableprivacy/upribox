@@ -19,8 +19,8 @@
   copy: src=dnsmasq-ninja/default/dnsmasq-ninja dest=/etc/default
   notify: restart dnsmasq_ninja
 
-- name: check if /var/run/dnsmasq-ninja exists
-  stat: path=/var/run/dnsmasq-ninja
+- name: check if /var/run/dnsmasq/dnsmasq-ninja.pid exists
+  stat: path=/var/run/dnsmasq/dnsmasq-ninja.pid
   register: res
 
 - name: stop service

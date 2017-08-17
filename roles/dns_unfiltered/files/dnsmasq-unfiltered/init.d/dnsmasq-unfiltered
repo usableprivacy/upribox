@@ -5,7 +5,7 @@
 # Required-Stop:  $network $remote_fs $syslog
 # Default-Start:  2 3 4 5
 # Default-Stop:   0 1 6
-# Description:    DNS server over Tor
+# Description:    unfiltered DNS server
 ### END INIT INFO
 
 set +e   # Don't exit on error status
@@ -13,7 +13,7 @@ set +e   # Don't exit on error status
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/sbin/dnsmasq
 NAME=dnsmasq-unfiltered
-RUN=/var/run/dnsmasq
+RUN=/var/run/dnsmasq-unfiltered
 DESC="unfiltered DNS server"
 
 # Most configuration options in /etc/default/dnsmasq are deprecated
@@ -101,10 +101,7 @@ start()
         # /var/run may be volatile, so we need to ensure that
         # /var/run/dnsmasq exists here as well as in postinst
         if [ ! -d $RUN ]; then
-            mkdir $RUN &>/dev/null
-            if [ ! -d $RUN ]; then
-                return 2
-            fi
+            mkdir $RUN || return 2
            chown dnsmasq:nogroup $RUN || return 2
         fi
 

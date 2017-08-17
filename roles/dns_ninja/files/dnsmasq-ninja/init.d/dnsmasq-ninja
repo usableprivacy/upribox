@@ -13,7 +13,7 @@ set +e   # Don't exit on error status
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/sbin/dnsmasq
 NAME=dnsmasq-ninja
-RUN=/var/run/dnsmasq
+RUN=/var/run/dnsmasq-ninja
 DESC="DNS server over Tor"
 
 # Most configuration options in /etc/default/dnsmasq are deprecated
@@ -101,10 +101,7 @@ start()
         # /var/run may be volatile, so we need to ensure that
         # /var/run/dnsmasq exists here as well as in postinst
         if [ ! -d $RUN ]; then
-           mkdir $RUN &>/dev/null
-           if [ ! -d $RUN ]; then
-               return 2
-           fi
+           mkdir $RUN || return 2
            chown dnsmasq:nogroup $RUN || return 2
         fi
 

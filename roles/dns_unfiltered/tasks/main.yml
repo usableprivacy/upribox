@@ -18,8 +18,8 @@
   copy: src=dnsmasq-unfiltered/default/dnsmasq-unfiltered dest=/etc/default
   notify: restart dnsmasq_unfiltered
 
-- name: check if /var/run/dnsmasq-unfiltered exists
-  stat: path=/var/run/dnsmasq-unfiltered
+- name: check if /var/run/dnsmasq/dnsmasq-unfiltered.pid exists
+  stat: path=/var/run/dnsmasq/dnsmasq-unfiltered.pid
   register: res
 
 - name: stop service
