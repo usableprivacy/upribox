@@ -1477,7 +1477,10 @@ ul.all-done .success-message:last-child{
 .loading {
     height: 350px;
     width: 100%;
-    background: url('../img/loading_132.gif') no-repeat center;
+    background: url('../img/loading_spinner-l.gif') no-repeat center;
+    background-size: 132px;
+    display: table-cell;
+    vertical-align: bottom;
 }
 
 /* -------------------------------- ADDED CSS ------------------------------------- */
@@ -1500,6 +1503,10 @@ ul.all-done .success-message:last-child{
     min-height:200px;
     height:100%;
     background-position: center 25px;
+}
+.loading-text {
+    text-align: center;
+    width: 100%;
 }
 
 .statistics-content {
@@ -1927,7 +1934,7 @@ input[type="radio"]{
 
 .i-status::before {
     background-color: transparent;
-    background-image: url(../img/loading_132_small.gif) !important;
+    background-image: url(../img/loading_spinner-s.gif) !important;
     background-repeat: no-repeat;
     background-attachment: scroll;
     background-size: 21px;

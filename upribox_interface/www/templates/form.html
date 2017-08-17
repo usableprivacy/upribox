@@ -1,4 +1,5 @@
 {% load widget_tweaks %}
+{% load base_extras %}
 {% load i18n %}
 
 <form class="js-form">
@@ -41,6 +42,6 @@
 <!-- <button class="multiple-inputs">Speichern</button> -->
             <br>
 
-            <button disabled="disabled" type="submit" name="submit" href="{{ href }}" class="multiple-inputs js-form-submit">{% trans "Speichern" %}</button> {% if back %}<a href="{{ back }}"> {% trans "Abbrechen" %} </a>{% endif %}
+            <button type="submit" {% if form|has_pw_field %}disabled="disabled"{% endif %} name="submit" href="{{ href }}" class="multiple-inputs js-form-submit">{% trans "Speichern" %}</button> {% if back %}<a href="{{ back }}"> {% trans "Abbrechen" %} </a>{% endif %}
         </fieldset>
 </form>

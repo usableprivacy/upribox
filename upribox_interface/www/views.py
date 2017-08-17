@@ -7,16 +7,20 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.utils.translation import ugettext
+from django.views.decorators.http import (require_GET, require_http_methods,
+                                          require_POST)
 from lib import jobs
 
 job_lock = Lock()
 
 
+@require_GET
 @login_required
 def faq(request):
     return render(request, "faq.html", {"request": request, 'messagestore': jobs.get_messages()})
 
 
+@require_POST
 @login_required
 def jobstatus(request):
     # if request.method != 'POST':
@@ -46,6 +50,7 @@ def jobstatus(request):
         return HttpResponse(status=503)
 
 
+@require_POST
 @login_required
 def clear_jobstatus(request):
     # if request.method != 'POST':
@@ -65,6 +70,7 @@ def clear_jobstatus(request):
         return HttpResponse(status=503)
 
 
+@require_POST
 @login_required
 def jobcounter(request):
     # if request.method != 'POST':
@@ -94,6 +100,7 @@ def jobcounter(request):
         return HttpResponse(status=503)
 
 
+@require_POST
 @login_required
 def clear_failed(request):
     # if request.method != 'POST':
@@ -113,6 +120,7 @@ def clear_failed(request):
         return HttpResponse(status=503)
 
 
+@require_POST
 @login_required
 def jobstatus_failed(request):
     # if request.method != 'POST':

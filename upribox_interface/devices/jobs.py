@@ -15,9 +15,19 @@ logger = logging.getLogger('uprilogger')
 
 
 def toggle_device_mode(mode, device):
+    dbfile = None
     try:
         if mode in [entry[0] for entry in DeviceEntry.MODES]:
             if device:
+                try:
+                    with open('/etc/ansible/default_settings.json', 'r') as f:
+                        config = json.load(f)
+                except IOError as e:
+                    logger.error('Cannot read Default Settings File: ' + e.strerror)
+                    raise
+
+                dbfile = config['django']['db']
+
                 jobs.job_message(_("Gerätemodus wird geändert..."))
 
                 try:
@@ -35,14 +45,6 @@ def toggle_device_mode(mode, device):
                     logger.error("ansible failed with error %d: %s" % (e.rc, e.message))
                     raise
 
-                try:
-                    with open('/etc/ansible/default_settings.json', 'r') as f:
-                        config = json.load(f)
-                except IOError as e:
-                    logger.error('Cannot read Default Settings File: ' + e.strerror)
-                    raise
-
-                dbfile = config['django']['db']
                 try:
                     with sqlite3.connect(dbfile) as conn:
                         c = conn.cursor()
@@ -65,6 +67,14 @@ def toggle_device_mode(mode, device):
         logger.exception(e)
         # jobs.job_clear_messages()
         jobs.job_error(_("Ändern des Gerätemodus fehlgeschlagen."))
+        try:
+            with sqlite3.connect(dbfile) as conn:
+                c = conn.cursor()
+                c.execute("Update devices_deviceentry set changing=? where id=?;", (False, device.id))
+                conn.commit()
+        except Exception:
+            # logger.exception(dbe)
+            raise jobs.JobFailedError()
         raise jobs.JobFailedError()
 
 def fail_dummy(test):

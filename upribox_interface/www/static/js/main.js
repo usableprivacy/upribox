@@ -20,8 +20,8 @@ UPRIBOX.Main = (function($) {
     var $x = 0;
     var xBound = 850;
 
-    var pollingTimeout = 600;
-    var pollingTimeoutCounter = 400;
+    var pollingTimeout = 900;
+    var pollingTimeoutCounter = 700;
     var pollingTimeoutStatistics = 4000;
     var wlanWarningTimeout = 30000;
 
@@ -341,9 +341,9 @@ UPRIBOX.Main = (function($) {
             this.caller();
         });
 
-        $(document).on('mousedown', '.radio_device', function(e) {
+        $(document).on('mousedown', '.dev_label', function(e) {
             // get the value of the current checked radio
-            prevMode = $('.radio_device[name='+$(this).attr('name')+']:checked').val();
+            prevMode = $('.radio_device[name='+$(this).prev("input").attr('name')+']:checked').val();
         });
 
         $('body').on('click', '.devname', function(e) {
@@ -630,7 +630,10 @@ function initialisePasswordFields(){
         });
     }
 
-    function showModal(type) {
+    function showModal(type, lock) {
+        if (typeof lock === 'undefined') {
+            lock = false;
+        }
         clearJobStatus(null, function () {
             $.ajax({
                 url: $('body').attr("data-template-modal"),
@@ -640,6 +643,7 @@ function initialisePasswordFields(){
                     return function(data) {
                         forceContinuousModalUpdate = true;
                         pauseCounter = true;
+
                         $('#main-content').append($(data));
                         if (t === "message") {
                             modalMode = "default";
@@ -658,9 +662,13 @@ function initialisePasswordFields(){
                                 pollProxy: modalUpdateProxy
                             });
                         }
-                        $('.js-modal-close').attr('disabled', false);
+                        if (lock){
+                            $('.js-modal-close').attr('disabled', 'disabled');
+                        }else{
+                            $('.js-modal-close').attr('disabled', false);
+                        }
                     }
-                }(type)
+                }(type, lock)
             });
         });
     }
@@ -706,7 +714,7 @@ function initialisePasswordFields(){
     function onAjaxUpdate() {
         checkInfoCookie();
         //alert(1);
-        showModal("message");
+        showModal("message", true);
         //pollForRequestedInformation();
     }
 
@@ -801,7 +809,7 @@ function initialisePasswordFields(){
                 // }
             }
         }
-        if(data.status === "done" || data.status === "failed" || forceContinuousModalUpdate) {
+        if(data.status === "done" || data.status === "failed" ) { //|| forceContinuousModalUpdate
             $('.js-modal-close').attr('disabled', false);
         }
         var tag = $('.message').find('ul').first();
@@ -1142,8 +1150,10 @@ function initialisePasswordFields(){
         };
 
         $(".loading").css("opacity", "0");
+        $(".loading-text").css("opacity", "0");
         setTimeout(function () {
             $(".loading").css("display", "none");
+            $(".loading-text").css("display", "none");
             $(".statistics-content").css("display", "block");
             $(".loading").detach().appendTo(".statistics-content .lists").addClass("update-weeks-statistik").css("visibility", "hidden").css("display", "block" );
             Plotly.newPlot(gd, statisticInformation.data, statisticInformation.layout, {displayModeBar: false});
@@ -1179,13 +1189,17 @@ function initialisePasswordFields(){
         $(".statistics-content .js-blocked-sites").css("visibility", "hidden");
         $(".statistics-content .js-filtered-sites").css("visibility", "hidden");
         $(".loading").css("visibility", "visible");
+        $(".loading-text").css("visibility", "visible");
         $(".loading").css("opacity", "1");
+        $(".loading-text").css("opacity", "1");
     }
 
     function removeStatisticsWaitingSpinner() {
         $(".loading").css("opacity", "0");
+        $(".loading-text").css("opacity", "0");
         setTimeout(function () {
             $(".loading").css("visibility", "hidden");
+            $(".loading-text").css("visibility", "hidden");
         }, 450);
         $(".statistics-content .js-blocked-sites").css("visibility", "visible");
         $(".statistics-content .js-filtered-sites").css("visibility", "visible");

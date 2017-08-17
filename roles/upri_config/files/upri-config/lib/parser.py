@@ -3,6 +3,7 @@ import os
 import re
 import sqlite3
 import subprocess
+import sys
 import time
 from datetime import datetime
 from urlparse import urlparse
@@ -185,6 +186,8 @@ def parse_dnsmasq_logs(arg):
 
 
 def action_parse_user_agents(arg):
+    sys.path.insert(0, "/opt/registrar/lib/")
+    from util import check_preconditions
     errors = False
 
     with open('/etc/ansible/default_settings.json', 'r') as f:
@@ -205,10 +208,13 @@ def action_parse_user_agents(arg):
                         # with conn:
                         parts = line.strip().split(";|;")
 
-                        try:
-                            EUI(parts[0])
-                            IPAddress(parts[1])
-                        except AddrFormatError:
+                        # try:
+                        #     EUI(parts[0])
+                        #     IPAddress(parts[1])
+                        # except AddrFormatError:
+                        #     continue
+
+                        if not check_preconditions(parts[1], parts[0]):
                             continue
                         else:
                             agent_id = None

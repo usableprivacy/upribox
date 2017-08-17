@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import render
+from django.views.decorators.http import require_http_methods, require_POST
 from lib import jobs, utils
 from lib.info import ModelInfo
 from wlan import jobs as wlanjobs
@@ -17,6 +18,7 @@ from .forms import WlanForm
 logger = logging.getLogger('uprilogger')
 
 
+@require_http_methods(["GET", "POST"])
 @login_required
 def silent(request):
     context = {}

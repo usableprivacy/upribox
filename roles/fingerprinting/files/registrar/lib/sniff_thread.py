@@ -1,14 +1,15 @@
 # coding=utf-8
-import thread
 import logging
+import sqlite3
+import thread
 import threading
 
-logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 # suppresses following message
 # WARNING: No route found for IPv6 destination :: (no default route?)
-from scapy.all import sniff, DHCP, hexstr, BOOTP
-import sqlite3
-from util import insert_or_update_fingerprint, DaemonError
+from scapy.all import BOOTP, DHCP, hexstr, sniff
+from util import DaemonError, check_preconditions, insert_or_update_fingerprint
+
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
 
 class _SniffThread(threading.Thread):
@@ -18,11 +19,11 @@ class _SniffThread(threading.Thread):
     _SNIFF_DIRECTION = "inbound"
     """str: speficies which traffic should be sniffed."""
 
-    _SNIFF_FILTER = lambda self: "({}) and {}".format(" or ".join(zip(* self._SNIFF_PARTS)[0]), self._SNIFF_DIRECTION)
+    _SNIFF_FILTER = lambda self: "({}) and {}".format(" or ".join(zip(*self._SNIFF_PARTS)[0]), self._SNIFF_DIRECTION)
     """str: tcpdump filter used for scapy's sniff function."""
     # _SNIFF_FILTER = "(arp or igmp or (icmp6 and ip6[40] == 129) or (multicast and ip6[48] == 131) or (icmp6 and ip6[40] == 134)) and inbound"
 
-    _LFILTER = lambda self, x: any([x.haslayer(layer) for layer in zip(* self._SNIFF_PARTS)[1]])
+    _LFILTER = lambda self, x: any([x.haslayer(layer) for layer in zip(*self._SNIFF_PARTS)[1]])
     # _LFILTER = staticmethod(lambda x: any([x.haslayer(layer) for layer in (ARP, IGMP, ICMPv6EchoReply, ICMPv6MLReport, ICMPv6ND_RA)]))
     """function: lambda filter used for scapy's sniff function."""
 
@@ -93,13 +94,13 @@ class RegistrarSniffThread(_SniffThread):
                 elif entry[0] == 'hostname':
                     params['hostname'] = entry[1]
                 # elif entry[0] == "client_id":
-                    # client_id value is hardware type (0x01) and mac address
-                    # params['mac'] = ":".join(hexstr(entry[1], onlyhex=True).split(" ")[-6:])
+                # client_id value is hardware type (0x01) and mac address
+                # params['mac'] = ":".join(hexstr(entry[1], onlyhex=True).split(" ")[-6:])
                 elif entry[0] == 'param_req_list':
                     # DHCP fingerprint in fingerbank format
                     params['dhcp_fingerprint'] = ",".join([str(int(num, 16)) for num in hexstr(entry[1], onlyhex=True).split(" ")])
 
-            if params.get('message-type', 0) == 3 and params.get('ip', None):
+            if params.get('message-type', 0) == 3 and check_preconditions(params.get('ip', None), params.get('mac', None)):
                 try:
                     insert_or_update_fingerprint(self.conn, **params)
                 except TypeError as te:
@@ -113,7 +114,7 @@ class RegistrarSniffThread(_SniffThread):
         try:
             self.conn = sqlite3.connect(self.dbfile)
         except sqlite3.Error as sqle:
-            self.logger.error("Failed to connect to sqlite database at path %s" % (self.dbfile,))
+            self.logger.error("Failed to connect to sqlite database at path %s" % (self.dbfile, ))
             self.logger.exception(sqle)
             raise DaemonError()
         super(RegistrarSniffThread, self).run()

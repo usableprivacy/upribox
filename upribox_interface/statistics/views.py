@@ -8,6 +8,7 @@ import lib.utils as utils
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from django.views.decorators.http import require_http_methods, require_POST
 from lib import jobs, stats
 
 SHOW_WEEKS = 5
@@ -16,11 +17,13 @@ SHOW_WEEKS = 5
 logger = logging.getLogger('uprilogger')
 
 
+@require_http_methods(["GET", "POST"])
 @login_required
 def get_statistics(request):
     return render(request, "statistics.html", {'messagestore': jobs.get_messages()})
 
 
+@require_POST
 @login_required()
 def json_statistics(request):
 
@@ -62,6 +65,7 @@ def detailed_week(week):
     return detailed
 
 
+@require_POST
 @login_required()
 def statistics_update(request, week=None):
     if not week:

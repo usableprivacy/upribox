@@ -89,3 +89,10 @@ def get_device_names(device):
     [names.append(x) for x in elems if x not in names]
 
     return filter(lambda x: x not in IGNORE, names)
+
+@register.filter
+def has_pw_field(form):
+    for field in form:
+        if field.field.widget.input_type == "password":
+            return True
+    return False

@@ -35,7 +35,7 @@ def get_devices(request):
     })
 
 
-@require_http_methods(["POST"])
+@require_POST
 @login_required
 def refresh_devices(request):
     try:
@@ -117,7 +117,7 @@ def change_name(request, slug):
 
 
 @login_required
-@require_http_methods(["GET", "POST"])
+@require_POST
 def get_device_status(request, slug):
     try:
         ip = DeviceEntry.objects.get(slug=slug).ip
@@ -130,14 +130,14 @@ def get_device_status(request, slug):
 
 
 @login_required
-@require_http_methods(["GET", "POST"])
+@require_POST
 def changing_devices(request):
     devices = DeviceEntry.objects.filter(changing=True)
     return JsonResponse([dev.slug for dev in devices], safe=False)
 
 
 @login_required
-@require_http_methods(["GET", "POST"])
+@require_POST
 def device_entry(request):
     return render(request, "device_entry.html", {
         'messagestore': jobs.get_messages(),
@@ -149,6 +149,7 @@ def device_entry(request):
     })
 
 
+@require_http_methods(["GET", "POST"])
 @login_required
 def single_device_template(request):
     return render(request, "device_entry.html")

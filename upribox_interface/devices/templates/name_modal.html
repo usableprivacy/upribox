@@ -13,11 +13,11 @@
     <div class="modalRow">
         <div class="modalCell"><p>{{ device|get_device_name }}</p></div>
         <div class="modalCell">
-            <input class="radio" name="changeName" type="radio" id="chosenName" {% if device.chosen_name %}checked{% endif %}/><label name="changeName" value="chosenName" for="chosenName"></label> {% trans "eigener Name" %} <br>
+            <input class="radio" name="changeName" type="radio" id="chosenName" value="chosenName" {% if device.chosen_name %}checked{% endif %}/><label name="changeName" value="chosenName" for="chosenName"></label> {% trans "eigener Name" %} <br>
             <input type="text" name="chosenName" value="{{device.chosen_name|default_if_none:''}}" {% if error %}class="form-input-error"{% endif %} {% if device.chosen_name is None %}disabled{% endif %}/>
         </div>
         <div class="modalCell">
-            <input class="radio" name="changeName" type="radio" id="suggestion" {% if device.chosen_name is None %}checked{% endif %}/><label name="changeName" value="suggestion" for="suggestion"></label> {% trans "Vorschlag" %} <br>
+            <input class="radio" name="changeName" type="radio" id="suggestion" value="suggestion" {% if device.chosen_name is None %}checked{% endif %}/><label name="changeName" value="suggestion" for="suggestion"></label> {% trans "Vorschlag" %} <br>
                 <select name="suggestion"{% if device.chosen_name %} disabled{% endif %}>
                     {% get_device_names device as names%}
                     {% for name in names %}
@@ -27,7 +27,7 @@
         </div>
     </div>
     {% csrf_token %}
-    <button type="submit" name="submit" class="multiple-inputs js-form-submit-nojob" {% if href %}href="{{href}}"{% endif %}>{% trans "Ändern" %}</button> <a class="js-modal-close-nojob"> {% trans "Abbrechen" %} </a>
+    <button type="submit" name="submit" class="multiple-inputs js-form-submit-nojob" {% if href %}href="{{href}}"{% endif %}>{% trans "Ändern" %}</button> <a class="js-modal-close-nojob" href=""> {% trans "Abbrechen" %} </a>
 <!-- </fieldset> -->
 </form>
     </div>

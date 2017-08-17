@@ -13,7 +13,7 @@ class ApateRedis(object):
     """str: Indicator for the IP part of the redis key."""
     __NETWORK = "net"
     """str: Indicator for the network address part of the redis key."""
-    __DB = 5
+    __DB = 6
     """int: Redis db which should be used."""
     __TTL = 259200
     """int: Time after which device entries in the redis db expire. (default=3 days)"""

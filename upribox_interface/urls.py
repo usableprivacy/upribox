@@ -98,7 +98,7 @@ urlpatterns = [
     url(r'^devices/single_device_template', devices.views.single_device_template, name="upri_device_single_device_template"),
     url(r'^devices/entry/$', devices.views.device_entry, name="upri_device_entry"),
 
-    url(r'^fail/$', devices.views.fail, name="upri_fail"),
+    # url(r'^fail/$', devices.views.fail, name="upri_fail"),
 
     # setup
     url(r'^setup/$', setup.views.setup_init, name="upri_setup"),

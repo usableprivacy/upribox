@@ -1,14 +1,17 @@
 import sqlite3
+from netaddr import IPAddress, EUI
+from netaddr.core import AddrFormatError
 
 _COLUMNS = ['ip', 'mac', 'dhcp_fingerprint', 'dhcp_vendor', 'hostname']
 # _COLUMNS = ['ip', 'mac', 'dhcp_fingerprint', 'dhcp_vendor', 'hostname', 'device_name', 'user_agent', 'score']
 # _DEFAULT_MODE = "SL"
-# _MODE_COL
-UMN = "mode"
+# _MODE_COLUMN = "mode"
 _DEFAULT_VALUES = {
     "mode": "SL"
 }
 
+EXCEPTED_MAC = [EUI("00:00:00:00:00:00")]
+EXCEPTED_IP = [IPAddress("0.0.0.0")]
 
 def insert_or_update_fingerprint(conn, **kwargs):
     if kwargs and kwargs.get("ip", None) and kwargs.get("mac", None):
@@ -37,6 +40,17 @@ def insert_or_update_fingerprint(conn, **kwargs):
     # other methods are not called inside the child and thread synchronisation on blocked threads is ....
     # also systemexit is not propagated to childs and sending signals to thread is also not possible (without bending reality)
 
+def check_preconditions(ip, mac):
+    try:
+        ip = IPAddress(ip)
+        mac = EUI(mac)
+    except (AddrFormatError, TypeError):
+        return False
+
+    if ip in EXCEPTED_IP or mac in EXCEPTED_MAC:
+        return False
+
+    return True
 
 class DaemonError(Exception):
     """This error class indicates, that the daemon has failed."""

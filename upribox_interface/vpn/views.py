@@ -16,6 +16,8 @@ from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
 from django.utils.translation import ugettext as _
+from django.views.decorators.http import (require_GET, require_http_methods,
+                                          require_POST)
 from lib import jobs
 
 from . import jobs as vpnjobs
@@ -71,12 +73,14 @@ def check_connection(request):
         return HttpResponse('{{"status": "failure", "msg": "{}"}}'.format(_("Die Verbindung war nicht erfolgreich!")))
 
 
+@require_GET
 @login_required
 def vpn_config(request):
     context = {'messagestore': jobs.get_messages(), 'profiles': VpnProfile.objects.all(), 'form': VpnProfileForm()}
     return render(request, "vpn.html", context)
 
 
+@require_POST
 @login_required
 def vpn_get(request, slug):
     try:
@@ -88,6 +92,7 @@ def vpn_get(request, slug):
         raise Http404()
 
 
+@require_POST
 @login_required
 def vpn_generate(request):
     context = {}
@@ -118,6 +123,7 @@ def vpn_generate(request):
     return render(request, "vpn.html", context)
 
 
+@require_POST
 @login_required
 def vpn_delete(request, slug):
     logger.info("deleting vpn profile %s..." % slug)
@@ -139,6 +145,7 @@ def vpn_delete(request, slug):
 
 
 # no login for download method required so users can easily download the config on other devices
+@require_http_methods(["GET", "POST"])
 def vpn_download(request, download_slug):
     logger.info("downloading vpn profile link %s..." % download_slug)
     try:
@@ -158,6 +165,7 @@ def vpn_download(request, download_slug):
         raise Http404()
 
 
+@require_POST
 @login_required
 def vpn_create_download(request, slug):
     try:
