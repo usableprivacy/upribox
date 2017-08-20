@@ -5,7 +5,7 @@ Getting Started
 **Welcome to our upribox Getting Started guide!**
 
 .. note::
-   If you bought a pre-assembled upribox from our online store you don't have to read this guide since everything is
+   If you bought a pre-assembled upribox from our online store you do not have to read this guide since everything is
    already set up and you only have to complete the simple tasks described in the enclosed manual.
 
 In a few easy steps you can build your own upribox and won't get bothered anymore by annoying ads and trackers (see :ref:`silent`).
@@ -22,8 +22,7 @@ You can download the latest upribox image from our `website <https://upribox.org
 See the `official Raspberry Pi documentation <https://www.raspberrypi.org/documentation/installation/installing-images/>`__
 for pointers on how to install the upribox image on the SD card. Upon
 the first boot the SSH/VPN keys are automatically re-generated (this
-will take a couple of minutes), and the system partitions are resized to
-use the entire size of the SD card.
+will take a couple of minutes).
 
 
 *********************
@@ -39,7 +38,7 @@ Table of recommended hardware
 .. note::
    Since upribox v0.5 we support the Pi3 natively, so no
    additional WiFi dongle is required. The Pi3 WiFi however
-   supports only one active Hotspot. You cannot yet activate the
+   supports only one active Hotspot. You cannot activate the
    **Ninja WiFi** on the Pi3 without an additional WiFi dongle.
 
 +--------------+------------------------+---------------------------+
@@ -52,7 +51,8 @@ Table of recommended hardware
 | WiFi         |       onboard          | TL-WN722N **v1** [#f5]_   |
 +--------------+------------------------+---------------------------+
 
-Please note that version 2 of the TL-WN722N WiFi dongle uses a different chipset and is not supported anymore.
+.. warning::
+   Please note that version 2 of the TL-WN722N WiFi dongle uses a different WiFi chipset and is not supported anymore.
 
 The upribox software works with Raspberry Pi 1 as well, but the
 performance for ad-blocking is considerable worse. Other potentially
@@ -77,7 +77,7 @@ Web Interface
 
 Once you are connected to either of the upribox WiFi networks (Silent or
 Ninja) you can access the upribox web interface via the following URI:
-http://upri.box. (see :ref:`integration`)
+**http://upri.box**. (see :ref:`integration`)
 
 Default passwords
 =================

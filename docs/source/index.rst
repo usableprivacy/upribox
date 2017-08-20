@@ -21,7 +21,7 @@ The upribox offers a easy to use webinterface and can be easily integrated into 
 
 .. _intro:
 
-.. include:: intro.inc
+.. include:: intro.rst
 
 #############
 Documentation
