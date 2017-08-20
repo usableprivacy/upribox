@@ -133,7 +133,7 @@ html_theme = 'alabaster'
 # documentation.
 #
 html_theme_options = {
-    'logo': 'upribox-logo_200px.png',
+    'logo': 'upribox-2_logo_light',
     'github_user': 'usableprivacy',
     'github_repo': 'upribox',
     'github_button': 'true',
