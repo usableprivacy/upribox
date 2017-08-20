@@ -1,6 +1,6 @@
-###############
+***************
 Getting Started
-###############
+***************
 
 **Welcome to our upribox Getting Started guide!**
 
@@ -14,9 +14,9 @@ OpenVPN server which secures your connection in unprotected WiFis and lets you b
 on the road (see :ref:`vpn`).
 
 
-************
+
 Installation
-************
+============
 
 You can download the latest upribox image from our `website <https://upribox.org/download/>`__ and verify its integrity and authenticity with the provided signature file and PGP key (see :ref:`signed-releases`).
 See the `official Raspberry Pi documentation <https://www.raspberrypi.org/documentation/installation/installing-images/>`__
@@ -25,15 +25,14 @@ the first boot the SSH/VPN keys are automatically re-generated (this
 will take a couple of minutes).
 
 
-*********************
 Hardware requirements
-*********************
+---------------------
 
 In the following you will find a list of required (and tested) hardware for the upribox software. On the Raspberry Pi 2 make
 sure that you use a compatible USB WiFi dongle!
 
 Table of recommended hardware
-=============================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. note::
    Since upribox v0.5 we support the Pi3 natively, so no
@@ -66,21 +65,20 @@ Wiki <https://piratebox.cc/raspberry_pi:piratebox_wifi_compatibility>`__.
 .. [#f5] TL-WN722N Wireless USB adapter `[Amazon.com] <https://www.amazon.com/TP-LINK-TL-WN722N-Wireless-Adapter-External/dp/B002SZEOLG>`__
 
 
-***********
 User manual
-***********
+===========
 
 .. _web_interface:
 
 Web Interface
-=============
+-------------
 
 Once you are connected to either of the upribox WiFi networks (Silent or
 Ninja) you can access the upribox web interface via the following URI:
 **http://upri.box**. (see :ref:`integration`)
 
 Default passwords
-=================
+-----------------
 
 If you used the latest upribox image for setting up your own privacy box you need the following passwords for accessing it:
 
@@ -90,8 +88,9 @@ If you used the latest upribox image for setting up your own privacy box you nee
 
 Please change the passwords upon the first login in the admin section of the web interface. New passwords have to be at least 8 characters long containing lower-case, upper-case, numbers and special characters.
 
+*******
 Updates
-=======
+*******
 
 The upribox performs an auto-update every **four hours**. This includes:
 
