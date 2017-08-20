@@ -1,4 +1,4 @@
-[![upribox Homepage](https://upribox.org/wp-content/uploads/2017/05/upribox-icon-logo-1.png)](https://upribox.org/)
+[![upribox Homepage](https://upribox.org/wp-content/uploads/2017/08/upribox-2_logo_light.png)](https://upribox.org/)
 
 ### Privacy made easy for the Raspberry Pi 1, 2, and 3
 
