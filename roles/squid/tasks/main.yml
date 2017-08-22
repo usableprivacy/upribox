@@ -6,6 +6,28 @@
   with_items:
     - squid3
 
+  # stretch
+- name: check if /etc/init.d/squid3 exists
+  stat: path=/etc/init.d/squid3
+  register: res
+
+  # stretch
+- name: create squid3 link
+  file: src=/etc/init.d/squid dest=/etc/init.d/squid3 state=link
+  when: not res.stat.exists
+
+  # stretch
+- name: reload services
+  systemd:
+    daemon-reload: yes
+    name: squid
+  when: not res.stat.exists
+
+  # stretch
+- name: create link to squid conf dir
+  file: src=/etc/squid dest=/etc/squid3 state=link
+  when: not res.stat.exists
+
 - name: add squid user to loggers group
   user: name=proxy groups="tmp-logger" append=yes
 

@@ -49,3 +49,16 @@
 
 - name: modify logrotate.d entry
   template: src=logrotate dest=/etc/logrotate.d/tor mode=0644
+
+  # stretch
+- name: remove dummy systemd unit file
+  file: path=/lib/systemd/system/tor.service state=absent
+  when: ansible_distribution_release != "jessie"
+  register: systemd_res
+
+  # stretch
+- name: reload services
+  systemd:
+    daemon-reload: yes
+    name: tor
+  when: systemd_res|changed

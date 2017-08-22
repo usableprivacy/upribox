@@ -3,13 +3,15 @@
   apt_key:
     data: "{{ lookup('file', 'ntop.key') }}"
     state: present
+  when: ansible_distribution_release == "jessie"
 
 - name: copy ntopng sources
   copy: src=ntop.list dest=/etc/apt/sources.list.d/ntop.list mode=644 owner=root group=root
   register: ntopng_res
+  when: ansible_distribution_release == "jessie"
 
 - name: install services
-  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ "0" if ntopng_res|changed else apt_cache_time }}
+  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ "0" if ntopng_res and ntopng_res|changed else apt_cache_time }}
   with_items:
     - redis-server
     - ntopng
@@ -18,6 +20,10 @@
   service: name={{ item }} enabled=yes use=service
   with_items:
     - ntopng
+
+  # stretch
+- name: create ntopng conf dir
+  file: path=/etc/ntopng state=directory mode=0755
 
 - name: create ntopng.start
   file: state=touch path=/etc/ntopng/ntopng.start mode=644 owner=root group=root
@@ -28,3 +34,18 @@
     - restart ntopng
   tags:
      - configure_devices
+
+- name: check if /etc/ntopng.conf is link
+  stat: path=/etc/ntopng.conf
+  register: ntop_res
+  when: ansible_distribution_release != "jessie"
+
+  # stretch
+- name: remove old config file
+  file: path=/etc/ntopng.conf state=absent
+  when: not ntop_res|skipped and ntop_res.stat.islnk is defined and ntop_res.stat.islnk == False
+
+  # stretch
+- name: create link to config
+  file: src=/etc/ntopng/ntopng.conf dest=/etc/ntopng.conf state=link
+  when: not ntop_res|skipped and ntop_res.stat.islnk is defined and ntop_res.stat.islnk == False

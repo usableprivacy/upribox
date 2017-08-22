@@ -74,6 +74,10 @@
     - libffi-dev
     - git
     - psmisc
+    # stretch
+    # this package is not preinstalled on stretch
+    # this is needed by ansible for becoming an unprivileged user
+    - acl
 
 - name: update pip via pip
   pip: name=pip state=present version="{{pip_version}}"
