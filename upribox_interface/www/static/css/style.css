@@ -2318,8 +2318,6 @@ input[type='radio'] + label {
   cursor: pointer;
 }
 
-
-
 /* Formartierung der Checkboxen und Radiobuttons */
 
 input[type='checkbox']:checked + label::before,
@@ -2346,10 +2344,24 @@ input[type=radio]:not(:checked) + label::before {
 input[type='checkbox']:hover  + label::before,
 input[type='radio']:hover  + label::before {
   background:#ddd;
-  box-shadow: inset 0 0 0 3px white;
+  box-shadow: inset 0 0 0 4px white;
 }
 
 input[type='checkbox']:checked  + label::before,
 input[type='radio']:checked  + label::before {
   background:black;
-  box-shadow: inset 0 0 0 3px white;
+  box-shadow: inset 0 0 0 4px white;
+}
+
+input[type='checkbox']:disabled:checked + label::before,
+input[type='radio']:disabled:checked + label::before{
+  background: #ddd;
+  box-shadow: inset 0 0 0 4px white;
+  border: 1px solid #ddd;
+}
+
+input[type='checkbox']:disabled + label::before,
+input[type='radio']:disabled + label::before{
+  background: white;
+  border: 1px solid #ddd;
+}

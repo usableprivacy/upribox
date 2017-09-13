@@ -40,8 +40,8 @@
         {% endblocktrans %}
         </div>
     {% elif phase == "eval" %}
-        {% blocktrans with orf="http://test.upribox.org/"%}
-            <p> Bitte testen Sie mit einem zweiten Gerät, das mit Ihrem Heimnetzwerk verbunden ist, ob eine Internetverbindung weiterhin besteht. Rufen Sie dazu einfach die Seite <a href="{{orf}}">www.orf.at</a> auf. <br> <br>
+        {% blocktrans with connect="http://test.upribox.org/"%}
+            <p> Bitte testen Sie mit einem zweiten Gerät, das mit Ihrem Heimnetzwerk verbunden ist, ob eine Internetverbindung weiterhin besteht. Rufen Sie dazu einfach die Seite <a href="{{connect}}">test.upribox.org</a> auf. <br> <br>
             Ist die Seite erreichbar?  </p>
         {% endblocktrans %}
         <button class="multiple-inputs" onclick="location.href='{% url 'upri_setup_success' %}';"> {% trans "Ja" %} </button> <button onclick="location.href='{% url 'upri_setup_failed' %}';"> {% trans "Nein" %} </button>

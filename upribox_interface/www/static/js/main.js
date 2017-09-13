@@ -318,7 +318,8 @@ UPRIBOX.Main = (function($) {
                 var dev_id = $(this).attr('name');
 
                 if(prevMode != mode){
-                    $(this).attr('disabled', true);
+                    // $(this).attr('disabled', true);
+                    $(this).closest(".single-device-row").find(".radio_device").attr('disabled', true);
                     $.ajax({
                         url: href,
                         dataType: 'html',
@@ -329,7 +330,7 @@ UPRIBOX.Main = (function($) {
                             setSingleDeviceAsInProgress(dev_id);
                             //$('body').append($(data));
                             //onAjaxUpdate();
-                            $(this).attr('disabled', false);
+                            // $(this).attr('disabled', false);
                         },
                         error: function () {
                             this.caller();
@@ -705,6 +706,8 @@ function initialisePasswordFields(){
         var onlineStat=entry.hasClass("is-online")?true:(entry.hasClass("is-offline")?false:null);
         if (onlineStat !== null)
             entry.removeClass("i-status").addClass(onlineStat?"i-connected":"i-notconnected");
+        // $(".radio_device").attr("disabled", "false");
+        $("#" + id).find(".radio_device").attr('disabled', false);
     }
 
     /**
