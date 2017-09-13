@@ -52,8 +52,12 @@
 
   # stretch
 - name: remove dummy systemd unit file
-  file: path=/lib/systemd/system/tor.service state=absent
+  file: path="/lib/systemd/system/{{ item }}" state=absent
   when: ansible_distribution_release != "jessie"
+  with_items:
+    - tor.service
+    - tor@.service
+    - tor@default.service
   register: systemd_res
 
   # stretch

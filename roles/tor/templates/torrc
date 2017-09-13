@@ -41,3 +41,4 @@ TransPort 9040
 TransListenAddress 0.0.0.0
 DNSPort 9053
 DNSListenAddress 127.0.0.1
+AvoidDiskWrites 1
