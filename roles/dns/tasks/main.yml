@@ -61,19 +61,27 @@
   tags:
     - network_config
 
-- name: remove dnsmasq-resolv.conf if link and dhcp
-  file: path=/etc/dnsmasq-resolv.conf state=absent
-  when: not mode == "static" and dnsres.stat.islnk is defined and dnsres.stat.islnk
-  tags:
-    - network_config
+# - name: remove dnsmasq-resolv.conf if link and dhcp
+#   file: path=/etc/dnsmasq-resolv.conf state=absent
+#   when: not mode == "static" and dnsres.stat.islnk is defined and dnsres.stat.islnk
+#   tags:
+#     - network_config
 
-- name: copy the openresolv config file
-  template: src=resolvconf.conf dest=/etc/resolvconf.conf mode="0644"
+- name: remove the openresolv config file
+  file: path=/etc/resolvconf.conf state=absent
   notify:
     - restart dnsmasq
     - ifupdown eth0
   tags:
     - network_config
+
+# - name: copy the openresolv config file
+#   template: src=resolvconf.conf dest=/etc/resolvconf.conf mode="0644"
+#   notify:
+#     - restart dnsmasq
+#     - ifupdown eth0
+#   tags:
+#     - network_config
 
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/dnsmasq mode=0644
@@ -81,18 +89,22 @@
     - toggle_silent
 
 - name: configure systemd-resolved
-  service: name=systemd-resolved state={{'started' if mode == "static" else 'stopped'}} enabled={{mode == "static"}} 
+  service: name=systemd-resolved state=started enabled=yes
+  notify:
+    - restart dnsmasq
+    - ifupdown eth0
+  #{{'started' if mode == "static" else 'stopped'}} enabled={{mode == "static"}}
   tags:
     - network_config
 
-- name: remove dnsmasq-resolv.conf if static ip
+- name: remove dnsmasq-resolv.conf if not link
   file: path=/etc/dnsmasq-resolv.conf state=absent
-  when: mode == "static" and dnsres.stat.islnk is defined and not dnsres.stat.islnk
+  when: dnsres.stat.islnk is defined and not dnsres.stat.islnk
   tags:
     - network_config
 
 - name: link dnsmasq-resolv.conf to /run/systemd/resolve/resolv.conf
   file: src=/run/systemd/resolve/resolv.conf dest=/etc/dnsmasq-resolv.conf state=link
-  when: mode == "static" and dnsres.stat.islnk is defined and not dnsres.stat.islnk
+  when: dnsres.stat.islnk is defined and not dnsres.stat.islnk
   tags:
     - network_config
