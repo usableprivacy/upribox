@@ -105,6 +105,6 @@
 
 - name: link dnsmasq-resolv.conf to /run/systemd/resolve/resolv.conf
   file: src=/run/systemd/resolve/resolv.conf dest=/etc/dnsmasq-resolv.conf state=link
-  when: dnsres.stat.islnk is defined and not dnsres.stat.islnk
+  when: not dnsres.stat.exists or (dnsres.stat.islnk is defined and not dnsres.stat.islnk)
   tags:
     - network_config
