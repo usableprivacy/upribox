@@ -35,7 +35,8 @@ RunAsDaemon 1
 DataDirectory /var/lib/tor
 
 ## Enable the transparent proxy and the DNS proxy
-VirtualAddrNetworkIPv4 10.192.0.0/10
+VirtualAddrNetworkIPv4 169.254.0.0/16
+#VirtualAddrNetworkIPv4 10.192.0.0/10
 AutomapHostsOnResolve 1
 TransPort 9040
 TransListenAddress 192.168.56.254
