@@ -19,7 +19,8 @@ def action_check_device(arg):
     if not check_ip(arg):
         return False
 
-    return bool(len(arping(arg, iface=None, verbose=0)[0]))
+    # default for timeout is 2 seconds
+    return bool(len(arping(arg, timeout=0.8, iface=None, verbose=0)[0]))
 
 
 def action_configure_devices(arg):

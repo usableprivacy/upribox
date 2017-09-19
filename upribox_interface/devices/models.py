@@ -2,6 +2,7 @@ from django.db import models
 import autoslug
 from lib import utils
 from django.db import connection
+from django.utils import timezone
 
 
 class UserAgent(models.Model):
@@ -39,5 +40,6 @@ class DeviceEntry(models.Model):
     chosen_name = models.CharField(max_length=256, null=True)
     slug = autoslug.AutoSlugField(unique=True, populate_from=utils.secure_random_id, always_update=False, null=True)
     changing = models.NullBooleanField(null=True, default=False)
+    last_seen = models.DateTimeField(default=timezone.now)
 
     objects = DeviceManager()

@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import json
 import logging
 import time
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 
 import lib.utils as utils
 from django.conf import settings
@@ -16,6 +16,7 @@ from django.template import loader
 from django.template.defaultfilters import date as _localdate
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_http_methods, require_POST
+from django.utils.timezone import now as django_now
 from lib import jobs
 from www.templatetags.base_extras import get_device_name
 
@@ -26,12 +27,16 @@ from .models import DeviceEntry
 logger = logging.getLogger('uprilogger')
 
 
+def get_entries():
+    return DeviceEntry.objects.filter(last_seen__gte=datetime.now() - timedelta(weeks=1))
+
+
 @require_http_methods(["GET", "POST"])
 @login_required
 def get_devices(request):
     return render(request, "devices.html", {
         'messagestore': jobs.get_messages(),
-        'devices': DeviceEntry.objects.all(),
+        'devices': get_entries(),
     })
 
 
@@ -43,7 +48,7 @@ def refresh_devices(request):
     except utils.AnsibleError as ae:
         logger.exception(ae)
 
-    devices = DeviceEntry.objects.all()
+    devices = get_entries()
     response = [
         {
             'slug': dev.slug,
@@ -107,7 +112,7 @@ def change_name(request, slug):
 
         return render(request, "devices.html", {
             'messagestore': jobs.get_messages(),
-            'devices': DeviceEntry.objects.all(),
+            'devices': get_entries(),
         })
     else:
         return render(
@@ -120,11 +125,15 @@ def change_name(request, slug):
 @require_POST
 def get_device_status(request, slug):
     try:
-        ip = DeviceEntry.objects.get(slug=slug).ip
+        dev = DeviceEntry.objects.get(slug=slug)
     except DeviceEntry.DoesNotExist:
         res = None
     else:
-        res = utils.exec_upri_config("check_device", ip)
+        res = utils.exec_upri_config("check_device", dev.ip)
+        if bool(res):
+            # update last_seen date
+            dev.last_seen = django_now()
+            dev.save()
 
     return JsonResponse({slug: bool(res)})
 

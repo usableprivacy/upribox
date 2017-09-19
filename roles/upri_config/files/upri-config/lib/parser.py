@@ -207,6 +207,11 @@ def action_parse_user_agents(arg):
                     for line in squid:
                         # with conn:
                         parts = line.strip().split(";|;")
+                        timestamp = None
+                        try:
+                            timestamp = datetime.fromtimestamp(float(parts[3]))
+                        except (ValueError, IndexError):
+                            timestamp = datetime.now()
 
                         # try:
                         #     EUI(parts[0])
@@ -234,20 +239,27 @@ def action_parse_user_agents(arg):
                             device_id = None
                             try:
                                 c.execute(
-                                    "INSERT INTO devices_deviceentry (ip, mac, mode) VALUES (?, ?, ?)",
-                                    (parts[1], parts[0], DEVICE_DEFAULT_MODE)
+                                    "INSERT INTO devices_deviceentry (ip, mac, mode, last_seen) VALUES (?, ?, ?, ?)",
+                                    (parts[1], parts[0], DEVICE_DEFAULT_MODE, timestamp)
                                 )
                                 device_id = c.lastrowid
                             except sqlite3.IntegrityError as sqlie:
                                 if "UNIQUE constraint failed: devices_deviceentry.mac" in sqlie.message:
-                                    c.execute("SELECT id, ip from devices_deviceentry where mac=?", (parts[0], ))
+                                    c.execute("SELECT id, ip, last_seen from devices_deviceentry where mac=?", (parts[0], ))
                                     res = c.fetchone()
                                     if not res:
                                         raise ValueError("Unable to retrieve id of device")
 
                                     device_id = res[0]
-                                    if res[1] != parts[1]:
-                                        c.execute("UPDATE devices_deviceentry SET ip=? where mac=?", (parts[1], parts[0]))
+                                    # res[1] != parts[1] or
+                                    entry_date = None
+                                    try:
+                                        entry_date = datetime.strptime(res[2], "%Y-%m-%d %H:%M:%S.%f")
+                                    except ValueError:
+                                        entry_date = datetime.strptime(res[2], "%Y-%m-%d %H:%M:%S")
+
+                                    if timestamp > entry_date:
+                                        c.execute("UPDATE devices_deviceentry SET ip=?, last_seen=? where mac=?", (parts[1], timestamp, parts[0]))
                                 else:
                                     raise sqlie
 
