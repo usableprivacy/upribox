@@ -110,10 +110,11 @@ def change_name(request, slug):
                 dev.chosen_name = chosen_name
                 dev.save()
 
-        return render(request, "devices.html", {
-            'messagestore': jobs.get_messages(),
-            'devices': get_entries(),
-        })
+        # return render(request, "devices.html", {
+        #     'messagestore': jobs.get_messages(),
+        #     'devices': get_entries(),
+        # })
+        return HttpResponse(dev.chosen_name, content_type='text/html; charset=utf-8')
     else:
         return render(
             request, "name_modal.html", {"device": DeviceEntry.objects.get(slug=slug),

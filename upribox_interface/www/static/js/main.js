@@ -162,12 +162,13 @@ UPRIBOX.Main = (function($) {
             updateMainContent(href, 'post', form);
         });
 
-        $('body').on('click', '.js-form-submit-nojob', function(e){
+        $('body').on('click', '.js-change-devicename', function(e){
             e.preventDefault();
             var href = $(this).attr('href');
             var form = $(this).closest('form');
             $(this).attr('disabled', true);
             var modal = $(this).closest('.js-modal');
+            var slug = $(this).attr('data-slug');
 
             $.ajax({
                 url: href,
@@ -176,7 +177,7 @@ UPRIBOX.Main = (function($) {
                 type: 'post',
                 success: function (data) {
                     modal.remove();
-                    $('#main-content').html($(data));
+                    $("#" + slug + " .devname").text(data);
                     // onAjaxUpdate();
                 },
                 error: function(jqXHR){

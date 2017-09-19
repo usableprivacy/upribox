@@ -27,7 +27,7 @@
         </div>
     </div>
     {% csrf_token %}
-    <button type="submit" name="submit" class="multiple-inputs js-form-submit-nojob" {% if href %}href="{{href}}"{% endif %}>{% trans "Ändern" %}</button> <a class="js-modal-close-nojob" href=""> {% trans "Abbrechen" %} </a>
+    <button type="submit" name="submit" class="multiple-inputs js-change-devicename" {% if device.slug %}data-slug="{{device.slug}}"{% endif %} {% if href %}href="{{href}}"{% endif %}>{% trans "Ändern" %}</button> <a class="js-modal-close-nojob" href=""> {% trans "Abbrechen" %} </a>
 <!-- </fieldset> -->
 </form>
     </div>
