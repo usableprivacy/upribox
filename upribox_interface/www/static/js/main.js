@@ -1102,10 +1102,10 @@ function initialisePasswordFields(){
                 currentClickedWeek = data[i].week;
                 currentSelectedWeek = data[i].week;
                 for (var entry in data[i].filtered.bad) {
-                    bad += parseInt(data[i].filtered.bad[entry]);
+                    bad += parseInt(data[i].filtered.bad[entry][1]);
                 }
                 for (var entry in data[i].filtered.ugly) {
-                    ugly += parseInt(data[i].filtered.ugly[entry]);
+                    ugly += parseInt(data[i].filtered.ugly[entry][1]);
                 }
             }
             else {
@@ -1281,10 +1281,10 @@ function initialisePasswordFields(){
         var ugly = 0;
         if (data.week == lastWeek) {
             for (var entry in data.filtered.bad) {
-                bad += parseInt(data.filtered.bad[entry]);
+                bad += parseInt(data.filtered.bad[entry][1]);
             }
             for (var entry in data.filtered.ugly) {
-                ugly += parseInt(data.filtered.ugly[entry]);
+                ugly += parseInt(data.filtered.ugly[entry][1]);
             }
             updateBarValue(statisticInformation.data[1].y.length-1, bad, ugly);
         }
