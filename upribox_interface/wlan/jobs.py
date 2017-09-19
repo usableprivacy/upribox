@@ -52,11 +52,7 @@ def toggle_silent(state):
 
                 logger.debug("restarting silent")
                 utils.exec_upri_config('enable_silent', state)
-                if state == 'no':
-                    utils.exec_upri_config('enable_tor', 'no')
-                    utils.exec_upri_config('restart_tor')
-                else:
-                    utils.exec_upri_config('restart_silent')
+                utils.exec_upri_config('restart_silent')
                 jobs.job_message(_("Konfiguration des silent WLAN erfolgreich."))
 
             except utils.AnsibleError as e:

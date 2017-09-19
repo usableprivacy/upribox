@@ -32,7 +32,7 @@
     - isc-dhcp-server
 
 - name: restart isc-dhcp-server
-  service: name=isc-dhcp-server state=restarted
+  service: name=isc-dhcp-server state={{'restarted' if silent|bool or (dhcpd|bool and mode=='static') else 'stopped'}}
 
 - name: restart avahi
   service: name=avahi-daemon state=restarted
