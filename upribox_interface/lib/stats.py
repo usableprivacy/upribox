@@ -66,8 +66,8 @@ def get_domain_counters(week, sort=False, limit=None):
         return (filtered.items(), blocked.items())
     else:
         return (
-            sorted(filtered.items(), key=operator.itemgetter(1), reverse=True)[:limit],
-            sorted(blocked.items(), key=operator.itemgetter(1), reverse=True)[:limit],
+            sorted(filtered.items(), cmp=lambda x, y: int(x) - int(y), key=operator.itemgetter(1), reverse=True)[:limit],
+            sorted(blocked.items(), cmp=lambda x, y: int(x) - int(y), key=operator.itemgetter(1), reverse=True)[:limit],
         )
 
 
