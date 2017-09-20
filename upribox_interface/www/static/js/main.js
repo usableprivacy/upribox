@@ -91,6 +91,7 @@ UPRIBOX.Main = (function($) {
     //stores the timeout handler for making the tooltips invisible after some time, on mobile devices
     var makeTooltipsDisappearOnMobileTimeoutHandler;
 
+    var refreshURL = false;
 
     //defining some urls for polling and html rendering-templates
 
@@ -303,7 +304,15 @@ UPRIBOX.Main = (function($) {
             }, 1000);
         });
 
-        $('body').on('click', '.js-modal-close', clearJobStatus);
+        $('body').on('click', '.js-modal-close', //clearJobStatus);
+        function(e){
+                clearJobStatus.bind(this, e, function(){
+                    if (refreshURL) {
+                        updateMainContent(refreshURL, 'get', undefined, true);
+                        refreshURL = false;
+                    }
+                })();
+        });
 
         $('body').on('click', '.js-modal-close-nojob', function(e){
             e.preventDefault();
@@ -423,71 +432,6 @@ UPRIBOX.Main = (function($) {
 
             initialisePasswordFields();
 
-            // if ($("[type='password']").length > 0) {
-            //     var pw1 = $("[name='password1']")[0];
-            //     var pw2 = $("[name='password2']")[0];
-            //
-            //     $("[type='password']").each(function(index, element) {
-            //         $(element).bind("propertychange change click keyup input paste", function () {
-            //             var result = zxcvbn(element.value);
-            //             if (element.value == "")
-            //                 result.score = -1;
-            //
-            //             var passwordsMatch = null;
-            //             var passwordLengthOk = null;
-            //             var passwordLengthCheckRequired = ($("#string8to64needed").length > 0);
-            //
-            //             var checkPasswordLength = function () {
-            //                 if (passwordLengthCheckRequired) {
-            //                     if (pw1.value.length >= 8 && pw1.value.length <=64) {
-            //                         passwordLengthOk = true;
-            //                     }
-            //                     else {
-            //                         passwordLengthOk = false;
-            //                     }
-            //                 }
-            //             }
-            //
-            //             if (element.name == "password1") {
-            //                 passwordsMatch = (element.value == pw2.value && element.value != "");
-            //                 checkPasswordLength();
-            //             }
-            //             if (element.name == "password2") {
-            //                 passwordsMatch = (element.value == pw1.value && element.value != "");
-            //                 checkPasswordLength();
-            //             }
-            //
-            //             if (passwordsMatch !== null && ((passwordLengthCheckRequired && passwordLengthOk !== null ) || !passwordLengthCheckRequired)) {
-            //                 if (passwordsMatch && ((passwordLengthCheckRequired && passwordLengthOk === true) || !passwordLengthCheckRequired)) {
-            //                     $("[name='submit']").removeAttr("disabled");
-            //                     $("#passwordsDontMatch").css("display", "none");
-            //                     if (passwordLengthCheckRequired) $("#string8to64needed").css("display", "none");
-            //                 }
-            //                 else {
-            //                     if (!passwordsMatch) {
-            //                         $("[name='submit']").attr("disabled", "disabled");
-            //                         if (pw1.value != "" && pw2.value != "" ) $("#passwordsDontMatch").css("display", "block");
-            //                         else if (pw1.value == "" || pw2.value == "") $("#passwordsDontMatch").css("display", "none");
-            //                     }
-            //                     else {
-            //                         $("#passwordsDontMatch").css("display", "none");
-            //                     }
-            //                     if (passwordLengthCheckRequired && passwordLengthOk === true) {
-            //                         $("#string8to64needed").css("display", "none");
-            //                     }
-            //                     else if (passwordLengthCheckRequired && passwordLengthOk === false) {
-            //                         $("[name='submit']").attr("disabled", "disabled");
-            //                         $("#string8to64needed").css("display", "block");
-            //                     }
-            //
-            //                 }
-            //             }
-            //             // Update the password strength meter
-            //             $(".meter-container:eq(" + index + " )").attr("name", "meter-value" + (result.score + 1).toString());
-            //         });
-            //     });
-            // }
-
         });
     }
 
@@ -556,14 +500,14 @@ function initialisePasswordFields(){
             });
         });
     }
-}
-
+    }
 
     function toggleServiceState2(e){
         e.preventDefault();
         var href = $(this).attr('href');
         var state = this.checked ? 'yes' : 'no';
         // $(this).attr('disabled', true);
+        refreshURL = window.location.pathname;
         $.ajax({
             url: href,
             dataType: 'html',
@@ -615,7 +559,7 @@ function initialisePasswordFields(){
      * @param {string} the type (post or get)
      * @param {Object} form data (optional)
      */
-    function updateMainContent(href, type, form) {
+    function updateMainContent(href, type, form, prevent) {
         clearJobStatus(null, function () {
             modalMode = "default";
             $.ajax({
@@ -626,7 +570,9 @@ function initialisePasswordFields(){
                 success: function (data) {
                     $('#main-content').html($(data));
                     initialisePasswordFields();
-                    onAjaxUpdate();
+                    if (!prevent){
+                        onAjaxUpdate();
+                    }
                 }
             });
         });
@@ -771,10 +717,11 @@ function initialisePasswordFields(){
                     forceContinuousModalUpdate = false;
                     pauseCounter = false;
                     //reload main content if refesh url was given
-                    var refreshUrl = $(this).attr('data-refresh-url');
-                    if (refreshUrl) {
-                        updateMainContent(refreshUrl, 'get');
-                    }
+                    // var refreshUrl = $(this).attr('data-refresh-url');
+
+                    // if (refreshUrl) {
+                    //     updateMainContent(refreshUrl, 'get');
+                    // }
                     console.log('messages cleared')
                     if (cb) cb();
                 }
