@@ -15,6 +15,12 @@
     - isc-dhcp-server
     - rng-tools
 
+  # AnsibleFilterError: The ipaddr filter requires python-netaddr be installed on the ansible controller
+- name: install dependencies via pip
+  pip: name="{{ item.name }}" state=present version="{{ item.version }}"
+  with_items:
+    - { name: 'netaddr', version: '0.7.19' }
+
 - name: test if hardware rng device exists
   stat:
     path: /dev/hwrng
