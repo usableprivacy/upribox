@@ -5,7 +5,7 @@
   register: user_exist
   changed_when: false
 
-- name: change logdir of supervisor
+- name: enable resolving the hostname
   lineinfile:
     dest: /etc/hosts
     regexp: "^127.0.0.1"
