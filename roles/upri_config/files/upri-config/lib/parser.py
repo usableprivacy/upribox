@@ -37,11 +37,21 @@ _TTL = 3629000
 
 
 def action_parse_logs(arg):
-    dnsmasq_val = parse_dnsmasq_logs(arg)
-    privoxy_val = parse_privoxy_logs(arg)
-    if 16 in (privoxy_val, dnsmasq_val):
+    with open('/etc/ansible/default_settings.json', 'r') as f:
+        config = json.load(f)
+    vals = [
+        parse_dnsmasq_logs(
+            os.path.join(config['log']['general']['path'], config['log']['dnsmasq']['subdir'], config['log']['dnsmasq']['logfiles']['logname'])
+        ),
+        parse_dnsmasq_logs(
+            os.path.
+            join(config['log']['general']['path'], config['log']['dnsmasq_ninja']['logfiles']['logname'])
+        ),
+        parse_privoxy_logs(arg)
+    ]
+    if 16 in vals:
         return 16
-    elif 1 in (privoxy_val, dnsmasq_val):
+    elif 1 in vals:
         return 1
     else:
         return 0
@@ -124,10 +134,8 @@ def parse_dnsmasq_logs(arg):
     blockedPattern = re.compile('([a-zA-Z]{3} ? \d{1,2} (\d{2}:?){3}) dnsmasq\[[0-9]*\]: config (.*) is 192.168.55.254')
 
     changed = False
-    with open('/etc/ansible/default_settings.json', 'r') as f:
-        config = json.load(f)
 
-    logfile = os.path.join(config['log']['general']['path'], config['log']['dnsmasq']['subdir'], config['log']['dnsmasq']['logfiles']['logname'])
+    logfile = arg
 
     if os.path.isfile(logfile):
         print "parsing dnsmasq logfile %s" % logfile
