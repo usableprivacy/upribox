@@ -1,6 +1,9 @@
 ---
 - include: ../../common/tasks/other_env.yml
 
+- include: ../../wlan/tasks/wlan_state.yml
+- include: ../../wlan/tasks/dhcpd_state.yml
+
 - name: install services
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
   with_items:
