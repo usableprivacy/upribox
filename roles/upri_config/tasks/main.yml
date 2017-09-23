@@ -41,6 +41,7 @@
     path: "{{ item }}"
   with_items:
     - "{{default_settings.log.general.path}}/{{default_settings.log.dnsmasq.subdir}}/{{default_settings.log.dnsmasq.logfiles.logname}}"
+    - "{{default_settings.log.general.path}}/{{default_settings.log.dnsmasq_ninja.logfiles.logname}}"
     - "{{default_settings.log.general.path}}/{{default_settings.log.privoxy.subdir}}/{{default_settings.log.privoxy.logfiles.logname}}"
   register: log_files
 

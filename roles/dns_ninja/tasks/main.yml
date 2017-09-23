@@ -39,6 +39,17 @@
   notify: restart dnsmasq_ninja
   register: res
 
+- name: ensure dnsmasq logfile exists
+  copy:
+    content: ""
+    dest: "{{default_settings.log.general.path}}/{{default_settings.log.dnsmasq_ninja.logfiles.logname}}"
+    force: no
+    group: root
+    owner: dnsmasq
+    mode: 0640
+  tags:
+    - toggle_silent
+
 - name: remove dnsmasq log files from other environment
   file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
   with_dict: "{{other_env.default_settings.log.dnsmasq_ninja.logfiles}}"
