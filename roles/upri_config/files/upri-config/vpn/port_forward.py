@@ -11,6 +11,8 @@ from lib.utils import check_fact
 # Port for OpenVPN
 PORT = check_fact('vpn', 'connection', 'port', debug=False)
 PROTOCOL = check_fact('vpn', 'connection', 'protocol', debug=False)
+CERT_DNS_PATH = check_fact('vpn', 'general', 'cert_dns_path', debug=False)
+SSL_PINNING_PATH = check_fact('vpn', 'general', 'ssl_pinning_path', debug=False)
 
 # Regex for parsing NATPMP output
 PUB_IP_REGEX = r'\bPublic IP address : (?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b'
@@ -59,8 +61,8 @@ def dns_update():
     if debug:
         print 'Send DNS update'
     try:
-        if exists('{{cert_dns_path}}'):
-            r = requests.get('https://api.upribox.org/dnsupdate/', cert='{{cert_dns_path}}', timeout=3, verify='{{ssl_pinning_path}}')
+        if exists(CERT_DNS_PATH):
+            r = requests.get('https://api.upribox.org/dnsupdate/', cert=CERT_DNS_PATH, timeout=3, verify=SSL_PINNING_PATH)
             if debug:
                 if r.text == 'OK':
                     print ' DNS Update Successful'
