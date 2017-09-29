@@ -11,6 +11,7 @@ from os.path import exists, isfile, join
 import dns.resolver
 import netifaces as ni
 import passwd
+import redis as redisDB
 from django import forms
 from django.conf import settings
 from django.utils.crypto import get_random_string
@@ -177,3 +178,8 @@ class AnsibleError(Exception):
     def __init__(self, message, rc):
         super(AnsibleError, self).__init__(message)
         self.rc = rc
+
+
+def check_authorization(user):
+    redis = redisDB.StrictRedis(host=settings.REDIS["HOST"], port=settings.REDIS["PORT"], db=settings.REDIS["DB"])
+    return user.is_authenticated() or not redis.exists(settings.SETUP_DELIMITER.join((settings.SETUP_PREFIX, settings.SETUP_KEY)))

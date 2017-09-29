@@ -6,7 +6,7 @@ import time
 
 import redis as redisDB
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
@@ -16,7 +16,7 @@ from more import jobs as morejobs
 logger = logging.getLogger('uprilogger')
 
 
-@login_required
+@user_passes_test(utils.check_authorization)
 @require_http_methods(["GET", "POST"])
 def setup_init(request):
     phase = "init"
@@ -43,7 +43,7 @@ def setup_init(request):
         return render(request, "setup.html", context)
 
 
-@login_required
+@user_passes_test(utils.check_authorization)
 @require_http_methods(["GET"])
 def setup_eval(request):
     context = {'phase': "eval"}
@@ -51,13 +51,13 @@ def setup_eval(request):
     return render(request, "setup.html", context)
 
 
-@login_required
+@user_passes_test(utils.check_authorization)
 @require_http_methods(["GET"])
 def setup_error(request):
     return render(request, "setup.html")
 
 
-@login_required
+@user_passes_test(utils.check_authorization)
 @require_http_methods(["GET", "POST"])
 def setup_success(request):
     phase = "success"
@@ -71,7 +71,7 @@ def setup_success(request):
     return render(request, "setup.html", context)
 
 
-@login_required
+@user_passes_test(utils.check_authorization)
 @require_http_methods(["GET", "POST"])
 def setup_failed(request):
     phase = "failed"

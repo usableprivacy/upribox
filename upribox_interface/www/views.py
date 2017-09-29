@@ -3,13 +3,13 @@ from __future__ import unicode_literals
 
 from threading import Lock
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.utils.translation import ugettext
 from django.views.decorators.http import (require_GET, require_http_methods,
                                           require_POST)
-from lib import jobs
+from lib import jobs, utils
 
 job_lock = Lock()
 
@@ -21,7 +21,7 @@ def faq(request):
 
 
 @require_POST
-@login_required
+@user_passes_test(utils.check_authorization)
 def jobstatus(request):
     # if request.method != 'POST':
     #     raise Http404()
@@ -51,7 +51,7 @@ def jobstatus(request):
 
 
 @require_POST
-@login_required
+@user_passes_test(utils.check_authorization)
 def clear_jobstatus(request):
     # if request.method != 'POST':
     #     raise Http404()
