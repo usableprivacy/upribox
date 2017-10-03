@@ -245,6 +245,8 @@ SETUP_NO_REDIRECT = [
     "upri_setup_eval",
     "upri_jobstatus",
     "upri_clear_jobstatus",
+    'upri_clear_failed',
+    'upri_jobstatus_failed',
 ]
 
 REDIS = {

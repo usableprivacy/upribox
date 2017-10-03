@@ -71,7 +71,7 @@ def clear_jobstatus(request):
 
 
 @require_POST
-@login_required
+@user_passes_test(utils.check_authorization)
 def jobcounter(request):
     # if request.method != 'POST':
     #     raise Http404()
@@ -101,7 +101,7 @@ def jobcounter(request):
 
 
 @require_POST
-@login_required
+@user_passes_test(utils.check_authorization)
 def clear_failed(request):
     # if request.method != 'POST':
     #     raise Http404()
@@ -121,7 +121,7 @@ def clear_failed(request):
 
 
 @require_POST
-@login_required
+@user_passes_test(utils.check_authorization)
 def jobstatus_failed(request):
     # if request.method != 'POST':
     #     raise Http404()

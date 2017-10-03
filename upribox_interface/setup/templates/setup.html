@@ -51,7 +51,7 @@
          <div class="icon i-setup-failed"> </div>
 
          <div class="setup-text">
-             <p> {% trans "Es ist leider ein Fehler während des Setups der upribox aufgetreten." %}</p>
+             <p> {% trans "Es ist leider ein Fehler während des Setups der upribox aufgetreten." %} <br> <a href="{% url 'upri_setup' %}">{% trans "Bitte versuchen Sie es erneut" %}</a></p>
          </div>
     {% endif %}
 {% endblock %}

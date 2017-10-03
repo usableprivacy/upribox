@@ -21,16 +21,13 @@ INIT_JOBS.Main = (function($) {
      /**
      * Gets executed when the user closes the modal dialog
      */
-    function clearJobStatus(e) {
+    function clearJobStatus(clearURL, targetURL) {
 
-        if(e) {
-            e.preventDefault();
-        }
-        var href= $('body').attr('data-clear-url');
+        // var href= $('body').attr('data-clear-url');
 
         $.ajax({
             context: this,
-            url: href,
+            url: clearURL,
             dataType: 'json',
             data: {'csrfmiddlewaretoken': Cookies.get('csrftoken')},
             type: 'post',
@@ -39,15 +36,16 @@ INIT_JOBS.Main = (function($) {
                 $(this).closest('.js-modal').remove();
 
                 //reload main content if refesh url was given
-                var refreshUrl = $(".init_jobs").attr('data-refresh-url');
-                console.log(refreshUrl);
-                window.location.replace(refreshUrl);
+                if ( targetURL ){
+                    console.log(targetURL);
+                    window.location.replace(targetURL);
+                }
             },
 
             //retry in case of error
             error: function(jqXHR, textStatus, errorThrown){
                 console.log("message clearing failed: " + textStatus)
-                setTimeout(clearJobStatus, pollingTimeout);
+                setTimeout(clearJobStatus, pollingTimeout, clearURL, targetURL);
             }
 
         });
@@ -67,13 +65,15 @@ INIT_JOBS.Main = (function($) {
 
             success: function (data) {
                 if(data.status === 'done'){
-                     clearJobStatus();
+                    clearJobStatus($('body').attr('data-clear-url'), $(".init_jobs").attr('data-refresh-url'));
+                }else if (data.status === 'failed') {
+                    clearJobStatus($('body').attr('data-clear-errors-url'), $(".init_jobs").attr('data-error-url'));
                 }else{
                     setTimeout(pollJobStatus, pollingTimeout);
                 }
             },
             error: function(jqXHR, textStatus, errorThrown){
-                var errorUrl = $(".init_jobs").attr('data-error-url');
+                // var errorUrl = $(".init_jobs").attr('data-error-url');
                 // window.location.replace(errorUrl);
 
                 //if we are not logged in, we get redirected to /login
