@@ -37,7 +37,11 @@ def silent(request):
     else:
         form = WlanForm(utils.get_fact('wlan', 'upri', 'ssid'))
 
-    context.update({'form': form, 'messagestore': jobs.get_messages()})
+    context.update({
+        'form': form,
+        'messagestore': jobs.get_messages(),
+        "refresh_url": reverse('upri_config'),
+    })
     return render(request, "silent.html", context)
 
 

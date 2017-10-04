@@ -157,6 +157,7 @@ UPRIBOX.Main = (function($) {
 
         $('body').on('click', '.js-form-submit', function(e) {
             e.preventDefault();
+            refreshURL = $("[data-refresh-url]").attr("data-refresh-url"); // || window.location.pathname
             var href = $(this).attr('href');
             var form = $(this).closest('form');
             $(this).attr('disabled', true);
@@ -308,7 +309,11 @@ UPRIBOX.Main = (function($) {
         function(e){
                 clearJobStatus.bind(this, e, function(){
                     if (refreshURL) {
-                        updateMainContent(refreshURL, 'get', undefined, true);
+                        if(refreshURL == window.location.pathname){
+                            updateMainContent(refreshURL, 'get', undefined, true);
+                        } else{
+                            window.location.assign(refreshURL);
+                        }
                         refreshURL = false;
                     }
                 })();
@@ -507,7 +512,7 @@ function initialisePasswordFields(){
         var href = $(this).attr('href');
         var state = this.checked ? 'yes' : 'no';
         // $(this).attr('disabled', true);
-        refreshURL = window.location.pathname;
+        refreshURL = $("[data-refresh-url]").attr("data-refresh-url");
         $.ajax({
             url: href,
             dataType: 'html',
@@ -570,7 +575,7 @@ function initialisePasswordFields(){
                 success: function (data) {
                     $('#main-content').html($(data));
                     initialisePasswordFields();
-                    if (!prevent){
+                    if (!prevent && $(".form-input-error").length < 1){
                         onAjaxUpdate();
                     }
                 }

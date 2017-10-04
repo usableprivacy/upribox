@@ -37,6 +37,7 @@ def more_overview(request):
         context.update({'setup_date': None})
     else:
         context.update({'setup_date': setup_date})
+    context.update({"refresh_url": reverse('upri_config')})
     return render(request, "config.html", context)
 
 
@@ -113,7 +114,7 @@ def more_static(request, enable=None, dhcpd=None):
 
             context.update({
                 'message': True,
-                "refresh_url": request.path,  # reverse('upri_config_static'),
+                "refresh_url": reverse('upri_config'), # request.path,  # reverse('upri_config_static'),
                 'messagestore': jobs.get_messages()
             })
 
@@ -121,6 +122,7 @@ def more_static(request, enable=None, dhcpd=None):
         'ip_form': ip_form,
         'messagestore': jobs.get_messages(),
         'href': request.path,
+        "refresh_url": reverse('upri_config'),
     })
 
     return render(request, "static.html", context)

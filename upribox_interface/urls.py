@@ -39,7 +39,7 @@ urlpatterns = [
     url(r'^more/modal$', more.views.show_modal, name="upri_modal"),
 
     # new config
-    url(r'^config/static$', more.views.more_static, name="upri_config_static"),
+    url(r'^config/static$', more.views.more_static, {"enable": True}, name="upri_config_static"),
     url(r'^config/static/enable$', more.views.more_static, {"enable": True}, name="upri_config_static_enable"),
     url(r'^config/static/dhcpd$', more.views.more_static, {"enable": True, "dhcpd": True}, name="upri_config_static_dhcpd"),
     url(r'^config/user$', more.views.more_user, name="upri_config_user"),

@@ -60,6 +60,7 @@
              <a href="{% url 'upri_setup' %}">{% trans "upribox erneut einrichten" %}</a>
              </p>
              {% endif %}
+             <div {% if refresh_url %}data-refresh-url="{{refresh_url}}"{% endif %}></div>
 {% endblock %}
 
 {% block info %}

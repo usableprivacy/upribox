@@ -17,6 +17,7 @@
 {% block content %}
                 {% url 'upri_config' as back %}
                 {% include "form.html" with form=ip_form %}
+                <div {% if refresh_url %}data-refresh-url="{{refresh_url}}"{% endif %}></div>
 {% endblock %}
 
 {% block info %}

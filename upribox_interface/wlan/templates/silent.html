@@ -21,6 +21,7 @@
                 {% trans "WLAN Zugangsdaten" as form_title%}
             {% endcomment %}
             {% include "form.html" with string_length_8_to_64_needed=True%}
+            <div {% if refresh_url %}data-refresh-url="{{refresh_url}}"{% endif %}></div>
 
 {% endblock %}
 

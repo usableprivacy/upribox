@@ -5,6 +5,7 @@ import json
 import logging
 import subprocess
 import time
+from math import floor, log
 from os import listdir
 from os.path import exists, isfile, join
 
@@ -153,7 +154,7 @@ def get_system_network_config():
     if not dns_servers[0] and exists(settings.DNS_FILE):
         rs = dns.resolver.Resolver(filename=settings.DNS_FILE)
         # get all ipv4 nameservers
-        dns_servers = [x for x in rs.nameservers if IPAddress(x).version == 4]
+        dns_servers = [x for x in rs.nameservers if IPAddress(x).version == 4 and not IPAddress(x).is_reserved()]
     else:
         if not gw_default:
             dns_servers = [gateway]
@@ -183,3 +184,15 @@ class AnsibleError(Exception):
 def check_authorization(user):
     redis = redisDB.StrictRedis(host=settings.REDIS["HOST"], port=settings.REDIS["PORT"], db=settings.REDIS["DB"])
     return user.is_authenticated() or not redis.exists(settings.SETUP_DELIMITER.join((settings.SETUP_PREFIX, settings.SETUP_KEY)))
+
+
+def human_format(number):
+    units = ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']
+    k = 1000.0
+    magnitude = int(floor(round(log(number, k), 1)))
+    if magnitude > 8:
+        magnitude = 8
+    if round(number / k**magnitude, 1) % 1 == 0:
+        return '%.0f%s' % (number / k**magnitude, units[magnitude])
+    else:
+        return '%.1f%s' % (number / k**magnitude, units[magnitude])
