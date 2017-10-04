@@ -25,6 +25,8 @@
 - name: restart systemd-networkd
   # shell: systemctl restart systemd-networkd
   systemd: name=systemd-networkd state=restarted daemon-reload=yes
+  notify:
+    - restart apate
 
 - name: configure isc-dhcp-server
   service: name={{ item }} enabled={{'yes' if silent|bool or (dhcpd|bool and mode=='static') else 'no'}} use=service
