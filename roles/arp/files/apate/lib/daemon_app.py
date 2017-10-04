@@ -94,7 +94,7 @@ class _DaemonApp(object):
                 self.logger.error("Unable to get MAC address of IPv4 Gateway")
 
             # get all ipv4 nameservers
-            dns_servers = [x for x in rs.nameservers if IPAddress(x).version == 4]
+            dns_servers = [x for x in rs.nameservers if IPAddress(x).version == 4 and not IPAddress(x).is_reserved()]
             # store ipv4 information
             self.ipv4 = IPInfo(ip, netmask, network, gateway, mac, gate_mac, dns_servers, None)
         except AddrFormatError as afe:
@@ -127,7 +127,7 @@ class _DaemonApp(object):
                 self.logger.error("Unable to get MAC address of IPv6 Gateway")
 
             # get all ipv6 nameservers
-            dns_servers = [x for x in rs.nameservers if IPAddress(x).version == 6]
+            dns_servers = [x for x in rs.nameservers if IPAddress(x).version == 6 and not IPAddress(x).is_reserved()]
             # store ipv6 information
             self.ipv6 = IPInfo(ip, netmask, network, gateway, mac, gate_mac, dns_servers, None)
         except AddrFormatError as afe:
