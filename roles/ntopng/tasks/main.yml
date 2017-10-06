@@ -1,14 +1,34 @@
 ---
-- name: add ntopng apt key
-  apt_key:
-    data: "{{ lookup('file', 'ntop.key') }}"
-    state: present
+# - name: add ntopng apt key
+#   apt_key:
+#     data: "{{ lookup('file', 'ntop.key') }}"
+#     state: present
+#   when: ansible_distribution_release == "jessie"
+#
+# - name: copy ntopng sources
+#   copy: src=ntop.list dest=/etc/apt/sources.list.d/ntop.list mode=644 owner=root group=root
+#   register: ntopng_res
+#   when: ansible_distribution_release == "jessie"
+
+  # jessie
+- name: check if /etc/apt/sources.list.d/ntop.list exists
+  stat: path=/etc/apt/sources.list.d/ntop.list
+  register: ntop_list
   when: ansible_distribution_release == "jessie"
 
-- name: copy ntopng sources
-  copy: src=ntop.list dest=/etc/apt/sources.list.d/ntop.list mode=644 owner=root group=root
+  # jessie
+- name: remove ntopng, installed from private repo
+  apt: name={{ item }} state=absent force=yes purge=yes
+  when: not ntop_list|skipped and ntop_list.stat.exists
+  with_items:
+    - ntopng
+    - ntopng-data
+
+  # jessie
+- name: remove unused files
+  file: path=/etc/apt/sources.list.d/ntop.list state=absent
+  when: not ntop_list|skipped and ntop_list.stat.exists
   register: ntopng_res
-  when: ansible_distribution_release == "jessie"
 
 - name: install services
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ "0" if ntopng_res and ntopng_res|changed else apt_cache_time }}
