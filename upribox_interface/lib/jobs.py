@@ -62,31 +62,37 @@ def check_jobs_failed():
 def get_messages():
     msg = []
     for job in finished_job_registry.get_job_ids():
-        cur_msgs = q.fetch_job(job).meta.get('messages')
-        if cur_msgs:
-            try:
-                while True:
-                    msg.append(cur_msgs.popleft())
-            except IndexError:
-                pass
+        fetched = q.fetch_job(job)
+        if fetched:
+            cur_msgs = fetched.meta.get('messages')
+            if cur_msgs:
+                try:
+                    while True:
+                        msg.append(cur_msgs.popleft())
+                except IndexError:
+                    pass
 
     for job in q.get_job_ids():
-        cur_msgs = q.fetch_job(job).meta.get('messages')
-        if cur_msgs:
-            try:
-                while True:
-                    msg.append(cur_msgs.popleft())
-            except IndexError:
-                pass
+        fetched = q.fetch_job(job)
+        if fetched:
+            cur_msgs = fetched.meta.get('messages')
+            if cur_msgs:
+                try:
+                    while True:
+                        msg.append(cur_msgs.popleft())
+                except IndexError:
+                    pass
 
     for job in started_job_registry.get_job_ids():
-        cur_msgs = q.fetch_job(job).meta.get('messages')
-        if cur_msgs:
-            try:
-                while True:
-                    msg.append(cur_msgs.popleft())
-            except IndexError:
-                pass
+        fetched = q.fetch_job(job)
+        if fetched:
+            cur_msgs = fetched.meta.get('messages')
+            if cur_msgs:
+                try:
+                    while True:
+                        msg.append(cur_msgs.popleft())
+                except IndexError:
+                    pass
 
     return msg
 
@@ -95,13 +101,15 @@ def get_failed_messages():
     msg = []
 
     for job in failed_queue.get_job_ids():
-        cur_msgs = q.fetch_job(job).meta.get('messages')
-        if cur_msgs:
-            try:
-                while True:
-                    msg.append(cur_msgs.popleft())
-            except IndexError:
-                pass
+        fetched = q.fetch_job(job)
+        if fetched:
+            cur_msgs = fetched.meta.get('messages')
+            if cur_msgs:
+                try:
+                    while True:
+                        msg.append(cur_msgs.popleft())
+                except IndexError:
+                    pass
 
     return msg
 

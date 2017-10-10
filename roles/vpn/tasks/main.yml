@@ -168,7 +168,7 @@
   register: res
 
 - name: creating Auth Key
-  shell: 'openvpn --genkey --secret /etc/openvpn/ca/tls-auth.key'
+  shell: '/usr/sbin/openvpn --genkey --secret /etc/openvpn/ca/tls-auth.key'
   args:
     chdir: /etc/openssl
   when: not res.results[0].stat.exists
