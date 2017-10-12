@@ -25,8 +25,8 @@ _DOMAIN = "domain"
 # return overall counter tuple(filtered, blocked)
 def get_overall_counters():
     return (
-        redis.get(_DELIMITER.join((_PREFIX, _PRIVOXY, _BLOCKED))),
-        redis.get(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED))),
+        redis.get(_DELIMITER.join((_PREFIX, _PRIVOXY, _BLOCKED))) or '0',
+        redis.get(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED))) or '0',
     )
 
 
@@ -34,8 +34,8 @@ def get_overall_counters():
 # return week counter tuple(filtered, blocked)
 def get_week_counters(week):
     return (
-        redis.get(_DELIMITER.join((_PREFIX, _PRIVOXY, _BLOCKED, _WEEK, str(week)))) or 0,
-        redis.get(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED, _WEEK, str(week)))) or 0,
+        redis.get(_DELIMITER.join((_PREFIX, _PRIVOXY, _BLOCKED, _WEEK, str(week)))) or '0',
+        redis.get(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED, _WEEK, str(week)))) or '0',
     )
 
 

@@ -189,10 +189,17 @@ def check_authorization(user):
 def human_format(number):
     units = ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']
     k = 1000.0
-    magnitude = int(floor(round(log(number, k), 1)))
-    if magnitude > 8:
-        magnitude = 8
-    if round(number / k**magnitude, 1) % 1 == 0:
-        return '%.0f%s' % (number / k**magnitude, units[magnitude])
+    # raises ValueError
+    number = float(number)
+    if number == 0:
+        return '0'
+    elif number < 0:
+        raise ValueError('argument must be a positive number')
     else:
-        return '%.1f%s' % (number / k**magnitude, units[magnitude])
+        magnitude = int(floor(round(log(number, k), 1)))
+        if magnitude > 8:
+            magnitude = 8
+        if round(number / k**magnitude, 1) % 1 == 0:
+            return '%.0f%s' % (number / k**magnitude, units[magnitude])
+        else:
+            return '%.1f%s' % (number / k**magnitude, units[magnitude])

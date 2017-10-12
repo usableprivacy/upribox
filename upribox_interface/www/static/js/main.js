@@ -1054,12 +1054,14 @@ function initialisePasswordFields(){
                 lastWeek = data[i].week;
                 currentClickedWeek = data[i].week;
                 currentSelectedWeek = data[i].week;
-                for (var entry in data[i].filtered.bad) {
-                    bad += parseInt(data[i].filtered.bad[entry][1]);
-                }
-                for (var entry in data[i].filtered.ugly) {
-                    ugly += parseInt(data[i].filtered.ugly[entry][1]);
-                }
+                bad = parseInt(data[i].bad);
+                ugly = parseInt(data[i].ugly);
+                // for (var entry in data[i].filtered.bad) {
+                //     bad += parseInt(data[i].filtered.bad[entry][1]);
+                // }
+                // for (var entry in data[i].filtered.ugly) {
+                //     ugly += parseInt(data[i].filtered.ugly[entry][1]);
+                // }
             }
             else {
                 bad = parseInt(data[i].bad);
@@ -1233,12 +1235,14 @@ function initialisePasswordFields(){
         var bad = 0;
         var ugly = 0;
         if (data.week == lastWeek) {
-            for (var entry in data.filtered.bad) {
-                bad += parseInt(data.filtered.bad[entry][1]);
-            }
-            for (var entry in data.filtered.ugly) {
-                ugly += parseInt(data.filtered.ugly[entry][1]);
-            }
+            bad = parseInt(data.bad);
+            ugly = parseInt(data.ugly);
+            // for (var entry in data.filtered.bad) {
+            //     bad += parseInt(data.filtered.bad[entry][1]);
+            // }
+            // for (var entry in data.filtered.ugly) {
+            //     ugly += parseInt(data.filtered.ugly[entry][1]);
+            // }
             updateBarValue(statisticInformation.data[1].y.length-1, bad, ugly);
         }
         updateOverallCount(data.overallCount);
