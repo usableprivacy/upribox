@@ -8,9 +8,6 @@
   with_items:
     - openvpn
 
-# - name: add port forwarding script
-  # template: src=portfwd.j2 dest=/usr/local/bin/portfwd.py owner=upri group=upri mode=0755
-
 - name: create crontab entry for port forwarding and dns update
   template: src=etc_cron.d_portfwd.j2 dest=/etc/cron.d/portfwd owner=root group=root mode=0644
   when: vpn|bool
@@ -29,8 +26,6 @@
   tags:
     - toggle_vpn
 
-# - name: copy the port forwarding deletion script
-  # template: src=delete_portfwd.j2 dest=/usr/local/bin/delete_portfwd.py owner=root group=root mode=0755
 - name: remove old portforward scripts
   file: path="{{ item }}" state=absent
   with_items:

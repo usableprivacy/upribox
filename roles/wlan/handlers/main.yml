@@ -20,7 +20,6 @@
   when: ipaddr.stdout.find("192.168.55.254") == -1
 
 - name: restart systemd-networkd
-  # shell: systemctl restart systemd-networkd
   systemd: name=systemd-networkd state=restarted daemon-reload=yes
   notify:
     - restart apate
