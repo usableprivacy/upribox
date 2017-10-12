@@ -4,8 +4,16 @@
 n=0
 until [ $n -ge 3 ]
 do
-    # update ansible
-    /usr/local/bin/ansible-pull -o -d {{ pull_workdir }} -C {{ pull_branch }} \
+    if [ $n -eq 0 ]
+    then
+        # update ansible only if repo changed
+        option=-o
+    else
+        # update ansible in case first run encountered errors
+        option=
+    fi
+
+    /usr/local/bin/ansible-pull $option -d {{ pull_workdir }} -C {{ pull_branch }} \
     -i {{ pull_workdir }}/environments/production/inventory_pull -U {{ pull_repo_url }} \
     >>{{ default_settings.log.general.path }}/{{ default_settings.log.ansible_pull.logfiles.logname }} 2>&1 && break
 

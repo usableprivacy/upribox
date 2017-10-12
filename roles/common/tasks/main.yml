@@ -82,6 +82,10 @@
 - name: update pip via pip
   pip: name=pip state=present version="{{pip_version}}"
 
+- name: update setuptools on jessie
+  pip: name=setuptools state=present version="{{ setuptools_version }}"
+  when: ansible_distribution_release == "jessie"
+
 - name: install ansible via pip
   pip: name=ansible state=present version="{{ansible_pip_version}}"
 

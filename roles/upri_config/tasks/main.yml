@@ -17,6 +17,10 @@
 - name: copy the upri-config files
   copy: src=upri-config/ dest=/opt/upri-config owner=root group=root mode=0774
 
+- name: update setuptools on jessie
+  pip: name=setuptools state=present version="{{ setuptools_version }}" virtualenv=/opt/upri-config/venv
+  when: ansible_distribution_release == "jessie"
+
 - name: install requirements to virtualenv
   pip: requirements=/opt/upri-config/requirements.txt virtualenv=/opt/upri-config/venv
 
