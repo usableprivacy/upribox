@@ -61,12 +61,6 @@
   tags:
     - network_config
 
-# - name: remove dnsmasq-resolv.conf if link and dhcp
-#   file: path=/etc/dnsmasq-resolv.conf state=absent
-#   when: not mode == "static" and dnsres.stat.islnk is defined and dnsres.stat.islnk
-#   tags:
-#     - network_config
-
 - name: remove the openresolv config file
   file: path=/etc/resolvconf.conf state=absent
   notify:
@@ -75,27 +69,25 @@
   tags:
     - network_config
 
-# - name: copy the openresolv config file
-#   template: src=resolvconf.conf dest=/etc/resolvconf.conf mode="0644"
-#   notify:
-#     - restart dnsmasq
-#     - ifupdown eth0
-#   tags:
-#     - network_config
-
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/dnsmasq mode=0644
   tags:
     - toggle_silent
 
-- name: configure systemd-resolved
-  service: name=systemd-resolved state=started enabled=yes
+# removes 127.0.0.1 (and 8.8.8.8, which is present if 127.0.0.1 is absent)
+# from dnsmasq-resolv.conf (stretch)
+# FallbackDNS Option does not prevent systemd from adding 8.8.8.8
+- name: modify resolved.conf
+  lineinfile:
+    path: /etc/systemd/resolved.conf
+    regexp: '^DNS='
+    line: 'DNS='
+    state: present
   notify:
+    - restart systemd-resolved
     - restart dnsmasq
+    - restart dnsmasq_unfiltered
     - ifupdown eth0
-  #{{'started' if mode == "static" else 'stopped'}} enabled={{mode == "static"}}
-  tags:
-    - network_config
 
 - name: remove dnsmasq-resolv.conf if not link
   file: path=/etc/dnsmasq-resolv.conf state=absent
@@ -104,7 +96,7 @@
     - network_config
 
 - name: link dnsmasq-resolv.conf to /run/systemd/resolve/resolv.conf
-  file: src=/run/systemd/resolve/resolv.conf dest=/etc/dnsmasq-resolv.conf state=link
+  file: src=/run/systemd/resolve/resolv.conf dest=/etc/dnsmasq-resolv.conf state=link force=yes
   when: not dnsres.stat.exists or (dnsres.stat.islnk is defined and not dnsres.stat.islnk)
   tags:
     - network_config

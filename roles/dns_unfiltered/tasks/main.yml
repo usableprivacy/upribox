@@ -48,11 +48,11 @@
 - name: enable service dnsmasq-unfiltered
   service: name=dnsmasq-unfiltered enabled=yes use=service
 
-- name: toggle service dnsmasq-unfiltered
-  systemd:
-    daemon-reload: yes
-    name: dnsmasq-unfiltered
-    state: started
+# - name: toggle service dnsmasq-unfiltered
+#   systemd:
+#     daemon-reload: yes
+#     name: dnsmasq-unfiltered
+#     state: started
 
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/dnsmasq_unfiltered mode=0644

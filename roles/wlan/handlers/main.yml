@@ -1,7 +1,4 @@
 ---
-- name: restart dnsmasq
-  service: name=dnsmasq state=restarted
-
 - name: restart networking
   service: name=networking state=restarted
   notify: restart apate

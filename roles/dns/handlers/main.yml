@@ -1,10 +1,13 @@
 ---
+
+- name: restart systemd-resolved
+  service: name=systemd-resolved state=restarted enabled=yes
+
 - name: restart dnsmasq
   systemd:
     daemon-reload: yes
     name: dnsmasq
     state: restarted
-
 
 - name: ifupdown eth0
   shell: ifdown eth0 && ifup eth0; sleep 3
