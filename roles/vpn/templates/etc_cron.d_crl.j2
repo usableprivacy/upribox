@@ -1,0 +1,3 @@
+# Cron job to update crl
+0 * * * * root /usr/bin/openssl ca -gencrl -crlhours 1 -out /etc/openssl/demoCA/crl.pem 2>&1 | /usr/bin/logger -t upri_crl_update
+@reboot root /usr/bin/openssl ca -gencrl -crlhours 1 -out /etc/openssl/demoCA/crl.pem 2>&1 | /usr/bin/logger -t upri_crl_update

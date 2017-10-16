@@ -205,6 +205,9 @@
     - restart openvpn
     - restart openvpn-su
 
+- name: create crontab entry for updating crl
+  template: src=etc_cron.d_crl.j2 dest=/etc/cron.d/crl owner=root group=root mode=0644
+
 - name: Copy the openvpn server config
   template: src=openvpn_server.conf dest=/etc/openvpn/server.conf
   notify:
