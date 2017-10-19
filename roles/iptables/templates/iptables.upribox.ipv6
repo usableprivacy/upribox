@@ -60,6 +60,8 @@ COMMIT
 -A INPUT -p tcp -m tcp --dport 9040 -j ACCEPT
 # avahi
 -A INPUT -p udp -m udp --dport 5353 -j ACCEPT
+# sdp
+-A INPUT -p udp -m udp --dport 1900 -j ACCEPT
 -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
 -A INPUT -p icmpv6 --icmpv6-type router-advertisement -m hl --hl-eq 255 -j ACCEPT

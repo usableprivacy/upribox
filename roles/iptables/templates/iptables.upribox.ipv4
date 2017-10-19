@@ -63,6 +63,8 @@ COMMIT
 -A INPUT -p tcp -m tcp --dport 9040 -j ACCEPT
 # avahi
 -A INPUT -p udp -m udp --dport 5353 -j ACCEPT
+# ssdp
+-A INPUT -p udp -m udp --dport 1900 -j ACCEPT
 {% if env=="development" %}
 # ntopng
 -A INPUT -p tcp -m tcp --dport 3000 -j ACCEPT
