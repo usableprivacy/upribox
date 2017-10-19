@@ -186,7 +186,7 @@ class RegistrarSniffThread(_SniffThread):
             except socket.error:
                 self.logger.debug("Unable to get ip of host")
             else:
-                #only allow locations inside private networks
+                # only allow locations inside private networks
                 if IPAddress(ip[2][0]).is_private():
                     try:
                         xml_content = url.urlopen(req).read()

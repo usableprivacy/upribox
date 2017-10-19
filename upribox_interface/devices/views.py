@@ -5,8 +5,10 @@ import json
 import logging
 import time
 from datetime import datetime, time, timedelta
+from socket import AF_INET
 
 import lib.utils as utils
+import netifaces as ni
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
@@ -14,9 +16,9 @@ from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.template import loader
 from django.template.defaultfilters import date as _localdate
+from django.utils.timezone import now as django_now
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_http_methods, require_POST
-from django.utils.timezone import now as django_now
 from lib import jobs
 from www.templatetags.base_extras import get_device_name
 
@@ -28,7 +30,13 @@ logger = logging.getLogger('uprilogger')
 
 
 def get_entries():
-    return DeviceEntry.objects.filter(last_seen__gte=datetime.now() - timedelta(weeks=1))
+    gateway = None
+    try:
+        gateway = ni.gateways()['default'][AF_INET][0]
+    except KeyError:
+        pass
+
+    return DeviceEntry.objects.filter(last_seen__gte=datetime.now() - timedelta(weeks=1)).exclude(ip=gateway)
 
 
 @require_http_methods(["GET", "POST"])
