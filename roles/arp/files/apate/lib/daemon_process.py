@@ -51,7 +51,7 @@ class SelectiveIPv4Process(mp.Process):
 
         self.threads = {}
         # Initialise threads
-        self.threads['sniffthread'] = SelectiveIPv4SniffThread(self.interface, self.ipv4, self.sleeper)
+        self.threads['sniffthread'] = SelectiveIPv4SniffThread(self.interface, self.ipv4, self.sleeper, self.logger)
         self.threads['psthread'] = PubSubThread(self.ipv4, self.logger, self.spoof_devices)
         self.threads['arpthread'] = ARPDiscoveryThread(self.ipv4.ip, str(self.ipv4.network.network))#.gateway
         self.threads['igmpthread'] = IGMPDiscoveryThread(self.ipv4)
@@ -173,7 +173,7 @@ class SelectiveIPv6Process(mp.Process):
 
         self.threads = {}
         # Initialise threads
-        self.threads['sniffthread'] = SelectiveIPv6SniffThread(self.interface, self.ipv6, self.sleeper)
+        self.threads['sniffthread'] = SelectiveIPv6SniffThread(self.interface, self.ipv6, self.sleeper, self.logger)
         self.threads['icmpv6thread'] = MulticastPingDiscoveryThread(self.interface)
         self.threads['mldv2thread'] = MulticastListenerDiscoveryThread(self.interface)
         self.threads['psthread6'] = PubSubThread(self.ipv6, self.logger, self.spoof_devices)

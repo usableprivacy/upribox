@@ -8,6 +8,7 @@ import urllib2 as url
 import xml
 
 import xmltodict
+from httplib import BadStatusLine
 from netaddr import IPAddress
 # suppresses following message
 # WARNING: No route found for IPv6 destination :: (no default route?)
@@ -182,9 +183,9 @@ class RegistrarSniffThread(_SniffThread):
             try:
                 ip = socket.gethostbyname_ex(req.get_host().split(":")[0])
             except ValueError:
-                self.logger.debug("malformed location value")
+                self.logger.warning("malformed location value")
             except socket.error:
-                self.logger.debug("Unable to get ip of host")
+                self.logger.warning("Unable to get ip of host")
             else:
                 # only allow locations inside private networks
                 if IPAddress(ip[2][0]).is_private():
@@ -193,11 +194,17 @@ class RegistrarSniffThread(_SniffThread):
                         spec = xmltodict.parse(xml_content)
                         user_agents.append((spec['root']['device']['friendlyName'], True))
                     except url.URLError:
-                        self.logger.debug("Unable to get content of url")
+                        self.logger.error("Unable to get content of url " + headers['location'])
                     except xml.parsers.expat.ExpatError:
-                        self.logger.debug("Unable to parse upnp xml")
+                        self.logger.error("Unable to parse upnp xml from url " + headers['location'])
                     except KeyError:
-                        self.logger.debug("xml does not contain required friendlyName")
+                        self.logger.error("xml does not contain required friendlyName from url " + headers['location'])
+                    except BadStatusLine:
+                        self.logger.warning("Server responded with bad status line for url " + headers['location'])
+                    except socket.error as e:
+                        if e.errno != errno.ECONNRESET:
+                            raise
+                        self.logger.warning("Connection reset by peer connecting to url " + headers['location'])
                     else:
                         try:
                             user_agents.append((spec['root']['device']['modelDescription'], True))

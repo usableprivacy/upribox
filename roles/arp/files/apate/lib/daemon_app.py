@@ -182,7 +182,7 @@ class HolisticDaemonApp(_DaemonApp):
         """
         super(self.__class__, self).__init__(logger, interface, pidfile, stdout, stderr, dns_file)
 
-        self.sniffthread = HolisticSniffThread(self.interface, self.ipv4)
+        self.sniffthread = HolisticSniffThread(self.interface, self.ipv4, logger)
         self.sniffthread.daemon = True
 
     def _return_to_normal(self):

@@ -52,7 +52,7 @@ class ApateRedis(object):
 
         """
         # TODO make thread-safe
-        if not self.check_device_disabled(mac, network or self.network) or force:
+        if not self.check_device_disabled(mac) or force:
             self._add_device_to_network(mac, network or self.network)
             return self._add_entry(self._get_device_name(mac, network or self.network, enabled=enabled), ip)
 
@@ -254,7 +254,7 @@ class ApateRedis(object):
         """Removes an IP address from a network (redis set)."""
         return self.redis.srem(ApateRedis.__DELIMITER.join((ApateRedis.__PREFIX, ApateRedis.__NETWORK, str(network))), str(mac))
 
-    def check_device_disabled(self, mac, network=None):
+    def check_device_disabled(self, mac):
         """Checks if a device already has a disabled device entry in the redis db.
 
         Args:
@@ -266,7 +266,8 @@ class ApateRedis(object):
 
         """
         # True if devices is disabled
-        return self.redis.get(self._get_device_name(mac, network or self.network, enabled=False)) is not None
+        # return self.redis.get(self._get_device_name(mac, network or self.network, enabled=False)) is not None
+        return self.redis.sismember(self.get_excluded_key(), mac)
 
     def _toggle_device(self, mac, ip, network, enabled):
         # add new device first and delete old device afterwards
