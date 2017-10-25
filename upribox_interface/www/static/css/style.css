@@ -192,15 +192,19 @@ main li {
     padding-left: 0.5em;
 }*/
 
-a, a:link, a:visited {
+a, a:link, a:visited, .device-link, .device-link:link, .device-link:visited{
     color: rgb(73, 175, 192);
     text-decoration: underline;
 }
 
-a:focus, a:hover, a:active {
+a:focus, a:hover, a:active, .device-link:focus, .device-link:hover, .device-link:active {
     color: rgb(0, 116, 136);
 }
 
+.device-link, .device-link:link, .device-link:visited {
+    cursor: pointer;
+    display: inline;
+}
 
 .modal {
     position: fixed;
@@ -1944,10 +1948,9 @@ input[type="radio"]{
     opacity: .38;
 }
 
-.i-notconnected {
+.i-notconnected, .device-link.i-status {
     color: #c9c9c9
 }
-
 
 .i-connected::before {
     width: 20px;
