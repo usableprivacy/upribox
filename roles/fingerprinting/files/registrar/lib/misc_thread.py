@@ -31,5 +31,5 @@ class SSDPDiscoveryThread(threading.Thread):
 
     def run(self):
         while True:
-            send(IP(dst=self._DST) / UDP(sport=self._PORT, dport=self._PORT) / self._PAYLOAD)
+            send(IP(dst=self._DST) / UDP(sport=self._PORT, dport=self._PORT) / self._PAYLOAD, iface=self.interface)
             time.sleep(self._SLEEP)

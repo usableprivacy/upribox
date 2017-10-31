@@ -20,7 +20,7 @@ def action_check_device(arg):
         return False
 
     # default for timeout is 2 seconds
-    return bool(len(arping(arg, timeout=0.8, iface=None, verbose=0)[0]))
+    return bool(len(arping(arg, timeout=1.2, iface=None, verbose=0)[0]))
 
 
 def action_configure_devices(arg):

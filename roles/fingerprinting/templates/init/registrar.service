@@ -11,6 +11,7 @@ ExecStart=/etc/init.d/registrar start
 ExecStop=/etc/init.d/registrar stop
 PIDFile={{ default_settings.registrar.pid.dir }}/{{ default_settings.registrar.pid.file }}
 Restart=on-failure
+RestartSec=10s
 
 [Install]
 WantedBy=multi-user.target
