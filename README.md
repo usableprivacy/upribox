@@ -6,7 +6,7 @@
 
 # Introduction
 
-#### The [upribox](https://upribox.org) software turns your RaspberryPi into a privacy-enhancing Wireless router. Main features: Adblocking, Tor, OpenVPN server 
+#### The [upribox](https://upribox.org) software turns your RaspberryPi into a privacy-enhancing Wireless router.  
 
 ---
 
