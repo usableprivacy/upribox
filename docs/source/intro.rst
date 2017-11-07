@@ -83,8 +83,8 @@ If you used the latest community upribox image for setting up your own privacy b
 ===============================  ============   ======================
 Login                            User           Default Password
 ===============================  ============   ======================
-Silent Wifi (SSID: **upribox**)  -              **changeme**
-Web Interface / SSH              **upri**       **changethedefaults!**
+Wifi (SSID: upribox)             -              changeme
+Web Interface / SSH              upri           changethedefaults!
 ===============================  ============   ======================
 
 
