@@ -140,6 +140,6 @@ function SHA384 for the packet HMAC authentication and AES-256
 Signed Releases
 ===============
 
-On our `website <https://upribox.org/download/>`__ you can
+On `Github <https://github.com/usableprivacy/upribox/releases>`__ you can
 download our latest community image and verify its integrity
 and authenticity with the provided signature file.
