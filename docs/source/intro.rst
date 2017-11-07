@@ -1,8 +1,3 @@
-***************
-Getting Started
-***************
-
-**Welcome to our upribox Getting Started guide!**
 
 .. note::
    If you bought a pre-assembled upribox from our online store you do not have to read this guide since everything is
