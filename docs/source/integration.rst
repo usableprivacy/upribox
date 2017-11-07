@@ -1,12 +1,12 @@
 .. _integration:
 
-######################
-Integrate your upribox
-######################
+#####
+Modes
+#####
 
-To integrate the upribox in your home network and access the web interface via the URI http://upri.box we implemented three different ways. This decision is motivated by the nature of these access modes. The most comfortable mode for the user, Apate, sometimes does not work with more complex home networks or specific routers we don't have control over. To give you an alternative your upribox can be accessed by configuring your upribox as the DHCP server on the network which requires a small configuration on your router at home. The third mode is to connect directly to the upribox WiFi and access the web interface from the connected device.
+To integrate the upribox in your home network and access the web interface via the URI `http://upri.box <http://upri.box/>` we implemented three different ways. This decision is motivated by the nature of these access modes. The most comfortable mode for the user, Apate, sometimes does not work with more complex home networks or specific routers we don't have control over. To give you an alternative your upribox can be accessed by configuring your upribox as the DHCP server on the network which requires a small configuration on your router at home. The third mode is to connect directly to the upribox WiFi and access the web interface from the connected device.
 
-The easiest way to configure Apate or DHCP server mode is by using the WiFi mode and connecting a device to the upribox Siltent WiFi. You then can choose the mode that best fits your needs and expertise and change it whenever you like in the admin section of the upribox web interface.
+The easiest way to configure Apate or DHCP server mode is by using the WiFi mode and connecting a device to the upribox Silent WiFi. You then can choose the mode that best fits your needs and expertise and change it whenever you like in the admin section of the upribox web interface.
 In the following the three modes are described in more detail:
 
 .. figure:: _static/modes.png
