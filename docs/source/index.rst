@@ -1,8 +1,6 @@
-################################
-Usable Privacy Box (**upribox**)
-################################
-
-**Privacy made easy for the Raspberry Pi**
+######################################
+Privacy made easy for the Raspberry Pi
+######################################
 
 
 .. _intro:
