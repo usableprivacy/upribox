@@ -58,11 +58,12 @@ User Interface
 
 .. _upri-config:
 
-********************
-Configuration Script
-********************
+********
+CLI Tool
+********
 
-In order to apply changes to the configuration of the upribox Django has access to only one configuration script ``upri-config.py`` and its actions:
+All changes to the upribox configuration are perfomed via ``upri-config.py``. This nifty command line tool can be used via SSH and also provides a secure way to perform a limited set of
+privileged command via the Django webinterface.
 
 .. argparse::
    :filename: source/argparser.py
