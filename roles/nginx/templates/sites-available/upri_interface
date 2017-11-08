@@ -2,6 +2,11 @@ upstream django {
     server unix:///var/run/uwsgi/upri_interface.sock; # for a file socket
 }
 
+map $uri $loggable {
+    ~*/jobstatus/count/ 0;
+    default 1;
+}
+
 # configuration of the server
 server {
     # the port your site will be served on
@@ -22,9 +27,8 @@ server {
     # max upload size
     client_max_body_size 75M;   # adjust to taste
 
-    access_log {{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.interface_access}};
+    access_log {{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.interface_access}} combined if=$loggable;
     error_log {{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.interface_error}} error;
-
 
     location /static {
         alias /usr/local/static/upribox_interface/; # your Django project's static files - amend as required
