@@ -21,3 +21,6 @@ APT::Periodic::Unattended-Upgrade "{{  default_settings.unattended_upgrades.gene
 
 // Do "apt-get autoclean" every n-days (0=disable)
 APT::Periodic::AutocleanInterval "{{  default_settings.unattended_upgrades.general.autoclean_days if not (ansible_local is defined and ansible_local.unattended_upgrade is defined and ansible_local.unattended_upgrade.general is defined) else ansible_local.unattended_upgrade.general.autoclean_days| default( default_settings.unattended_upgrades.general.autoclean_days) }}";
+
+// Do "apt-get clean" every n-days (0=disable)
+APT::Periodic::CleanInterval "{{  default_settings.unattended_upgrades.general.clean_days if not (ansible_local is defined and ansible_local.unattended_upgrade is defined and ansible_local.unattended_upgrade.general is defined) else ansible_local.unattended_upgrade.general.clean_days| default( default_settings.unattended_upgrades.general.clean_days) }}";
