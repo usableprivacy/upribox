@@ -178,10 +178,11 @@ class SelectiveIPv4SniffThread(_SelectiveSniffThread):
             pkt (str): Received packet via scapy's sniff (through socket.recv).
         """
         try:
-            if self.ip and pkt.haslayer(ARP):
-                self._arp_handler(pkt)
-            elif self.ip and pkt.haslayer(IGMP):
-                self._igmp_handler(pkt)
+            if self.ip and pkt.haslayer(Ether) and pkt[Ether].src != self.ip.gate_mac:
+                if pkt.haslayer(ARP):
+                    self._arp_handler(pkt)
+                elif pkt.haslayer(IGMP):
+                    self._igmp_handler(pkt)
         except Exception as e:
             self.logger.error("Failed to handle packet")
             self.logger.exception(e)
@@ -263,16 +264,17 @@ class SelectiveIPv6SniffThread(_SelectiveSniffThread):
             pkt (str): Received packet via scapy's sniff (through socket.recv).
         """
         try:
-            if self.ip and pkt.haslayer(ICMPv6EchoReply) and pkt[ICMPv6EchoReply].data == MulticastPingDiscoveryThread._DATA:
-                # react to echo replies with data == upribox
-                self._icmpv6_handler(pkt)
-            elif self.ip and pkt.haslayer(ICMPv6MLReport):
-                # react to multicast listener reports
-                self._icmpv6_handler(pkt)
-            elif self.ip and pkt.haslayer(ICMPv6ND_RA):
-                # spoof clients after receiving a router advertisement
-                with self.sleeper:
-                    self.sleeper.notifyAll()
+            if self.ip and pkt.haslayer(Ether) and pkt[Ether].src != self.ip.gate_mac:
+                if pkt.haslayer(ICMPv6EchoReply) and pkt[ICMPv6EchoReply].data == MulticastPingDiscoveryThread._DATA:
+                    # react to echo replies with data == upribox
+                    self._icmpv6_handler(pkt)
+                elif pkt.haslayer(ICMPv6MLReport):
+                    # react to multicast listener reports
+                    self._icmpv6_handler(pkt)
+                elif pkt.haslayer(ICMPv6ND_RA):
+                    # spoof clients after receiving a router advertisement
+                    with self.sleeper:
+                        self.sleeper.notifyAll()
         except Exception as e:
             self.logger.error("Failed to handle packet")
             self.logger.exception(e)

@@ -6,6 +6,7 @@ import thread
 import threading
 import urllib2 as url
 import xml
+import errno
 
 import xmltodict
 from httplib import BadStatusLine
