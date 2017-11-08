@@ -869,7 +869,7 @@ function initialisePasswordFields(){
             x: [/*'<a ><span class="kw-desc">KW </span>10</a>', '<a ><span class="kw-desc">KW </span>11</a>', '<a ><span class="kw-desc">KW </span>12</a>'*/],
             y: [/*12, 18, 29*/],
             width:[/*.6, .6, .6*/],
-            marker: {color: '#8CC8C8'},
+            marker: {color: '#47adc0'},
             type: 'bar',
             name: 'geblockt'
         };
@@ -1325,7 +1325,8 @@ function initialisePasswordFields(){
     }
 
     function startCheckOnlineStatus() {
-        for (var i = 0; i < onlineStatusPolling; i++) {
+        for (var i = 0; i < checkOnlineStatusList.length; i++) {
+            //onlineStatusPolling
             checkOnlineStatus();
         }
     }

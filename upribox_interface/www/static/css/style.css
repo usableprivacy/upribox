@@ -1535,11 +1535,11 @@ ul.all-done .success-message:last-child{
 }
 
 .statistics-content .gefiltert {
-    color: rgb(0, 116, 136);
+    color: rgb(71, 173, 192);
 }
 
 .statistics-content .blockiert {
-    color: rgb(73, 175, 192);
+    color: rgb(0, 116, 136);
 }
 
 .statistics-content .totalstat-div {
@@ -1630,7 +1630,8 @@ ul.all-done .success-message:last-child{
     display: inline-block;
 }
 .statistics-content .legend-filtered-content {
-    border: 5px solid #8CC8C8;
+    border: 5px solid #47adc0;
+    /*#8CC8C8;*/
 }
 .statistics-content .legend-blocked-domains {
     border: 5px solid #007589;
