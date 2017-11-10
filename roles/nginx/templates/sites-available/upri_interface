@@ -2,10 +2,12 @@ upstream django {
     server unix:///var/run/uwsgi/upri_interface.sock; # for a file socket
 }
 
+{% if ansible_distribution_release != "jessie" %}
 map $uri $loggable {
     ~*/jobstatus/count/ 0;
     default 1;
 }
+{% endif %}
 
 # configuration of the server
 server {
@@ -27,7 +29,7 @@ server {
     # max upload size
     client_max_body_size 75M;   # adjust to taste
 
-    access_log {{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.interface_access}} combined if=$loggable;
+    access_log {{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.interface_access}}{% if ansible_distribution_release != "jessie" %} combined if=$loggable{% endif %};
     error_log {{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.interface_error}} error;
 
     location /static {
