@@ -194,8 +194,9 @@ class RegistrarSniffThread(_SniffThread):
                         xml_content = url.urlopen(req).read()
                         spec = xmltodict.parse(xml_content)
                         user_agents.append((spec['root']['device']['friendlyName'], True))
-                    except url.URLError:
-                        self.logger.error("Unable to get content of url " + headers['location'])
+                    except url.URLError as urle:
+                        self.logger.warning("Unable to get content of url " + headers['location'])
+                        self.logger.warning(urle)
                     except xml.parsers.expat.ExpatError:
                         self.logger.error("Unable to parse upnp xml from url " + headers['location'])
                     except KeyError:

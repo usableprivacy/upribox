@@ -25,11 +25,14 @@ setuptools_version: 36.5.0
 
 django_settings_file: &django_settings_file settings_prod
 
+recovery_file: /home/upri/.ansible-pull
+
 default_settings:
   registrar:
     general:
       enabled: 'yes'
       interface: 'all'
+      loglevel: 'ERROR'
     pid:
       dir: '/var/run/registrar'
       file: 'registrar.pid'
@@ -37,6 +40,7 @@ default_settings:
     general:
       enabled: 'no'
       interface: 'eth0'
+      loglevel: 'INFO'
     # modes: selective, holistic
     mode: 'selective'
     pid:
