@@ -58,5 +58,12 @@
     line: 'notify-keyspace-events "EKxs"'
   notify: restart redis
 
+- name: disable logging for redis-sever
+  lineinfile:
+    dest: /etc/redis/redis.conf
+    regexp: '^logfile'
+    state: absent
+  notify: restart redis
+
 - name: enable redis server
   service: name=redis-server enabled=yes
