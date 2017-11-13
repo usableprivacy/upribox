@@ -84,20 +84,6 @@
     - toggle_silent
     - network_config
 
-- name: disable dhcpcd on eth0 for static config
-  lineinfile: path=/etc/dhcpcd.conf regexp='^denyinterfaces\ eth0' line='denyinterfaces eth0' state=present
-  when: static_ip_setup is defined
-  tags:
-    - toggle_silent
-    - network_config
-
-- name: re-enable dhcpcd on eth0
-  lineinfile: path=/etc/dhcpcd.conf regexp='^denyinterfaces\ eth0' line='denyinterfaces eth0' state=absent
-  when: static_ip_setup is not defined
-  tags:
-    - toggle_silent
-    - network_config
-
 - name: configure ifplugd
   copy: src=ifplugd dest=/etc/default/ifplugd owner=root group=root mode=644
   register: result
@@ -166,3 +152,6 @@
 - name: copy avahi webinterface service
   copy: src=avahi/interface.service dest=/etc/avahi/services/interface.service owner=root group=root mode=644
   notify: restart avahi
+
+- name: disable dhcpcd service
+  service: name=dhcpcd enabled=no state=stopped
