@@ -21,6 +21,8 @@
     - { role: fingerprinting, tags: ["fingerprinting"] }
     - { role: ntopng, tags: ["ntopng"] }
     - { role: django, tags: ["django"] }
+  environment:
+    PATH: "{{ root_path }}"
   post_tasks:
     - include: roles/ssh/main.yml
       tags: [toggle_ssh]

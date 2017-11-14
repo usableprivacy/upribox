@@ -18,6 +18,8 @@ django_settings_file: &django_settings_file settings_dev
 
 recovery_file: /home/upri/.ansible-pull
 
+root_path: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
 default_settings:
   registrar:
     general:

@@ -23,6 +23,8 @@ ansible_uwsgi_version: 2.0.15
 pip_version: 9.0.1
 setuptools_version: 36.5.0
 
+root_path: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
 django_settings_file: &django_settings_file settings_prod
 
 recovery_file: /home/upri/.ansible-pull
