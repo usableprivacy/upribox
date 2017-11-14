@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-10 10:58+0000\n"
+"POT-Creation-Date: 2017-10-23 11:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,11 +19,11 @@ msgstr ""
 
 #: vpn/forms.py:20
 msgid "Name:"
-msgstr ""
+msgstr "Name"
 
 #: vpn/forms.py:26
 msgid "Domain:"
-msgstr ""
+msgstr "Domain"
 
 #: vpn/forms.py:49
 msgid "Profil existiert bereits"
@@ -36,7 +36,7 @@ msgstr "domain must be less than 255 characters"
 #: vpn/forms.py:64
 msgid ""
 "Die Domain darf lediglich Buchstaben, Ziffern, Punkte und Minusse enthalten"
-msgstr "domain may only contain characters, numbers, dots and dashes"
+msgstr "domain may only contain characters, digits, dots and dashes"
 
 #: vpn/forms.py:66
 msgid "Die Domain ist nicht gültig"
@@ -59,10 +59,8 @@ msgid "Es ist ein unbekannter Fehler aufgetreten."
 msgstr "an unknown error occurred."
 
 #: vpn/jobs.py:37
-#, fuzzy
-#| msgid "Konfiguration des VPNs erfolgreich."
 msgid "Konfiguration des VPNs fehlgeschlagen."
-msgstr "VPN configuration successful"
+msgstr "VPN configuration failed."
 
 #: vpn/jobs.py:44
 msgid "VPN Profile wird generiert..."
@@ -98,7 +96,7 @@ msgstr ""
 
 #: vpn/templates/vpn.html:11
 msgid "Sicherer Zugang von &uuml;berall."
-msgstr "secure access from anywhere"
+msgstr "Secure access from anywhere"
 
 #: vpn/templates/vpn.html:15
 msgid "Start"
@@ -106,7 +104,7 @@ msgstr ""
 
 #: vpn/templates/vpn.html:15
 msgid "Konfiguration"
-msgstr ""
+msgstr "configuration"
 
 #: vpn/templates/vpn.html:19
 msgid ""
@@ -205,7 +203,7 @@ msgstr ""
 
 #: vpn/templates/vpn.html:104
 msgid "Neues Profil erstellen"
-msgstr "create new profile"
+msgstr "Create new profile"
 
 #: vpn/templates/vpn.html:116
 msgid "Wie funktioniert VPN?"
@@ -232,29 +230,29 @@ msgstr "Valid: "
 
 #: vpn/templates/vpn_profile.html:15
 msgid "Profil herunterladen"
-msgstr "download profile"
+msgstr "Download profile"
 
 #: vpn/templates/vpn_profile.html:19
 msgid "QR-Code anzeigen"
-msgstr "show QR-code"
+msgstr "Show QR-code"
 
 #: vpn/templates/vpn_profile.html:24
 msgid "Profil l&ouml;schen"
-msgstr "delete profile"
+msgstr "Delete profile"
 
-#: vpn/views.py:39 vpn/views.py:52
+#: vpn/views.py:41 vpn/views.py:54
 msgid "openvpn.log konnte nicht geöffnet werden."
 msgstr "unable to open openvpn.log."
 
-#: vpn/views.py:45
+#: vpn/views.py:47
 msgid "Verbindung zu api.upribox.org fehlgeschlagen."
 msgstr "connection to api.upribox.org failed."
 
-#: vpn/views.py:68
+#: vpn/views.py:70
 msgid "Die Verbindung war erfolgreich!"
 msgstr "Connection successful!"
 
-#: vpn/views.py:71
+#: vpn/views.py:73
 msgid "Die Verbindung war nicht erfolgreich!"
 msgstr "Connection failed!"
 

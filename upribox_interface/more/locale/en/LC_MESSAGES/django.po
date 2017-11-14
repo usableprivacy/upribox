@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-10 10:58+0000\n"
+"POT-Creation-Date: 2017-10-23 11:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,41 +19,37 @@ msgstr ""
 
 #: more/forms.py:14
 msgid "Benutzername"
-msgstr "user name"
+msgstr "Username"
 
 #: more/forms.py:19
 msgid "Altes Passwort"
-msgstr "existing password"
+msgstr "Existing password"
 
 #: more/forms.py:24
 msgid "Neues Passwort"
-msgstr "new password"
+msgstr "New password"
 
 #: more/forms.py:29
 msgid "Neues Passwort erneut eingeben"
-msgstr "re-enter new password"
+msgstr "Re-enter new password"
 
 #: more/forms.py:43
 msgid "Das alte Passwort ist inkorrekt"
-msgstr "old password is invalid"
+msgstr "Old password is invalid"
 
 #: more/forms.py:56
 msgid "IP:"
-msgstr ""
+msgstr "IP"
 
 #: more/forms.py:61
-#, fuzzy
-#| msgid "Subnetzmaske"
 msgid "Subnetzmaske:"
-msgstr "subnet mask"
+msgstr "Subnet mask"
 
 #: more/forms.py:65
 msgid "Gateway:"
-msgstr ""
+msgstr "Gateway"
 
 #: more/forms.py:69
-#, fuzzy
-#| msgid "DNS Server"
 msgid "DNS-Server:"
 msgstr "DNS server"
 
@@ -110,14 +106,12 @@ msgid "Netzwerk wird neu gestartet..."
 msgstr "Restarting network..."
 
 #: more/jobs.py:44
-#, fuzzy
-#| msgid "Konfiguration von Interfaces erfolgreich."
 msgid "Konfiguration der Netzwerkeinstellungen erfolgreich."
 msgstr "Configuration of interfaces successful."
 
 #: more/jobs.py:53
 msgid "Konfiguration der Netzwerkeinstellungen fehlgeschlagen."
-msgstr ""
+msgstr "Configuration of network settings failed."
 
 #: more/jobs.py:62
 msgid "SSH wird gestartet..."
@@ -132,10 +126,8 @@ msgid "Konfiguration von SSH erfolgreich."
 msgstr "Configuration of SSH successful."
 
 #: more/jobs.py:81
-#, fuzzy
-#| msgid "Konfiguration von SSH erfolgreich."
 msgid "Konfiguration von SSH fehlgeschlagen."
-msgstr "Configuration of SSH successful."
+msgstr "Configuration of SSH failed."
 
 #: more/jobs.py:91
 msgid "Apate ARP Spoofing Daemon wird gestartet..."
@@ -150,10 +142,8 @@ msgid "Konfiguration von Apate ARP Spoofing Daemon erfolgreich."
 msgstr "Configuration of Apate ARP Spoofing daemon successful."
 
 #: more/jobs.py:113
-#, fuzzy
-#| msgid "Konfiguration von Apate ARP Spoofing Daemon erfolgreich."
 msgid "Konfiguration von Apate ARP Spoofing Daemon fehlgeschlagen."
-msgstr "Configuration of Apate ARP Spoofing daemon successful."
+msgstr "Configuration of Apate ARP Spoofing daemon failed."
 
 #: more/jobs.py:122
 msgid "Statische IP wird aktiviert..."
@@ -164,36 +154,26 @@ msgid "Statische IP wird deaktiviert..."
 msgstr "Deactivate static IP..."
 
 #: more/jobs.py:129
-#, fuzzy
-#| msgid "Konfiguration von Interfaces erfolgreich."
 msgid "Konfiguration der statischen IP erfolgreich."
-msgstr "Configuration of interfaces successful."
+msgstr "Configuration of static IP successful."
 
 #: more/jobs.py:141
-#, fuzzy
-#| msgid "Deaktivierung von statischer IP fehlgeschlagen."
 msgid "Konfiguration der statischen IP fehlgeschlagen."
-msgstr "Failed to deactivate static IP."
+msgstr "Failed to configure static IP."
 
 #: more/jobs.py:151
-#, fuzzy
-#| msgid "DHCP Server wird konfiguriert..."
 msgid "DHCP Server wird aktiviert..."
-msgstr "Configuring DHCP server..."
+msgstr "Enabling DHCP server..."
 
 #: more/jobs.py:153
-#, fuzzy
-#| msgid "DHCP Server wird konfiguriert..."
 msgid "DHCP Server wird deaktiviert..."
-msgstr "Configuring DHCP server..."
+msgstr "Disabling DHCP server..."
 
 #: more/jobs.py:156
 msgid "DHCP Server wird konfiguriert..."
 msgstr "Configuring DHCP server..."
 
 #: more/jobs.py:158
-#, fuzzy
-#| msgid "Konfiguration von Interfaces erfolgreich."
 msgid "Konfiguration des DHCP Servers erfolgreich."
 msgstr "Configuration of interfaces successful."
 
@@ -202,111 +182,107 @@ msgid "Es ist ein unbekannter Fehler aufgetreten."
 msgstr "Unknown error occured."
 
 #: more/jobs.py:170
-#, fuzzy
-#| msgid "Konfiguration von SSH erfolgreich."
 msgid "Konfiguration des DHCP Servers fehlgeschlagen."
-msgstr "Configuration of SSH successful."
+msgstr "Configuration of DHCP server failed."
 
 #: more/templates/config.html:7 more/templates/config.html:10
 #: more/templates/config.html:14 more/templates/static.html:7
 #: more/templates/static.html:10
-#, fuzzy
-#| msgid "Konfiguration erfolgreich"
-msgid "Konfiguration"
-msgstr "Configuration of SSH successful."
+msgid "SSH Konfiguration"
+msgstr "Configuration"
 
 #: more/templates/config.html:10 more/templates/static.html:10
 #: more/templates/user.html:10
 msgid "Start"
-msgstr ""
+msgstr "Start"
 
 #: more/templates/config.html:19
 msgid "Funktionen"
-msgstr ""
+msgstr "Features"
 
 #: more/templates/config.html:29
 msgid "SSH"
-msgstr ""
+msgstr "SSH"
 
 #: more/templates/config.html:34
 msgid "WLAN"
-msgstr ""
+msgstr "WiFi"
 
 #: more/templates/config.html:34 more/templates/config.html:38
-#: more/templates/config.html:43 more/templates/config.html:50
+#: more/templates/config.html:44 more/templates/config.html:51
 msgid "Einstellungen"
-msgstr ""
+msgstr "Settings"
 
 #: more/templates/config.html:37
 msgid "VPN"
-msgstr ""
+msgstr "VPN"
 
-#: more/templates/config.html:42
+#: more/templates/config.html:43
 msgid "Statische IP"
 msgstr "Static IP"
 
-#: more/templates/config.html:42
+#: more/templates/config.html:43
 msgid "Deaktivieren nicht möglich, weil upribox-Zugang \"Manuell\" ausgewählt"
-msgstr ""
+msgstr "Deactivating is not possible, because upribox-Zugang \"Manuell\" is selected"
 
-#: more/templates/config.html:45
+#: more/templates/config.html:46
 msgid "upribox-Zugang"
-msgstr ""
+msgstr "upribox-access"
 
-#: more/templates/config.html:47
-#, fuzzy
-#| msgid "Statische IP"
+#: more/templates/config.html:48
 msgid "Automatisch"
-msgstr "Static IP"
+msgstr "Automatic"
 
-#: more/templates/config.html:47
+#: more/templates/config.html:48
 msgid "Wird vom Router nicht unterstützt"
-msgstr ""
+msgstr "Not supported by the router"
 
-#: more/templates/config.html:49
+#: more/templates/config.html:50
 msgid "Manuell"
-msgstr ""
+msgstr "Manual"
 
-#: more/templates/config.html:53
+#: more/templates/config.html:54
 msgid "Nur über WLAN \"upribox\""
-msgstr ""
+msgstr "Only over WiFi \"upribox\""
 
-#: more/templates/config.html:57
+#: more/templates/config.html:58
 msgid "Setup"
 msgstr ""
 
-#: more/templates/config.html:58
+#: more/templates/config.html:59
 #, python-format
 msgid "Die upribox wurde am %(setup_date)s eingerichtet"
-msgstr ""
+msgstr "The upribox is set up on %(setup_date)s"
 
-#: more/templates/config.html:59
+#: more/templates/config.html:60
 msgid "upribox erneut einrichten"
-msgstr ""
+msgstr "set up the upribox again"
 
-#: more/templates/config.html:69
+#: more/templates/config.html:71
 msgid "VPN:"
 msgstr ""
 
-#: more/templates/config.html:70
+#: more/templates/config.html:72
 msgid ""
 "Sie wollen unterwegs auf sichere Weise Ihre E-Mails abrufen oder eine &Uuml;"
 "berweisung t&auml;tigen? Richten Sie daf&uuml;r VPN ein und nutzen Sie Ihr "
 "Internet, als w&auml;ren Sie zu Hause. Sie sch&uuml;tzen Ihre Daten vor dem "
 "Zugriff von Dritten in offenen Wireless-Netzwerken."
 msgstr ""
+"You want to securely retrieve your e-mails on the go or confirm;"
+"a bank transfer? Set up the VPN and use your"
+"Internet as if you were at home. You protect your data from being"
+"accessed by third parties in open wireless networks."
 
 #: more/templates/static.html:10 more/templates/static.html:14
-#, fuzzy
-#| msgid "Statische IP"
 msgid "Static IP"
 msgstr "Static IP"
 
-#: more/templates/static.html:23
-msgid "Hinweis"
-msgstr ""
-
 #: more/templates/static.html:24
+msgid "Hinweis"
+msgstr "Note"
+
+#: more/templates/static.html:25
 msgid ""
 "Im Normalfall können die voreingestellten Werte für IP-Adresse, "
 "Subnetzmaske, Standardgateway und DNS Server übernommen werden. Bitte rufen "
@@ -314,16 +290,19 @@ msgid ""
 "deaktivieren Sie dort den DHCP-Server, da diese Funktion von nun an von der "
 "upribox übernommen wird."
 msgstr ""
+"Normally, the default values for IP address,"
+"Subnet mask, default gateway and DNS server are taken over. Please open"
+"the administration interface of your router and"
+"deactivate the DHCP server, since this function is taken over by"
+"the upribox from now on."
 
 #: more/templates/user.html:7
 msgid "Admin - upribox"
 msgstr ""
 
 #: more/templates/user.html:10
-#, fuzzy
-#| msgid "Benutzername"
 msgid "Benutzer"
-msgstr "user name"
+msgstr "User"
 
 #: more/templates/user.html:14
 msgid "Admin"
@@ -331,7 +310,7 @@ msgstr ""
 
 #: more/templates/user.html:15
 msgid "Admin-Daten &auml;ndern."
-msgstr "change administration data"
+msgstr "Change administration data"
 
 #~ msgid "Es ist ein unbekannter Fehler aufgetreten. Fehlercode: %(errorcode)s"
 #~ msgstr "Unknown error occured. Error-code: %(errorcode)s"
@@ -416,7 +395,7 @@ msgstr "change administration data"
 #~ msgid ""
 #~ "Hier können erfahrene Nutzerinnen und Nutzer Ihrer upribox eine statische "
 #~ "IP zuweisen."
-#~ msgstr "Experienced users can asign a static IP to their upribox."
+#~ msgstr "Experienced users can assign a static IP to their upribox."
 
 #~ msgid ""
 #~ "Zusätzlich ist es möglich, Ihre upribox als DHCP-Server agieren zu "

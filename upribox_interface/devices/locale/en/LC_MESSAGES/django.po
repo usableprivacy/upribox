@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-10 10:58+0000\n"
+"POT-Creation-Date: 2017-10-23 11:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: devices/jobs.py:21
+#: devices/jobs.py:31
 msgid "Gerätemodus wird geändert..."
 msgstr "Device mode is being changed..."
 
-#: devices/jobs.py:55
+#: devices/jobs.py:57
 msgid "Gerätemodus erfolgreich geändert."
 msgstr "Device mode successfully changed."
 
-#: devices/jobs.py:67
+#: devices/jobs.py:69
 msgid "Ändern des Gerätemodus fehlgeschlagen."
 msgstr "Changing the device mode failed."
 
-#: devices/jobs.py:72
+#: devices/jobs.py:82
 msgid "Job fehlgeschlagen."
 msgstr "Job failed."
 
@@ -45,48 +45,52 @@ msgstr "Device Overview"
 msgid "Geräteübersicht - upribox"
 msgstr "Device Overview - upribox"
 
-#: devices/templates/devices.html:23
+#: devices/templates/devices.html:24
 msgid "Die Geräteliste wird noch mit dem Server synchonisiert..."
 msgstr "Synchronizing device list..."
 
-#: devices/templates/devices.html:24
+#: devices/templates/devices.html:25
 msgid "Es wird noch überprüft welche Geräte online sind..."
 msgstr "Checking for online devices..."
 
-#: devices/templates/devices.html:45
+#: devices/templates/devices.html:46
 msgid "Keine Geräte verfügbar"
 msgstr "No devices available"
 
-#: devices/templates/devices.html:64
+#: devices/templates/devices.html:65
 msgid "Kein Modus:"
 msgstr "No Mode:"
 
-#: devices/templates/devices.html:65
+#: devices/templates/devices.html:66
 msgid ""
 "Ist dieser Modus aktiviert, werden weder Werbung ausgeblendet, noch ihre "
 "Aktivitäten geschützt."
-msgstr "While this mode is enabled, advertisements are not filtered and your activities are not secured."
+msgstr ""
+"Advertisements are not filtered and your activities are not secured."
 
-#: devices/templates/devices.html:65 devices/templates/devices.html:69
-#: devices/templates/devices.html:73
+
+#: devices/templates/devices.html:66 devices/templates/devices.html:70
+#: devices/templates/devices.html:74
 msgid "mehr"
 msgstr "more"
 
-#: devices/templates/devices.html:68
+#: devices/templates/devices.html:69
 msgid "Silent Modus:"
 msgstr "Silent Mode:"
 
-#: devices/templates/devices.html:69
+#: devices/templates/devices.html:70
 msgid ""
 "Ermöglicht werbefreie Nutzung von Internetseiten. Außerdem wird Ihr "
 "Verhalten nicht beobachtet."
-msgstr "Enables ad-free usage of websites. Additionally, your online activities are not monitored."
+msgstr ""
+"Enables ad-free usage of websites and your online activities are "
+"not monitored."
 
-#: devices/templates/devices.html:72
+#: devices/templates/devices.html:73
 msgid "Ninja Modus:"
 msgstr "Ninja Mode:"
 
-#: devices/templates/devices.html:73
+#: devices/templates/devices.html:74
 msgid ""
 "Ermöglicht anonyme Nutzung. Ihre Aktivitäten können nur schwer nachverfolgt "
 "werden."
@@ -98,7 +102,7 @@ msgstr "Change device name"
 
 #: devices/templates/name_modal.html:16
 msgid "eigener Name"
-msgstr "custom Name"
+msgstr "custom name"
 
 #: devices/templates/name_modal.html:20
 msgid "Vorschlag"
@@ -112,6 +116,6 @@ msgstr "Apply"
 msgid "Abbrechen"
 msgstr "Cancel"
 
-#: devices/views.py:100
+#: devices/views.py:113
 msgid "Der gewählte Name darf nicht leer sein"
 msgstr "Empty names are not permitted"

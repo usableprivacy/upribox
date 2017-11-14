@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-10 10:58+0000\n"
+"POT-Creation-Date: 2017-10-23 11:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,8 +29,11 @@ msgid ""
 "\"upribox\" verfügbar. Alternativ kann die upribox <a href=\"%(help)s"
 "\">manuell mittels DHCP</a> vollständig eingerichtet werden.</p>\n"
 "        "
-msgstr "The functionality of your upribox is currently only available via the \"upribox\" WLAN. Alternatively, you can complete the setup of your upribox manually by <a href=\"%(help)s"
-"\">configuring DHCP</a>."
+msgstr ""
+"\n"
+"The functionality of your upribox is currently only available via the "
+"\"upribox\" WLAN. Alternatively, you can complete the setup of your upribox "
+"manually by <a href=\"%(help)s\">configuring DHCP</a>."
 
 #: setup/templates/setup.html:26 setup/templates/setup.html:33
 msgid "Geräteübersicht"
@@ -38,7 +41,7 @@ msgstr "Device Overview"
 
 #: setup/templates/setup.html:30
 msgid "Ihre upribox wurde erfolgreich eingerichtet!"
-msgstr "Your upribox has been successfully setup!"
+msgstr "Your upribox has been successfully set up!"
 
 #: setup/templates/setup.html:38
 msgid ""
@@ -48,6 +51,11 @@ msgid ""
 "ist.</p>\n"
 "        "
 msgstr ""
+"\n"
+"           <p> The upribox has no internet connection currently."
+"Please make sure the upribox is connected to your home"
+" network.</p>\n"
+"        "
 
 #: setup/templates/setup.html:43
 #, python-format
@@ -55,11 +63,18 @@ msgid ""
 "\n"
 "            <p> Bitte testen Sie mit einem zweiten Gerät, das mit Ihrem "
 "Heimnetzwerk verbunden ist, ob eine Internetverbindung weiterhin besteht. "
-"Rufen Sie dazu einfach die Seite <a href=\"%(orf)s\">www.orf.at</a> auf. "
-"<br> <br>\n"
+"Rufen Sie dazu einfach die Seite <a href=\"%(connect)s\">test.upribox.org</"
+"a> auf. <br> <br>\n"
 "            Ist die Seite erreichbar?  </p>\n"
 "        "
 msgstr ""
+"\n"
+"            <p> Please test with a second device that works with your"
+"Home network is connected, if an internet connection persists."
+"Simply go to this page <a href=\"%(connect)s\">test.upribox.org</"
+"a> auf. <br> <br>\n"
+"            Is the page reachable?  </p>\n"
+"        "
 
 #: setup/templates/setup.html:47
 msgid "Ja"
@@ -76,3 +91,7 @@ msgstr "Please wait, while the setup is being started."
 #: setup/templates/setup.html:54
 msgid "Es ist leider ein Fehler während des Setups der upribox aufgetreten."
 msgstr "Unfortunately, an error occurred while setting up the upribox."
+
+#: setup/templates/setup.html:54
+msgid "Bitte versuchen Sie es erneut"
+msgstr "Please try again"

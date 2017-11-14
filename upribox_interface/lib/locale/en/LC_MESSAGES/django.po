@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-10 10:58+0000\n"
+"POT-Creation-Date: 2017-10-23 11:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,36 +17,31 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: lib/utils.py:82
+#: lib/utils.py:84
 msgid "Bitte das Passwort zur Bestätigung erneut eingeben."
 msgstr "Please re-enter the password."
 
-#: lib/utils.py:86
+#: lib/utils.py:88
 msgid "Die beiden Passwörter stimmen nicht überein."
 msgstr "The passwords do not match."
 
-#: lib/utils.py:93
-msgid "Das Passwort muss mindestens 1 Ziffer beinhalten."
-msgstr "The password must contain at least one number."
-
-#: lib/utils.py:95
-msgid "Das Passwort muss mindestens 1 Kleinbuchstaben beinhalten."
-msgstr "The password must contain at least one lower case character."
-
-#: lib/utils.py:97
-msgid "Das Passwort muss mindestens 1 Großbuchstaben beinhalten."
-msgstr "The password must contain at least one upper case character."
-
-#: lib/utils.py:99
-msgid "Das Passwort muss mindestens 1 Sonderzeichen beinhalten."
-msgstr "The password must contain at least one special character."
-
-#: lib/utils.py:101
+#: lib/utils.py:103
 msgid "Das Passwort muss zwischen 8 und 63 Zeichen lang sein."
 msgstr "The password must be between 8 and 63 characters long."
 
-#: lib/utils.py:104
-#, fuzzy, python-format
-#| msgid "Das Passwort darf lediglich die Sonderzeichen %s enthalten"
+#: lib/utils.py:106
+#, python-format
 msgid "Das Passwort darf lediglich die Sonderzeichen %s enthalten."
 msgstr "The password may only contain the following special characters: %s ."
+
+#~ msgid "Das Passwort muss mindestens 1 Ziffer beinhalten."
+#~ msgstr "The password must contain at least one digit."
+
+#~ msgid "Das Passwort muss mindestens 1 Kleinbuchstaben beinhalten."
+#~ msgstr "The password must contain at least one lower case character."
+
+#~ msgid "Das Passwort muss mindestens 1 Großbuchstaben beinhalten."
+#~ msgstr "The password must contain at least one upper case character."
+
+#~ msgid "Das Passwort muss mindestens 1 Sonderzeichen beinhalten."
+#~ msgstr "The password must contain at least one special character."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-10 10:58+0000\n"
+"POT-Creation-Date: 2017-10-23 11:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,82 +18,78 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: statistics/templates/statistics.html:5
-#, fuzzy
-#| msgid "Statistiken - upribox"
 msgid "Statistik - upribox"
-msgstr "statistics - upribox"
+msgstr "Statistics - upribox"
 
 #: statistics/templates/statistics.html:8
 #: statistics/templates/statistics.html:14
 msgid "Statistik"
-msgstr "statistics"
+msgstr "Statistics"
 
 #: statistics/templates/statistics.html:14
 msgid "Start"
 msgstr ""
 
-#: statistics/templates/statistics.html:24
-#, fuzzy
-#| msgid "Statistik"
+#: statistics/templates/statistics.html:21
+msgid "Statistik wird geladen"
+msgstr "Statistics are loading"
+
+#: statistics/templates/statistics.html:23
 msgid "Gesamtstatistik"
-msgstr "statistics"
+msgstr "Statistics"
 
-#: statistics/templates/statistics.html:27
+#: statistics/templates/statistics.html:26
 msgid "Domains blockiert"
-msgstr ""
+msgstr "Domains blocked"
 
-#: statistics/templates/statistics.html:30
+#: statistics/templates/statistics.html:29
 msgid "Inhalte gefiltert"
-msgstr ""
+msgstr "Content filtered"
 
-#: statistics/templates/statistics.html:34
-#, fuzzy
-#| msgid "Statistik"
+#: statistics/templates/statistics.html:33
 msgid "Wochenstatistik"
-msgstr "statistics"
+msgstr "Statistics"
 
-#: statistics/templates/statistics.html:36
-#: statistics/templates/statistics.html:50
+#: statistics/templates/statistics.html:35
+#: statistics/templates/statistics.html:49
 msgid "KW"
 msgstr ""
 
-#: statistics/templates/statistics.html:39
+#: statistics/templates/statistics.html:38
 msgid "Gesamtanzahl geblockter Anfragen"
-msgstr ""
+msgstr "Total number of blocked requests"
 
-#: statistics/templates/statistics.html:40
-#, fuzzy
-#| msgid "Gefilterte Inhalte"
+#: statistics/templates/statistics.html:39
 msgid "Gesamtanzahl gefilterter Inhalte"
 msgstr "filtered content"
 
-#: statistics/templates/statistics.html:44
+#: statistics/templates/statistics.html:43
 msgid "geblockt"
-msgstr ""
+msgstr "blocked"
 
-#: statistics/templates/statistics.html:45
+#: statistics/templates/statistics.html:44
 msgid "gefiltert"
-msgstr ""
+msgstr "filtered"
 
-#: statistics/templates/statistics.html:48
+#: statistics/templates/statistics.html:47
 msgid "Anzahl"
-msgstr ""
+msgstr "Quantity"
 
-#: statistics/templates/statistics.html:50
+#: statistics/templates/statistics.html:49
 msgid "Kalenderwochen"
-msgstr ""
+msgstr "Calendar weeks"
 
-#: statistics/templates/statistics.html:52
+#: statistics/templates/statistics.html:51
 msgid "Details für Kalenderwoche"
-msgstr ""
+msgstr "Details for calendar week"
 
-#: statistics/templates/statistics.html:55
+#: statistics/templates/statistics.html:54
 msgid "Top geblockte Domains"
-msgstr "most blocked domains"
+msgstr "Most blocked domains"
 
-#: statistics/templates/statistics.html:61
+#: statistics/templates/statistics.html:60
 msgid "Top gefilterte Inhalte"
-msgstr "most filtered content"
+msgstr "Most filtered content"
 
 #, fuzzy
 #~| msgid "Geblockete Domains und gefilterte Inhalte."

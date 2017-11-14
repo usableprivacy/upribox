@@ -18,14 +18,14 @@
                 <fieldset>
                     <legend>{% trans "Legend" %}</legend>
                     <h2>{% trans "Login" %}</h2>
-                    <p class="formLabel">{% trans "Admin" %}: </p>
+                    <p class="formLabel">{% trans "Admin:" %} </p>
 
                     {{ form.username|add_error_class:'form-input-error'}}
                     {% for error in form.username.errors %}
                         <p class="error-message">{{ error|striptags }}</p>
                     {% endfor %}
 
-                    <p class="formLabel">{% trans "Passwort" %}:</p>
+                    <p class="formLabel">{% trans "Passwort:" %}</p>
                     {{ form.password|add_error_class:'form-input-error'}}
                     <span id="pw{{forloop.counter}}" class="icon i-eye-open showpw" ></span>
                     {% for error in form.password.errors %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-10 10:58+0000\n"
+"POT-Creation-Date: 2017-10-23 11:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,19 +19,15 @@ msgstr ""
 
 #: wlan/forms.py:12
 msgid "SSID:"
-msgstr ""
+msgstr "SSID"
 
 #: wlan/forms.py:17
-#, fuzzy
-#| msgid "Passwort"
 msgid "Neues Passwort:"
-msgstr "password"
+msgstr "New password"
 
 #: wlan/forms.py:22
-#, fuzzy
-#| msgid "Passwort erneut eingeben"
 msgid "Passwort bestätigen:"
-msgstr "re-enter password"
+msgstr "Re-enter password"
 
 #: wlan/forms.py:44
 msgid "Die SSID muss zwischen 1 und 32 Zeichen lang sein"
@@ -59,16 +55,12 @@ msgid "Wlan wird neu gestartet..."
 msgstr "restarting WiFi..."
 
 #: wlan/jobs.py:30
-#, fuzzy
-#| msgid "Konfiguration des ninja WLAN erfolgreich."
 msgid "Konfiguration des WLANs erfolgreich."
-msgstr "successfully configured ninja Wifi."
+msgstr "Configuration of Wifi successful."
 
-#: wlan/jobs.py:40 wlan/jobs.py:72
-#, fuzzy
-#| msgid "Konfiguration des ninja WLAN erfolgreich."
+#: wlan/jobs.py:40 wlan/jobs.py:68
 msgid "Konfiguration des WLANs fehlgeschlagen."
-msgstr "successfully configured ninja Wifi."
+msgstr "Configuration of Wifi failed."
 
 #: wlan/jobs.py:49
 msgid "silent WLAN wird gestartet..."
@@ -78,11 +70,11 @@ msgstr "starting silent WiFi..."
 msgid "silent WLAN wird gestoppt..."
 msgstr "stopping silent WiFi..."
 
-#: wlan/jobs.py:60
+#: wlan/jobs.py:56
 msgid "Konfiguration des silent WLAN erfolgreich."
 msgstr "successfully configured silent Wifi."
 
-#: wlan/jobs.py:66
+#: wlan/jobs.py:62
 msgid "Es ist ein unbekannter Fehler aufgetreten."
 msgstr "an unknown error occurred."
 
@@ -91,34 +83,32 @@ msgid "Start"
 msgstr ""
 
 #: wlan/templates/silent.html:7 wlan/templates/silent.html:10
-#, fuzzy
-#| msgid "Konfiguration erfolgreich"
 msgid "Konfiguration"
-msgstr "configuration successful"
+msgstr "configuration"
 
 #: wlan/templates/silent.html:7 wlan/templates/silent.html:13
 msgid "WLAN"
 msgstr ""
 
-#: wlan/templates/silent.html:29
-msgid "Tipps für sichere Passwörter:"
-msgstr ""
-
 #: wlan/templates/silent.html:30
-msgid "Mindestens 8 Zeichen."
-msgstr ""
+msgid "Tipps für sichere Passwörter:"
+msgstr "Tipps for secure passwords:"
 
 #: wlan/templates/silent.html:31
-msgid "Mindestens 1 Großbuchstabe."
-msgstr ""
+msgid "Mindestens 8 Zeichen."
+msgstr "At least 8 characters."
 
 #: wlan/templates/silent.html:32
-msgid "Mindestens 1 Kleinbuchstabe."
-msgstr ""
+msgid "Mindestens 1 Großbuchstabe."
+msgstr "At least 1 capital letter."
 
 #: wlan/templates/silent.html:33
+msgid "Mindestens 1 Kleinbuchstabe."
+msgstr "At least 1 small letter."
+
+#: wlan/templates/silent.html:34
 msgid "Mindestens 1 Ziffer."
-msgstr ""
+msgstr "At least 1 digit."
 
 #, fuzzy
 #~| msgid "Passwort"
@@ -190,10 +180,10 @@ msgstr ""
 #~ msgstr "The Ninja WiFi can not be activated on the Raspberry Pi 3."
 
 #~ msgid "Ein-/Ausschalten"
-#~ msgstr "enable/Off"
+#~ msgstr "enable/disable"
 
 #~ msgid "Ninja Modus läuft"
-#~ msgstr "ninja mode active"
+#~ msgstr "Ninja Mode active"
 
 #~ msgid "Ausschalten"
 #~ msgstr "disable"
@@ -203,7 +193,7 @@ msgstr ""
 
 #~ msgid ""
 #~ "Um den Ninja Modus zu starten, aktiviere bitte zuerst den Silent Modus"
-#~ msgstr "To start ninja node please activate silent mode first"
+#~ msgstr "To start ninja node please activate Silent Mode first"
 
 #~ msgid "Einschalten"
 #~ msgstr "enable"
@@ -244,19 +234,19 @@ msgstr ""
 #~ msgstr "hide information"
 
 #~ msgid "Silent Modus läuft nicht"
-#~ msgstr "silent mode not active"
+#~ msgstr "Silent Mode not active"
 
 #~ msgid "Silent Modus läuft"
-#~ msgstr "silent mode active"
+#~ msgstr "Silent Mode active"
 
 #~ msgid "Deaktivierung des Silent Modus deaktiviert auch den Ninja Modus."
-#~ msgstr "Deactivation of silent mode also deactivates ninja mode"
+#~ msgstr "Deactivation of Silent Mode also deactivates ninja mode"
 
 #~ msgid "Aktiviere SSH und Apate, um den Silent Modus deaktivieren zu können"
-#~ msgstr "Activate SSH and Apate to deactivate silent mode"
+#~ msgstr "Activate SSH and Apate to deactivate Silent Mode"
 
 #~ msgid "Was ist der Silent Modus?"
-#~ msgstr "What is the silent mode?"
+#~ msgstr "What is the Silent Mode?"
 
 #~ msgid ""
 #~ "Der SILENT-Modus erlaubt ihnen, Webseiten ohne Werbung anzusehen. Diese "
@@ -283,10 +273,10 @@ msgstr ""
 #~ msgstr "name"
 
 #~ msgid "Silent Modus - upribox"
-#~ msgstr "silent mode - upribox"
+#~ msgstr "Silent Mode - upribox"
 
 #~ msgid "Silent Modus"
-#~ msgstr "silent mode"
+#~ msgstr "Silent Mode"
 
 #~ msgid "Ohne Werbung surfen."
 #~ msgstr "surf without ads"
