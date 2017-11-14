@@ -24,12 +24,6 @@
   register: ntopng_res
   when: ansible_distribution_release == "stretch"
 
-#   # jessie
-# - name: remove unused files
-#   file: path=/etc/apt/sources.list.d/ntop.list state=absent
-#   when: not ntop_list|skipped and ntop_list.stat.exists
-#   register: ntopng_res
-
 - name: install services
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ "0" if ntopng_res and ntopng_res|changed else apt_cache_time }}
   with_items:
@@ -56,17 +50,80 @@
   tags:
      - configure_devices
 
-# - name: check if /etc/ntopng.conf is link
-#   stat: path=/etc/ntopng.conf
-#   register: ntop_res
-#   when: ansible_distribution_release != "jessie"
-#
-#   # stretch
-# - name: remove old config file
-#   file: path=/etc/ntopng.conf state=absent
-#   when: not ntop_res|skipped and ntop_res.stat.islnk is defined and ntop_res.stat.islnk == False
-#
-#   # stretch
-# - name: create link to config
-#   file: src=/etc/ntopng/ntopng.conf dest=/etc/ntopng.conf state=link
-#   when: not ntop_res|skipped and ntop_res.stat.islnk is defined and ntop_res.stat.islnk == False
+- name: create systemd directory for ntopng
+  file: path=/etc/systemd/system/ntopng.service.d state=directory
+
+  # ntopng does not handle the pid file properly
+  # https://github.com/ntop/ntopng/issues/1565
+  # (pid file is not removed)
+- name: override ntopng systemd dependencies
+  copy: src=ntopng_systemd_override dest=/etc/systemd/system/ntopng.service.d/override.conf owner=root group=root mode=644
+  register: override
+
+  # check if pref file exists and if it already contains desired entries
+- name: check ntopng preferences
+  shell: cat /var/tmp/ntopng/runtimeprefs.json
+  register: result
+  failed_when: result.rc !=0 and result.rc != 1
+  changed_when: no
+
+- set_fact:
+    # ntopng preferences
+    prefs: "{{ result.stdout | from_json if result.rc == 0 else '{}' | from_json }}"
+
+- set_fact:
+    # check if a entry is not contained inside ntopng prefs or has different value
+    configured: "{% for item in entries %}{{prefs[item] is not defined or prefs[item] != entries[item]}} or {% endfor %}False"
+
+# during a fresh setup, ntopng might not have finished startup yet (and fail at next task)
+- name: ensure ntopng is running
+  systemd:
+    name: ntopng
+    state: started
+    daemon-reload: yes
+  register: nt_res
+
+  # wait until ntopng truly finished startup
+- name: wait until /var/run/ntopng.pid exists
+  wait_for:
+    path: /var/run/ntopng.pid
+    state: present
+  when: nt_res|changed
+
+# ntopng persist the runtime configuration on stop
+# stop service before editing, otherwise our changes will be overwritten
+- name: stop ntopng for configuration
+  systemd:
+    name: ntopng
+    state: stopped
+  when: configured
+  notify:
+    - restart ntopng
+
+# wait until ntopng truly finished shutdown
+- name: wait until /var/run/ntopng.pid vanished
+  wait_for:
+    path: /var/run/ntopng.pid
+    state: absent
+  when: configured
+
+# reread prefs in case file was empty beforehand
+# since the settings might have change after being persisted -> reread
+- name: reread ntopng preferences
+  shell: cat /var/tmp/ntopng/runtimeprefs.json
+  when: configured
+  register: result
+  failed_when: result.rc !=0 and result.rc != 1
+  changed_when: no
+
+- set_fact:
+    prefs: "{{ result.stdout | from_json if result.rc == 0 else '{}' | from_json }}"
+  when: configured
+
+- name: adjust ntopng runtime preferences
+  copy:
+    content: "{{ prefs|combine(entries)|to_json }}"
+    dest: /var/tmp/ntopng/runtimeprefs.json
+  when: configured
+  notify:
+    - restart ntopng

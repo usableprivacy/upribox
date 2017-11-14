@@ -1,0 +1,2 @@
+[Service]
+ExecStopPost=-/bin/rm /var/run/ntopng.pid
