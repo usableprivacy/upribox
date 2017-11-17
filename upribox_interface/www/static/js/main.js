@@ -180,6 +180,7 @@ UPRIBOX.Main = (function($) {
                 success: function (data) {
                     modal.remove();
                     $("#" + slug + " .devname").text(data);
+                    sortDevices();
                     // onAjaxUpdate();
                 },
                 error: function(jqXHR){
@@ -1331,6 +1332,21 @@ function initialisePasswordFields(){
         }
     }
 
+    function sortDevices() {
+        var sortArray = function(a, b) {
+            if ($(a).find(".devname")[0].innerHTML.toUpperCase() < $(b).find(".devname")[0].innerHTML.toUpperCase()) {
+                return -1;
+            } else if ($(a).find(".devname")[0].innerHTML.toUpperCase() > $(b).find(".devname")[0].innerHTML.toUpperCase()) {
+                return 1;
+            } else {
+                return 0;
+            }
+        };
+
+        $('.is-offline').parents(".divTableRow").sort(sortArray).insertAfter($('.divTableHead').parents('.divTableRow'));
+        $('.is-online').parents(".divTableRow").sort(sortArray).insertAfter($('.divTableHead').parents('.divTableRow'));
+    }
+
     function checkOnlineStatus(deviceId) {
         if (!deviceId) {
             statOnlinePollingLastElementIndex++;
@@ -1360,11 +1376,6 @@ function initialisePasswordFields(){
         }
         var entry = $("#" + id).find(".device-link");
         entry.addClass(onlineStat?"is-online":"is-offline");
-        if (onlineStat){
-            var siblings = $(entry).parents('.single-device-row').prevAll('.single-device-row');
-            $(entry).parents('.single-device-row').insertBefore(siblings[siblings.length-1]);
-            // console.log($(entry).parents('.single-device-row').prevAll());
-        }
         checkedDevicesForOnlineStatusCounter++;
 
         if ($("#" + id).attr("data-changing") !== "True")
@@ -1372,6 +1383,7 @@ function initialisePasswordFields(){
 
         if (checkedDevicesForOnlineStatusCounter >= checkOnlineStatusList.length) {
             $(".device-sync").css("display", "none");
+            sortDevices();
             return;
         }
         checkOnlineStatus();
