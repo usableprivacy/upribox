@@ -1,9 +1,11 @@
 # coding=utf-8
 import logging
+import sqlite3
 import threading
 import time
 
-from scapy.all import IP, UDP, Ether, conf, send
+from scapy.all import ARP, IP, UDP, Ether, arping, conf, send
+from util import DaemonError, check_preconditions, insert_or_update_fingerprint
 
 # suppresses following message
 # WARNING: No route found for IPv6 destination :: (no default route?)
@@ -33,3 +35,44 @@ class SSDPDiscoveryThread(threading.Thread):
         while True:
             send(IP(dst=self._DST) / UDP(sport=self._PORT, dport=self._PORT) / self._PAYLOAD, iface=self.interface)
             time.sleep(self._SLEEP)
+
+
+class StaticIPNoModeDiscoveryThread(threading.Thread):
+    _SLEEP = 3600
+    """int: Time to wait before sending packets anew."""
+    _QUERY = "select ip from devices_deviceentry where mode='NO'"
+
+    def __init__(self, interface, dbfile, logger):
+        """Initialises the thread.
+        """
+        threading.Thread.__init__(self)
+        self.interface = interface
+        self.dbfile = dbfile
+        self.logger = logger
+
+    def run(self):
+        try:
+            self.conn = sqlite3.connect(self.dbfile)
+            with self.conn:
+                c = self.conn.cursor()
+                while True:
+                    try:
+                        c.execute(self._QUERY)
+                        devices = list(sum(c.fetchall(), ()))
+
+                        if devices:
+                            ans, unans = arping(devices, iface=None, verbose=0)
+                            for device in ans:
+                                if check_preconditions(device[1][ARP].psrc, device[1][ARP].hwsrc):
+                                    insert_or_update_fingerprint(self.conn, ip=device[1][ARP].psrc, mac=device[1][ARP].hwsrc)
+
+                        self.logger.info("checked no mode devices: " + str(devices))
+
+                        time.sleep(self._SLEEP)
+                    except sqlite3.Error as sqle:
+                        self.logger.error("a database error occurred")
+                        self.logger.exception(sqle)
+        except sqlite3.Error as sqle:
+            self.logger.error("Failed to connect to sqlite database at path %s" % (self.dbfile, ))
+            self.logger.exception(sqle)
+            raise DaemonError()

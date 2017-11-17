@@ -13,7 +13,7 @@ import os
 import threading
 import time
 
-from misc_thread import SSDPDiscoveryThread
+from misc_thread import SSDPDiscoveryThread, StaticIPNoModeDiscoveryThread
 # suppresses following message
 # WARNING: No route found for IPv6 destination :: (no default route?)
 from scapy.all import conf
@@ -62,6 +62,7 @@ class DaemonApp(object):
         # Initialise threads
         self.threads['sniffthread'] = RegistrarSniffThread(self.interface, logger, self.django_db)
         self.threads['ssdpthread'] = SSDPDiscoveryThread(self.interface)
+        self.threads['nomodethread'] = StaticIPNoModeDiscoveryThread(self.interface, self.django_db, logger)
 
         # declare all threads as deamons
         for worker in self.threads:

@@ -134,6 +134,7 @@ class RegistrarSniffThread(_SniffThread):
         if params.get('message-type', 0) == 3 and check_preconditions(params.get('ip', None), params.get('mac', None)):
             try:
                 insert_or_update_fingerprint(self.conn, **params)
+                self.logger.debug("registered dhcp: ip: {}, mac: {}".format(params.get('ip', None), params.get('mac', None)))
             except TypeError as te:
                 self.logger.error(insert_or_update_fingerprint.__name__ + " needs keyword-only argument ip")
             except sqlite3.Error as sqle:
@@ -148,7 +149,8 @@ class RegistrarSniffThread(_SniffThread):
         id = None
 
         if not all(pkt.haslayer(layer) for layer in [Ether, IP, UDP]):
-            self.logger.debug("malformed packet")
+            self.logger.info("malformed packet")
+            self.logger.info(pkt.command())
             return
 
         params['mac'] = pkt[Ether].src
@@ -157,6 +159,7 @@ class RegistrarSniffThread(_SniffThread):
         if check_preconditions(params.get('ip', None), params.get('mac', None)):
             try:
                 id = insert_or_update_fingerprint(self.conn, **params)
+                self.logger.debug("registered ssdp: ip: {}, mac: {}".format(params.get('ip', None), params.get('mac', None)))
             except TypeError as te:
                 self.logger.error(insert_or_update_fingerprint.__name__ + " needs keyword-only argument ip")
             except sqlite3.Error as sqle:
