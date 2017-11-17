@@ -17,6 +17,13 @@
   with_items:
     - dnsmasq
 
+- name: create systemd directory for dnsmasq
+  file: path=/etc/systemd/system/dnsmasq.service.d state=directory
+
+- name: override tor systemd dependencies
+  copy: src=override.conf dest=/etc/systemd/system/dnsmasq.service.d/override.conf owner=root group=root mode=644
+  notify: restart dnsmasq
+
 - name: add dnsmasq user to loggers group
   user: name=dnsmasq groups="tmp-logger" append=yes
 

@@ -270,6 +270,12 @@ case "$1" in
 	stop_resolvconf
 	;;
   systemd-exec)
+  # /run may be volatile, so we need to ensure that
+    # /run/dnsmasq exists here as well as in postinst
+    if [ ! -d $RUN ]; then
+        mkdir $RUN || return 2
+       chown dnsmasq:nogroup $RUN || return 2
+    fi
 #  --pid-file without argument disables writing a PIDfile, we don't need one with sytemd.
 # Enable DBus by default because we use DBus activation with systemd.
 	exec $DAEMON --keep-in-foreground --pid-file --enable-dbus \

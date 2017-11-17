@@ -34,6 +34,13 @@
   copy: src=dnsmasq-ninja/init.d/dnsmasq-ninja dest=/etc/init.d mode="755"
   notify: restart dnsmasq_ninja
 
+- name: create systemd directory for dnsmasq_ninja
+  file: path=/etc/systemd/system/dnsmasq-ninja.service.d state=directory
+
+- name: override tor systemd dependencies
+  copy: src=dnsmasq-ninja/override.conf dest=/etc/systemd/system/dnsmasq-ninja.service.d/override.conf owner=root group=root mode=644
+  notify: restart dnsmasq_ninja
+
 - name: copy dnsmasq ninja conf
   template: src=dnsmasq-ninja.conf dest=/etc/
   notify: restart dnsmasq_ninja
