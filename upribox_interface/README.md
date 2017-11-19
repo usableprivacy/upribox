@@ -51,7 +51,7 @@ Command to create the English language files:
 
  -------------------------------------------------------------------------------------------
 
- The translation is then done in every local translation folder for earch of the Django apps. (*django.po* files)
+ The translation is then done in every local translation folder for each of the Django apps. (*django.po* files)
 
  -------------------------------------------------------------------------------------------
 

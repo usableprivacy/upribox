@@ -252,7 +252,7 @@ msgstr ""
 #: more/templates/config.html:59
 #, python-format
 msgid "Die upribox wurde am %(setup_date)s eingerichtet"
-msgstr "The upribox is set up on %(setup_date)s"
+msgstr "The upribox was set up on %(setup_date)s"
 
 #: more/templates/config.html:60
 msgid "upribox erneut einrichten"
