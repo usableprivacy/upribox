@@ -2369,3 +2369,8 @@ input[type='radio']:disabled + label::before{
   background: white;
   border: 1px solid #ddd;
 }
+
+.js-vpn-profile a {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}

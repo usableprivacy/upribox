@@ -149,8 +149,8 @@ class RegistrarSniffThread(_SniffThread):
         id = None
 
         if not all(pkt.haslayer(layer) for layer in [Ether, IP, UDP]):
-            self.logger.info("malformed packet")
-            self.logger.info(pkt.command())
+            self.logger.debug("packet does not contain all required layers")
+            self.logger.debug(pkt.command())
             return
 
         params['mac'] = pkt[Ether].src
