@@ -1,8 +1,11 @@
 #!/usr/bin/env python
-import argcomplete, argparse
+import argcomplete
+import argparse
+
 
 def boolean_completer(prefix, parsed_args, **kwargs):
     return ["yes", "no"]
+
 
 def create_argparser():
 
@@ -97,15 +100,15 @@ def create_argparser():
     # create the parser for the "restart_firewall" command
     subparser.add_parser('restart_firewall', help='Triggers the Ansible tasks with the tag *iptables*')
 
-    # create the parser for the "enable_device" command
-    parser_enable_device = subparser.add_parser('enable_device',
-                                                help='Enables ARP spoofing via Apate (see arp) for a specific device')
-    parser_enable_device.add_argument('arg', help='The IP address of the device that shall be enabled', metavar="ip")
-
-    # create the parser for the "disable_device" command
-    parser_disable_device = subparser.add_parser('disable_device',
-                                                 help='Disables ARP spoofing via Apate (see arp) for a specific device')
-    parser_disable_device.add_argument('arg', help='The IP address of the device that shall be disabled', metavar="ip")
+    # # create the parser for the "enable_device" command
+    # parser_enable_device = subparser.add_parser('enable_device',
+    #                                             help='Enables ARP spoofing via Apate (see arp) for a specific device')
+    # parser_enable_device.add_argument('arg', help='The IP address of the device that shall be enabled', metavar="ip")
+    #
+    # # create the parser for the "disable_device" command
+    # parser_disable_device = subparser.add_parser('disable_device',
+    #                                              help='Disables ARP spoofing via Apate (see arp) for a specific device')
+    # parser_disable_device.add_argument('arg', help='The IP address of the device that shall be disabled', metavar="ip")
 
     # create the parser for the "set_ip" command
     parser_set_ip = subparser.add_parser('set_ip', help='Sets a static IP by writing to the fact *interfaces*')
@@ -167,9 +170,31 @@ def create_argparser():
 
     # create the parser for the "silent_device" command
     parser_silent_device = subparser.add_parser('silent_device',
-                                                 help='Shortcut for calling of include_device and untorify_device')
+                                                help='Shortcut for calling of include_device and untorify_device')
     parser_silent_device.add_argument('arg', help='The MAC address of the device whose mode shall be set to silent',
-                                       metavar="mac")
+                                      metavar="mac")
+
+    # create the parser for the "check_device" command
+    parser_check_device = subparser.add_parser('check_device', help='Checks if device with given ip address is online')
+    parser_check_device.add_argument('arg',
+                                     help='The IP address of the device to check',
+                                     metavar="ip")
+
+    # create the parser for the "filter_update" command
+    subparser.add_parser('filter_update', help='updates the filter files')
+
+    # create the parser for the "vpn_forward" command
+    parser_vpn_forward = subparser.add_parser('vpn_forward', help='enables vpn port forwarding if possible')
+    parser_vpn_forward.add_argument('--debug', action='store_true', help='Print additional debug messages', dest="arg")
+
+    parser_vpn_unforward = subparser.add_parser('vpn_unforward', help='removes vpn port forwarding')
+    parser_vpn_unforward.add_argument('--debug', action='store_true', help='Print additional debug messages', dest="arg")
+
+    subparser.add_parser('backup_settings', help='Saves settings and logs to a backup archive')
+
+    parser_restore = subparser.add_parser('restore_settings', help="Restore settings from backup archive")
+    parser_restore.add_argument('arg', help='The path of the backup archive',
+                                metavar="path")
 
     argcomplete.autocomplete(parser)
 

@@ -65,7 +65,7 @@ Configuration Script
 In order to apply changes to the configuration of the upribox Django has access to only one configuration script ``upri-config.py`` and its actions:
 
 .. argparse::
-   :filename: argparser.py
+   :filename: source/argparser.py
    :func: create_argparser
    :prog: upri-config.py
 
