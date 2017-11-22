@@ -7,9 +7,9 @@ This role is responsible for basic configurations of the operating system such a
 - configuring locale
 - user management
 
-  - creating sudo group
-  - creating remote user
-  - removing default user (*pi*)
+ - creating sudo group
+ - creating remote user
+ - removing default user (*pi*)
 
 - setting the hostname (*upri*)
 - adding authorized key

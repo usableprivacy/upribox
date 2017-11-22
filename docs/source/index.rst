@@ -7,9 +7,9 @@ Getting Started
 
 .. include:: intro.rst
 
-*************
+#############
 Documentation
-*************
+#############
 
 .. toctree::
    :maxdepth: 3

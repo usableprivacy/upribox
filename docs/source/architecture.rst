@@ -28,6 +28,7 @@ Base setup
 .. include:: modules/init.inc
 .. include:: modules/common.inc
 .. include:: modules/unattended_upgrades.inc
+.. include:: modules/upri-config.inc
 
 Networking
 ==========

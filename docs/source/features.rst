@@ -36,8 +36,8 @@ information that my or may not be appropriate.
 Ninja Mode
 **********
 
-By activating Ninja mode the upribox will create another network (on Raspberry Pi 3 only with an additional WiFi dongle).
-Connected devices benefit from the same ad- and tracker blocking mechanisms as in the Silent mode but additionally the traffic will be anonymized.
+The Ninja Mode can be activated inside the upribox webinterface for specific devices.
+Those devices benefit from the same ad- and tracker blocking mechanisms as in the Silent mode but additionally the traffic will be anonymized.
 
 The upribox Ninja mode uses the Tor anonymity network to hinder tracking of
 your internet usage. For example, your internet provider will not be able to
@@ -50,6 +50,17 @@ For the best protection of your anonymity we recommend the usage of the Tor Brow
 `macOS <https://www.torproject.org/download/download-easy.html#mac>`__) or alternatively
 `Tails <https://tails.boum.org/>`__. If you cannot use the Tor
 Browser, activate and use the upribox Ninja mode.
+
+.. _nomode:
+
+**********
+No Mode
+**********
+If you are experiencing issues with a specific device in either *Silent Mode* or *Ninja Mode*,
+you can disable the upribox functions for this device inside the upribox webinterface.
+
+Traffic of devices, which are configured to use *No Mode*, is not filtered by the upribox, therefore
+advertisements are not filtered and your activities are not secured.
 
 .. _vpn:
 

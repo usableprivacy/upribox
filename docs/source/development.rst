@@ -3,7 +3,7 @@
 Development
 ===========
 
-The current upribox image is based on Raspbian [#Raspbian]_ Jessie
+The current upribox image is based on Raspbian [#Raspbian]_ Stretch
 Lite and customized with Ansible (see :ref:`architecture`). The
 Raspbian image can be staged into *production* or *development* mode.
 
@@ -20,7 +20,7 @@ to setup a development environment for the upribox software.
 Prerequisites [on your development machine]
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
--  install *ansible* 1.9.6 (``sudo pip install ansible==1.9.6``) and
+-  install *ansible* 2.3.0 (``sudo pip install ansible==2.3.0``) and
    *git*
 -  install requirements for the *ansible* modules (``sudo apt-get install python-pip python-dev libffi-dev libssl-dev libxml2-dev libxslt1-dev libjpeg8-dev zlib1g-dev``)
 -  make sure to log into your Raspberry via SSH once because ansible

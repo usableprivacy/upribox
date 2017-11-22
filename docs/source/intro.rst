@@ -23,40 +23,24 @@ will take a couple of minutes).
 Hardware requirements
 ---------------------
 
-In the following you will find a list of required (and tested) hardware for the upribox software. On the Raspberry Pi 2 make
-sure that you use a compatible USB WiFi dongle!
+In the following you will find a list of required (and tested) hardware for the upribox software.
 
 Table of recommended hardware
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. note::
-   Since upribox v0.5 we support the Pi3 natively, so no
-   additional WiFi dongle is required. The Pi3 WiFi however
-   supports only one active Hotspot. You cannot activate the
-   **Ninja WiFi** on the Pi3 without an additional TL-WN722N v1 WiFi dongle.
-
-+--------------+------------------------+---------------------------+
-|              | Raspberry Pi 3 [#f1]_  | Raspberry Pi 2 [#f2]_     |
-+==============+========================+===========================+
-| SD Card      |      microSDHC Class 10 (min. 4GB) [#f3]_          |
-+--------------+------------------------+---------------------------+
-| Power Supply |      Micro USB 5V/2A [#f4]_                        |
-+--------------+------------------------+---------------------------+
-| WiFi         |       onboard          | TL-WN722N **v1** [#f5]_   |
-+--------------+------------------------+---------------------------+
-
-.. warning::
-   Please note that version 2 of the TL-WN722N WiFi dongle uses a different WiFi chipset and is not supported.
-
-The upribox software works with Raspberry Pi 1 as well, but the
-performance for ad-blocking is considerable worse.
++--------------+------------------------------------------------+
+|              |      Raspberry Pi 3 [#f1]_                     |
++==============+================================================+
+| SD Card      |      microSDHC Class 10 (min. 4GB) [#f3]_      |
++--------------+------------------------------------------------+
+| Power Supply |      Micro USB 5V/2A [#f4]_                    |
++--------------+------------------------------------------------+
+| WiFi         |      onboard                                   |
++--------------+------------------------------------------------+
 
 .. [#f1] Raspberry Pi 3 `[Element14] <https://www.element14.com/community/community/raspberry-pi/raspberrypi3>`__  `[Amazon.com] <https://www.amazon.com/Raspberry-Pi-RASP-PI-3-Model-Motherboard/dp/B01CD5VC92>`__
-.. [#f2] Raspberry Pi 2 `[Element14] <http://element14.com/raspberrypi2>`__ `[Adafruit] <https://www.adafruit.com/products/2358>`__
 .. [#f3] Sandisk SDHC 8GB `[Amazon.com] <https://www.amazon.com/SanDisk-MicroSDHC-Standard-Packaging-SDSDQUAN-008G-G4A/dp/B00M55C0VU/>`__
 .. [#f4] Power Supply `[Amazon.com] <https://www.amazon.com/Kootek-Universal-Charger-Raspberry-External/dp/B00GWDLJGS>`__ `[Adafruit] <https://www.adafruit.com/products/1995>`__
-.. [#f5] TL-WN722N Wireless USB adapter `[Amazon.com] <https://www.amazon.com/TP-LINK-TL-WN722N-Wireless-Adapter-External/dp/B002SZEOLG>`__
-
 
 User manual
 ===========
@@ -66,9 +50,12 @@ User manual
 Web Interface
 -------------
 
-Once you are connected to either of the upribox WiFi networks (Silent or
-Ninja) you can access the upribox web interface via the following URI:
-**http://upri.box <http://upri.box/>**. (see :ref:`integration`)
+Once you are connected to the upribox WiFi network you can access the upribox web interface via one of the following URIs:
+
+- `http://upri.box <http://upri.box/>`_
+- `https://upri.box:4300 <https://upri.box:4300/>`_
+
+(see :ref:`integration`)
 
 Default passwords
 -----------------
@@ -78,21 +65,21 @@ If you used the latest community upribox image for setting up your own privacy b
 ===============================  ============   ======================
 Login                            User           Default Password
 ===============================  ============   ======================
-Wifi (SSID: upribox)             -              changeme
+Wifi (SSID: upribox)             \-              changeme
 Web Interface / SSH              upri           changethedefaults!
 ===============================  ============   ======================
 
 
 It is important that you change the passwords upon the first login in the admin section of the web interface.
-New passwords have to be at least 8 characters long containing lower-case, upper-case, numbers and special characters.
+New passwords should have at least 8 characters containing lower-case, upper-case, numbers and special characters.
 
-*******
+If you bought a pre-assembled upribox from our online store,
+the SSH password of your upribox is configured to be the equal to your webinterface password.
+
 Updates
-*******
+-------
 
-The upribox performs an auto-update every **four hours**. This includes:
-
- * Blocking rules for privoxy and DNS
- * Software updates via ansible + updates from github
+The upribox performs an auto-update every **hour**, which includes software updates via ansible and updates from github.
+The blocking rules for privoxy and DNS are updated every **four hours**.
 
 Please note that this process overwrites manual changes to configuration files. To conduct persistent manual changes you have to use *custom facts* (see :ref:`customization`).
