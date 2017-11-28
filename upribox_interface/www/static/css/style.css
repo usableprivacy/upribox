@@ -2176,6 +2176,7 @@ a.infotext{
 /* Accordion */
 
 button.accordion {
+    height: 100%;
     width: 100%;
     background-color: #f3f3f3;
     color: black;
@@ -2205,7 +2206,7 @@ button.accordion {
     transition: max-height 0.2s ease-out;
   }
 
-  button.accordion:after {
+  button.accordion:before {
     vertical-align: middle;
     display: inline-block;
     width: 10px;
@@ -2222,7 +2223,7 @@ button.accordion {
     margin-top: -2px;
   }
 
-  button.accordion.active:after {
+  button.accordion.active:before {
     vertical-align: middle;
     background: none;
     display: inline-block;
