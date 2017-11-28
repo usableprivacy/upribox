@@ -788,6 +788,7 @@ header nav a:focus, header nav a:hover, header nav a:active, header nav a.active
     /*background-position: -140px -457px;*/
     padding-right: 5px;
     float: left;
+    margin-top: 5px;
 }
 
 .i-update::before {
@@ -796,6 +797,7 @@ header nav a:focus, header nav a:hover, header nav a:active, header nav a.active
     background: url('../img/loading_spinner-s.gif') 0px 0px/20px 20px no-repeat;
     padding-right: 5px;
     float: left;
+    margin-top: 5px;
 }
 
 .i-setup-successful::before {
@@ -916,6 +918,7 @@ header nav a:focus, header nav a:hover, header nav a:active, header nav a.active
         background: url(../img/loading_spinner-s.gif) 1px 1px/15px 15px no-repeat;
         padding-right: 5px;
         float: none;
+        margin-top: 5px;
     }
 }
 
@@ -1943,7 +1946,7 @@ input[type="radio"]{
     background-repeat: no-repeat;
     background-attachment: scroll;
     background-size: 21px;
-    height: 32px;
+    height: 22px;
     width: 27px;
     margin-left: -2px;
     opacity: .38;
