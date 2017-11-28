@@ -2096,11 +2096,12 @@ a.infotext{
     min-height: 50px;
 }
 
-@-moz-document url-prefix() {
+/*only needed for tables in firefox*/
+/*@-moz-document url-prefix() {
     .setup-text{
     height: 70px;
     }
-}
+}*/
 
 .multiple-inputs{
     margin-right: 20px;
