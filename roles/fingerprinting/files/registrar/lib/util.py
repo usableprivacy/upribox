@@ -13,6 +13,9 @@ _DEFAULT_VALUES = {"mode": "SL"}
 EXCEPTED_MAC = [EUI("00:00:00:00:00:00")]
 EXCEPTED_IP = [IPAddress("0.0.0.0")]
 
+# update entry if older as UPDATE_THRESHOLD hours
+UPDATE_THRESHOLD = 1
+
 
 def insert_or_update_fingerprint(conn, **kwargs):
     id = None
@@ -33,10 +36,19 @@ def insert_or_update_fingerprint(conn, **kwargs):
                     id = c.lastrowid
                 except sqlite3.IntegrityError as sqlie:
                     if "UNIQUE constraint failed: devices_deviceentry.mac" in sqlie.message:
+                        # holds all values except mac
+                        tmp = {key: params[key] for key in params if key not in ["mac"]}
+                        # craft parametrized prepared statement string for update clause
+                        update = "=?,".join(tmp.keys() + timestamps.keys()) + "=?"
+                        # craft parametrized prepared statement string for where clause
+                        where = "!=? or ".join(tmp.keys()) + "!=?"
+
+                        # update fields if mac is equal and at least one values differs or timestamp is older than UPDATE_THRESHOLD
                         c.execute(
-                            "UPDATE devices_deviceentry SET %s where mac=?" % ("=?,".join(params.keys() + timestamps.keys()) + "=?", ),
-                            params.values() + timestamps.values() + [params['mac']]
+                            "UPDATE devices_deviceentry SET %s where mac=? and (%s or (julianday() - julianday(last_seen))*24 > ?)" % (update, where),
+                            tmp.values() + timestamps.values() + [params['mac']] + tmp.values() + [UPDATE_THRESHOLD]
                         )
+
                         c.execute("SELECT id FROM devices_deviceentry WHERE mac=?", (params['mac'], ))
                         try:
                             id = c.fetchone()[0]
