@@ -61,8 +61,11 @@ COMMIT
 -A INPUT -p udp -m udp --dport 5301 -j ACCEPT
 # tor
 -A INPUT -p tcp -m tcp --dport 9040 -j ACCEPT
-# avahi
+# mdns (avahi)
 -A INPUT -p udp -m udp --dport 5353 -j ACCEPT
+# llmnr (systemd-resolved)
+-A INPUT -p tcp -m tcp --dport 5355 -j ACCEPT
+-A INPUT -p udp -m udp --dport 5355 -j ACCEPT
 # ssdp
 -A INPUT -p udp -m udp --dport 1900 -j ACCEPT
 {% if env=="development" %}
