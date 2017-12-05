@@ -1,2 +1,2 @@
-deb http://apt.ntop.org/stretch_pi armhf/
-deb http://apt.ntop.org/stretch_pi all/
+deb http://apt-stable.ntop.org/stretch_pi armhf/
+deb http://apt-stable.ntop.org/stretch_pi all/

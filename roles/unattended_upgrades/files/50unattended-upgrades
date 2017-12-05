@@ -30,6 +30,7 @@ Unattended-Upgrade::Origins-Pattern {
         // this will also work for raspbian buster
         "o=Raspbian,label=Raspbian";
         "o=Raspberry Pi Foundation,label=Raspberry Pi Foundation";
+        "o=ntop,l=ntop Repository";
 };
 
 // do not show command prompts, preserve old config
