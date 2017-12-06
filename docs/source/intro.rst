@@ -55,6 +55,11 @@ Once you are connected to the upribox WiFi network you can access the upribox we
 - `http://upri.box <http://upri.box/>`_
 - `https://upri.box:4300 <https://upri.box:4300/>`_
 
+In case your device is not connected to the upribox WiFi network and the traffic is not routed through the upribox, you can still access the web interface via:
+
+- `http://upribox.local <http://upribox.local/>`_
+- `https://upribox.local:4300 <https://upribox.local:4300/>`_
+
 (see :ref:`integration`)
 
 Default passwords

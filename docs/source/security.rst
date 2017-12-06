@@ -41,18 +41,18 @@ Passwords
 =========
 
 If you ordered a fully assembled upribox from our website you will
-find your passwords for the web interface, SSH and both WiFis in
+find your passwords for the web interface and the WiFi in
 the included manual. These passwords were generated with a
 cryptographically secure pseudo-random number generator (CSPRNG)
 which means that the program that created the passwords used
 operating system specific randomness sources which leads to high
-unpredictability.
+unpredictability. The SSH password of your upribox is configured
+to be the equal to your webinterface password.
+
 Upriboxes that you assembled yourself with the provided community
 image are pre-configured with passwords that can be changed in the
-web interface. Only secure passwords with a minimum of 8 characters
-containing lower-case, upper-case, numbers and special characters
-are accepted by the system.
-
+web interface. Secure passwords should consist of at least 8 characters
+containing lower-case, upper-case, numbers and special characters.
 
 SSH/VPN Keys
 ============

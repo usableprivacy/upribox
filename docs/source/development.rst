@@ -52,7 +52,7 @@ downloaded and updated via github.
     pre-assembled boxes. In this process we also create a new user and
     generate a cryptographically secure password. This happens out of scope
     of the production ansible playbook and therefore you have to create a
-    user on your own when deploying in production mode from scratch.
+    user for the web interface on your own when deploying in production mode from scratch.
 
 Development Mode
 ^^^^^^^^^^^^^^^^
@@ -103,6 +103,9 @@ Set-up the initial upribox base image
    ``--ask-pass`` if you change the default password.
 -  from now on, you can deploy the upribox software in
    production or development mode (see :ref:`dev_vs_prod`).
+-  after deyploing the upribox software in production mode for the first time,
+   you need to create a new webinterface user in */usr/share/nginx/www-upri-interface* on the upribox with
+   ``/var/webapp-virtualenv/bin/python manage.py createsuperuser --settings settings_prod``
 
 .. rubric:: Footnotes
 
