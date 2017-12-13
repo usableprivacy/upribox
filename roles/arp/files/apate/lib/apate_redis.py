@@ -218,7 +218,7 @@ class ApateRedis(object):
 
         """
         devs = self.redis.hgetall(self.get_toggled_key(network=network or self.network))
-        if len(devs.keys()) > 0:
+        if len(devs) > 0:
             self.redis.hdel(self.get_toggled_key(network=network or self.network), *devs.keys())
         return devs
 
@@ -274,8 +274,8 @@ class ApateRedis(object):
         # this is done to avoid race conditions
         # self.add_device(mac, self.get_device_ip(mac, network, enabled=not enabled), network, enabled=enabled, force=True)
         # self.remove_device(mac, network, enabled=not enabled)
-        self.redis.hset(self.get_toggled_key(network=network), self._get_device_name(mac, network, enabled=enabled), ip)
         if not enabled:
             self.redis.sadd(self.get_excluded_key(), mac)
-        if enabled:
+        else:
             self.redis.srem(self.get_excluded_key(), mac)
+        self.redis.hset(self.get_toggled_key(network=network), self._get_device_name(mac, network, enabled=enabled), ip)

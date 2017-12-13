@@ -1455,7 +1455,7 @@ function initialisePasswordFields(){
                 setTimeout(function (pr)
                 {
                     return pollForRequestedInformation(pr);
-                }(pollRequest), pollingTimeout);
+                }, pollingTimeout, pollRequest);
             }
 
         });
