@@ -8,14 +8,11 @@
 
 ---
 
-## Download (v2)
-
-### [upribox-image-v2-alpha.zip](https://github.com/usableprivacy/upribox/releases/download/v2.0-alpha/upribox-v2-alpha.zip) (Dec 2017, 616MB)
+## [upribox-image-v2-alpha.zip](https://github.com/usableprivacy/upribox/releases/download/v2.0-alpha/upribox-v2-alpha.zip) (Jan 2018, 809MB)
 
 ---
 
-## Documentation
-### [docs.upribox.org](https://docs.upribox.org)
+## Documentation: [docs.upribox.org](https://docs.upribox.org)
 
 ---
 
