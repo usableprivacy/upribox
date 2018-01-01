@@ -2,9 +2,6 @@
 Getting Started
 ###############
 
-
-.. _intro:
-
 .. include:: intro.rst
 
 #############
