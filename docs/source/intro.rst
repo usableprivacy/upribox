@@ -1,3 +1,4 @@
+.. _intro:
 
 .. note::
    If you bought a pre-assembled upribox from our online store you do not have to read this guide since everything is
@@ -45,10 +46,9 @@ Table of recommended hardware
 User manual
 ===========
 
-.. _web_interface:
-
 Web Interface
 -------------
+.. _web_interface:
 
 Once you are connected to the upribox WiFi network you can access the upribox web interface via one of the following URIs:
 

@@ -3,7 +3,7 @@
 django
 ------
 
-The upribox user interface (see :ref:`web_interface`) is based on the Python Web framework Django [#Django]_.
+The upribox user interface (see :doc:`intro`) is based on the Python Web framework Django [#Django]_.
 The role is responsible for installing the requirements to a virtual environment, copying the web interface files,
 setting up the database and installing services like a supervisor (for the rqworker) and the application container uWSGI.
 By deploying this role the upribox also starts a cleanup process for the saved statistic files removing data older than 6 months.

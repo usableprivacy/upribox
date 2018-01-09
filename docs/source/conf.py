@@ -16,9 +16,18 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+
+
+#def setup(app):
+#    app.add_stylesheet('custom.css')
+
+
+def setup(app):
+    app.add_javascript('piwik.js')
+
+
 import os
-#import sys
-#sys.path.insert(0, os.path.abspath('../roles/django/files/'))
+
 path_to_argparser = '../../roles/upri_config/files/upri-config/lib/argparser.py'
 if os.path.isfile(path_to_argparser):
     from shutil import copyfile
@@ -56,8 +65,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'upribox'
-copyright = u'2017, upribox developers'
-author = u'Markus Huber'
+copyright = u'2018, upribox developers'
+author = u'Markus Donko-Huber'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -73,7 +82,7 @@ release = u'2.0'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'en'
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -138,6 +147,10 @@ html_theme_options = {
     'github_repo': 'upribox',
     'github_button': 'true',
     'fixed_sidebar': 'true',
+    'font_family': "'Lato', 'goudy old style', 'minion pro', 'bell mt', 'serif'",
+    'head_font_family': "'Montserrat', 'Garamond', 'Georgia', 'serif'",
+    #'note_bg': 'rgb(73, 175, 192)'
+    'note_bg': 'gray_1'
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
