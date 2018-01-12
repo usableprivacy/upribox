@@ -1,10 +1,6 @@
 --redis 127.0.0.1:6379{% if ansible_distribution_release != "jessie"%}@2{% endif %}
 
-{% if ansible_local is defined and ansible_local.devices is defined and ansible_local.devices.no_adblocking is defined %}
---packet-filter "ip and not proto ipv6 and not ether host ff:ff:ff:ff:ff:ff {% for m in ansible_local.devices.no_adblocking %}and not ether host {{ m }}{% endfor %}"
-{% else %}
 --packet-filter "ip and not proto ipv6 and not ether host ff:ff:ff:ff:ff:ff"
-{% endif %}
 
 --http-port {{ ":3000" if env=="production" else "3000"}}
 

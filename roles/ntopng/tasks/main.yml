@@ -47,8 +47,6 @@
   template: src=config dest=/etc/ntopng/ntopng.conf
   notify:
     - restart ntopng
-  tags:
-     - configure_devices
 
 - name: create systemd directory for ntopng
   file: path=/etc/systemd/system/ntopng.service.d state=directory

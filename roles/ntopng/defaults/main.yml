@@ -3,4 +3,13 @@
 entries:
   # ntopng.prefs.logging_level: "error" (ntopng serialized, see /var/tmp/ntopng/runtimeprefs.json)
   ntopng.prefs.logging_level: 00056572726F720700A80FDA22CDB3DB93
+  # ntopng.prefs.host_rrd_creation: 1
+  ntopng.prefs.host_rrd_creation: 00C0010700D94A3245D9CBC4E6
+  # ntopng.prefs.host_ndpi_timeseries_creation: "both"
+  ntopng.prefs.host_ndpi_timeseries_creation: 0004626F7468070037F544D2C2F4B1FC
+  # ntopng.prefs.interface_rrd_creation: 0
+  ntopng.prefs.interface_rrd_creation: 00C00007006772728BF09AD612
+  # ntopng.prefs.interface_ndpi_timeseries_creation: "none"
+  ntopng.prefs.interface_ndpi_timeseries_creation: 00046E6F6E650700D905FA995C0496AD
+
   # to change ntopng runtime settings, copy the encoded values and create new etries here
