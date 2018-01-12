@@ -1,4 +1,5 @@
 # coding=utf-8
+import errno
 import logging
 import socket
 import sqlite3
@@ -6,7 +7,6 @@ import thread
 import threading
 import urllib2 as url
 import xml
-import errno
 
 import xmltodict
 from httplib import BadStatusLine
@@ -168,9 +168,12 @@ class RegistrarSniffThread(_SniffThread):
         if id is None:
             return
 
-        if parser.execute(pkt[UDP].payload.load, len(pkt[UDP].payload.load)) != len(pkt[UDP].payload.load):
-            self.logger.warning("error while parsing HTTP payload of ssdp packet")
-            return
+        try:
+            if parser.execute(pkt[UDP].payload.load, len(pkt[UDP].payload.load)) != len(pkt[UDP].payload.load):
+                self.logger.warning("error while parsing HTTP payload of ssdp packet")
+                return
+        except AttributeError:
+            self.logger.warning("received UDP packet without payload")
 
         headers = parser.get_headers()
         if "user-agent" in headers:

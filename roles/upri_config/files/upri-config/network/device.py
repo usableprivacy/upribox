@@ -95,7 +95,7 @@ def get_ip(mac):
     try:
         conn = sqlite3.connect(dbfile)
         c = conn.cursor()
-        c.execute("SELECT ip FROM devices_deviceentry WHERE mac=?", (mac, ))
+        c.execute("SELECT ip FROM devices_deviceentry WHERE mac=?", (mac.lower(), ))
         data = c.fetchone()
         if not data:
             # invalid profile id

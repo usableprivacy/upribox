@@ -1,16 +1,18 @@
 import logging
-import threading
 import multiprocessing as mp
-
-logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
-# suppresses following message
-# WARNING: No route found for IPv6 destination :: (no default route?)
-from scapy.all import sendp, ARP, Ether, ETHER_BROADCAST, ICMPv6NDOptDstLLAddr, ICMPv6ND_NA, IPv6
+import threading
 
 import util
-from sniff_thread import SelectiveIPv4SniffThread, SelectiveIPv6SniffThread
 from apate_redis import ApateRedis
-from misc_thread import ARPDiscoveryThread, IGMPDiscoveryThread, PubSubThread, MulticastPingDiscoveryThread, MulticastListenerDiscoveryThread
+from misc_thread import (ARPDiscoveryThread, IGMPDiscoveryThread,
+                         MulticastListenerDiscoveryThread,
+                         MulticastPingDiscoveryThread, PubSubThread)
+# suppresses following message
+# WARNING: No route found for IPv6 destination :: (no default route?)
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
+from scapy.all import (ARP, ETHER_BROADCAST, Ether, ICMPv6ND_NA,
+                       ICMPv6NDOptDstLLAddr, IPv6, sendp)
+from sniff_thread import SelectiveIPv4SniffThread, SelectiveIPv6SniffThread
 
 
 class SelectiveIPv4Process(mp.Process):
@@ -53,7 +55,7 @@ class SelectiveIPv4Process(mp.Process):
         # Initialise threads
         self.threads['sniffthread'] = SelectiveIPv4SniffThread(self.interface, self.ipv4, self.sleeper, self.logger)
         self.threads['psthread'] = PubSubThread(self.ipv4, self.logger, self.spoof_devices)
-        self.threads['arpthread'] = ARPDiscoveryThread(self.ipv4.ip, str(self.ipv4.network.network))#.gateway
+        self.threads['arpthread'] = ARPDiscoveryThread(self.ipv4.ip, str(self.ipv4.network.network))  #.gateway
         self.threads['igmpthread'] = IGMPDiscoveryThread(self.ipv4)
 
         # declare all threads as deamons
@@ -70,8 +72,9 @@ class SelectiveIPv4Process(mp.Process):
 
         with self.sleeper:
             sendp(
-                Ether(dst=ETHER_BROADCAST) / ARP(op=1, psrc=self.ipv4.gateway, pdst=self.ipv4.gateway, hwdst=ETHER_BROADCAST,
-                                                 hwsrc=self.ipv4.gate_mac))
+                Ether(dst=ETHER_BROADCAST) /
+                ARP(op=1, psrc=self.ipv4.gateway, pdst=self.ipv4.gateway, hwdst=ETHER_BROADCAST, hwsrc=self.ipv4.gate_mac)
+            )
 
     def shutdown(self):
         self.exit.set()
@@ -99,13 +102,17 @@ class SelectiveIPv4Process(mp.Process):
             for worker in self.threads:
                 self.threads[worker].start()
 
-            # lamda expression to generate arp replies to spoof the clients
-            exp1 = lambda dev: Ether(dst=dev[1]) / ARP(op=2, psrc=self.ipv4.gateway, pdst=dev[0], hwdst=dev[1])
+            exp = (
+                # lamda expression to generate arp replies to spoof the clients
+                lambda dev: Ether(dst=dev[1]) / ARP(op=2, psrc=self.ipv4.gateway, pdst=dev[0], hwdst=dev[1]),
+                # lamda expression to generate arp replies to tell the gateway the mac of the clients
+                # this reduces arp requests sent by the gateway (unspoofing clients)
+                lambda dev: Ether(dst=self.ipv4.gate_mac, src=dev[1]) / ARP(op=2, psrc=dev[0], pdst=self.ipv4.gateway, hwsrc=dev[1], hwdst=self.ipv4.gate_mac)
+            )
 
             while not self.exit.is_set():
                 # generates packets for existing clients
-
-                sendp([p(dev) for dev in self.ipv4.redis.get_devices_values(filter_values=True) for p in (exp1,)])
+                sendp(p(dev) for dev in self.ipv4.redis.get_devices_values(filter_values=True) for p in exp)
                 try:
                     with self.sleeper:
                         self.sleeper.wait(timeout=self.__SLEEP)
@@ -189,11 +196,13 @@ class SelectiveIPv6Process(mp.Process):
         # spoof clients with GARP broadcast request
         with self.sleeper:
             # check if the impersonation of the DNS server is necessary
-            tgt = (self.ipv6.gateway, self.ipv6.dns_servers[0]) if util.is_spoof_dns(self.ipv6) else (self.ipv6.gateway,)
+            tgt = (self.ipv6.gateway, self.ipv6.dns_servers[0]) if util.is_spoof_dns(self.ipv6) else (self.ipv6.gateway, )
 
             for source in tgt:
-                sendp(Ether(dst=ETHER_BROADCAST) / IPv6(src=source, dst=MulticastPingDiscoveryThread._MULTICAST_DEST) /
-                      ICMPv6ND_NA(tgt=source, R=0, S=0) / ICMPv6NDOptDstLLAddr(lladdr=self.ipv6.gate_mac))
+                sendp(
+                    Ether(dst=ETHER_BROADCAST) / IPv6(src=source, dst=MulticastPingDiscoveryThread._MULTICAST_DEST) /
+                    ICMPv6ND_NA(tgt=source, R=0, S=0) / ICMPv6NDOptDstLLAddr(lladdr=self.ipv6.gate_mac)
+                )
 
     def shutdown(self):
         self.exit.set()
@@ -221,15 +230,21 @@ class SelectiveIPv6Process(mp.Process):
                 self.threads[worker].start()
 
             # check if the impersonation of the DNS server is necessary
-            tgt = (self.ipv6.gateway, self.ipv6.dns_servers[0]) if util.is_spoof_dns(self.ipv6) else (self.ipv6.gateway,)
+            tgt = (self.ipv6.gateway, self.ipv6.dns_servers[0]) if util.is_spoof_dns(self.ipv6) else (self.ipv6.gateway, )
 
             while not self.exit.is_set():
                 packets = []
 
-                for source in tgt:
-                    packets.extend([Ether(dst=dev[1]) / IPv6(src=source, dst=dev[0]) /
-                                    ICMPv6ND_NA(tgt=source, R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=self.ipv6.mac)
-                                    for dev in self.ipv6.redis.get_devices_values(filter_values=True)])
+                for dev in self.ipv6.redis.get_devices_values(filter_values=True):
+                    for source in tgt:
+                        packets.append(
+                            Ether(dst=dev[1]) / IPv6(src=source, dst=dev[0]) / ICMPv6ND_NA(tgt=source, R=0, S=1) /
+                            ICMPv6NDOptDstLLAddr(lladdr=self.ipv6.mac)
+                        )
+                    packets.append(
+                        Ether(dst=self.ipv6.gate_mac, src=dev[1]) / IPv6(src=dev[0], dst=self.ipv6.gateway) / ICMPv6ND_NA(tgt=dev[0], R=0, S=1) /
+                        ICMPv6NDOptDstLLAddr(lladdr=dev[1])
+                    )
 
                 sendp(packets)
                 try:
@@ -248,7 +263,7 @@ class SelectiveIPv6Process(mp.Process):
 
     @staticmethod
     def spoof_devices(ip, devs, logger):
-        tgt = (ip.gateway, ip.dns_servers[0]) if util.is_spoof_dns(ip) else (ip.gateway,)
+        tgt = (ip.gateway, ip.dns_servers[0]) if util.is_spoof_dns(ip) else (ip.gateway, )
 
         for entry in devs:
             dev_hw = util.get_device_mac(entry)
@@ -256,8 +271,13 @@ class SelectiveIPv6Process(mp.Process):
 
             for source in tgt:
                 if not ip.redis.check_device_disabled(util.get_device_mac(entry)):
-                    sendp([Ether(dst=dev_hw) / IPv6(src=source, dst=dev_ip) /
-                           ICMPv6ND_NA(tgt=source, R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=ip.mac)])
+                    sendp(
+                        [Ether(dst=dev_hw) / IPv6(src=source, dst=dev_ip) / ICMPv6ND_NA(tgt=source, R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=ip.mac)]
+                    )
                 else:
-                    sendp([Ether(dst=dev_hw) / IPv6(src=source, dst=dev_ip) /
-                           ICMPv6ND_NA(tgt=source, R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=ip.gate_mac)])
+                    sendp(
+                        [
+                            Ether(dst=dev_hw) / IPv6(src=source, dst=dev_ip) / ICMPv6ND_NA(tgt=source, R=0, S=1) /
+                            ICMPv6NDOptDstLLAddr(lladdr=ip.gate_mac)
+                        ]
+                    )
