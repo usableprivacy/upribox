@@ -1,0 +1,9 @@
+{{ default_settings.log.general.path }}/{{ default_settings.log.django.error }}
+{
+  su root tmp-logger
+  rotate 5
+  daily
+  missingok
+  notifempty
+  maxsize 10M
+}

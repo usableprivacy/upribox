@@ -72,6 +72,11 @@
   file: path=/usr/share/nginx/www-upri-interface/db.sqlite3 state=absent
   when: env == "production"
 
+# the task "check django for errors" tries to access or close the logfile, which might not exist
+# (in the run where the old settings file without file logging is replaced by the new one)
+- name: create django logfile
+  file: path="{{ default_settings.log.general.path }}/{{ default_settings.log.django.error }}" state=touch mode=0644 owner=www-data group=www-data
+
 - name: check django for errors
   django_manage: settings="{{ django_settings_file }}" command="help" app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
   become_user: www-data
@@ -148,7 +153,8 @@
   when:  copy_django is defined and copy_django|changed and sv_config is defined and not sv_config|changed
 
 - name: modify logrotate.d entry
-  template: src=logrotate.j2 dest=/etc/logrotate.d/supervisor mode=0644
-
-- name: modify logrotate.d entry
-  template: src=logrotate_uwsgi.j2 dest=/etc/logrotate.d/uwsgi mode=0644
+  template: src="{{ item.key }}" dest="/etc/logrotate.d/{{ item.value }}" mode=0644
+  with_dict:
+      logrotate_uwsgi.j2: uwsgi
+      logrotate.j2: supervisor
+      logrotate_interface.j2: interface

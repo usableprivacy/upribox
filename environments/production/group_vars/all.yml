@@ -77,6 +77,8 @@ default_settings:
       logfiles:
         #logrotate applies to *.log
         logname: 'privoxy.log'
+    django:
+        error: 'django_error.log'
     squid:
       subdir: 'squid'
       logfiles:

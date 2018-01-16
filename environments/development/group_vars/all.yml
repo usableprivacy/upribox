@@ -64,6 +64,8 @@ default_settings:
       subdir: 'privoxy'
       logfiles:
         logname: 'privoxy.log'
+    django:
+        error: 'django_error.log'
     registrar:
       subdir: 'registrar'
       logfiles:

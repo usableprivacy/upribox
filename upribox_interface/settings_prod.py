@@ -14,6 +14,8 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 import sys
 
+from lib.utils import get_fact
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Quick-start development settings - unsuitable for production
@@ -64,18 +66,6 @@ INSTALLED_APPS = (
     'more',
     'setup',
 )
-
-# MIDDLEWARE_CLASSES = (
-#     'django.contrib.sessions.middleware.SessionMiddleware',
-#     'django.middleware.locale.LocaleMiddleware',
-#     'django.middleware.common.CommonMiddleware',
-#     'django.middleware.csrf.CsrfViewMiddleware',
-#     'django.contrib.auth.middleware.AuthenticationMiddleware',
-#     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-#     'django.contrib.messages.middleware.MessageMiddleware',
-#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-#     'django.middleware.security.SecurityMiddleware',
-# )
 
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -198,7 +188,7 @@ LOGGING = {
                 'class': 'logging.StreamHandler',
                 'formatter': 'simple',
                 'stream': sys.stdout,
-            }
+            },
         },
     'loggers':
         {
@@ -213,6 +203,22 @@ LOGGING = {
             },
         },
 }
+
+LOG_FILE = get_fact('log', 'django', 'error')
+LOG_PATH = get_fact('log', 'general', 'path')
+
+if LOG_FILE and LOG_PATH:
+    LOGGING['handlers']['file'] = {
+        'level': 'ERROR',
+        'class': 'logging.handlers.WatchedFileHandler',
+        'filename': LOG_PATH + '/' + LOG_FILE,
+    }
+
+    LOGGING['loggers']['django'] = {
+        'handlers': ['file'],
+        'level': 'INFO',
+        'propagate': True,
+    }
 
 # Set the duration vpn profile download links are valid (in seconds)
 VPN_LINK_TIMEOUT = 60 * 5
