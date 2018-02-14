@@ -48,6 +48,11 @@
   notify:
     - restart ntopng
 
+# this will become obsolete by a new ntopng stable release (current: 3.2)
+# also change url inside upribox_interface/traffic/ntopng.py (QUERY_URL)
+- name: copy custom ntopng lua script
+  copy: src=query.lua dest=/usr/share/ntopng/scripts/lua/modules/grafana/upri.lua mode=644 owner=root group=root
+
 - name: create systemd directory for ntopng
   file: path=/etc/systemd/system/ntopng.service.d state=directory
 

@@ -83,3 +83,14 @@ def tofirstdayinisoweek(year, week):
     if date(year, 1, 4).isoweekday() > 4:
         ret -= timedelta(days=7)
     return ret
+
+
+def get_week_days(year, week):
+    d = date(year, 1, 1)
+    if (d.weekday() > 3):
+        d = d + timedelta(7 - d.weekday())
+    else:
+        d = d - timedelta(d.weekday())
+    dlt = timedelta(days=(week - 1) * 7)
+    # return d + dlt, d + dlt + timedelta(days=6)
+    return [d + dlt + timedelta(days=i) for i in range(7)]

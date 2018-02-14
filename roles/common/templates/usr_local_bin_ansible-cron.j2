@@ -1,5 +1,13 @@
 #!/bin/bash
 
+function cleanup() {
+    rm -f {{ recovery_file }} >>{{ default_settings.log.general.path }}/{{ default_settings.log.ansible_pull.logfiles.logname }} 2>&1
+}
+
+# trap ctrl-c and call cleanup()
+# to avoid a very unlikely race condition
+trap cleanup INT
+
 # Ansible Update Cronjob: runs ansible-pull up to three times
 n=0
 until [ $n -ge 3 ]
@@ -37,4 +45,4 @@ do
 done
 
 # remove update status file
-rm -f {{ recovery_file }} >>{{ default_settings.log.general.path }}/{{ default_settings.log.ansible_pull.logfiles.logname }} 2>&1
+cleanup
