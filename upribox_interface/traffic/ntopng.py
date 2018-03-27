@@ -43,6 +43,10 @@ def _device_day_data(date, host, metric):
     return r.json()
 
 
+def convert_to_megabytes(byte_count):
+    return round((byte_count / (1024.0 * 1024.0)), 2)
+
+
 # date(datetime.date object)
 # host(str): ip address
 # sent_recv(bool): separate sent and receveived values (only protocols)
@@ -74,7 +78,9 @@ def device_day_stats(date, host, sent_recv=True, metric=Metric.PROTOCOLS):
         # calculates bytes from given bps values
         res[key] += sum((point[0] / byte) * time_factor for point in proto['datapoints'])
 
-    return res
+    final_result = {protocol: convert_to_megabytes(byte_count) for protocol, byte_count in res.items()}
+
+    return final_result
 
 
 def get_active_hosts(mode='local', api='grafana'):

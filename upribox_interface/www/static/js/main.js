@@ -70,6 +70,12 @@ UPRIBOX.Main = (function($) {
         layout: {}
     };
 
+    //holds data and layout for device traffic statistics
+    var statisticTrafficInformation = {
+        data: [],
+        layout: {}
+    };
+
     //indicates how many weeks should be shown in the plot
     var totalWeeks = 5;
 
@@ -420,6 +426,10 @@ UPRIBOX.Main = (function($) {
 
             if($('body').attr("data-poll-statistics-main-url")) {
                 getStatistic();
+            }
+
+              if($('body').attr("data-poll-traffic-main-url")) {
+                getTraffic();
             }
 
             if ($('.messages-to-show').length > 0) {
@@ -854,6 +864,84 @@ function initialisePasswordFields(){
         })
     }
 
+    function getTraffic() {
+        pollForRequestedInformation({
+            pollUrl: "data-poll-traffic-main-url",
+            domManipulator: completeTraffic,
+            errorHandler: errorGetStatistics,
+            pollOnce: true
+        })
+    }
+
+    function completeTraffic(data) {
+
+        var protocols_num = data['protocols'].length;
+
+        for (var i = 0; i < protocols_num; i++){
+
+            var trace = {
+            //hoverinfo: "y",
+            x: data['protocols'][i]['dates'],
+            y: data['protocols'][i]['amounts'],
+            //width:[/*.6, .6, .6*/],
+            marker: {
+                color: data['protocols'][i]['color']
+            },
+            name: data['protocols'][i]['protocol'],
+            text: data['protocols'][i]['protocol'],
+            type: 'bar'
+            };
+
+            statisticTrafficInformation.data.push(trace);
+        }
+
+
+        var layout = {
+            xaxis: {
+                autorange: true,
+                showgrid: false,
+                showline: true,
+                fixedrange: true
+            },
+            yaxis: {
+                autorange: true,
+                showgrid: false,
+                showline: true,
+                showticklabels: true,
+                fixedrange: true,
+                zeroline: false
+            },
+            barmode: 'stack',
+            showlegend: true,
+            /*legend: {
+             "x": "0",
+             "margin.r": "120"
+             },*/
+            margin: {
+                l: 22,
+                r: 0,
+                b: 50,
+                t: 10,
+                pad: 0
+            },
+            /*
+            annotations: [
+            ]*/
+        };
+
+        statisticTrafficInformation.layout = layout;
+
+        initializeTrafficStatistics(data);
+
+        /*trace1.y[0] =10;
+         layout.annotations[0].y = trace1.y[0] + trace2.y[0];
+
+         Plotly.Plots.resize(gd);*/
+        // var week = $(".xtick").find("text").text;
+        //console.log($(".xtick").find("text a"));
+        //$(".xtick").find("text a").on("click", function () {alert(1)});
+    }
+
     function completeStatistics(data) {
 
         var trace1 = {
@@ -954,6 +1042,175 @@ function initialisePasswordFields(){
         // var week = $(".xtick").find("text").text;
         //console.log($(".xtick").find("text a"));
         //$(".xtick").find("text a").on("click", function () {alert(1)});
+    }
+
+    function initializeTrafficStatistics(data) {
+
+        if (data.total == null)
+            data.total = 0;
+
+        updateOverallTrafficCount(data.total);
+
+        //updateLists(data[0].filtered.bad, data[0].filtered.ugly);
+
+        // var weeksToDo =  data.length;
+        // var dummyWeeksTodo =  totalWeeks - weeksToDo;
+        //
+        // var fillStatisticInformation = function (countBad, countUgly, week, index, onlyDummy, width) {
+        //     if (!width)
+        //         width = .6;
+        //     var offset = onlyDummy?0:dummyWeeksTodo;
+        //     var weekDomString = getWeekDomString(week, onlyDummy);
+        //     if (!onlyDummy) {
+        //         //statisticInformation.data[0].y[index] = countBad;
+        //         statisticInformation.data[1].x[index] = weekDomString;
+        //         statisticInformation.data[1].width[index] = width;
+        //
+        //         //statisticInformation.data[1].y[index] = countUgly;
+        //         statisticInformation.data[2].x[index] = weekDomString;
+        //         statisticInformation.data[2].width[index] = width;
+        //
+        //         statisticInformation.layout.annotations[index] = {
+        //             x: index + offset,
+        //             //y: countBad + countUgly,
+        //             xref: 'x',
+        //             yref: 'y',
+        //             text: '',
+        //             showarrow: true,
+        //             arrowcolor: "transparent",
+        //             arrowhead: 0,
+        //             ax: 0,
+        //             ay: -10
+        //         }
+        //         updateBarValue(index, countBad, countUgly, true);
+        //     }
+        //     statisticInformation.data[0].y[index + offset] = 0.0001; //this is added for the case all values are 0 - in this case the zero line would be placed in the vertical middle and the (zero indicating) annotations would also be in the vertical middle
+        //     statisticInformation.data[0].x[index + offset] = weekDomString;
+        //     statisticInformation.data[0].width[index + offset] = width;
+        //
+        //     statisticInformation.data[3].y[index + offset] = 0.0013; //this is added for the case the values of the week are zero. thanks to this, the hover info stays at the bottom in that case
+        //     statisticInformation.data[3].x[index + offset] = weekDomString;
+        //     statisticInformation.data[3].width[index + offset] = width;
+        // }
+        //
+        // var getWeekDomString = function (week, dontCreateLink) {
+        //     var calendarWeekShortText = $("#calendar-week-short-text").text();
+        //     var defaultDomString = "<span>" + calendarWeekShortText + " </span>" + week;
+        //     var retVal = dontCreateLink?defaultDomString:"<a id='week" + week + "'>" + defaultDomString + "</a>";
+        //     return retVal;
+        // }
+        //
+        // var getWeekCountOfYear = function (prevYear) {
+        //     /*according to
+        //      https://de.wikipedia.org/w/index.php?title=Woche&oldid=167637426#Z.C3.A4hlweise_nach_ISO_8601
+        //      and
+        //      https://en.wikipedia.org/w/index.php?title=ISO_week_date&oldid=793798377#Weeks_per_year
+        //      a common year has 53 Weeks, when it starts with a thursday and ends with a thursday
+        //      and
+        //      a leap year has 53 Weeks, when it starts with a Wednesday and ends with a Thursday or when it starts with a Thursday and ends with a Friday
+        //      */
+        //     var currentYear = new Date().getFullYear();
+        //     if (prevYear) currentYear--;
+        //     var isLeapYear = (new Date(currentYear, 1, 29).getMonth()==1);
+        //     var has53Weeks = false;
+        //     var yearsFirstDay = new Date(currentYear, 0, 1).getDay(); // 4 would be Thursday
+        //     var yearsLastDay = new Date(currentYear, 11, 31).getDay(); // 4 would be Thursday
+        //     if (!isLeapYear) {
+        //         has53Weeks = (yearsFirstDay == 4 && yearsLastDay == 4);
+        //     }
+        //     else {
+        //         has53Weeks = ((yearsFirstDay == 3 && yearsLastDay == 4) || (yearsFirstDay == 4 && yearsLastDay == 5));
+        //     }
+        //     return (has53Weeks?53:52);
+        // }
+        //
+        // for (var i = 0; i < totalWeeks; i++) {
+        //     fillStatisticInformation(0, 0, "", i, true);
+        //     clickableWeeks.push(0);
+        // }
+        // for (var i = 0; i < weeksToDo; i++) {
+        //     fillStatisticInformation(0, 0, "", i);
+        // }
+        // for (var i = weeksToDo - 1; i >= 0; i--) {
+        //     //for (var i = totalWeeks - 1; i >= dummyWeeksTodo; i--) {
+        //
+        //     clickableWeeks[totalWeeks-i-1] = data[i].week;
+        //
+        //     var bad = 0;
+        //     var ugly = 0;
+        //     if (i == 0) {
+        //         lastWeek = data[i].week;
+        //         currentClickedWeek = data[i].week;
+        //         currentSelectedWeek = data[i].week;
+        //         bad = parseInt(data[i].bad);
+        //         ugly = parseInt(data[i].ugly);
+        //         // for (var entry in data[i].filtered.bad) {
+        //         //     bad += parseInt(data[i].filtered.bad[entry][1]);
+        //         // }
+        //         // for (var entry in data[i].filtered.ugly) {
+        //         //     ugly += parseInt(data[i].filtered.ugly[entry][1]);
+        //         // }
+        //     }
+        //     else {
+        //         bad = parseInt(data[i].bad);
+        //         ugly = parseInt(data[i].ugly);
+        //     }
+        //     //fillStatisticInformation(bad, ugly, data[i].week, totalWeeks-(i+1));
+        //     fillStatisticInformation(bad, ugly, data[i].week, weeksToDo-1-i);
+        //
+        // }
+        // for (var i = 0; i < dummyWeeksTodo; i++) {
+        //     //alert(1);
+        //
+        //     /*var followWeek = (parseInt(data[0].week) + i + 1);
+        //      var weeksInThisYear = getWeekCountOfYear();
+        //      if (followWeek > weeksInThisYear)
+        //      followWeek = weeksInThisYear - followWeek;
+        //      fillStatisticInformation(0, 0, followWeek, i + weeksToDo, true);*/
+        //
+        //     var prevWeek = (parseInt(data[data.length-1].week) - i - 1);
+        //     var weeksInPrevYear = getWeekCountOfYear(true);
+        //     if (prevWeek < 1)
+        //         prevWeek = weeksInPrevYear + prevWeek;
+        //     //fillStatisticInformation(0, 0, followWeek, i + weeksToDo, true);
+        //
+        //     fillStatisticInformation(0, 0, prevWeek, dummyWeeksTodo - 1 - i, true);
+        // }
+        var d3 = Plotly.d3;
+
+        var WIDTH_IN_PERCENT_OF_PARENT = 73,
+            HEIGHT_IN_PERCENT_OF_PARENT = 80;
+
+        var gd3 = d3.select('#stats');
+        /*.style({
+         width: WIDTH_IN_PERCENT_OF_PARENT + '%',
+         height: HEIGHT_IN_PERCENT_OF_PARENT + '%'
+         });*/
+
+        gd = gd3.node();
+        window.onresize = function() {
+            requestAnimationFrame(function() {
+                Plotly.Plots.resize(gd);
+                //createLinksForWeeks();
+            });
+        };
+
+        $(".loading").css("opacity", "0");
+        $(".loading-text").css("opacity", "0");
+        setTimeout(function () {
+            $(".loading").css("display", "none");
+            $(".loading-text").css("display", "none");
+            $(".statistics-content").css("display", "block");
+            $(".loading").detach().appendTo(".statistics-content .lists").addClass("update-weeks-statistik").css("visibility", "hidden").css("display", "block" );
+            Plotly.newPlot(gd, statisticTrafficInformation.data, statisticTrafficInformation.layout, {displayModeBar: false});
+            Plotly.Plots.resize(gd);
+            //setActiveWeekLink();
+            //createLinksForWeeks();
+            $(".statistics-content").css("opacity", "1");
+            /*setTimeout(function() {
+                doStatisticsUpdate(lastWeek, true);
+            }, 550);*/
+        }, 450);
     }
 
     function initializeStatistics(data) {
@@ -1181,6 +1438,10 @@ function initialisePasswordFields(){
     function updateOverallCount(overallCount) {
         $("#total-blocked").text(overallCount.bad);
         $("#total-filtered").text(overallCount.ugly);
+    }
+
+    function updateOverallTrafficCount(overallCount) {
+        $("#total-traffic").text(overallCount);
     }
 
     function updateLists(badList, uglyList) {

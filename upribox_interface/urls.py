@@ -111,5 +111,6 @@ urlpatterns = [
     url(r'^setup/success$', setup.views.setup_success, name="upri_setup_success"),
 
     # traffic
-    url(r'^traffic/(?P<slug>\w+)(?:/(?P<week>[0-9]{1,2})/(?P<year>[0-9]{4}))?$', traffic.views.get_statistics, name="upri_traffic")
+    url(r'^traffic/(?P<slug>\w+)(?:/(?P<week>[0-9]{1,2})/(?P<year>[0-9]{4}))?$', traffic.views.get_statistics, name="upri_traffic"),
+    url(r'^traffic/overview/(?P<slug>\w+)$', traffic.views.get_overview, name="upri_traffic_overview"),
 ]
