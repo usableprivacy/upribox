@@ -112,5 +112,6 @@ urlpatterns = [
 
     # traffic
     url(r'^traffic/(?P<slug>\w+)(?:/(?P<week>[0-9]{1,2})/(?P<year>[0-9]{4}))?$', traffic.views.get_statistics, name="upri_traffic"),
+    url(r'^traffic/domains/(?P<slug>\w+)(?:/(?P<week>[0-9]{1,2}))?$', traffic.views.get_device_queries, name="upri_traffic_domains"),
     url(r'^traffic/overview/(?P<slug>\w+)$', traffic.views.get_overview, name="upri_traffic_overview"),
 ]

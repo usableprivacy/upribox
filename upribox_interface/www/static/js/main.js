@@ -185,8 +185,8 @@ UPRIBOX.Main = (function($) {
                 type: 'post',
                 success: function (data) {
                     modal.remove();
-                    $("#" + slug + " .devname").text(data);
-                    sortDevices();
+                    $("a.devnamechange").text(data);
+                    //sortDevices();
                     // onAjaxUpdate();
                 },
                 error: function(jqXHR){
@@ -369,7 +369,7 @@ UPRIBOX.Main = (function($) {
             prevMode = $('.radio_device[name='+$(this).prev("input").attr('name')+']:checked').val();
         });
 
-        $('body').on('click', '.devname', function(e) {
+        $('body').on('click', '.devnamechange', function(e) {
             e.preventDefault();
             var href = $(this).attr('href');
             $.ajax({
@@ -880,15 +880,21 @@ function initialisePasswordFields(){
         for (var i = 0; i < protocols_num; i++){
 
             var trace = {
-            //hoverinfo: "y",
             x: data['protocols'][i]['dates'],
             y: data['protocols'][i]['amounts'],
-            //width:[/*.6, .6, .6*/],
             marker: {
                 color: data['protocols'][i]['color']
             },
             name: data['protocols'][i]['protocol'],
             text: data['protocols'][i]['protocol'],
+            textposition: 'top',
+            line: {
+                width: 1.0,
+                color: '#777777'},
+            //hoverinfo: 'y+text',
+            /*hoverlabel: {
+                font: {size: 8}
+            },*/
             type: 'bar'
             };
 
@@ -909,7 +915,9 @@ function initialisePasswordFields(){
                 showline: true,
                 showticklabels: true,
                 fixedrange: true,
-                zeroline: false
+                zeroline: false,
+                //type: 'log',
+                title: 'Data [MB]'
             },
             barmode: 'stack',
             showlegend: true,
@@ -918,10 +926,10 @@ function initialisePasswordFields(){
              "margin.r": "120"
              },*/
             margin: {
-                l: 22,
+                l: 50,
                 r: 0,
-                b: 50,
-                t: 10,
+                b: 40,
+                t: 30,
                 pad: 0
             },
             /*
@@ -1046,52 +1054,17 @@ function initialisePasswordFields(){
 
     function initializeTrafficStatistics(data) {
 
+        //console.log(data);
+
         if (data.total == null)
             data.total = 0;
 
         updateOverallTrafficCount(data.total);
+        updateCalendarWeek(data.calendarweek);
 
         //updateLists(data[0].filtered.bad, data[0].filtered.ugly);
 
-        // var weeksToDo =  data.length;
-        // var dummyWeeksTodo =  totalWeeks - weeksToDo;
-        //
-        // var fillStatisticInformation = function (countBad, countUgly, week, index, onlyDummy, width) {
-        //     if (!width)
-        //         width = .6;
-        //     var offset = onlyDummy?0:dummyWeeksTodo;
-        //     var weekDomString = getWeekDomString(week, onlyDummy);
-        //     if (!onlyDummy) {
-        //         //statisticInformation.data[0].y[index] = countBad;
-        //         statisticInformation.data[1].x[index] = weekDomString;
-        //         statisticInformation.data[1].width[index] = width;
-        //
-        //         //statisticInformation.data[1].y[index] = countUgly;
-        //         statisticInformation.data[2].x[index] = weekDomString;
-        //         statisticInformation.data[2].width[index] = width;
-        //
-        //         statisticInformation.layout.annotations[index] = {
-        //             x: index + offset,
-        //             //y: countBad + countUgly,
-        //             xref: 'x',
-        //             yref: 'y',
-        //             text: '',
-        //             showarrow: true,
-        //             arrowcolor: "transparent",
-        //             arrowhead: 0,
-        //             ax: 0,
-        //             ay: -10
-        //         }
-        //         updateBarValue(index, countBad, countUgly, true);
-        //     }
-        //     statisticInformation.data[0].y[index + offset] = 0.0001; //this is added for the case all values are 0 - in this case the zero line would be placed in the vertical middle and the (zero indicating) annotations would also be in the vertical middle
-        //     statisticInformation.data[0].x[index + offset] = weekDomString;
-        //     statisticInformation.data[0].width[index + offset] = width;
-        //
-        //     statisticInformation.data[3].y[index + offset] = 0.0013; //this is added for the case the values of the week are zero. thanks to this, the hover info stays at the bottom in that case
-        //     statisticInformation.data[3].x[index + offset] = weekDomString;
-        //     statisticInformation.data[3].width[index + offset] = width;
-        // }
+
         //
         // var getWeekDomString = function (week, dontCreateLink) {
         //     var calendarWeekShortText = $("#calendar-week-short-text").text();
@@ -1179,13 +1152,12 @@ function initialisePasswordFields(){
         var d3 = Plotly.d3;
 
         var WIDTH_IN_PERCENT_OF_PARENT = 73,
-            HEIGHT_IN_PERCENT_OF_PARENT = 80;
+            HEIGHT_IN_PERCENT_OF_PARENT = 150;
 
-        var gd3 = d3.select('#stats');
-        /*.style({
-         width: WIDTH_IN_PERCENT_OF_PARENT + '%',
+        var gd3 = d3.select('#stats').style({
+         //width: WIDTH_IN_PERCENT_OF_PARENT + '%',
          height: HEIGHT_IN_PERCENT_OF_PARENT + '%'
-         });*/
+         });
 
         gd = gd3.node();
         window.onresize = function() {
@@ -1207,9 +1179,9 @@ function initialisePasswordFields(){
             //setActiveWeekLink();
             //createLinksForWeeks();
             $(".statistics-content").css("opacity", "1");
-            /*setTimeout(function() {
-                doStatisticsUpdate(lastWeek, true);
-            }, 550);*/
+            setTimeout(function() {
+                doTrafficUpdate(lastWeek, true);
+            }, 550);
         }, 450);
     }
 
@@ -1444,6 +1416,10 @@ function initialisePasswordFields(){
         $("#total-traffic").text(overallCount);
     }
 
+    function updateCalendarWeek(calendarweek) {
+        $("#current-week").text(calendarweek);
+    }
+
     function updateLists(badList, uglyList) {
         $("#blocked-pages").empty();
         for (var detailUrl in badList) {
@@ -1452,6 +1428,13 @@ function initialisePasswordFields(){
         $("#filtered-pages").empty();
         for (var detailUrl in uglyList) {
             $("#filtered-pages").append("<li>" + uglyList[detailUrl][0] + ": " + uglyList[detailUrl][1] + "</li>")
+        }
+    }
+
+    function updateDomainList(domainList) {
+        $("#requested-domains").empty();
+        for (var detailUrl in domainList) {
+            $("#requested-domains").append("<li>" + domainList[detailUrl][0] + ": " + domainList[detailUrl][1] + "</li>")
         }
     }
 
@@ -1483,6 +1466,24 @@ function initialisePasswordFields(){
             pollIntervall: pollingTimeoutStatistics
         })
     }
+
+    function doTrafficUpdate(week, doInfinite) {
+        pollForRequestedInformation({
+            pollUrl: "data-poll-traffic-update-url",
+            additionalUrl: week,
+            domManipulator: updateTrafficStatistics,
+            errorHandler: errorUpdateStatistics,
+            pollOnce: !doInfinite,
+            pollIntervall: pollingTimeoutStatistics
+        })
+    }
+
+    function updateTrafficStatistics(data) {
+
+        //console.log(data);
+        updateDomainList(data.domains);
+    }
+
 
     function updateStatistics(data) {
 

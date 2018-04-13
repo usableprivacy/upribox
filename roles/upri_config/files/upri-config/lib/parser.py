@@ -10,7 +10,8 @@ from urlparse import urlparse
 
 import redis as redisDB
 from lib.settings import DEVICE_DEFAULT_MODE
-from netaddr import EUI, AddrFormatError, IPAddress
+from netaddr import EUI
+from subprocess import check_output
 
 redis = redisDB.StrictRedis(host="localhost", port=6379, db=7)
 
@@ -21,12 +22,27 @@ _PREFIX = _DELIMITER.join(("stats", "v2"))
 """str: Prefix which is used for every key in the redis db."""
 _DNSMASQ = "dnsmasq"
 _PRIVOXY = "privoxy"
+_DEVICE = "device"
 _BLOCKED = "blocked"
+_QUERIED = "queried"
 _WEEK = "week"
 _DOMAIN = "domain"
 
 # 6 weeks in seconds
 _TTL = 3629000
+
+#
+# lookup MAC address associated with ip address
+# return MAC address as EUI instance
+#
+
+
+def get_mac_from_ip(ip):
+    arp_entry = check_output(["arp", "-n", ip])
+    unix_mac = re.search(r"(([a-f\d]{1,2}\:){5}[a-f\d]{1,2})", arp_entry).groups()[0]
+    mac = EUI(unix_mac)
+    return mac
+
 
 #
 # parse the privoxy and dnsmasq logfiles and insert data into django db
@@ -43,10 +59,10 @@ def action_parse_logs(arg):
         parse_dnsmasq_logs(
             os.path.join(config['log']['general']['path'], config['log']['dnsmasq']['subdir'], config['log']['dnsmasq']['logfiles']['logname'])
         ),
-        parse_dnsmasq_logs(
-            os.path.
-            join(config['log']['general']['path'], config['log']['dnsmasq_ninja']['logfiles']['logname'])
-        ),
+        #parse_dnsmasq_logs(
+        #    os.path.
+        #    join(config['log']['general']['path'], config['log']['dnsmasq_ninja']['logfiles']['logname'])
+        #),
         parse_privoxy_logs(arg)
     ]
     if 16 in vals:
@@ -121,63 +137,111 @@ def parse_privoxy_logs(arg):
     return 0
 
 
+def parse_blocked_domain(log_line, cur_year):
+    blockedPattern = re.compile('([a-zA-Z]{3} ? \d{1,2} (\d{2}:?){3}) dnsmasq\[[0-9]*\]: config (.*) is 192.168.55.254')
+    try:
+        res = re.match(blockedPattern, log_line)
+        if res:
+            sdate = res.group(1)
+            ssite = res.group(3)
+            psite = str(ssite)
+            pdate = datetime.strptime(sdate, '%b %d %H:%M:%S').replace(year=cur_year)
+
+            # calendar week
+            week = pdate.date().isocalendar()[1]
+
+            # blocked overall counter
+            redis.incr(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED)))
+
+            # filtered counter per calendar week
+            redis.incr(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED, _WEEK, str(week))))
+            redis.expire(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED, _WEEK, str(week))), _TTL)
+
+            # store filtered domain count per week
+            redis.hincrby(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED, _WEEK, str(week), _DOMAIN)), psite, 1)
+            redis.expire(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED, _WEEK, str(week), _DOMAIN)), _TTL)
+
+            #print "found new blocked query: [%s] %s" % (psite, pdate)
+            return True
+    except Exception as e:
+        print "failed to parse blocked query \"%s\": %s" % (log_line, e.message)
+        return False
+
+#
+# parse dnsmasq dns query line
+#
+
+
+def parse_dns_query(log_line, cur_year):
+    queryPattern = re.compile(
+        '(.*) dnsmasq\[[0-9]*\]: query\[[A-Z]*\] (.*) from (.*)')
+    try:
+        res = re.match(queryPattern, log_line)
+        if res:
+            sdate = res.group(1)
+            ssite = res.group(2)
+            sip = res.group(3)
+
+            psite = str(ssite)
+            pdate = datetime.strptime(sdate, '%b %d %H:%M:%S').replace(year=cur_year)
+
+            try:
+                mac = get_mac_from_ip(sip)
+            except AttributeError:
+                #print "No MAC found for {}".format(sip)
+                return False
+
+            # calendar week
+            week = pdate.date().isocalendar()[1]
+
+            # store filtered domain count per week
+            redis.hincrby(_DELIMITER.join((_PREFIX, _DEVICE, _QUERIED, str(mac), _WEEK, str(week), _DOMAIN)), psite, 1)
+            redis.expire(_DELIMITER.join((_PREFIX, _DEVICE, _QUERIED, str(mac), _WEEK, str(week), _DOMAIN)), _TTL)
+
+            #print "found device query: %s from %s at %s " % (psite, mac, pdate)
+            return True
+    except Exception as e:
+        print "failed to parse device query \"%s\": %s" % (log_line, e.message)
+        return False
+
+
 #
 # parse the dnsmasq logfile and insert data into redis db
 # return values:
 # 16: error
 # 1: new entries have been added
 # 0: no changes
-
-
 def parse_dnsmasq_logs(arg):
-    # queryPattern = re.compile('([a-zA-Z]{3} ? \d{1,2} (\d{2}:?){3}) dnsmasq\[[0-9]*\]: query\[[A-Z]*\] (.*) from ([0-9]+.?){4}')
-    blockedPattern = re.compile('([a-zA-Z]{3} ? \d{1,2} (\d{2}:?){3}) dnsmasq\[[0-9]*\]: config (.*) is 192.168.55.254')
-
-    changed = False
-
     logfile = arg
 
     if os.path.isfile(logfile):
+
         print "parsing dnsmasq logfile %s" % logfile
         cur_year = time.localtime().tm_year
-        with open(logfile, 'r') as dnsmasq:
+        block_count = block_count_failed = query_count = query_count_failed = 0
+
+        with open(logfile, 'r+') as dnsmasq:
             for line in dnsmasq:
-                try:
-                    res = re.match(blockedPattern, line)
-                    if res:
-                        sdate = res.group(1)
-                        ssite = res.group(3)
-                        psite = str(ssite)
-                        pdate = datetime.strptime(sdate, '%b %d %H:%M:%S').replace(year=cur_year)
+                if line.strip().endswith('192.168.55.254'):
+                    if parse_blocked_domain(line, cur_year): block_count += 1
+                    else: block_count_failed += 1
+                elif ' query' in line \
+                        and not line.strip().endswith('127.0.0.1'):
+                    if parse_dns_query(line, cur_year): query_count += 1
+                    else: query_count_failed += 1
 
-                        # calendar week
-                        week = pdate.date().isocalendar()[1]
-
-                        # blocked overall counter
-                        redis.incr(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED)))
-
-                        # filtered counter per calendar week
-                        redis.incr(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED, _WEEK, str(week))))
-                        redis.expire(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED, _WEEK, str(week))), _TTL)
-
-                        # store filtered domain count per week
-                        redis.hincrby(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED, _WEEK, str(week), _DOMAIN)), psite, 1)
-                        redis.expire(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED, _WEEK, str(week), _DOMAIN)), _TTL)
-
-                        changed = True
-                        print "found new blocked query: [%s] %s" % (psite, pdate)
-                except Exception as e:
-                    print "failed to parse blocked query \"%s\": %s" % (line, e.message)
-
-        if changed:
+            print "Found {} device queries ({} failed) and {} blocked queries ({} failed)"\
+                .format(query_count, query_count_failed, block_count, block_count_failed)
             try:
-                # truncate logfile
-                with open(logfile, "a") as lf:
-                    lf.truncate(0)
-            except Exception as e:
-                print "failed to write to redis database"
-                return 16
-            return 1
+                dnsmasq.truncate(0)
+                if block_count > 0 or query_count > 0:
+                    return 1
+                else:
+                    return 0
+            except Exception as error:
+                print "Failed to truncate file: {}".format(error)
+            return 16
+
     else:
         print "failed to parse dnsmasq logfile %s: file not found" % logfile
         return 16

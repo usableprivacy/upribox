@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import logging
 from datetime import date, datetime, time
 
 from devices.models import DeviceEntry
@@ -8,12 +9,15 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import render
-from lib.stats import get_week_days
-from lib.utils import human_format
+from lib.stats import get_week_days, get_queries_for_device
+from lib.utils import human_format, exec_upri_config
 from colour import Color
 from lib import jobs
 
 from .ntopng import Metric, device_day_stats
+
+# Get an instance of a logger
+logger = logging.getLogger('uprilogger')
 
 
 @require_http_methods(["GET", "POST"])
@@ -73,6 +77,7 @@ def get_statistics(request, slug, week=None, year=None):
                 amounts.append(0.0)
         protocols.append({'protocol': protocol, 'color': colors[protocols_top.index(protocol)].hex,
                           'dates': dates, 'amounts': amounts})
+    protocols.reverse()
 
     stats = {
         'total': human_format(total*1024*1024, binary=True, suffix='B'),
@@ -90,3 +95,30 @@ def get_overview(request, slug):
     return render(
         request, "overview.html", {"device": DeviceEntry.objects.get(slug=slug)}
     )
+
+
+@require_http_methods(["GET", "POST"])
+@login_required
+def get_device_queries(request, slug, week=None):
+    if not week:
+        week = datetime.now().date().isocalendar()[1]
+        week = int(week)
+
+    try:
+        logger.debug("parsing logs")
+        exec_upri_config('parse_logs')
+        if int(week) == 0:
+            raise ValueError()
+    except (ValueError, TypeError) as error:
+        return HttpResponse(status=412)
+
+    try:
+
+        dev = DeviceEntry.objects.get(slug=slug)
+        domains = get_queries_for_device(dev.mac, week, sort=True, limit=10)
+
+    except (ValueError, TypeError, DeviceEntry.DoesNotExist) as error:
+        #return JsonResponse(error, safe=False)
+        return HttpResponse(status=412)
+
+    return JsonResponse({'domains': domains})

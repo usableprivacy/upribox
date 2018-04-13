@@ -5,6 +5,7 @@ from datetime import date, datetime, timedelta
 
 import redis as redisDB
 from django.conf import settings
+from netaddr import EUI
 
 logger = logging.getLogger('uprilogger')
 
@@ -17,10 +18,11 @@ _PREFIX = _DELIMITER.join(("stats", "v2"))
 """str: Prefix which is used for every key in the redis db."""
 _DNSMASQ = "dnsmasq"
 _PRIVOXY = "privoxy"
+_DEVICE = "device"
 _BLOCKED = "blocked"
+_QUERIED = "queried"
 _WEEK = "week"
 _DOMAIN = "domain"
-
 
 # return overall counter tuple(filtered, blocked)
 def get_overall_counters():
@@ -68,6 +70,19 @@ def get_domain_counters(week, sort=False, limit=None):
         return (
             sorted(filtered.items(), cmp=lambda x, y: int(x) - int(y), key=operator.itemgetter(1), reverse=True)[:limit],
             sorted(blocked.items(), cmp=lambda x, y: int(x) - int(y), key=operator.itemgetter(1), reverse=True)[:limit],
+        )
+
+
+# limit only when sorted
+def get_queries_for_device(mac, week, sort=False, limit=None):
+
+    queries = redis.hgetall(_DELIMITER.join((_PREFIX, _DEVICE, _QUERIED, str(EUI(mac)), _WEEK, str(week), _DOMAIN)))
+
+    if not sort:
+        return queries.items()
+    else:
+        return (
+            sorted(queries.items(), cmp=lambda x, y: int(x) - int(y), key=operator.itemgetter(1), reverse=True)[:limit]
         )
 
 
