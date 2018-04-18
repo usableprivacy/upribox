@@ -877,6 +877,12 @@ function initialisePasswordFields(){
 
         var protocols_num = data['protocols'].length;
 
+        function createHoverInfo(value){
+            if(value > 0) return "y+text";
+            else return "skip";
+        }
+
+
         for (var i = 0; i < protocols_num; i++){
 
             var trace = {
@@ -891,7 +897,7 @@ function initialisePasswordFields(){
             line: {
                 width: 1.0,
                 color: '#777777'},
-            //hoverinfo: 'y+text',
+            hoverinfo: data['protocols'][i]['amounts'].map(createHoverInfo),
             /*hoverlabel: {
                 font: {size: 8}
             },*/
@@ -1448,7 +1454,7 @@ function initialisePasswordFields(){
         if (ignoreRedraw)
             return;
         Plotly.redraw(gd);
-        Plotly.relayout(gd);
+        //Plotly.relayout(gd);
         createLinksForWeeks();
     }
 
