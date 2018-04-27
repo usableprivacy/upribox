@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-23 11:00+0000\n"
+"POT-Creation-Date: 2018-04-19 19:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,75 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: vpn/forms.py:20
-msgid "Name:"
-msgstr "Name"
-
-#: vpn/forms.py:26
-msgid "Domain:"
-msgstr "Domain"
-
-#: vpn/forms.py:49
-msgid "Profil existiert bereits"
-msgstr "profile already exists"
-
-#: vpn/forms.py:62
-msgid "Die Domain darf maximal 255 Zeichen lang sein"
-msgstr "domain must be less than 255 characters"
-
-#: vpn/forms.py:64
-msgid ""
-"Die Domain darf lediglich Buchstaben, Ziffern, Punkte und Minusse enthalten"
-msgstr "domain may only contain characters, digits, dots and dashes"
-
-#: vpn/forms.py:66
-msgid "Die Domain ist nicht gültig"
-msgstr "domain is invalid"
-
-#: vpn/jobs.py:18
-msgid "VPN wird gestartet..."
-msgstr "starting VPN..."
-
-#: vpn/jobs.py:20
-msgid "VPN wird gestoppt..."
-msgstr "stopping VPN..."
-
-#: vpn/jobs.py:26
-msgid "Konfiguration des VPNs erfolgreich."
-msgstr "VPN configuration successful"
-
-#: vpn/jobs.py:32
-msgid "Es ist ein unbekannter Fehler aufgetreten."
-msgstr "an unknown error occurred."
-
-#: vpn/jobs.py:37
-msgid "Konfiguration des VPNs fehlgeschlagen."
-msgstr "VPN configuration failed."
-
-#: vpn/jobs.py:44
-msgid "VPN Profile wird generiert..."
-msgstr "generating VPN profile..."
-
-#: vpn/jobs.py:47
-msgid "Generieren des VPN Profiles erfolgreich."
-msgstr "VPN profile successfully generated."
-
-#: vpn/jobs.py:58
-msgid "Generieren des VPN Profiles fehlgeschlagen."
-msgstr "generation of VPN profile failed."
-
-#: vpn/jobs.py:65
-msgid "VPN Profile wird entfernt..."
-msgstr "removing VPN profile..."
-
-#: vpn/jobs.py:68
-msgid "Entfernen des VPN Profiles erfolgreich."
-msgstr "VPN profile sucessfully removed."
-
-#: vpn/jobs.py:78
-msgid "Entfernen des VPN Profiles fehlgeschlagen."
-msgstr "Removal of VPN profile failed."
 
 #: vpn/templates/vpn.html:7
 msgid "VPN - upribox"
@@ -240,21 +171,70 @@ msgstr "Show QR-code"
 msgid "Profil l&ouml;schen"
 msgstr "Delete profile"
 
-#: vpn/views.py:41 vpn/views.py:54
-msgid "openvpn.log konnte nicht geöffnet werden."
-msgstr "unable to open openvpn.log."
+#~ msgid "Name:"
+#~ msgstr "Name"
 
-#: vpn/views.py:47
-msgid "Verbindung zu api.upribox.org fehlgeschlagen."
-msgstr "connection to api.upribox.org failed."
+#~ msgid "Domain:"
+#~ msgstr "Domain"
 
-#: vpn/views.py:70
-msgid "Die Verbindung war erfolgreich!"
-msgstr "Connection successful!"
+#~ msgid "Profil existiert bereits"
+#~ msgstr "profile already exists"
 
-#: vpn/views.py:73
-msgid "Die Verbindung war nicht erfolgreich!"
-msgstr "Connection failed!"
+#~ msgid "Die Domain darf maximal 255 Zeichen lang sein"
+#~ msgstr "domain must be less than 255 characters"
+
+#~ msgid ""
+#~ "Die Domain darf lediglich Buchstaben, Ziffern, Punkte und Minusse "
+#~ "enthalten"
+#~ msgstr "domain may only contain characters, digits, dots and dashes"
+
+#~ msgid "Die Domain ist nicht gültig"
+#~ msgstr "domain is invalid"
+
+#~ msgid "VPN wird gestartet..."
+#~ msgstr "starting VPN..."
+
+#~ msgid "VPN wird gestoppt..."
+#~ msgstr "stopping VPN..."
+
+#~ msgid "Konfiguration des VPNs erfolgreich."
+#~ msgstr "VPN configuration successful"
+
+#~ msgid "Es ist ein unbekannter Fehler aufgetreten."
+#~ msgstr "an unknown error occurred."
+
+#~ msgid "Konfiguration des VPNs fehlgeschlagen."
+#~ msgstr "VPN configuration failed."
+
+#~ msgid "VPN Profile wird generiert..."
+#~ msgstr "generating VPN profile..."
+
+#~ msgid "Generieren des VPN Profiles erfolgreich."
+#~ msgstr "VPN profile successfully generated."
+
+#~ msgid "Generieren des VPN Profiles fehlgeschlagen."
+#~ msgstr "generation of VPN profile failed."
+
+#~ msgid "VPN Profile wird entfernt..."
+#~ msgstr "removing VPN profile..."
+
+#~ msgid "Entfernen des VPN Profiles erfolgreich."
+#~ msgstr "VPN profile sucessfully removed."
+
+#~ msgid "Entfernen des VPN Profiles fehlgeschlagen."
+#~ msgstr "Removal of VPN profile failed."
+
+#~ msgid "openvpn.log konnte nicht geöffnet werden."
+#~ msgstr "unable to open openvpn.log."
+
+#~ msgid "Verbindung zu api.upribox.org fehlgeschlagen."
+#~ msgstr "connection to api.upribox.org failed."
+
+#~ msgid "Die Verbindung war erfolgreich!"
+#~ msgstr "Connection successful!"
+
+#~ msgid "Die Verbindung war nicht erfolgreich!"
+#~ msgstr "Connection failed!"
 
 #~ msgid "Starten des VPNs fehlgeschlagen."
 #~ msgstr "starting VPN failed"
