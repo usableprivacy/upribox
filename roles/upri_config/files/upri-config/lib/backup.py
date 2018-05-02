@@ -1,7 +1,7 @@
 import zipfile
 from datetime import datetime
 from lib.utils import get_default, call_ansible
-from os.path import isdir, join
+from os.path import isdir, join, abspath
 import os
 import stat
 import struct
@@ -14,7 +14,7 @@ BACKUP_LOCATIONS = [
     "/etc/openvpn/ca"
 ]
 
-BACKUP_NAME = "/home/upri/upri_backup_{}.zip"
+BACKUP_NAME = "upri_backup_{}.zip"
 
 # ID + LENGTH in bytes
 EXTRA_HEADER_LENGTH = 4
@@ -36,7 +36,8 @@ UNIX_PERM_BYTES = 16L
 def action_backup(arg):
     timestamp = datetime.now()
     try:
-        with zipfile.ZipFile(BACKUP_NAME.format(timestamp), 'w', zipfile.ZIP_DEFLATED) as zipf:
+        zpath = join(abspath(arg), BACKUP_NAME.format(timestamp))
+        with zipfile.ZipFile(zpath, 'w', zipfile.ZIP_DEFLATED) as zipf:
             for location in BACKUP_LOCATIONS:
 
                 if isdir(location):
@@ -50,7 +51,10 @@ def action_backup(arg):
                         print ve
                         # try other files if one file fails
     except EnvironmentError:
-        os.remove(BACKUP_NAME.format(timestamp))
+        try:
+            os.remove(BACKUP_NAME.format(timestamp))
+        except Exception:
+            pass
         print 'Unable to create backup archive'
         return 1
 
