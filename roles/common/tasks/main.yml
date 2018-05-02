@@ -79,6 +79,9 @@
     # this is needed by ansible for becoming an unprivileged user
     - acl
 
+- name: enable ntp
+  command: timedatectl set-ntp True
+
 - name: update pip via pip
   pip: name=pip state=present version="{{pip_version}}"
 
