@@ -85,6 +85,11 @@
   notify:
     - uninstall django on errors
 
+- name: stop registrar service before django db jobs
+  service:
+    name: registrar
+    state: stopped
+
 - name: migrate django database
   django_manage: settings="{{ django_settings_file }}" command="migrate --fake-initial" app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
   become_user: www-data
@@ -96,6 +101,11 @@
 
 - name: collect static
   django_manage: settings="{{ django_settings_file }}" command=collectstatic app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv link=yes
+
+- name: start registrar service
+  service:
+    name: registrar
+    state: started
 
 - name: install supervisor for rqworker
   apt: name=supervisor state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
