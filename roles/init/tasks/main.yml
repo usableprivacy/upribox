@@ -38,6 +38,19 @@
 - name: disable systemd Predictable Network Interface Names
   file: src=/dev/null dest=/etc/systemd/network/99-default.link state=link
 
+  # pi3 b+
+- name: set iw region to AT
+  command: iw reg set AT
+
+- name: set wpa_cli country to AT
+  command: wpa_cli -i wlan0 set country AT
+
+- name: safe wpa_cli settings
+  command: wpa_cli -i wlan0 save_config
+
+- name: unblock WiFi
+  command: rfkill unblock wifi
+
 - name: rebooting raspberry Pi ...
   remote_user: "{{ remote_user }}"
   shell: /bin/sleep 3 && /sbin/reboot
