@@ -7,6 +7,7 @@
     - redis-server
     - python-virtualenv
     - natpmp-utils
+    - anacron
 
 - name: enable redis server
   service: name=redis-server enabled=yes use=service
@@ -68,18 +69,39 @@
   changed_when: "update_result.rc == 1"
   failed_when: "update_result.rc > 1"
 
-- name: create crontab entries
-  template: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0644
+- name: create root backup directory
+  file:
+      path: "/var/upribox-backups"
+      state: directory
+      owner: root
+      group: root
+      mode: 0755
+
+- name: create daily backup directory
+  file:
+      path: "/var/upribox-backups/daily"
+      state: directory
+      owner: root
+      group: root
+      mode: 0750
+  notify: move daily backups
+
+- name: create weekly backup directory
+  file:
+      path: "/var/upribox-backups/weekly"
+      state: directory
+      owner: root
+      group: root
+      mode: 0750
+
+- name: create cron / anacron jobs
+  template: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode={{ item.mode|default("0644")}}
   when: item.env is not defined or item.env == env
   notify: touch crontab files
   register: cron_result
   with_items:
     - { src: "cron/etc_cron.d_ansible-pull.j2", dest: "/etc/cron.d/ansible-pull", env: "production" }
     - { src: "cron/etc_cron.d_parse-user-agents.j2", dest: "/etc/cron.d/parse-user-agents"}
+    - { src: "cron/backup.j2", dest: "/etc/cron.weekly/backup", mode: "0755"}
     - { src: "cron/filter_update.j2", dest: "/etc/cron.d/filter_update" }
     - { src: "cron/cron_parse_logs.j2", dest: "/etc/cron.d/parse-logs"}
-
-- name: remove old cron jobs
-  file: path={{ item }} state=absent
-  with_items:
-    - /etc/cron.d/cleanup-statistics
