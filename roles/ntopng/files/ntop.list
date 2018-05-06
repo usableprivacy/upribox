@@ -1,2 +1,6 @@
 deb http://apt-stable.ntop.org/stretch_pi armhf/
 deb http://apt-stable.ntop.org/stretch_pi all/
+# deb http://packages.ntop.org/RaspberryPI/stretch_pi/ all/
+# deb http://packages.ntop.org/RaspberryPI/stretch_pi/ armhf/
+deb http://apt.ntop.org/stretch_pi armhf/
+deb http://apt.ntop.org/stretch_pi all/

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-23 11:00+0000\n"
+"POT-Creation-Date: 2018-04-19 19:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,178 +17,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: more/forms.py:14
-msgid "Benutzername"
-msgstr "Username"
-
-#: more/forms.py:19
-msgid "Altes Passwort"
-msgstr "Existing password"
-
-#: more/forms.py:24
-msgid "Neues Passwort"
-msgstr "New password"
-
-#: more/forms.py:29
-msgid "Neues Passwort erneut eingeben"
-msgstr "Re-enter new password"
-
-#: more/forms.py:43
-msgid "Das alte Passwort ist inkorrekt"
-msgstr "Old password is invalid"
-
-#: more/forms.py:56
-msgid "IP:"
-msgstr "IP"
-
-#: more/forms.py:61
-msgid "Subnetzmaske:"
-msgstr "Subnet mask"
-
-#: more/forms.py:65
-msgid "Gateway:"
-msgstr "Gateway"
-
-#: more/forms.py:69
-msgid "DNS-Server:"
-msgstr "DNS server"
-
-#: more/forms.py:93
-msgid "Es handelt sich nicht um eine Subnetzmaske"
-msgstr "This is no valid subnet mask"
-
-#: more/forms.py:95
-msgid "Die Subnetzmaske ist inkorrekt"
-msgstr "old password is invalid"
-
-#: more/forms.py:100
-msgid "Die IP Adresse ist inkorrekt"
-msgstr "old password is invalid"
-
-#: more/forms.py:105
-msgid "Die IP Adresse des Gateways ist inkorrekt"
-msgstr "old password is invalid"
-
-#: more/forms.py:110
-msgid "Die IP Adresse des DNS Servers ist inkorrekt"
-msgstr "The IP address of the DNS server is incorrect"
-
-#: more/forms.py:115 more/forms.py:117
-msgid "Es handelt sich nicht um eine korrekte Hostadresse"
-msgstr "This is no valid host address"
-
-#: more/jobs.py:15
-msgid "Die Netzwerkeinstellungen werden neu konfiguriert..."
-msgstr "Configuring network settings..."
-
-#: more/jobs.py:20
-msgid "Modus zur Vergabe statischer IP Adressen wird aktiviert..."
-msgstr "Activating mode for static IP address assignment..."
-
-#: more/jobs.py:24
-msgid "IP Adresse wird geändert..."
-msgstr "Setting IP address..."
-
-#: more/jobs.py:28
-msgid "Subnetzmaske wird geändert..."
-msgstr "Setting subnet mask..."
-
-#: more/jobs.py:32
-msgid "Gateway wird geändert..."
-msgstr "Setting gateway..."
-
-#: more/jobs.py:36
-msgid "DNS Server wird geändert..."
-msgstr "Restarting SSH..."
-
-#: more/jobs.py:40
-msgid "Netzwerk wird neu gestartet..."
-msgstr "Restarting network..."
-
-#: more/jobs.py:44
-msgid "Konfiguration der Netzwerkeinstellungen erfolgreich."
-msgstr "Configuration of interfaces successful."
-
-#: more/jobs.py:53
-msgid "Konfiguration der Netzwerkeinstellungen fehlgeschlagen."
-msgstr "Configuration of network settings failed."
-
-#: more/jobs.py:62
-msgid "SSH wird gestartet..."
-msgstr "Restarting SSH..."
-
-#: more/jobs.py:64
-msgid "SSH wird gestoppt..."
-msgstr "Stopping SSH..."
-
-#: more/jobs.py:69
-msgid "Konfiguration von SSH erfolgreich."
-msgstr "Configuration of SSH successful."
-
-#: more/jobs.py:81
-msgid "Konfiguration von SSH fehlgeschlagen."
-msgstr "Configuration of SSH failed."
-
-#: more/jobs.py:91
-msgid "Apate ARP Spoofing Daemon wird gestartet..."
-msgstr "Starting Apate ARP Spoofing Daemon..."
-
-#: more/jobs.py:94
-msgid "Apate ARP Spoofing Daemon wird gestoppt..."
-msgstr "Stopping Apate ARP Spoofing Daemon..."
-
-#: more/jobs.py:100
-msgid "Konfiguration von Apate ARP Spoofing Daemon erfolgreich."
-msgstr "Configuration of Apate ARP Spoofing daemon successful."
-
-#: more/jobs.py:113
-msgid "Konfiguration von Apate ARP Spoofing Daemon fehlgeschlagen."
-msgstr "Configuration of Apate ARP Spoofing daemon failed."
-
-#: more/jobs.py:122
-msgid "Statische IP wird aktiviert..."
-msgstr "Activating static IP..."
-
-#: more/jobs.py:124
-msgid "Statische IP wird deaktiviert..."
-msgstr "Deactivate static IP..."
-
-#: more/jobs.py:129
-msgid "Konfiguration der statischen IP erfolgreich."
-msgstr "Configuration of static IP successful."
-
-#: more/jobs.py:141
-msgid "Konfiguration der statischen IP fehlgeschlagen."
-msgstr "Failed to configure static IP."
-
-#: more/jobs.py:151
-msgid "DHCP Server wird aktiviert..."
-msgstr "Enabling DHCP server..."
-
-#: more/jobs.py:153
-msgid "DHCP Server wird deaktiviert..."
-msgstr "Disabling DHCP server..."
-
-#: more/jobs.py:156
-msgid "DHCP Server wird konfiguriert..."
-msgstr "Configuring DHCP server..."
-
-#: more/jobs.py:158
-msgid "Konfiguration des DHCP Servers erfolgreich."
-msgstr "Configuration of interfaces successful."
-
-#: more/jobs.py:164
-msgid "Es ist ein unbekannter Fehler aufgetreten."
-msgstr "Unknown error occured."
-
-#: more/jobs.py:170
-msgid "Konfiguration des DHCP Servers fehlgeschlagen."
-msgstr "Configuration of DHCP server failed."
-
 #: more/templates/config.html:7 more/templates/config.html:10
 #: more/templates/config.html:14 more/templates/static.html:7
 #: more/templates/static.html:10
-msgid "SSH Konfiguration"
+msgid "Konfiguration"
 msgstr "Configuration"
 
 #: more/templates/config.html:10 more/templates/static.html:10
@@ -223,7 +55,8 @@ msgstr "Static IP"
 
 #: more/templates/config.html:43
 msgid "Deaktivieren nicht möglich, weil upribox-Zugang \"Manuell\" ausgewählt"
-msgstr "Deactivating is not possible, because upribox-Zugang \"Manuell\" is selected"
+msgstr ""
+"Deactivating is not possible, because upribox-Option \"Manual\" is selected"
 
 #: more/templates/config.html:46
 msgid "upribox-Zugang"
@@ -247,7 +80,7 @@ msgstr "Only over WiFi \"upribox\""
 
 #: more/templates/config.html:58
 msgid "Setup"
-msgstr ""
+msgstr "Setup"
 
 #: more/templates/config.html:59
 #, python-format
@@ -260,7 +93,7 @@ msgstr "set up the upribox again"
 
 #: more/templates/config.html:71
 msgid "VPN:"
-msgstr ""
+msgstr "VPN"
 
 #: more/templates/config.html:72
 msgid ""
@@ -269,10 +102,10 @@ msgid ""
 "Internet, als w&auml;ren Sie zu Hause. Sie sch&uuml;tzen Ihre Daten vor dem "
 "Zugriff von Dritten in offenen Wireless-Netzwerken."
 msgstr ""
-"You want to securely retrieve your e-mails on the go or confirm;"
-"a bank transfer? Set up the VPN and use your"
-"Internet as if you were at home. You protect your data from being"
-"accessed by third parties in open wireless networks."
+"You want to securely retrieve your e-mails on the go or confirm;a bank "
+"transfer? Set up the VPN and use yourInternet as if you were at home. You "
+"protect your data from being accessed by third parties in open wireless "
+"networks."
 
 #: more/templates/static.html:10 more/templates/static.html:14
 msgid "Static IP"
@@ -290,11 +123,10 @@ msgid ""
 "deaktivieren Sie dort den DHCP-Server, da diese Funktion von nun an von der "
 "upribox übernommen wird."
 msgstr ""
-"Normally, the default values for IP address, "
-"subnet mask, default gateway and DNS server can be taken over. Please open "
-"the administration interface of your router and "
-"deactivate the DHCP server, since this function is taken over by "
-"the upribox from now on."
+"Normally, the default values for IP address, subnet mask, default gateway "
+"and DNS server can be taken over. Please open the administration interface "
+"of your router and deactivate the DHCP server, since this function is taken "
+"over by the upribox from now on."
 
 #: more/templates/user.html:7
 msgid "Admin - upribox"
@@ -311,6 +143,132 @@ msgstr ""
 #: more/templates/user.html:15
 msgid "Admin-Daten &auml;ndern."
 msgstr "Change administration data"
+
+#~ msgid "Benutzername"
+#~ msgstr "Username"
+
+#~ msgid "Altes Passwort"
+#~ msgstr "Existing password"
+
+#~ msgid "Neues Passwort"
+#~ msgstr "New password"
+
+#~ msgid "Neues Passwort erneut eingeben"
+#~ msgstr "Re-enter new password"
+
+#~ msgid "Das alte Passwort ist inkorrekt"
+#~ msgstr "Old password is invalid"
+
+#~ msgid "IP:"
+#~ msgstr "IP"
+
+#~ msgid "Subnetzmaske:"
+#~ msgstr "Subnet mask"
+
+#~ msgid "Gateway:"
+#~ msgstr "Gateway"
+
+#~ msgid "DNS-Server:"
+#~ msgstr "DNS server"
+
+#~ msgid "Es handelt sich nicht um eine Subnetzmaske"
+#~ msgstr "This is no valid subnet mask"
+
+#~ msgid "Die Subnetzmaske ist inkorrekt"
+#~ msgstr "old password is invalid"
+
+#~ msgid "Die IP Adresse ist inkorrekt"
+#~ msgstr "old password is invalid"
+
+#~ msgid "Die IP Adresse des Gateways ist inkorrekt"
+#~ msgstr "old password is invalid"
+
+#~ msgid "Die IP Adresse des DNS Servers ist inkorrekt"
+#~ msgstr "The IP address of the DNS server is incorrect"
+
+#~ msgid "Es handelt sich nicht um eine korrekte Hostadresse"
+#~ msgstr "This is no valid host address"
+
+#~ msgid "Die Netzwerkeinstellungen werden neu konfiguriert..."
+#~ msgstr "Configuring network settings..."
+
+#~ msgid "Modus zur Vergabe statischer IP Adressen wird aktiviert..."
+#~ msgstr "Activating mode for static IP address assignment..."
+
+#~ msgid "IP Adresse wird geändert..."
+#~ msgstr "Setting IP address..."
+
+#~ msgid "Subnetzmaske wird geändert..."
+#~ msgstr "Setting subnet mask..."
+
+#~ msgid "Gateway wird geändert..."
+#~ msgstr "Setting gateway..."
+
+#~ msgid "DNS Server wird geändert..."
+#~ msgstr "Restarting SSH..."
+
+#~ msgid "Netzwerk wird neu gestartet..."
+#~ msgstr "Restarting network..."
+
+#~ msgid "Konfiguration der Netzwerkeinstellungen erfolgreich."
+#~ msgstr "Configuration of interfaces successful."
+
+#~ msgid "Konfiguration der Netzwerkeinstellungen fehlgeschlagen."
+#~ msgstr "Configuration of network settings failed."
+
+#~ msgid "SSH wird gestartet..."
+#~ msgstr "Restarting SSH..."
+
+#~ msgid "SSH wird gestoppt..."
+#~ msgstr "Stopping SSH..."
+
+#~ msgid "Konfiguration von SSH erfolgreich."
+#~ msgstr "Configuration of SSH successful."
+
+#~ msgid "Konfiguration von SSH fehlgeschlagen."
+#~ msgstr "Configuration of SSH failed."
+
+#~ msgid "Apate ARP Spoofing Daemon wird gestartet..."
+#~ msgstr "Starting Apate ARP Spoofing Daemon..."
+
+#~ msgid "Apate ARP Spoofing Daemon wird gestoppt..."
+#~ msgstr "Stopping Apate ARP Spoofing Daemon..."
+
+#~ msgid "Konfiguration von Apate ARP Spoofing Daemon erfolgreich."
+#~ msgstr "Configuration of Apate ARP Spoofing daemon successful."
+
+#~ msgid "Konfiguration von Apate ARP Spoofing Daemon fehlgeschlagen."
+#~ msgstr "Configuration of Apate ARP Spoofing daemon failed."
+
+#~ msgid "Statische IP wird aktiviert..."
+#~ msgstr "Activating static IP..."
+
+#~ msgid "Statische IP wird deaktiviert..."
+#~ msgstr "Deactivate static IP..."
+
+#~ msgid "Konfiguration der statischen IP erfolgreich."
+#~ msgstr "Configuration of static IP successful."
+
+#~ msgid "Konfiguration der statischen IP fehlgeschlagen."
+#~ msgstr "Failed to configure static IP."
+
+#~ msgid "DHCP Server wird aktiviert..."
+#~ msgstr "Enabling DHCP server..."
+
+#~ msgid "DHCP Server wird deaktiviert..."
+#~ msgstr "Disabling DHCP server..."
+
+#~ msgid "DHCP Server wird konfiguriert..."
+#~ msgstr "Configuring DHCP server..."
+
+#~ msgid "Konfiguration des DHCP Servers erfolgreich."
+#~ msgstr "Configuration of interfaces successful."
+
+#~ msgid "Es ist ein unbekannter Fehler aufgetreten."
+#~ msgstr "Unknown error occured."
+
+#~ msgid "Konfiguration des DHCP Servers fehlgeschlagen."
+#~ msgstr "Configuration of DHCP server failed."
 
 #~ msgid "Es ist ein unbekannter Fehler aufgetreten. Fehlercode: %(errorcode)s"
 #~ msgstr "Unknown error occured. Error-code: %(errorcode)s"

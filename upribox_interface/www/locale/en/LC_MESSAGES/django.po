@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-23 11:00+0000\n"
+"POT-Creation-Date: 2018-04-19 19:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,8 +67,8 @@ msgstr "Statistics"
 msgid "Konfiguration"
 msgstr "Configuration"
 
-#: www/templates/base.html:43 www/templates/login.html:21
-msgid "Admin:"
+#: www/templates/base.html:43
+msgid "Admin"
 msgstr "Admin"
 
 #: www/templates/base.html:44 www/templates/base.html:59
@@ -111,11 +111,10 @@ msgid ""
 "Fehler wissen: <a href=\"mailto:%(email)s\">%(email)s</a>."
 msgstr ""
 "\n"
-"               Silent Mode allows you to use websites without ads. "
-" These will simply be hidden and tracking services will be "
-"blocked or not executed to protect your privacy. "
-" In rare cases, it may cause display errors or blocking of "
-"websites coming in. To improve the upribox please let us be "
+"               Silent Mode allows you to use websites without ads.  These "
+"will simply be hidden and tracking services will be blocked or not executed "
+"to protect your privacy.  In rare cases, it may cause display errors or "
+"blocking of websites coming in. To improve the upribox please let us be "
 "informed with the error: <a href=\"mailto:%(email)s\">%(email)s </a>."
 
 #: www/templates/faq.html:23
@@ -135,12 +134,11 @@ msgid ""
 "werden, kommt es aber zu einer spürbaren Reduktion der Internet-"
 "Geschwindigkeit."
 msgstr ""
-"In addition, you are in an anonymous network, where"
-" tracking your activity on the Internet is difficult. This way your "
-"Internet providers, for example, can no longer track which websites"
-" you visit. Since your request for websites is routed through multiple routers "
-"but there will be a noticeable reduction in the Internet "
-"speed."
+"In addition, you are in an anonymous network, where tracking your activity "
+"on the Internet is difficult. This way your Internet providers, for example, "
+"can no longer track which websites you visit. Since your request for "
+"websites is routed through multiple routers but there will be a noticeable "
+"reduction in the Internet speed."
 
 #: www/templates/faq.html:30
 msgid "Wie funktioniert VPN?"
@@ -153,20 +151,20 @@ msgid ""
 "als wären Sie zu Hause. Sie schützen Ihre Daten vor dem Zugriff von Dritten "
 "in offenen Wireless-Netzwerken."
 msgstr ""
-"You want to get your e-mails in a safe and secure way on the go?"
-" Confirm a bank transfer? Set up VPN and use your Internet, "
-"as if you were at home protecting your data from being accessed by third parties "
-"in open wireless networks."
+"You want to get your e-mails in a safe and secure way on the go? Confirm a "
+"bank transfer? Set up VPN and use your Internet, as if you were at home "
+"protecting your data from being accessed by third parties in open wireless "
+"networks."
 
 #: www/templates/faq.html:33
 msgid ""
 "Um den Zugriff auf Ihre upribox zu schützen, erfordern Verbindungen "
 "spezielle VPN-Profile. Erstellen Sie pro BenutzerIn ein VPN-Profil und laden "
 "Sie das Profil dann z.B. auf Ihr Smartphone."
-
-msgstr "To protect access to your upribox, connections require "
-"special VPN profiles. Create a VPN profile per user, then you "
-"load the profile, for example, on your smartphone."
+msgstr ""
+"To protect access to your upribox, connections require special VPN profiles. "
+"Create a VPN profile per user, then you load the profile, for example, on "
+"your smartphone."
 
 #: www/templates/faq.html:34
 msgid "Das upribox-VPN blockiert Werbung automatisch."
@@ -183,10 +181,10 @@ msgid ""
 "lassen, um sämtlichen Netzwerkverkehr über diese zu leiten. Dazu muss der "
 "DHCP-Server im Interface Ihres Routers deaktiviert werden."
 msgstr ""
-"Here, experienced users of the upribox can use a static IP configuration. "
-"In addition, it is possible to configure your upribox as a DHCP server "
-"to route all network traffic through it."
-" The router's DHCP server has to be be disabled in the interface of your router."
+"Here, experienced users of the upribox can use a static IP configuration. In "
+"addition, it is possible to configure your upribox as a DHCP server to route "
+"all network traffic through it. The router's DHCP server has to be be "
+"disabled in the interface of your router."
 
 #: www/templates/form.html:9
 msgid "abbrechen"
@@ -236,6 +234,10 @@ msgstr "legend"
 msgid "Login"
 msgstr "Login"
 
+#: www/templates/login.html:21
+msgid "Admin:"
+msgstr "Admin"
+
 #: www/templates/login.html:28
 msgid "Passwort:"
 msgstr "Password"
@@ -252,7 +254,8 @@ msgstr "Where do I find the passwords?"
 msgid ""
 "Die Daten für den Login finden Sie auf ihrer Anleitung \"upribox "
 "Administration\""
-msgstr "You can find your login credentials on your upribox instruction manual."
+msgstr ""
+"You can find your login credentials on your upribox instruction manual."
 
 #: www/templates/login.html:54
 msgid "Information ausblenden"
@@ -310,6 +313,12 @@ msgstr ""
 "You have been logged out! Click on \"close\" and login again."
 
 #: www/templates/modal.html:13
+#, fuzzy, python-format
+#| msgid ""
+#| "\n"
+#| "                Die Upribox konnte nicht erreicht werden. Bitte stellen "
+#| "Sie sicher, dass Sie sich mit dem Wlan \"%(upri_ssid)s\" verbunden sind.\n"
+#| "            "
 msgid ""
 "\n"
 "                Die Upribox konnte nicht erreicht werden. Bitte stellen Sie "
@@ -324,9 +333,8 @@ msgstr ""
 msgid "Schließen"
 msgstr "Close"
 
-#: www/templatetags/base_extras.py:47
-msgid "abgelaufen"
-msgstr "time out"
+#~ msgid "abgelaufen"
+#~ msgstr "time out"
 
 #~ msgid "WLAN-Zugangsdaten &auml;ndern"
 #~ msgstr "Changing the WiFi settings"

@@ -70,6 +70,12 @@ UPRIBOX.Main = (function($) {
         layout: {}
     };
 
+    //holds data and layout for device traffic statistics
+    var statisticTrafficInformation = {
+        data: [],
+        layout: {}
+    };
+
     //indicates how many weeks should be shown in the plot
     var totalWeeks = 5;
 
@@ -179,8 +185,8 @@ UPRIBOX.Main = (function($) {
                 type: 'post',
                 success: function (data) {
                     modal.remove();
-                    $("#" + slug + " .devname").text(data);
-                    sortDevices();
+                    $("a.devnamechange").text(data);
+                    //sortDevices();
                     // onAjaxUpdate();
                 },
                 error: function(jqXHR){
@@ -363,7 +369,7 @@ UPRIBOX.Main = (function($) {
             prevMode = $('.radio_device[name='+$(this).prev("input").attr('name')+']:checked').val();
         });
 
-        $('body').on('click', '.devname', function(e) {
+        $('body').on('click', '.devnamechange', function(e) {
             e.preventDefault();
             var href = $(this).attr('href');
             $.ajax({
@@ -420,6 +426,10 @@ UPRIBOX.Main = (function($) {
 
             if($('body').attr("data-poll-statistics-main-url")) {
                 getStatistic();
+            }
+
+              if($('body').attr("data-poll-traffic-main-url")) {
+                getTraffic();
             }
 
             if ($('.messages-to-show').length > 0) {
@@ -854,6 +864,98 @@ function initialisePasswordFields(){
         })
     }
 
+    function getTraffic() {
+        pollForRequestedInformation({
+            pollUrl: "data-poll-traffic-main-url",
+            domManipulator: completeTraffic,
+            errorHandler: errorGetStatistics,
+            pollOnce: true
+        })
+    }
+
+    function completeTraffic(data) {
+
+        var protocols_num = data['protocols'].length;
+
+        function createHoverInfo(value){
+            if(value > 0) return "y+text";
+            else return "skip";
+        }
+
+
+        for (var i = 0; i < protocols_num; i++){
+
+            var trace = {
+            x: data['protocols'][i]['dates'],
+            y: data['protocols'][i]['amounts'],
+            marker: {
+                color: data['protocols'][i]['color']
+            },
+            name: data['protocols'][i]['protocol'],
+            text: data['protocols'][i]['protocol'],
+            textposition: 'top',
+            line: {
+                width: 1.0,
+                color: '#777777'},
+            hoverinfo: data['protocols'][i]['amounts'].map(createHoverInfo),
+            /*hoverlabel: {
+                font: {size: 8}
+            },*/
+            type: 'bar'
+            };
+
+            statisticTrafficInformation.data.push(trace);
+        }
+
+
+        var layout = {
+            xaxis: {
+                autorange: true,
+                showgrid: false,
+                showline: true,
+                fixedrange: true
+            },
+            yaxis: {
+                autorange: true,
+                showgrid: false,
+                showline: true,
+                showticklabels: true,
+                fixedrange: true,
+                zeroline: false,
+                //type: 'log',
+                title: 'Data [MB]'
+            },
+            barmode: 'stack',
+            showlegend: true,
+            /*legend: {
+             "x": "0",
+             "margin.r": "120"
+             },*/
+            margin: {
+                l: 50,
+                r: 0,
+                b: 40,
+                t: 30,
+                pad: 0
+            },
+            /*
+            annotations: [
+            ]*/
+        };
+
+        statisticTrafficInformation.layout = layout;
+
+        initializeTrafficStatistics(data);
+
+        /*trace1.y[0] =10;
+         layout.annotations[0].y = trace1.y[0] + trace2.y[0];
+
+         Plotly.Plots.resize(gd);*/
+        // var week = $(".xtick").find("text").text;
+        //console.log($(".xtick").find("text a"));
+        //$(".xtick").find("text a").on("click", function () {alert(1)});
+    }
+
     function completeStatistics(data) {
 
         var trace1 = {
@@ -954,6 +1056,139 @@ function initialisePasswordFields(){
         // var week = $(".xtick").find("text").text;
         //console.log($(".xtick").find("text a"));
         //$(".xtick").find("text a").on("click", function () {alert(1)});
+    }
+
+    function initializeTrafficStatistics(data) {
+
+        //console.log(data);
+
+        if (data.total == null)
+            data.total = 0;
+
+        updateOverallTrafficCount(data.total);
+        updateCalendarWeek(data.calendarweek);
+
+        //updateLists(data[0].filtered.bad, data[0].filtered.ugly);
+
+
+        //
+        // var getWeekDomString = function (week, dontCreateLink) {
+        //     var calendarWeekShortText = $("#calendar-week-short-text").text();
+        //     var defaultDomString = "<span>" + calendarWeekShortText + " </span>" + week;
+        //     var retVal = dontCreateLink?defaultDomString:"<a id='week" + week + "'>" + defaultDomString + "</a>";
+        //     return retVal;
+        // }
+        //
+        // var getWeekCountOfYear = function (prevYear) {
+        //     /*according to
+        //      https://de.wikipedia.org/w/index.php?title=Woche&oldid=167637426#Z.C3.A4hlweise_nach_ISO_8601
+        //      and
+        //      https://en.wikipedia.org/w/index.php?title=ISO_week_date&oldid=793798377#Weeks_per_year
+        //      a common year has 53 Weeks, when it starts with a thursday and ends with a thursday
+        //      and
+        //      a leap year has 53 Weeks, when it starts with a Wednesday and ends with a Thursday or when it starts with a Thursday and ends with a Friday
+        //      */
+        //     var currentYear = new Date().getFullYear();
+        //     if (prevYear) currentYear--;
+        //     var isLeapYear = (new Date(currentYear, 1, 29).getMonth()==1);
+        //     var has53Weeks = false;
+        //     var yearsFirstDay = new Date(currentYear, 0, 1).getDay(); // 4 would be Thursday
+        //     var yearsLastDay = new Date(currentYear, 11, 31).getDay(); // 4 would be Thursday
+        //     if (!isLeapYear) {
+        //         has53Weeks = (yearsFirstDay == 4 && yearsLastDay == 4);
+        //     }
+        //     else {
+        //         has53Weeks = ((yearsFirstDay == 3 && yearsLastDay == 4) || (yearsFirstDay == 4 && yearsLastDay == 5));
+        //     }
+        //     return (has53Weeks?53:52);
+        // }
+        //
+        // for (var i = 0; i < totalWeeks; i++) {
+        //     fillStatisticInformation(0, 0, "", i, true);
+        //     clickableWeeks.push(0);
+        // }
+        // for (var i = 0; i < weeksToDo; i++) {
+        //     fillStatisticInformation(0, 0, "", i);
+        // }
+        // for (var i = weeksToDo - 1; i >= 0; i--) {
+        //     //for (var i = totalWeeks - 1; i >= dummyWeeksTodo; i--) {
+        //
+        //     clickableWeeks[totalWeeks-i-1] = data[i].week;
+        //
+        //     var bad = 0;
+        //     var ugly = 0;
+        //     if (i == 0) {
+        //         lastWeek = data[i].week;
+        //         currentClickedWeek = data[i].week;
+        //         currentSelectedWeek = data[i].week;
+        //         bad = parseInt(data[i].bad);
+        //         ugly = parseInt(data[i].ugly);
+        //         // for (var entry in data[i].filtered.bad) {
+        //         //     bad += parseInt(data[i].filtered.bad[entry][1]);
+        //         // }
+        //         // for (var entry in data[i].filtered.ugly) {
+        //         //     ugly += parseInt(data[i].filtered.ugly[entry][1]);
+        //         // }
+        //     }
+        //     else {
+        //         bad = parseInt(data[i].bad);
+        //         ugly = parseInt(data[i].ugly);
+        //     }
+        //     //fillStatisticInformation(bad, ugly, data[i].week, totalWeeks-(i+1));
+        //     fillStatisticInformation(bad, ugly, data[i].week, weeksToDo-1-i);
+        //
+        // }
+        // for (var i = 0; i < dummyWeeksTodo; i++) {
+        //     //alert(1);
+        //
+        //     /*var followWeek = (parseInt(data[0].week) + i + 1);
+        //      var weeksInThisYear = getWeekCountOfYear();
+        //      if (followWeek > weeksInThisYear)
+        //      followWeek = weeksInThisYear - followWeek;
+        //      fillStatisticInformation(0, 0, followWeek, i + weeksToDo, true);*/
+        //
+        //     var prevWeek = (parseInt(data[data.length-1].week) - i - 1);
+        //     var weeksInPrevYear = getWeekCountOfYear(true);
+        //     if (prevWeek < 1)
+        //         prevWeek = weeksInPrevYear + prevWeek;
+        //     //fillStatisticInformation(0, 0, followWeek, i + weeksToDo, true);
+        //
+        //     fillStatisticInformation(0, 0, prevWeek, dummyWeeksTodo - 1 - i, true);
+        // }
+        var d3 = Plotly.d3;
+
+        var WIDTH_IN_PERCENT_OF_PARENT = 73,
+            HEIGHT_IN_PERCENT_OF_PARENT = 150;
+
+        var gd3 = d3.select('#stats').style({
+         //width: WIDTH_IN_PERCENT_OF_PARENT + '%',
+         height: HEIGHT_IN_PERCENT_OF_PARENT + '%'
+         });
+
+        gd = gd3.node();
+        window.onresize = function() {
+            requestAnimationFrame(function() {
+                Plotly.Plots.resize(gd);
+                //createLinksForWeeks();
+            });
+        };
+
+        $(".loading").css("opacity", "0");
+        $(".loading-text").css("opacity", "0");
+        setTimeout(function () {
+            $(".loading").css("display", "none");
+            $(".loading-text").css("display", "none");
+            $(".statistics-content").css("display", "block");
+            $(".loading").detach().appendTo(".statistics-content .lists").addClass("update-weeks-statistik").css("visibility", "hidden").css("display", "block" );
+            Plotly.newPlot(gd, statisticTrafficInformation.data, statisticTrafficInformation.layout, {displayModeBar: false});
+            Plotly.Plots.resize(gd);
+            //setActiveWeekLink();
+            //createLinksForWeeks();
+            $(".statistics-content").css("opacity", "1");
+            setTimeout(function() {
+                doTrafficUpdate(lastWeek, true);
+            }, 550);
+        }, 450);
     }
 
     function initializeStatistics(data) {
@@ -1183,6 +1418,14 @@ function initialisePasswordFields(){
         $("#total-filtered").text(overallCount.ugly);
     }
 
+    function updateOverallTrafficCount(overallCount) {
+        $("#total-traffic").text(overallCount);
+    }
+
+    function updateCalendarWeek(calendarweek) {
+        $("#current-week").text(calendarweek);
+    }
+
     function updateLists(badList, uglyList) {
         $("#blocked-pages").empty();
         for (var detailUrl in badList) {
@@ -1191,6 +1434,13 @@ function initialisePasswordFields(){
         $("#filtered-pages").empty();
         for (var detailUrl in uglyList) {
             $("#filtered-pages").append("<li>" + uglyList[detailUrl][0] + ": " + uglyList[detailUrl][1] + "</li>")
+        }
+    }
+
+    function updateDomainList(domainList) {
+        $("#requested-domains").empty();
+        for (var detailUrl in domainList) {
+            $("#requested-domains").append("<li>" + domainList[detailUrl][0] + ": " + domainList[detailUrl][1] + "</li>")
         }
     }
 
@@ -1204,7 +1454,7 @@ function initialisePasswordFields(){
         if (ignoreRedraw)
             return;
         Plotly.redraw(gd);
-        Plotly.relayout(gd);
+        //Plotly.relayout(gd);
         createLinksForWeeks();
     }
 
@@ -1222,6 +1472,24 @@ function initialisePasswordFields(){
             pollIntervall: pollingTimeoutStatistics
         })
     }
+
+    function doTrafficUpdate(week, doInfinite) {
+        pollForRequestedInformation({
+            pollUrl: "data-poll-traffic-update-url",
+            additionalUrl: week,
+            domManipulator: updateTrafficStatistics,
+            errorHandler: errorUpdateStatistics,
+            pollOnce: !doInfinite,
+            pollIntervall: pollingTimeoutStatistics
+        })
+    }
+
+    function updateTrafficStatistics(data) {
+
+        //console.log(data);
+        updateDomainList(data.domains);
+    }
+
 
     function updateStatistics(data) {
 

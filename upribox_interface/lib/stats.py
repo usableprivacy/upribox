@@ -5,6 +5,7 @@ from datetime import date, datetime, timedelta
 
 import redis as redisDB
 from django.conf import settings
+from netaddr import EUI
 
 logger = logging.getLogger('uprilogger')
 
@@ -17,10 +18,11 @@ _PREFIX = _DELIMITER.join(("stats", "v2"))
 """str: Prefix which is used for every key in the redis db."""
 _DNSMASQ = "dnsmasq"
 _PRIVOXY = "privoxy"
+_DEVICE = "device"
 _BLOCKED = "blocked"
+_QUERIED = "queried"
 _WEEK = "week"
 _DOMAIN = "domain"
-
 
 # return overall counter tuple(filtered, blocked)
 def get_overall_counters():
@@ -71,6 +73,19 @@ def get_domain_counters(week, sort=False, limit=None):
         )
 
 
+# limit only when sorted
+def get_queries_for_device(mac, week, sort=False, limit=None):
+
+    queries = redis.hgetall(_DELIMITER.join((_PREFIX, _DEVICE, _QUERIED, str(EUI(mac)), _WEEK, str(week), _DOMAIN)))
+
+    if not sort:
+        return queries.items()
+    else:
+        return (
+            sorted(queries.items(), cmp=lambda x, y: int(x) - int(y), key=operator.itemgetter(1), reverse=True)[:limit]
+        )
+
+
 def sub_week(week, year, sub):
     try:
         return (tofirstdayinisoweek(year, week) - timedelta(days=7 * sub)).date().isocalendar()[1]
@@ -83,3 +98,14 @@ def tofirstdayinisoweek(year, week):
     if date(year, 1, 4).isoweekday() > 4:
         ret -= timedelta(days=7)
     return ret
+
+
+def get_week_days(year, week):
+    d = date(year, 1, 1)
+    if (d.weekday() > 3):
+        d = d + timedelta(7 - d.weekday())
+    else:
+        d = d - timedelta(d.weekday())
+    dlt = timedelta(days=(week - 1) * 7)
+    # return d + dlt, d + dlt + timedelta(days=6)
+    return [d + dlt + timedelta(days=i) for i in range(7)]

@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import json
 import logging
+import socket
 import subprocess
 import time
 from math import floor, log
@@ -186,9 +187,12 @@ def check_authorization(user):
     return user.is_authenticated() or not redis.exists(settings.SETUP_DELIMITER.join((settings.SETUP_PREFIX, settings.SETUP_KEY)))
 
 
-def human_format(number):
+def human_format(number, binary=False, suffix=''):
     units = ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']
     k = 1000.0
+    if binary:
+        units = ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi']
+        k = 1024.0
     # raises ValueError
     number = float(number)
     if number == 0:
@@ -200,6 +204,20 @@ def human_format(number):
         if magnitude > 8:
             magnitude = 8
         if round(number / k**magnitude, 1) % 1 == 0:
-            return '%.0f%s' % (number / k**magnitude, units[magnitude])
+            return '%.0f%s%s' % (number / k**magnitude, units[magnitude], suffix)
         else:
-            return '%.1f%s' % (number / k**magnitude, units[magnitude])
+            return '%.1f%s%s' % (number / k**magnitude, units[magnitude], suffix)
+
+
+def check_ip(ip):
+    try:
+        socket.inet_pton(socket.AF_INET, ip)
+        return socket.AF_INET
+    except socket.error:
+        try:
+            socket.inet_pton(socket.AF_INET6, ip)
+            return socket.AF_INET6
+        except socket.error:
+            return None
+    except TypeError:
+        return None

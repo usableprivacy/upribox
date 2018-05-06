@@ -25,11 +25,39 @@
   when: ansible_distribution_release == "stretch"
 
 - name: install services
-  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ "0" if ntopng_res and ntopng_res|changed else apt_cache_time }}
+  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes
   with_items:
     - redis-server
-    - ntopng
-    - ntopng-data
+    - python-jmespath
+
+- name: try to install latest ntopng stable release
+  block:
+    - name: retrieve latest ntopng release version
+      uri:
+        url: https://api.github.com/repos/ntop/ntopng/releases/latest
+        return_content: yes
+      register: ntop_latest
+
+    - name: install latest ntopng stable
+      apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ "0" if ntopng_res and ntopng_res|changed else apt_cache_time }}
+      with_items:
+        - ntopng={{ ntop_latest.json.tag_name }}*
+        - ntopng-data
+
+  rescue:
+      # try to install the previous ntopng stable release in case the github repo contains a new stable release,
+      # but the apt repos do not at the moment
+      - name: retrieve all ntopng releases
+        uri:
+          url: https://api.github.com/repos/ntop/ntopng/releases
+          return_content: yes
+        register: ntop_releases
+
+      - name: install previous ntopng stable
+        apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ "0" if ntopng_res and ntopng_res|changed else apt_cache_time }}
+        with_items:
+          - ntopng={{ (ntop_releases.json | json_query('[?prerelease==`false` && draft==`false`].tag_name') | sort(reverse=True))[1] }}*
+          - ntopng-data
 
 - name: enable services
   service: name={{ item }} enabled=yes use=service
@@ -47,6 +75,11 @@
   template: src=config dest=/etc/ntopng/ntopng.conf
   notify:
     - restart ntopng
+
+# this will become obsolete by a new ntopng stable release (current: 3.2)
+# also change url inside upribox_interface/traffic/ntopng.py (QUERY_URL)
+- name: copy custom ntopng lua script
+  copy: src=query.lua dest=/usr/share/ntopng/scripts/lua/modules/grafana/upri.lua mode=644 owner=root group=root
 
 - name: create systemd directory for ntopng
   file: path=/etc/systemd/system/ntopng.service.d state=directory

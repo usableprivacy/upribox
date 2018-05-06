@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load base_extras %}
+
+{% block title %}{% trans "Overview - " %}{{ device|get_device_name }}{% endblock %}
+
+{% block header %}
+    <h1><a href="{% if device.slug %}{% url 'upri_device_name' slug=device.slug %}{% endif %}" class="devnamechange">{{ device|get_device_name }}</a></h1>
+{% endblock %}
+
+{% block additional-data-urls %}data-poll-traffic-main-url="{% url 'upri_traffic' slug=device.slug %}" data-poll-traffic-update-url="{% url 'upri_traffic_domains' slug=device.slug %}"{% endblock %}
+
+{% block breadcrumb  %}
+<p><a href="{% url 'upri_index' %}">{% trans "Start" %}</a> > <a href="{% url 'upri_devices' %}">{% trans "Geräteübersicht" %}</a> > {% if device.slug %}{{ device|get_device_name }}{% endif %}</p>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="loading" style="display: block;"></div>
+<div class="loading-text">{% trans "Statistik wird geladen" %}</div>
+<div class="statistics-content" style="display: none;">
+{#    <h2> {% trans "Gesamtstatistik" %} </h2>#}
+
+    <div class="totalstat-div">
+        <p class="totalstat"> <span id="total-traffic" class="totalstat-numb blockiert"> </span> <br> {% trans "Datenvolumen gesamt" %}</p>
+    </div>
+    <div class="totalstat-div">
+        <p class="totalstat"> <span id="current-week" class="totalstat-numb gefiltert"> </span> <br> {% trans "Kalenderwoche" %}</p>
+    </div>
+
+
+{#   <h2 class="statistic-plot-heading clear">{% trans "Wochenstatistik" %} </h2> #}
+    <!--This span is not visible. Its only purpose is to hold the translated string for "KW", which is later needed for the plot-->
+    <span id="calendar-week-short-text">{% trans "Tag" %}</span>
+
+{##}
+{# <p class="overall-count">{% trans "Gesamtanzahl geblockter Anfragen" %}: <span id="total-blocked">2290</span><br>#}
+{#        {% trans "Gesamtanzahl gefilterter Inhalte" %}: <span id="total-filtered">2290</span>#}
+{#    </p>#}
+
+{#    <div class="y-axis-desc">{% trans "Datenvolumen (MB)" %}</div>#}
+    <div id="stats"></div>
+{#    <div class="x-axis-desc"><span class="weeks-full-text">{% trans "Datum" %}</span><span class="weeks-short-text">{% trans "Tag" %}</span></div>#}
+    <div class="lists">
+        <p class="lists-headline">{%trans "Details für Kalenderwoche" %} <span id="statistic-details-calendar-week"></span></p>
+
+        <div class="statistics js-requested-domains">
+            <p class="">{%trans "Domain Top 10 (Anfragen)" %}</p>
+            <ol id="requested-domains">
+
+            </ol>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block info_wrapper %}
+{% endblock %}

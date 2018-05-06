@@ -2379,3 +2379,18 @@ input[type='radio']:disabled + label::before{
     overflow-wrap: break-word;
     word-wrap: break-word;
 }
+
+/* Device Traffic Overview */
+
+a.devnamechange {
+    color: black;
+    text-decoration: none;
+}
+
+a.devnamechange:link {
+    border-bottom: 1px dashed;
+}
+
+a.devnamechange:hover {
+    border-bottom: 1px solid;
+}

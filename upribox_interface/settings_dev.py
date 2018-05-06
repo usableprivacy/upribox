@@ -51,6 +51,7 @@ INSTALLED_APPS = (
     'devices',
     'more',
     'setup',
+    'traffic'
 )
 
 MIDDLEWARE = [

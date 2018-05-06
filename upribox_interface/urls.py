@@ -13,16 +13,18 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
+import statistics.views
+
+import devices.views
+import more.views
+import setup.views
+import traffic.views
+import vpn.views
+import wlan.views
+import www.views
 from django.conf.urls import include, url
 from django.contrib.auth import views as auth_views
 from django.views.generic.base import RedirectView
-import more.views
-import www.views
-import wlan.views
-import vpn.views
-import statistics.views
-import devices.views
-import setup.views
 
 urlpatterns = [
 
@@ -41,7 +43,8 @@ urlpatterns = [
     # new config
     url(r'^config/static$', more.views.more_static, {"enable": True}, name="upri_config_static"),
     url(r'^config/static/enable$', more.views.more_static, {"enable": True}, name="upri_config_static_enable"),
-    url(r'^config/static/dhcpd$', more.views.more_static, {"enable": True, "dhcpd": True}, name="upri_config_static_dhcpd"),
+    url(r'^config/static/dhcpd$', more.views.more_static, {"enable": True,
+                                                           "dhcpd": True}, name="upri_config_static_dhcpd"),
     url(r'^config/user$', more.views.more_user, name="upri_config_user"),
     url(r'^config/$', more.views.more_overview, name="upri_config"),
     url(r'^config/static/toggle$', more.views.static_toggle, name="upri_static_toggle"),
@@ -105,5 +108,10 @@ urlpatterns = [
     url(r'^setup/evaluation$', setup.views.setup_eval, name="upri_setup_eval"),
     url(r'^setup/error$', setup.views.setup_error, name="upri_setup_error"),
     url(r'^setup/failed$', setup.views.setup_failed, name="upri_setup_failed"),
-    url(r'^setup/success$', setup.views.setup_success, name="upri_setup_success")
+    url(r'^setup/success$', setup.views.setup_success, name="upri_setup_success"),
+
+    # traffic
+    url(r'^traffic/(?P<slug>\w+)(?:/(?P<week>[0-9]{1,2})/(?P<year>[0-9]{4}))?$', traffic.views.get_statistics, name="upri_traffic"),
+    url(r'^traffic/domains/(?P<slug>\w+)(?:/(?P<week>[0-9]{1,2}))?$', traffic.views.get_device_queries, name="upri_traffic_domains"),
+    url(r'^traffic/overview/(?P<slug>\w+)$', traffic.views.get_overview, name="upri_traffic_overview"),
 ]
