@@ -4,3 +4,7 @@
   with_items:
     - "{{ cron_result.results }}"
   when: item|changed
+
+- name: move daily backups
+  shell: /bin/mv /home/upri/upri_backup_*.zip /var/upribox-backups/daily
+  ignore_errors: yes

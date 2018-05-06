@@ -69,13 +69,30 @@
   changed_when: "update_result.rc == 1"
   failed_when: "update_result.rc > 1"
 
-- name: create backup directory
+- name: create root backup directory
   file:
       path: "/var/upribox-backups"
       state: directory
       owner: root
       group: root
       mode: 0755
+
+- name: create daily backup directory
+  file:
+      path: "/var/upribox-backups/daily"
+      state: directory
+      owner: root
+      group: root
+      mode: 0750
+  notify: move daily backups
+
+- name: create weekly backup directory
+  file:
+      path: "/var/upribox-backups/weekly"
+      state: directory
+      owner: root
+      group: root
+      mode: 0750
 
 - name: create cron / anacron jobs
   template: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode={{ item.mode|default("0644")}}
