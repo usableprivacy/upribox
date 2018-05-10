@@ -64,8 +64,11 @@ def get_statistics(request, slug, week=None, year=None):
         total_protocols.update(traffic)
 
     protocols_top = sorted(total_protocols, key=total_protocols.get, reverse=True)
+    if len(protocols_top) > 0:
+        colors = list(Color('#47ADC0').range_to(Color('black'), len(protocols_top)))
+
     protocols = list()
-    colors = list(Color('#47ADC0').range_to(Color('black'), len(protocols_top)))
+
     for protocol in protocols_top:
         dates = list()
         amounts = list()
