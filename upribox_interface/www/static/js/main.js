@@ -877,6 +877,14 @@ function initialisePasswordFields(){
 
         var protocols_num = data['protocols'].length;
 
+        if (protocols_num == 0){
+            $(".no-data-available").css("display", "block");
+            $(".loading").css("display", "none");
+            $(".loading-text").css("display", "none");
+            $(".statistics-content").css("display", "none");
+            return;
+        }
+
         function createHoverInfo(value){
             if(value > 0) return "y+text";
             else return "skip";
@@ -1068,93 +1076,6 @@ function initialisePasswordFields(){
         updateOverallTrafficCount(data.total);
         updateCalendarWeek(data.calendarweek);
 
-        //updateLists(data[0].filtered.bad, data[0].filtered.ugly);
-
-
-        //
-        // var getWeekDomString = function (week, dontCreateLink) {
-        //     var calendarWeekShortText = $("#calendar-week-short-text").text();
-        //     var defaultDomString = "<span>" + calendarWeekShortText + " </span>" + week;
-        //     var retVal = dontCreateLink?defaultDomString:"<a id='week" + week + "'>" + defaultDomString + "</a>";
-        //     return retVal;
-        // }
-        //
-        // var getWeekCountOfYear = function (prevYear) {
-        //     /*according to
-        //      https://de.wikipedia.org/w/index.php?title=Woche&oldid=167637426#Z.C3.A4hlweise_nach_ISO_8601
-        //      and
-        //      https://en.wikipedia.org/w/index.php?title=ISO_week_date&oldid=793798377#Weeks_per_year
-        //      a common year has 53 Weeks, when it starts with a thursday and ends with a thursday
-        //      and
-        //      a leap year has 53 Weeks, when it starts with a Wednesday and ends with a Thursday or when it starts with a Thursday and ends with a Friday
-        //      */
-        //     var currentYear = new Date().getFullYear();
-        //     if (prevYear) currentYear--;
-        //     var isLeapYear = (new Date(currentYear, 1, 29).getMonth()==1);
-        //     var has53Weeks = false;
-        //     var yearsFirstDay = new Date(currentYear, 0, 1).getDay(); // 4 would be Thursday
-        //     var yearsLastDay = new Date(currentYear, 11, 31).getDay(); // 4 would be Thursday
-        //     if (!isLeapYear) {
-        //         has53Weeks = (yearsFirstDay == 4 && yearsLastDay == 4);
-        //     }
-        //     else {
-        //         has53Weeks = ((yearsFirstDay == 3 && yearsLastDay == 4) || (yearsFirstDay == 4 && yearsLastDay == 5));
-        //     }
-        //     return (has53Weeks?53:52);
-        // }
-        //
-        // for (var i = 0; i < totalWeeks; i++) {
-        //     fillStatisticInformation(0, 0, "", i, true);
-        //     clickableWeeks.push(0);
-        // }
-        // for (var i = 0; i < weeksToDo; i++) {
-        //     fillStatisticInformation(0, 0, "", i);
-        // }
-        // for (var i = weeksToDo - 1; i >= 0; i--) {
-        //     //for (var i = totalWeeks - 1; i >= dummyWeeksTodo; i--) {
-        //
-        //     clickableWeeks[totalWeeks-i-1] = data[i].week;
-        //
-        //     var bad = 0;
-        //     var ugly = 0;
-        //     if (i == 0) {
-        //         lastWeek = data[i].week;
-        //         currentClickedWeek = data[i].week;
-        //         currentSelectedWeek = data[i].week;
-        //         bad = parseInt(data[i].bad);
-        //         ugly = parseInt(data[i].ugly);
-        //         // for (var entry in data[i].filtered.bad) {
-        //         //     bad += parseInt(data[i].filtered.bad[entry][1]);
-        //         // }
-        //         // for (var entry in data[i].filtered.ugly) {
-        //         //     ugly += parseInt(data[i].filtered.ugly[entry][1]);
-        //         // }
-        //     }
-        //     else {
-        //         bad = parseInt(data[i].bad);
-        //         ugly = parseInt(data[i].ugly);
-        //     }
-        //     //fillStatisticInformation(bad, ugly, data[i].week, totalWeeks-(i+1));
-        //     fillStatisticInformation(bad, ugly, data[i].week, weeksToDo-1-i);
-        //
-        // }
-        // for (var i = 0; i < dummyWeeksTodo; i++) {
-        //     //alert(1);
-        //
-        //     /*var followWeek = (parseInt(data[0].week) + i + 1);
-        //      var weeksInThisYear = getWeekCountOfYear();
-        //      if (followWeek > weeksInThisYear)
-        //      followWeek = weeksInThisYear - followWeek;
-        //      fillStatisticInformation(0, 0, followWeek, i + weeksToDo, true);*/
-        //
-        //     var prevWeek = (parseInt(data[data.length-1].week) - i - 1);
-        //     var weeksInPrevYear = getWeekCountOfYear(true);
-        //     if (prevWeek < 1)
-        //         prevWeek = weeksInPrevYear + prevWeek;
-        //     //fillStatisticInformation(0, 0, followWeek, i + weeksToDo, true);
-        //
-        //     fillStatisticInformation(0, 0, prevWeek, dummyWeeksTodo - 1 - i, true);
-        // }
         var d3 = Plotly.d3;
 
         var WIDTH_IN_PERCENT_OF_PARENT = 73,
