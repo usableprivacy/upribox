@@ -10,7 +10,6 @@
   file: path=/etc/apt/sources.list.d/ntop.list state=absent
   when: ntop_list.stat.exists
 
-
 # stretch
 #- name: remove ntopng, installed from raspbian repo
 #  apt: name={{ item }} state=absent force=yes purge=yes
@@ -44,57 +43,21 @@
   with_items:
     - ntopng-data_3.2.180514.deb
     - ntopng_3.2.180514.deb
-  when: ntopng_version.failed
+  when: ntopng_version.rc == 1
 
 - name: install stable ntopng version
   apt: deb="/home/upri/{{ item }}" force=yes
   with_items:
     - ntopng-data_3.2.180514.deb
     - ntopng_3.2.180514.deb
-  when: ntopng_version.failed
+  when: ntopng_version.rc == 1
 
 - name: remove temp files
   file: path="/home/upri/{{ item }}" state=absent
   with_items:
     - ntopng-data_3.2.180514.deb
     - ntopng_3.2.180514.deb
-  when: ntopng_version.failed
-
-
-
-#- name: copy ntopng sources
-#  copy: src=ntop.list dest=/etc/apt/sources.list.d/ntop.list mode=644 owner=root group=root
-#  register: ntopng_res
-#  when: ansible_distribution_release == "stretch"
-
-#- name: try to install latest ntopng stable release
-#  block:
-#    - name: retrieve latest ntopng release version
-#      uri:
-#        url: https://api.github.com/repos/ntop/ntopng/releases/latest
-#        return_content: yes
-#      register: ntop_latest
-#
-#    - name: install latest ntopng stable
-#      apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ "0" if ntopng_res and ntopng_res|changed else apt_cache_time }}
-#      with_items:
-#        - ntopng={{ ntop_latest.json.tag_name }}*
-#        - ntopng-data
-#
-#  rescue:
-#      # try to install the previous ntopng stable release in case the github repo contains a new stable release,
-#      # but the apt repos do not at the moment
-#      - name: retrieve all ntopng releases
-#        uri:
-#          url: https://api.github.com/repos/ntop/ntopng/releases
-#          return_content: yes
-#        register: ntop_releases
-#
-#      - name: install previous ntopng stable
-#        apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ "0" if ntopng_res and ntopng_res|changed else apt_cache_time }}
-#        with_items:
-#          - ntopng={{ (ntop_releases.json | json_query('[?prerelease==`false` && draft==`false`].tag_name') | sort(reverse=True))[1] }}*
-#          - ntopng-data
+  when: ntopng_version.rc == 1
 
 - name: enable services
   service: name={{ item }} enabled=yes use=service
