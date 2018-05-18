@@ -1,9 +1,9 @@
 ---
 - include: ../../common/tasks/other_env.yml
 
-- name: Stop update process if master is pulled from old wheezy image
-  fail: msg="You are running the outdated wheezy image, update process stoped."
-  when: ansible_distribution_release == "wheezy"
+- name: Stop update process if master is not pulled from stretch image 
+  fail: msg="You are running the outdated image, update process stoped."
+  when: ansible_distribution_release != "stretch"
 
 - name: configure hosts
   template: src=hosts dest=/etc/hosts owner=root group=root mode=644
