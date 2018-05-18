@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-19 19:05+0000\n"
+"POT-Creation-Date: 2018-05-18 07:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,15 +35,30 @@ msgstr ""
 "\"upribox\" WLAN. Alternatively, you can complete the setup of your upribox "
 "manually by <a href=\"%(help)s\">configuring DHCP</a>."
 
-#: setup/templates/setup.html:26 setup/templates/setup.html:33
+#: setup/templates/setup.html:26 setup/templates/setup.html:35
+#: setup/templates/setup.html:42
 msgid "Geräteübersicht"
 msgstr "Device Overview"
 
 #: setup/templates/setup.html:30
+msgid ""
+"\n"
+"            <p> Eine IPv6-fähige Internetverbindung wurde erkannt. Die "
+"upribox ist über das WLAN \"upribox\" verfügbar, der automatische Modus "
+"wurde nicht aktiviert. </p>\n"
+"        "
+msgstr ""
+"\n"
+"            <p> You Internet connection is IPv6-enabled. Use the "
+"upribox WiFi \"upribox\", the automatic modus "
+"has not been activated. </p>\n"
+"        "
+
+#: setup/templates/setup.html:39
 msgid "Ihre upribox wurde erfolgreich eingerichtet!"
 msgstr "Your upribox has been successfully set up!"
 
-#: setup/templates/setup.html:38
+#: setup/templates/setup.html:47
 msgid ""
 "\n"
 "            <p> Die upribox verfügt derzeit über keine Internetverbindung. "
@@ -56,7 +71,7 @@ msgstr ""
 "sure the upribox is connected to your home network.</p>\n"
 "        "
 
-#: setup/templates/setup.html:43
+#: setup/templates/setup.html:52
 #, python-format
 msgid ""
 "\n"
@@ -74,22 +89,22 @@ msgstr ""
 "            Is the page reachable?  </p>\n"
 "        "
 
-#: setup/templates/setup.html:47
+#: setup/templates/setup.html:56
 msgid "Ja"
 msgstr "Yes"
 
-#: setup/templates/setup.html:47
+#: setup/templates/setup.html:56
 msgid "Nein"
 msgstr "No"
 
-#: setup/templates/setup.html:49
+#: setup/templates/setup.html:58
 msgid "Bitte warten, das Setup wird gestartet."
 msgstr "Please wait, while the setup is being started."
 
-#: setup/templates/setup.html:54
+#: setup/templates/setup.html:63
 msgid "Es ist leider ein Fehler während des Setups der upribox aufgetreten."
 msgstr "Unfortunately, an error occurred while setting up the upribox."
 
-#: setup/templates/setup.html:54
+#: setup/templates/setup.html:63
 msgid "Bitte versuchen Sie es erneut"
 msgstr "Please try again"
