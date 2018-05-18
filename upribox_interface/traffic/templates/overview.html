@@ -3,7 +3,7 @@
 {% load i18n %}
 {% load base_extras %}
 
-{% block title %}{% trans "Overview - " %}{{ device|get_device_name }}{% endblock %}
+{% block title %}{% trans "Übersicht - " %}{{ device|get_device_name }}{% endblock %}
 
 {% block header %}
     <h1><a href="{% if device.slug %}{% url 'upri_device_name' slug=device.slug %}{% endif %}" class="devnamechange">{{ device|get_device_name }}</a></h1>
