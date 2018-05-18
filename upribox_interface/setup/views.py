@@ -77,6 +77,9 @@ def setup_failed(request):
     phase = "failed"
     context = {}
 
+    if info.check_ipv6():
+        phase = "ipv6"
+
     _setup_redis(phase)
 
     if not info.check_ipv6():
@@ -85,7 +88,7 @@ def setup_failed(request):
             # context.update({'message': True})
 
     context.update({
-        'phase': phase  # init, failed, success
+        'phase': phase  # init, failed, ipv6, success
     })
     return render(request, "setup.html", context)
 

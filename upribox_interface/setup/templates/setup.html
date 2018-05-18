@@ -24,6 +24,15 @@
         </div>
 
         <button onclick="location.href='{% url 'upri_devices' %}';"> {% trans "Geräteübersicht" %} </button>
+    {% elif phase == "ipv6"%}
+        <div class="icon i-setup-failed"> </div>
+        <div class="setup-text">
+        {% blocktrans %}
+            <p> Eine IPv6-fähige Internetverbindung wurde erkannt. Die upribox ist über das WLAN "upribox" verfügbar, der automatische Modus wurde nicht aktiviert. </p>
+        {% endblocktrans %}
+        </div>
+
+        <button onclick="location.href='{% url 'upri_devices' %}';"> {% trans "Geräteübersicht" %} </button>
     {% elif phase == "success"%}
         <div class="icon i-setup-successful"></div>
         <div class="setup-text">
