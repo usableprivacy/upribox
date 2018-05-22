@@ -4,11 +4,12 @@
 
 [![Current releases](https://img.shields.io/badge/release-v2.0-brightgreen.svg)](https://github.com/usableprivacy/upribox/releases) [![Documentation Status](https://img.shields.io/badge/docs-latest-blue.svg)](http://docs.upribox.org) [![GPLv3 License](https://img.shields.io/badge/license-GPLv3-yellow.svg)](https://github.com/usableprivacy/upribox/blob/master/LICENSE) [![Median time to resolve an issue](http://isitmaintained.com/badge/resolution/usableprivacy/upribox.svg)](http://isitmaintained.com/project/usableprivacy/upribox) [![Twitter Follow](https://img.shields.io/twitter/follow/usableprivacy.svg?style=social&label=Follow)](https://twitter.com/usableprivacy)
 
-### The [upribox](https://upribox.org) Software Image turns your RaspberryPi into a privacy-enhancing Wireless router with adblocking, Tor, and VPN features.
+
+The [upribox](https://upribox.org) Software Image turns your RaspberryPi into a privacy-enhancing Wireless router with adblocking, Tor, and VPN features.
 
 ---
 
-## [upribox-image-v2-alpha.zip](https://github.com/usableprivacy/upribox/releases/download/v2.0-alpha/upribox-v2-alpha.zip) (Jan 2018, 809MB)
+## [upribox-image-v2.zip](https://github.com/usableprivacy/upribox/releases/download/v2.0/upribox-image-v2.zip) (May 2018, 786MB)
 
 ---
 
