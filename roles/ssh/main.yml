@@ -1,7 +1,8 @@
 ---
-- include: ssh_state.yml tags=toggle_ssh
+- include: ssh_state.yml
+  tags: [toggle_ssh]
+
 - name: configure ssh
-  service: name=ssh state='{{ "started" if ssh_enabled|bool else "stopped" }}' enabled='{{ ssh_enabled|bool }}'
+  service: name=ssh state='{{ "started" if ssh_enabled|bool else "stopped" }}' enabled='{{ ssh_enabled|bool }}' use=service
   tags:
     - toggle_ssh
-   

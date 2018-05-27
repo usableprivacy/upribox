@@ -1,0 +1,11 @@
+[
+    { "update_from": "https://rules.upribox.org/downloads/blacklist.de.conf",
+     "update_to": "/etc/dnsmasq.d/dnsblacklist.conf", "run": ["restart-dnsmasq", "restart-dnsmasq-ninja"] },
+
+    { "update_from": "https://rules.upribox.org/downloads/css.de.lua",
+     "update_to": "/etc/nginx/lua/css.lua", "run": ["restart-nginx"] },
+
+    { "update_from": "https://rules.upribox.org/downloads/upri.block.de.action",
+     "update_to": "/etc/privoxy/upri.block.action" }
+
+]

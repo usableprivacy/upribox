@@ -12,17 +12,12 @@
     },
     "dhcpd": {
         "general": {
-            "enabled": "yes"
+            "enabled": "no"
         }
     },
     "ssh": {
         "general": {
             "enabled": "yes"
-        }
-    },
-    "tor": {
-        "general": {
-            "enabled": "no"
         }
     },
     "unattended_upgrades": {
@@ -36,14 +31,11 @@
     },
     "wlan": {
         "general": {
+            "enabled": "yes",
             "channel": 9,
             "hw_mode": "g",
             "ieee80211n": 1,
             "wmm_enabled": 1
-        },
-        "ninja": {
-            "passwd": "MyRaspberryP1T0r!",
-            "ssid": "upriBoxTor"
         },
         "upri": {
             "passwd": "MyRaspberryP1!",
@@ -54,6 +46,11 @@
         "connection": {
             "port": 1194,
             "protocol": "UDP"
+        }
+    },
+    "apate": {
+        "general": {
+            "enabled": "no"
         }
     }
 }

@@ -1,0 +1,13 @@
+[Unit]
+Description=Upribox Update Recovery
+Wants=network-online.target networking.service
+After=sys-subsystem-net-devices-eth0.device networking.service network-online.target systemd-networkd.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "/usr/bin/test -f {{ recovery_file }} && /usr/local/bin/ansible-cron --force"
+SuccessExitStatus=1
+Environment=HOME=/root
+
+[Install]
+WantedBy=multi-user.target

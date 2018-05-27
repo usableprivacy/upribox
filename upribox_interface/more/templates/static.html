@@ -1,0 +1,27 @@
+{% extends request.is_ajax|yesno:"base_ajax.html,base.html" %}
+
+{% load i18n %}
+{% load widget_tweaks %}
+{% load base_extras %}
+
+{% block title %}{% trans "Konfiguration" %}{% endblock %}
+
+{% block breadcrumb  %}
+    <p><a href="{% url 'upri_index' %}">{% trans "Start" %}</a> > <a href="{% url 'upri_config' %}">{% trans "Konfiguration" %}</a> > {% trans "Static IP" %}</p>
+{% endblock %}
+
+{% block header %}
+    <h1>{% trans "Static IP" %}</h1>
+{% endblock %}
+
+{% block content %}
+                {% url 'upri_config' as back %}
+                {% include "form.html" with form=ip_form %}
+                <div {% if refresh_url %}data-refresh-url="{{refresh_url}}"{% endif %}></div>
+{% endblock %}
+
+{% block info %}
+<p class="icon i-info infohead"> {% trans "Hinweis" %} </p>
+<p class="infotext"> {% trans "Im Normalfall können die voreingestellten Werte für IP-Adresse, Subnetzmaske, Standardgateway und DNS Server übernommen werden. Bitte rufen Sie abschließend noch die Administration-Oberfläche Ihres Routers auf und deaktivieren Sie dort den DHCP-Server, da diese Funktion von nun an von der upribox übernommen wird." %}
+</p>
+{% endblock %}

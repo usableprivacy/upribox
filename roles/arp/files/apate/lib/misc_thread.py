@@ -146,12 +146,12 @@ class PubSubThread(threading.Thread):
             pass
 
     def _handle_expired(self, message):
-        self.logger.debug("Removed expired device {} from network {}".format(util.get_device_ip(message['data']), util.get_device_net(message['data'])))
+        self.logger.debug("Removed expired device {} from network {}".format(util.get_device_mac(message['data']), util.get_device_net(message['data'])))
         # removes the ip of the expired device (the removed device entry) from the network set
-        self.redis._del_device_from_network(util.get_device_ip(message['data']), util.get_device_net(message['data']))
+        self.redis._del_device_from_network(util.get_device_mac(message['data']), util.get_device_net(message['data']))
 
     def _handle_toggled(self, message):
-        if message['data'] == 'sadd':
+        if message['data'] == 'hset':
             # devs can be used to selectively spoof only the toggled devices
             devs = self.redis.pop_toggled()
             self.handler(self.ip, devs, self.logger)

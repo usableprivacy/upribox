@@ -6,7 +6,7 @@ ieee80211n={{ default_settings.wlan.general.ieee80211n if not (ansible_local is 
 driver=nl80211
 wmm_enabled={{ default_settings.wlan.general.wmm_enabled if not (ansible_local is defined and ansible_local.wlan is defined and ansible_local.wlan.general is defined) else ansible_local.wlan.general.wmm_enabled | default(default_settings.wlan.general.wmm_enabled) }}
 
-#ssid without tor
+#ssid
 ssid={{ default_settings.wlan.upri.ssid if not (ansible_local is defined and ansible_local.wlan is defined and ansible_local.wlan.upri is defined) else ansible_local.wlan.upri.ssid | default(default_settings.wlan.upri.ssid) }}
 auth_algs=1
 wpa=2
@@ -16,17 +16,3 @@ wpa_passphrase={{ default_settings.wlan.upri.passwd if not (ansible_local is def
 wpa_key_mgmt=WPA-PSK
 wpa_pairwise=TKIP
 rsn_pairwise=CCMP
-
-{% if tor|bool%}
-#ssid with tor
-bss=wlan0_0
-ssid={{ default_settings.wlan.ninja.ssid if not (ansible_local is defined and ansible_local.wlan is defined and ansible_local.wlan.ninja is defined) else ansible_local.wlan.ninja.ssid | default(default_settings.wlan.ninja.ssid) }}
-auth_algs=1
-wpa=2
-macaddr_acl=0
-ignore_broadcast_ssid=0
-wpa_passphrase={{ default_settings.wlan.ninja.passwd if not (ansible_local is defined and ansible_local.wlan is defined and ansible_local.wlan.ninja is defined) else ansible_local.wlan.ninja.passwd | default(default_settings.wlan.ninja.passwd) }}
-wpa_key_mgmt=WPA-PSK
-wpa_pairwise=TKIP
-rsn_pairwise=CCMP
-{% endif %}

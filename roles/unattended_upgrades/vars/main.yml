@@ -8,3 +8,4 @@ default_settings:
       download_days: 0
       install_days: 1
       autoclean_days: 21
+      clean_days: 7

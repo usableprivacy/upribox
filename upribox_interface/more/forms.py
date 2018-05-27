@@ -53,26 +53,26 @@ class StaticIPForm(forms.Form):
 
     ip_address = forms.CharField(
         required=True,
-        label=ugettext_lazy("IP Adresse"),
+        label=ugettext_lazy("IP:"),
         max_length=20,
     )
     ip_netmask = forms.CharField(
         required=True,
-        label=ugettext_lazy("Subnetzmaske"),
+        label=ugettext_lazy("Subnetzmaske:"),
     )
     gateway = forms.CharField(
         required=True,
-        label=ugettext_lazy("Standardgateway"),
+        label=ugettext_lazy("Gateway:"),
     )
     dns_server = forms.CharField(
         required=True,
-        label=ugettext_lazy("DNS Server"),
+        label=ugettext_lazy("DNS-Server:"),
     )
-    dhcp_server = forms.BooleanField(
-        required=False,
-        widget=forms.CheckboxInput,
-        label=ugettext_lazy("upribox als DHCP Server nutzen"),
-    )
+    # dhcp_server = forms.BooleanField(
+    #     required=False,
+    #     widget=forms.CheckboxInput,
+    #     label=ugettext_lazy("upribox als DHCP Server nutzen"),
+    # )
 
     def __init__(self, ip, netmask, gateway, dns, dhcp, *args, **kwargs):
         super(StaticIPForm, self).__init__(*args, **kwargs)
@@ -82,7 +82,7 @@ class StaticIPForm(forms.Form):
         self.fields['gateway'].widget.attrs['value'] = gateway
         self.fields['dns_server'].widget.attrs['value'] = dns
         #self.fields['dhcp_server'].widget.attrs['checked'] = str(dhcp.lower() == "yes").lower()
-        self.fields['dhcp_server'].initial = dhcp.lower() == "yes"
+        # self.fields['dhcp_server'].initial = dhcp.lower() == "yes"
 
     def clean(self):
         cleaned_data = super(StaticIPForm, self).clean()

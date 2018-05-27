@@ -10,6 +10,7 @@ ExecStart=/etc/init.d/apate start
 ExecStop=/etc/init.d/apate stop
 PIDFile={{ default_settings.apate.pid.dir }}/{{ default_settings.apate.pid.file }}
 Restart=on-failure
+RestartSec=15s
 
 [Install]
 WantedBy=multi-user.target

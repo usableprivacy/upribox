@@ -85,16 +85,13 @@ class _DaemonApp(object):
             # get default gateway
             gateway = ni.gateways()["default"][ni.AF_INET][0]
 
-            try:
-                # get MAC address of gateway
-                gate_mac = util.get_mac(gateway, self.interface)
-                if not gate_mac:
-                    raise DaemonError()
-            except Exception:
-                self.logger.error("Unable to get MAC address of IPv4 Gateway")
+            # get MAC address of gateway
+            gate_mac = util.get_mac(gateway, self.interface)
+            if not gate_mac:
+                raise DaemonError("Unable to get MAC address of IPv4 Gateway")
 
             # get all ipv4 nameservers
-            dns_servers = [x for x in rs.nameservers if IPAddress(x).version == 4]
+            dns_servers = [x for x in rs.nameservers if IPAddress(x).version == 4 and not IPAddress(x).is_reserved()]
             # store ipv4 information
             self.ipv4 = IPInfo(ip, netmask, network, gateway, mac, gate_mac, dns_servers, None)
         except AddrFormatError as afe:
@@ -104,6 +101,8 @@ class _DaemonApp(object):
             self.logger.debug("No IPv4 default gateway is configured")
         except IndexError:
             self.logger.debug("No IPv4 address is configured")
+        except DaemonError as de:
+            self.logger.exception(de)
 
         try:
             # global IPv6 if self.ipv6 results in True
@@ -118,16 +117,13 @@ class _DaemonApp(object):
             # get default gateway
             gateway = ni.gateways()["default"][ni.AF_INET6][0]
 
-            try:
-                # get MAC address of gateway
-                gate_mac = util.get_mac6(gateway, self.interface)
-                if not gate_mac:
-                    raise DaemonError()
-            except Exception:
-                self.logger.error("Unable to get MAC address of IPv6 Gateway")
+            # get MAC address of gateway
+            gate_mac = util.get_mac6(gateway, self.interface)
+            if not gate_mac:
+                raise DaemonError("Unable to get MAC address of IPv6 Gateway")
 
             # get all ipv6 nameservers
-            dns_servers = [x for x in rs.nameservers if IPAddress(x).version == 6]
+            dns_servers = [x for x in rs.nameservers if IPAddress(x).version == 6 and not IPAddress(x).is_reserved()]
             # store ipv6 information
             self.ipv6 = IPInfo(ip, netmask, network, gateway, mac, gate_mac, dns_servers, None)
         except AddrFormatError as afe:
@@ -137,10 +133,12 @@ class _DaemonApp(object):
             self.logger.debug("No IPv6 default gateway is configured")
         except IndexError:
             self.logger.debug("No IPv6 address is configured")
+        except DaemonError as de:
+            self.logger.exception(de)
 
         if not any((self.ipv4, self.ipv6)):
             # at least ipv4 or ipv6 has to be configured
-            self.logger.error("Unable to retriev IPv4 and IPv6 configuration")
+            self.logger.error("Unable to retrieve IPv4 and IPv6 configuration")
             raise DaemonError()
 
     def _return_to_normal(self):
@@ -182,7 +180,7 @@ class HolisticDaemonApp(_DaemonApp):
         """
         super(self.__class__, self).__init__(logger, interface, pidfile, stdout, stderr, dns_file)
 
-        self.sniffthread = HolisticSniffThread(self.interface, self.ipv4)
+        self.sniffthread = HolisticSniffThread(self.interface, self.ipv4, logger)
         self.sniffthread.daemon = True
 
     def _return_to_normal(self):

@@ -7,7 +7,7 @@
     - dnsmasq
 
 - name: enable services
-  service: name={{ item }} enabled=yes
+  service: name={{ item }} enabled=yes use=service
   with_items:
     - dnsmasq
 
@@ -18,8 +18,26 @@
   copy: src=dnsmasq-unfiltered/default/dnsmasq-unfiltered dest=/etc/default
   notify: restart dnsmasq_unfiltered
 
+- name: check if /var/run/dnsmasq/dnsmasq-unfiltered.pid exists
+  stat: path=/var/run/dnsmasq/dnsmasq-unfiltered.pid
+  register: res
+
+- name: stop service
+  systemd:
+    daemon-reload: yes
+    name: dnsmasq-unfiltered
+    state: stopped
+  when: res.stat.exists
+
 - name: copy dnsmasq unfiltered init.d
   copy: src=dnsmasq-unfiltered/init.d/dnsmasq-unfiltered dest=/etc/init.d mode="755"
+  notify: restart dnsmasq_unfiltered
+
+- name: create systemd directory for dnsmasq_unfiltered
+  file: path=/etc/systemd/system/dnsmasq-unfiltered.service.d state=directory
+
+- name: override tor systemd dependencies
+  copy: src=dnsmasq-unfiltered/override.conf dest=/etc/systemd/system/dnsmasq-unfiltered.service.d/override.conf owner=root group=root mode=644
   notify: restart dnsmasq_unfiltered
 
 - name: copy dnsmasq unfiltered conf
@@ -32,10 +50,10 @@
   with_dict: "{{other_env.default_settings.log.dnsmasq_unfiltered.logfiles}}"
   when: res|changed or (other_env.default_settings.log.general.path != default_settings.log.general.path or other_env.default_settings.log.dnsmasq_unfiltered.logfiles.logname != default_settings.log.dnsmasq_unfiltered.logfiles.logname)
 
-- name: toggle service dnsmasq-unfiltered
-  service: name={{ item }} enabled=yes state=started
-  with_items:
-    - dnsmasq-unfiltered
+  # workaround for broken systemd module (https://github.com/ansible/ansible-modules-core/issues/3764)
+  # (https://github.com/geerlingguy/ansible-role-varnish/pull/65)
+- name: enable service dnsmasq-unfiltered
+  service: name=dnsmasq-unfiltered enabled=yes use=service
 
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/dnsmasq_unfiltered mode=0644

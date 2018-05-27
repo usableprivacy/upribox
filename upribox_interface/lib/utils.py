@@ -1,18 +1,23 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
 import json
-from os import listdir
-from os.path import isfile, join, exists
 import logging
+import socket
 import subprocess
 import time
+from math import floor, log
+from os import listdir
+from os.path import exists, isfile, join
+
 import dns.resolver
-import passwd
-from django.conf import settings
-from django.utils.translation import ugettext_lazy
-from django.utils.crypto import get_random_string
-from django import forms
 import netifaces as ni
+import passwd
+import redis as redisDB
+from django import forms
+from django.conf import settings
+from django.utils.crypto import get_random_string
+from django.utils.translation import ugettext_lazy
 from netaddr import IPAddress
 
 logger = logging.getLogger('uprilogger')
@@ -87,22 +92,20 @@ def check_passwords(password1, password2):
     # password2 not empty string and valid
     if password2 and not pw2.is_valid():
         errors = []
-        if not pw2.has_digit():
-            errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Ziffer beinhalten.")))
-        if not pw2.has_lowercase_char():
-            errors.append(
-                forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Kleinbuchstaben beinhalten.")))
-        if not pw2.has_uppercase_char():
-            errors.append(
-                forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Großbuchstaben beinhalten.")))
-        if not pw2.has_symbol():
-            errors.append(
-                forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Sonderzeichen beinhalten.")))
+        # if not pw2.has_digit():
+        #     errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Ziffer beinhalten.")))
+        # if not pw2.has_lowercase_char():
+        #     errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Kleinbuchstaben beinhalten.")))
+        # if not pw2.has_uppercase_char():
+        #     errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Großbuchstaben beinhalten.")))
+        # if not pw2.has_symbol():
+        #     errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss mindestens 1 Sonderzeichen beinhalten.")))
         if not pw2.has_allowed_length():
             errors.append(forms.ValidationError(ugettext_lazy("Das Passwort muss zwischen 8 und 63 Zeichen lang sein.")))
         if not pw2.has_only_allowed_chars():
-            errors.append(forms.ValidationError(ugettext_lazy(
-                "Das Passwort darf lediglich die Sonderzeichen %s enthalten." % pw2.get_allowed_chars())))
+            errors.append(
+                forms.ValidationError(ugettext_lazy("Das Passwort darf lediglich die Sonderzeichen %s enthalten." % pw2.get_allowed_chars()))
+            )
 
         raise forms.ValidationError(errors)
 
@@ -152,7 +155,7 @@ def get_system_network_config():
     if not dns_servers[0] and exists(settings.DNS_FILE):
         rs = dns.resolver.Resolver(filename=settings.DNS_FILE)
         # get all ipv4 nameservers
-        dns_servers = [x for x in rs.nameservers if IPAddress(x).version == 4]
+        dns_servers = [x for x in rs.nameservers if IPAddress(x).version == 4 and not IPAddress(x).is_reserved()]
     else:
         if not gw_default:
             dns_servers = [gateway]
@@ -164,8 +167,12 @@ def get_system_network_config():
 
 
 def get_default_network_config():
-    return {'ip': get_fact('interfaces', 'static', 'ip'), 'netmask': get_fact('interfaces', 'static', 'netmask'),
-            'gateway': get_fact('interfaces', 'static', 'gateway'), 'dns_servers': [get_fact('interfaces', 'static', 'dns')]}
+    return {
+        'ip': get_fact('interfaces', 'static', 'ip'),
+        'netmask': get_fact('interfaces', 'static', 'netmask'),
+        'gateway': get_fact('interfaces', 'static', 'gateway'),
+        'dns_servers': [get_fact('interfaces', 'static', 'dns')]
+    }
 
 
 class AnsibleError(Exception):
@@ -173,3 +180,44 @@ class AnsibleError(Exception):
     def __init__(self, message, rc):
         super(AnsibleError, self).__init__(message)
         self.rc = rc
+
+
+def check_authorization(user):
+    redis = redisDB.StrictRedis(host=settings.REDIS["HOST"], port=settings.REDIS["PORT"], db=settings.REDIS["DB"])
+    return user.is_authenticated() or not redis.exists(settings.SETUP_DELIMITER.join((settings.SETUP_PREFIX, settings.SETUP_KEY)))
+
+
+def human_format(number, binary=False, suffix=''):
+    units = ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']
+    k = 1000.0
+    if binary:
+        units = ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi']
+        k = 1024.0
+    # raises ValueError
+    number = float(number)
+    if number == 0:
+        return '0'
+    elif number < 0:
+        raise ValueError('argument must be a positive number')
+    else:
+        magnitude = int(floor(round(log(number, k), 1)))
+        if magnitude > 8:
+            magnitude = 8
+        if round(number / k**magnitude, 1) % 1 == 0:
+            return '%.0f%s%s' % (number / k**magnitude, units[magnitude], suffix)
+        else:
+            return '%.1f%s%s' % (number / k**magnitude, units[magnitude], suffix)
+
+
+def check_ip(ip):
+    try:
+        socket.inet_pton(socket.AF_INET, ip)
+        return socket.AF_INET
+    except socket.error:
+        try:
+            socket.inet_pton(socket.AF_INET6, ip)
+            return socket.AF_INET6
+        except socket.error:
+            return None
+    except TypeError:
+        return None

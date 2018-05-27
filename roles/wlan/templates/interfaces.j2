@@ -9,16 +9,3 @@ iface wlan0 inet static
   #pre-up ifconfig wlan0 hw ether {{ ansible_wlan0.macaddress | regex_replace('^..', magic_mac_prefix) | regex_replace('..$', magic_mac_postfix) }}
   hwaddress ether {{ ansible_wlan0.macaddress | regex_replace('^..', magic_mac_prefix) | regex_replace('..$', magic_mac_postfix) }}
   #pre-up iptables-restore < /etc/iptables.upribox.ipv4
-
-auto wlan1
-allow-hotplug wlan1
-iface wlan1 inet manual
-
-{% if tor|bool %}
-auto wlan0_0
-allow-hotplug wlan0_0
-iface wlan0_0 inet static
-  address 192.168.56.254
-  netmask 255.255.255.0
-  #pre-up iptables-restore < /etc/iptables.upribox.ipv4
-{% endif %}

@@ -3,17 +3,15 @@
 <div class="modal js-modal">
     <div class="message clearfix">
 
-        {% get_fact 'wlan' 'ninja' 'ssid' as ninja_ssid_fact %}
         {% get_fact 'wlan' 'upri' 'ssid' as upri_ssid_fact %}
-
         <div class="warning-message js-session-lost-warning hidden">
             {% blocktrans %}
                 Sie wurden aus der upribox ausgeloggt! Bitte klicken Sie auf "Schließen" und loggen Sie sich erneut ein.
             {% endblocktrans %}
         </div>
         <div class="error-message js-connection-warning hidden">
-            {% blocktrans with upri_ssid|default:upri_ssid_fact as upri_ssid and ninja_ssid|default:ninja_ssid_fact as ninja_ssid%}
-                Die Upribox konnte nicht erreicht werden. Bitte stellen Sie sicher, dass Sie sich mit dem Wlan "{{ upri_ssid}}" oder "{{ ninja_ssid }}" verbunden sind.
+            {% blocktrans with upri_ssid|default:upri_ssid_fact as upri_ssid %}
+                Die Upribox konnte nicht erreicht werden. Bitte stellen Sie sicher, dass Sie sich mit dem Wlan "{{ upri_ssid}}" verbunden sind.
             {% endblocktrans %}
         </div>
         <ul>
@@ -21,6 +19,6 @@
                 <li class="success-message">{{ msg }}</li>
             {% endfor %}
         </ul>
-        <button {% if button_enabled != 'true' %}disabled{% endif %} {% if refresh_url %}data-refresh-url="{{ refresh_url }}"{% endif %}class="js-modal-close">{% trans "Schließen" %}</button>
+        <button {% if button_enabled != 'true' %}disabled{% endif %} {% if refresh_url %}data-refresh-url="{{ refresh_url }}"{% endif %}class="js-modal-close" href="">{% trans "Schließen" %}</button>
     </div>
 </div>

@@ -1,16 +1,16 @@
---- 
-- include: ../../tor/tasks/tor_state.yml tags=toggle_tor
-- include: ../../common/tasks/other_env.yml tags=toggle_tor
-    
+---
+- include: ../../wlan/tasks/wlan_state.yml
+- include: ../../common/tasks/other_env.yml
+
 - name: install services
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
   with_items:
     - dnsmasq
-  
+
 - name: enable services
-  service: name={{ item }} enabled=yes
+  service: name={{ item }} enabled=yes use=service
   with_items:
-    - dnsmasq  
+    - dnsmasq
 
 - name: add dnsmasq user to loggers group
   user: name=dnsmasq groups="tmp-logger" append=yes
@@ -18,41 +18,60 @@
 - name: copy dnsmasq ninja default
   copy: src=dnsmasq-ninja/default/dnsmasq-ninja dest=/etc/default
   notify: restart dnsmasq_ninja
-  when: tor|bool
-  tags:
-    - toggle_tor
+
+- name: check if /var/run/dnsmasq/dnsmasq-ninja.pid exists
+  stat: path=/var/run/dnsmasq/dnsmasq-ninja.pid
+  register: res
+
+- name: stop service
+  systemd:
+    daemon-reload: yes
+    name: dnsmasq-ninja
+    state: stopped
+  when: res.stat.exists
 
 - name: copy dnsmasq ninja init.d
   copy: src=dnsmasq-ninja/init.d/dnsmasq-ninja dest=/etc/init.d mode="755"
   notify: restart dnsmasq_ninja
-  when: tor|bool
-  tags:
-    - toggle_tor
+
+- name: create systemd directory for dnsmasq_ninja
+  file: path=/etc/systemd/system/dnsmasq-ninja.service.d state=directory
+
+- name: override tor systemd dependencies
+  copy: src=dnsmasq-ninja/override.conf dest=/etc/systemd/system/dnsmasq-ninja.service.d/override.conf owner=root group=root mode=644
+  notify: restart dnsmasq_ninja
 
 - name: copy dnsmasq ninja conf
   template: src=dnsmasq-ninja.conf dest=/etc/
   notify: restart dnsmasq_ninja
-  when: tor|bool
-  tags:
-    - toggle_tor
   register: res
+
+- name: ensure dnsmasq logfile exists
+  copy:
+    content: ""
+    dest: "{{default_settings.log.general.path}}/{{default_settings.log.dnsmasq_ninja.logfiles.logname}}"
+    force: no
+    group: root
+    owner: dnsmasq
+    mode: 0640
+  tags:
+    - toggle_silent
 
 - name: remove dnsmasq log files from other environment
   file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
   with_dict: "{{other_env.default_settings.log.dnsmasq_ninja.logfiles}}"
   when: res|changed or (other_env.default_settings.log.general.path != default_settings.log.general.path or other_env.default_settings.log.dnsmasq_ninja.logfiles.logname != default_settings.log.dnsmasq_ninja.logfiles.logname)
-  tags:
-    - toggle_tor
-  
-- name: toggle service dnsmasq-ninja
-  service: name={{ item }} enabled={{ tor }} state={{ "stopped" if not tor|bool else "started" }}
-  when: tor|bool
-  with_items:
-    - dnsmasq-ninja 
-  tags:
-    - toggle_tor
-  
+
+  # workaround for broken systemd module (https://github.com/ansible/ansible-modules-core/issues/3764)
+  # (https://github.com/geerlingguy/ansible-role-varnish/pull/65)
+- name: enable service dnsmasq-ninja
+  service: name=dnsmasq-ninja enabled=yes use=service
+
+- name: start service dnsmasq-ninja
+  systemd:
+    daemon-reload: yes
+    name: dnsmasq-ninja
+    state: started
+
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/dnsmasq_ninja mode=0644
-  tags:
-    - toggle_tor

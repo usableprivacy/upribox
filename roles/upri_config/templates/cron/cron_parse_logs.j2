@@ -1,0 +1,2 @@
+# Cron job to update filter rules
+{{ cron_parse_schedule }} {{ cron_parse_user }} /usr/local/bin/upri-config.py parse_logs 2>&1 | /usr/bin/logger -t {{ parse_syslog_tag }}

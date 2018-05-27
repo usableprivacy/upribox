@@ -1,1 +1,0 @@
- ACTION=="add", SUBSYSTEM=="net", KERNEL=="wlan[0-1]", TAG+="systemd", ENV{SYSTEMD_WANTS}="wlan_stick@$name.service"

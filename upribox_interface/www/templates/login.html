@@ -12,21 +12,22 @@
 
 {% block content %}
     <div class="row clearfix">
-        <div class="col-2 col-2-main js-col-2-main">
+        <!-- <div class="col-2 col-2-main js-col-2-main"> -->
 
             <form method="post" action="{% url 'upri_login' %}" class="login-form">
-                <fieldset class="limited">
+                <fieldset>
                     <legend>{% trans "Legend" %}</legend>
                     <h2>{% trans "Login" %}</h2>
-                    <label for="Admin">{% trans "Admin" %}: </label>
+                    <p class="formLabel">{% trans "Admin:" %} </p>
 
                     {{ form.username|add_error_class:'form-input-error'}}
                     {% for error in form.username.errors %}
                         <p class="error-message">{{ error|striptags }}</p>
                     {% endfor %}
 
-                    <label for="two">{% trans "Passwort" %}:</label>
+                    <p class="formLabel">{% trans "Passwort:" %}</p>
                     {{ form.password|add_error_class:'form-input-error'}}
+                    <span id="pw{{forloop.counter}}" class="icon i-eye-open showpw" ></span>
                     {% for error in form.password.errors %}
                         <p class="error-message">{{ error|striptags }}</p>
                     {% endfor %}
@@ -37,12 +38,13 @@
 
                     <input type="hidden" name="next" value="{{ next }}" />
                     {% csrf_token %}
-                    <input type="submit" name="submit" id="submit" value="{% trans "Login" %}" class="submit"/>
+                </br>
+                    <button type="submit" name="submit" id="submit" value="{% trans "Login" %}" class="multiple-inputs submit">{% trans "Login" %}</button>
                 </fieldset>
             </form>
-        </div>
+        <!-- </div> -->
 
-        <div class="col-2 col-2-info js-col-2-info">
+        <!-- <div class="col-2 col-2-info js-col-2-info">
             <aside>
                 <h2 class="icon i-information js-info-trigger">
                     <a href="#" title="{% trans "Information einklappen" %}" class="i-arrow">{% trans "Wie kann ich mich einloggen?" %}</a>
@@ -51,24 +53,24 @@
 
                 <a href="#" title="{% trans "Information ausblenden" %}" class="info-out i-arrow js-info-trigger">{% trans "Information ausblenden" %}</a>
             </aside>
-        </div>
+        </div> -->
     </div>
-    <h2>{% trans "Status" %}</h2>
+    <!-- <h2>{% trans "Status" %}</h2>
     <form>
         <fieldset>
             <legend>{% trans "Status" %}</legend>
-            <div>
+             <div>
                 <p class="switch icon i-on">{% trans "Silent Modus l&auml;uft." %}</p>
             </div>
 
-            {% get_fact 'tor' 'general' 'enabled' as torenabled%}
-            {% if torenabled == 'yes' %}
+            {% get_fact 'silent' 'general' 'enabled' as wifienabled%}
+            {% if wifienabled == 'yes' %}
                 <div class="switch icon i-on">
-                    <p>{% trans "Ninja Modus l&auml;uft." %}</p>
+                    <p>{% trans "WLAN eingeschaltet." %}</p>
                 </div>
             {% else %}
                 <div class="switch icon i-off">
-                    <p>{% trans "Ninja Modus l&auml;uft nicht." %}</p>
+                    <p>{% trans "WLAN ausgeschaltet." %}</p>
                 </div>
             {% endif %}
 
@@ -84,12 +86,25 @@
                 </div>
             {% endif %}
         </fieldset>
-    </form>
+    </form> -->
 
-    <h2>{% trans "Infos und Tipps" %}</h2>
+    <!-- <h2>{% trans "Infos und Tipps" %}</h2>
     <ul>
         <li>{% trans "Verwenden Sie einen aktuellen Webbrowser, wir empfehlen Mozilla Firefox." %}</li>
         <li>{% trans 'Verwenden Sie den Ninja-Modus zusammen mit dem "Privaten Modus" Ihres Browsers.' %}</li>
         <li>{% trans "Setzen sie ihre Browsereinstellungen zurück, bevor Sie loslegen." %}</li>
-    </ul>
+    </ul> -->
+{% endblock %}
+
+{% block info %}
+<p class="icon i-info infohead"> {% trans "Wie kann ich mich einloggen?" %} </p>
+<p class="infotext"> {% trans 'Die Daten für den Login finden Sie auf ihrer Anleitung "upribox Administration"' %} </p>
+<p class="icon i-info infohead"> {% trans "Infos und Tipps" %} </p>
+<p class="infotext">
+<ul>
+    <li>{% trans "Verwenden Sie einen aktuellen Webbrowser, wir empfehlen Mozilla Firefox." %}</li>
+    <li>{% trans 'Verwenden Sie den Ninja-Modus zusammen mit dem "Privaten Modus" Ihres Browsers.' %}</li>
+    <li>{% trans "Setzen sie ihre Browsereinstellungen zurück, bevor Sie loslegen." %}</li>
+</ul>
+</p>
 {% endblock %}

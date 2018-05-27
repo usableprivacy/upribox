@@ -1,0 +1,77 @@
+{% extends request.is_ajax|yesno:"base_ajax.html,base.html" %}
+
+{% load i18n %}
+{% load widget_tweaks %}
+{% load base_extras %}
+{% load static from staticfiles %}
+
+{% block title %}{% trans "Einrichtung der upribox" %}{% endblock %}
+
+{% block header %}
+    <h1>{% trans "Einrichtung der upribox" %}</h1>
+{% endblock %}
+
+{% block content %}
+
+    {% if phase == "failed"%}
+        <div class="icon i-setup-failed"> </div>
+
+        <div class="setup-text">
+        {% url "upri_faq" as help %}
+        {% blocktrans %}
+            <p> Die Funktionalität der upribox ist derzeit nur über das WLAN "upribox" verfügbar. Alternativ kann die upribox <a href="{{ help }}">manuell mittels DHCP</a> vollständig eingerichtet werden.</p>
+        {% endblocktrans %}
+        </div>
+
+        <button onclick="location.href='{% url 'upri_devices' %}';"> {% trans "Geräteübersicht" %} </button>
+    {% elif phase == "ipv6"%}
+        <div class="icon i-setup-failed"> </div>
+        <div class="setup-text">
+        {% blocktrans %}
+            <p> Eine IPv6-fähige Internetverbindung wurde erkannt. Die upribox ist über das WLAN "upribox" verfügbar, der automatische Modus wurde nicht aktiviert. </p>
+        {% endblocktrans %}
+        </div>
+
+        <button onclick="location.href='{% url 'upri_devices' %}';"> {% trans "Geräteübersicht" %} </button>
+    {% elif phase == "success"%}
+        <div class="icon i-setup-successful"></div>
+        <div class="setup-text">
+        <p> {% trans "Ihre upribox wurde erfolgreich eingerichtet!" %} </p>
+        </div>
+
+        <button onclick="location.href='{% url 'upri_devices' %}';"> {% trans "Geräteübersicht" %} </button>
+    {% elif phase == "isolated"%}
+        <div class="icon i-setup-failed"> </div>
+
+        <div class="setup-text">
+        {% blocktrans %}
+            <p> Die upribox verfügt derzeit über keine Internetverbindung. Bitte stellen Sie sicher, dass die upribox mit ihrem Heimnetzwerk verbunden ist.</p>
+        {% endblocktrans %}
+        </div>
+    {% elif phase == "eval" %}
+        {% blocktrans with connect="http://test.upribox.org/"%}
+            <p> Bitte testen Sie mit einem zweiten Gerät, das mit Ihrem Heimnetzwerk verbunden ist, ob eine Internetverbindung weiterhin besteht. Rufen Sie dazu einfach die Seite <a href="{{connect}}">test.upribox.org</a> auf. <br> <br>
+            Ist die Seite erreichbar?  </p>
+        {% endblocktrans %}
+        <button class="multiple-inputs" onclick="location.href='{% url 'upri_setup_success' %}';"> {% trans "Ja" %} </button> <button onclick="location.href='{% url 'upri_setup_failed' %}';"> {% trans "Nein" %} </button>
+    {% elif phase == "init" %}
+         <p class="icon i-update init_jobs" data-refresh-url="{{ refresh_url }}" data-error-url="{{ error_url }}" > {% trans "Bitte warten, das Setup wird gestartet." %} </p>
+    {% else %}
+         <div class="icon i-setup-failed"> </div>
+
+         <div class="setup-text">
+             <p> {% trans "Es ist leider ein Fehler während des Setups der upribox aufgetreten." %} <br> <a href="{% url 'upri_setup' %}">{% trans "Bitte versuchen Sie es erneut" %}</a></p>
+         </div>
+
+    {% endif %}
+             {% csrf_token %}
+{% endblock %}
+
+{% block mainjs %}
+{% endblock %}
+
+{% block script %}
+    {% if phase == "init" %}
+        <script type="text/javascript" src="{% static "js/init_page.js" %}"></script>
+    {% endif %}
+{% endblock %}

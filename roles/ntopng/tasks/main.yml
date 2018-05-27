@@ -1,0 +1,160 @@
+---
+# stretch
+- name: check if /etc/apt/sources.list.d/ntop.list exists
+  stat: path=/etc/apt/sources.list.d/ntop.list
+  register: ntop_list
+  when: ansible_distribution_release == "stretch"
+
+# stretch
+- name: remove ntopng apt source
+  file: path=/etc/apt/sources.list.d/ntop.list state=absent
+  when: ntop_list.stat.exists
+
+# stretch
+#- name: remove ntopng, installed from raspbian repo
+#  apt: name={{ item }} state=absent force=yes purge=yes
+#  when: not ntop_list|skipped and not ntop_list.stat.exists
+#  with_items:
+#    - ntopng
+#    - ntopng-data
+
+#- name: add ntopng apt key
+#  apt_key:
+#    data: "{{ lookup('file', 'ntop.key') }}"
+#    state: present
+#  when: ansible_distribution_release == "stretch"
+
+- name: install services
+  apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes
+  with_items:
+    - redis-server
+    - python-jmespath
+
+# test ntopng version
+- name: verify ntopng version
+  shell: ntopng --version|grep v.3.2.180514
+  register: ntopng_version
+  ignore_errors: yes
+
+- name: download stable ntopng version
+  get_url:
+    url: "https://debs.upribox.org/stretch/stable/{{ item }}"
+    dest: /home/upri/{{ item }}
+  with_items:
+    - ntopng-data_3.2.180514.deb
+    - ntopng_3.2.180514.deb
+  when: ntopng_version.rc == 1
+
+- name: install stable ntopng version
+  apt: deb="/home/upri/{{ item }}" force=yes
+  with_items:
+    - ntopng-data_3.2.180514.deb
+    - ntopng_3.2.180514.deb
+  when: ntopng_version.rc == 1
+
+- name: remove temp files
+  file: path="/home/upri/{{ item }}" state=absent
+  with_items:
+    - ntopng-data_3.2.180514.deb
+    - ntopng_3.2.180514.deb
+  when: ntopng_version.rc == 1
+
+- name: enable services
+  service: name={{ item }} enabled=yes use=service
+  with_items:
+    - ntopng
+
+  # stretch
+- name: create ntopng conf dir
+  file: path=/etc/ntopng state=directory mode=0755
+
+- name: create ntopng.start
+  file: state=touch path=/etc/ntopng/ntopng.start mode=644 owner=root group=root
+
+- name: template ntopng config
+  template: src=config dest=/etc/ntopng/ntopng.conf
+  notify:
+    - restart ntopng
+
+# this will become obsolete by a new ntopng stable release (current: 3.2)
+# also change url inside upribox_interface/traffic/ntopng.py (QUERY_URL)
+- name: copy custom ntopng lua script
+  copy: src=query.lua dest=/usr/share/ntopng/scripts/lua/modules/grafana/upri.lua mode=644 owner=root group=root
+
+- name: create systemd directory for ntopng
+  file: path=/etc/systemd/system/ntopng.service.d state=directory
+
+  # ntopng does not handle the pid file properly
+  # https://github.com/ntop/ntopng/issues/1565
+  # (pid file is not removed)
+- name: override ntopng systemd dependencies
+  copy: src=ntopng_systemd_override dest=/etc/systemd/system/ntopng.service.d/override.conf owner=root group=root mode=644
+  register: override
+
+  # check if pref file exists and if it already contains desired entries
+- name: check ntopng preferences
+  shell: cat /var/tmp/ntopng/runtimeprefs.json
+  register: result
+  failed_when: result.rc !=0 and result.rc != 1
+  changed_when: no
+
+- set_fact:
+    # ntopng preferences
+    prefs: "{{ result.stdout | from_json if result.rc == 0 else '{}' | from_json }}"
+
+- set_fact:
+    # check if a entry is not contained inside ntopng prefs or has different value
+    configured: "{% for item in entries %}{{prefs[item] is not defined or prefs[item] != entries[item]}} or {% endfor %}False"
+
+# during a fresh setup, ntopng might not have finished startup yet (and fail at next task)
+- name: ensure ntopng is running
+  systemd:
+    name: ntopng
+    state: started
+    daemon-reload: yes
+  register: nt_res
+
+  # wait until ntopng truly finished startup
+- name: wait until /var/run/ntopng.pid exists
+  wait_for:
+    path: /var/run/ntopng.pid
+    state: present
+  when: nt_res|changed
+
+# ntopng persist the runtime configuration on stop
+# stop service before editing, otherwise our changes will be overwritten
+- name: stop ntopng for configuration
+  systemd:
+    name: ntopng
+    state: stopped
+  when: configured
+  notify:
+    - restart ntopng
+
+# wait until ntopng truly finished shutdown
+- name: wait until /var/run/ntopng.pid vanished
+  wait_for:
+    path: /var/run/ntopng.pid
+    state: absent
+  when: configured
+
+# reread prefs in case file was empty beforehand
+# since the settings might have change after being persisted -> reread
+- name: reread ntopng preferences
+  shell: cat /var/tmp/ntopng/runtimeprefs.json
+  when: configured
+  register: result
+  failed_when: result.rc !=0 and result.rc != 1
+  changed_when: no
+
+- set_fact:
+    prefs: "{{ result.stdout | from_json if result.rc == 0 else '{}' | from_json }}"
+  when: configured
+
+- name: adjust ntopng runtime preferences
+  copy:
+    content: "{{ prefs|combine(entries)|to_json }}"
+    dest: /var/tmp/ntopng/runtimeprefs.json
+  when: configured
+  notify:
+    - restart ntopng

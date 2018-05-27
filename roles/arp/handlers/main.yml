@@ -1,5 +1,6 @@
 ---
-- include: ../tasks/apate_state.yml tags=toggle_apate
+- include: ../tasks/apate_state.yml
+  tags: [toggle_apate]
 
 - name: restart apate
   service: name=apate state={{"restarted" if apate_enabled|bool else "stopped"}}

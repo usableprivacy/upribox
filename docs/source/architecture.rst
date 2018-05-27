@@ -28,6 +28,7 @@ Base setup
 .. include:: modules/init.inc
 .. include:: modules/common.inc
 .. include:: modules/unattended_upgrades.inc
+.. include:: modules/upri-config.inc
 
 Networking
 ==========
@@ -66,7 +67,7 @@ All changes to the upribox configuration are perfomed via ``upri-config.py``. Th
 privileged command via the Django webinterface.
 
 .. argparse::
-   :filename: argparser.py
+   :filename: source/argparser.py
    :func: create_argparser
    :prog: upri-config.py
 

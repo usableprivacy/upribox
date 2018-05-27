@@ -4,7 +4,9 @@
   notify: restart isc-dhcp-server before tor
 
 - name: restart isc-dhcp-server before tor
-  service: name=isc-dhcp-server state=restarted
+  service: name=isc-dhcp-server state={{'restarted' if silent|bool or (dhcpd|bool and mode=='static') else 'stopped'}}
+  register: isc_res
+  changed_when: isc_res|changed or isc_res|succeeded
   notify: restart tor
 
 - name: restart tor

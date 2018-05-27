@@ -14,7 +14,6 @@
 {% endfor %}
 {% endif %}
 
-
 # tor
 {% if ansible_local is defined and ansible_local.devices is defined and ansible_local.devices.tor is defined %}
 {% for m in ansible_local.devices.tor %}
@@ -44,15 +43,28 @@ COMMIT
 -A INPUT -p udp -m udp --dport 546 -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
 -A INPUT -p udp -m udp --dport 53 -j ACCEPT
+# dhcp
 -A INPUT -p udp -m udp --sport 67:68 --dport 67:68 -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 4300 -j ACCEPT
 -A INPUT -p {{vpn_protocol|lower}} -m {{vpn_protocol|lower}} --dport {{vpn_port|lower}} -j ACCEPT
+# squid
 -A INPUT -p tcp -m tcp --dport 3128 -j ACCEPT
+# privoxy
+-A INPUT -p tcp -m tcp --dport 8119 -j ACCEPT
+# dnsmasq-ninja
 -A INPUT -p udp -m udp --dport 5300 -j ACCEPT
+# dnsmasq-unfiltered
 -A INPUT -p udp -m udp --dport 5301 -j ACCEPT
+# tor
 -A INPUT -p tcp -m tcp --dport 9040 -j ACCEPT
+# mdns (avahi)
 -A INPUT -p udp -m udp --dport 5353 -j ACCEPT
--A INPUT -p udp -m udp --dport 8119 -j ACCEPT
+# llmnr (systemd-resolved)
+-A INPUT -p tcp -m tcp --dport 5355 -j ACCEPT
+-A INPUT -p udp -m udp --dport 5355 -j ACCEPT
+# ssdp
+-A INPUT -p udp -m udp --dport 1900 -j ACCEPT
 -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
 -A INPUT -p icmpv6 --icmpv6-type router-advertisement -m hl --hl-eq 255 -j ACCEPT

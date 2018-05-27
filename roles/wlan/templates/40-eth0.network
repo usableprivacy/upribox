@@ -14,3 +14,7 @@ DNS={{ ansible_local.interfaces.static.dns | default(default_settings.interfaces
 {% else %}
 DHCP=yes
 {% endif %}
+{% if ansible_distribution_release != "jessie" %}
+[DHCP]
+CriticalConnection=true
+{% endif %}

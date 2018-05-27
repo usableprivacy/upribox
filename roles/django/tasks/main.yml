@@ -1,5 +1,6 @@
 ---
 - include: ../../common/tasks/other_env.yml
+- include: ../../fingerprinting/tasks/registrar_state.yml
 
 - name: create dir for django webapp
   file: path=/usr/share/nginx/www-upri-interface state=directory
@@ -16,7 +17,7 @@
   apt: name=redis-server state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
 
 - name: enable redis server
-  service: name=redis-server enabled=yes
+  service: name=redis-server enabled=yes use=service
 
 - name: install virtualenv
   apt: name=python-virtualenv state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
@@ -33,6 +34,8 @@
 - name: stop uwsgi for updating
   service: name=django-uwsgi state=stopped
   when: installed_uwsgi_version.stdout != ansible_uwsgi_version
+  register: uwsgi_service
+  failed_when: uwsgi_service|failed and not "Could not find the requested service django-uwsgi" in uwsgi_service.msg
 
 - name: install uWSGI
   pip: name=uwsgi state=present version="{{ansible_uwsgi_version}}"
@@ -63,11 +66,16 @@
   file: path=/var/upribox-interface/ state=directory mode=755 owner=www-data group=www-data
 
 - name: enable uwsgi django service
-  service: name=django-uwsgi enabled=yes
+  service: name=django-uwsgi enabled=yes use=service
 
 - name: delete development database
   file: path=/usr/share/nginx/www-upri-interface/db.sqlite3 state=absent
   when: env == "production"
+
+# the task "check django for errors" tries to access or close the logfile, which might not exist
+# (in the run where the old settings file without file logging is replaced by the new one)
+- name: create django logfile
+  file: path="{{ default_settings.log.general.path }}/{{ default_settings.log.django.error }}" state=touch mode=0644 owner=www-data group=www-data
 
 - name: check django for errors
   django_manage: settings="{{ django_settings_file }}" command="help" app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
@@ -76,6 +84,11 @@
   changed_when: django_res|changed or django_res|failed
   notify:
     - uninstall django on errors
+
+- name: stop registrar service before django db jobs
+  service:
+    name: registrar
+    state: stopped
 
 - name: migrate django database
   django_manage: settings="{{ django_settings_file }}" command="migrate --fake-initial" app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
@@ -87,17 +100,12 @@
   when: env == "development"
 
 - name: collect static
-  django_manage: settings="{{ django_settings_file }}" command=collectstatic app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv
+  django_manage: settings="{{ django_settings_file }}" command=collectstatic app_path=/usr/share/nginx/www-upri-interface virtualenv=/var/webapp-virtualenv link=yes
 
-- name: install dependency for management script via pip
-  pip: name="{{ item.name }}" state=present version="{{ item.version }}"
-  with_items:
-    - { name: 'jsonmerge', version: '1.3.0' }
-    - { name: 'functools32', version: '3.2.3-2' }
-    - { name: 'redis', version: '2.10.5' }
-    - { name: 'netifaces', version: '0.10.5' }
-    - { name: 'netaddr', version: '0.7.19' }
-    - { name: 'argcomplete', version: '1.8.2'}
+- name: start registrar service
+  service:
+    name: registrar
+    state: started
 
 - name: install supervisor for rqworker
   apt: name=supervisor state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
@@ -112,7 +120,7 @@
   notify: restart supervisor
 
 - name: enable supervisord
-  service: name=supervisor enabled=yes
+  service: name=supervisor enabled=yes use=service
 
 - name: change logdir of supervisor
   lineinfile:
@@ -137,60 +145,26 @@
 
 - name: remove default logfiles
   file: path=/var/log/supervisor state=absent
-  #when: res1 |changed or res2 |changed or res3 |changed or sv_config |changed
 
   # also delete rotated log files
   # ansible 2.x would cover this task with find and file module
 - name: remove supervisor log files from other environment
   file: path='{{other_env.default_settings.log.general.path}}/{{item.value}}' state=absent
-  # shell: "rm {{other_env.default_settings.log.general.path}}/{{item.value}}*"
   with_dict: "{{other_env.default_settings.log.supervisor.logfiles}}"
-  # register: res
   when: res2 |changed or res3 |changed or sv_config |changed
-  # failed_when: res.rc != 0 and res.rc != 1
-  # changed_when: res.rc == 0
 
 - name: remove rqworker log files from other environment
   file: path='{{other_env.default_settings.log.general.path}}/{{item.value}}' state=absent
-  # shell: "rm {{other_env.default_settings.log.general.path}}/{{item.value}}*"
   with_dict: "{{other_env.default_settings.log.rqworker.logfiles}}"
-  # register: res
   when: res2 |changed or res3 |changed or sv_config |changed
-  # failed_when: res.rc != 0 and res.rc != 1
-  # changed_when: res.rc == 0
 
 - name: restart supervisor myworker task
   shell: "supervisorctl restart myworker"
   when:  copy_django is defined and copy_django|changed and sv_config is defined and not sv_config|changed
 
-- name: copy management scripts
-  copy: src="{{ item.src }}" dest="{{ item.dest }}" owner=root group=root mode=755
-  with_items:
-    - { src: 'upri-config.py', dest: '/usr/local/bin/upri-config.py' }
-    - { src: 'argparser.py', dest: '/usr/local/bin/argparser.py' }
-  tags:
-    - upri_config
-
-- name: check if log files already exist
-  stat:
-    path: "{{ item }}"
-  with_items:
-    - "{{default_settings.log.general.path}}/{{default_settings.log.dnsmasq.subdir}}/{{default_settings.log.dnsmasq.logfiles.logname}}"
-    - "{{default_settings.log.general.path}}/{{default_settings.log.privoxy.subdir}}/{{default_settings.log.privoxy.logfiles.logname}}"
-  register: log_files
-
-- name: cleanup statistics
-  shell: "/var/webapp-virtualenv/bin/python /usr/share/nginx/www-upri-interface/manage.py cleanup --settings {{django_settings_file}}"
-
-- name: update block statistics
-  shell: "/usr/local/bin/upri-config.py parse_logs"
-  register: update_result
-  changed_when: "update_result.rc == 1"
-  failed_when: "update_result.rc != 0 and update_result.rc != 1"
-  when: not False in (log_files.results | map(attribute='stat.exists') | list)
-
 - name: modify logrotate.d entry
-  template: src=logrotate.j2 dest=/etc/logrotate.d/supervisor mode=0644
-
-- name: modify logrotate.d entry
-  template: src=logrotate_uwsgi.j2 dest=/etc/logrotate.d/uwsgi mode=0644
+  template: src="{{ item.key }}" dest="/etc/logrotate.d/{{ item.value }}" mode=0644
+  with_dict:
+      logrotate_uwsgi.j2: uwsgi
+      logrotate.j2: supervisor
+      logrotate_interface.j2: interface

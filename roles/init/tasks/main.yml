@@ -5,6 +5,13 @@
   register: user_exist
   changed_when: false
 
+- name: enable resolving the hostname
+  lineinfile:
+    dest: /etc/hosts
+    regexp: "^127.0.0.1"
+    line: "127.0.0.1       localhost upribox"
+    state: present
+
 - name: set hostname
   hostname: name="{{ hostname }}"
 
@@ -27,6 +34,23 @@
 - name: configure sudoers
   template: src=sudoers.j2 dest=/etc/sudoers validate='visudo -cf %s'
 
+  # stretch
+- name: disable systemd Predictable Network Interface Names
+  file: src=/dev/null dest=/etc/systemd/network/99-default.link state=link
+
+  # pi3 b+
+- name: set iw region to AT
+  command: iw reg set AT
+
+- name: set wpa_cli country to AT
+  command: wpa_cli -i wlan0 set country AT
+
+- name: safe wpa_cli settings
+  command: wpa_cli -i wlan0 save_config
+
+- name: unblock WiFi
+  command: rfkill unblock wifi
+
 - name: rebooting raspberry Pi ...
   remote_user: "{{ remote_user }}"
   shell: /bin/sleep 3 && /sbin/reboot
@@ -41,7 +65,7 @@
     port=22
     delay=30
     timeout=300
-  sudo: false
+  become: no
 
 - name: remove default user
   remote_user: "{{ remote_user }}"

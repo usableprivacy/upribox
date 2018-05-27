@@ -1,5 +1,6 @@
 ---
-- include: ../tasks/vpn_state.yml tags=toggle_vpn
+- include: ../tasks/vpn_state.yml
+  tags: [toggle_vpn]
 
 - name: restart openvpn
   service: name=openvpn state=stopped

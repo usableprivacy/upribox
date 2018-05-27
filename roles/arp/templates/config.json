@@ -5,5 +5,6 @@
     "stdout": "{{ default_settings.log.general.path }}/{{ default_settings.log.apate.subdir }}/{{ default_settings.log.apate.logfiles.stdout }}",
     "stderr": "{{ default_settings.log.general.path }}/{{ default_settings.log.apate.subdir }}/{{ default_settings.log.apate.logfiles.stderr }}",
     "mode": "{{ default_settings.apate.mode if not (ansible_local is defined and ansible_local.apate is defined) else ansible_local.apate.mode | default(default_settings.apate.mode) }}",
-    "dns": "/etc/dnsmasq-resolv.conf"
+    "dns": "/etc/dnsmasq-resolv.conf",
+    "loglevel": "{{ default_settings.apate.general.loglevel if not (ansible_local is defined and ansible_local.apate is defined and ansible_local.apate.general) else ansible_local.apate.general.loglevel | default(default_settings.apate.general.loglevel) }}"
 }

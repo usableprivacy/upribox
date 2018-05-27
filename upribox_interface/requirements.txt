@@ -11,8 +11,10 @@ netifaces==0.10.5
 pytz==2017.2
 redis==2.10.5
 requests==2.13.0
-rq==0.7.1
+rq==0.8.1
 sqlparse==0.2.3
 ua-parser==0.7.3
 user-agents==1.1.0
 wsgiref==0.1.2
+enum34==1.1.6
+colour==0.1.5

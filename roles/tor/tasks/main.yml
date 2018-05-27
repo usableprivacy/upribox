@@ -1,6 +1,8 @@
---- 
-- include: tor_state.yml tags=toggle_tor
-- include: ../../common/tasks/other_env.yml 
+---
+- include: ../../common/tasks/other_env.yml
+
+- include: ../../wlan/tasks/wlan_state.yml
+- include: ../../wlan/tasks/dhcpd_state.yml
 
 - name: install services
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
@@ -11,11 +13,9 @@
   user: name="debian-tor" groups="tmp-logger" append=yes
 
 - name: enable services
-  service: name={{ item }} enabled={{tor}}
+  service: name={{ item }} enabled=yes use=service
   with_items:
     - tor
-  tags:
-    - toggle_tor
 
 - name: create systemd directory for tor
   file: path=/etc/systemd/system/tor.service.d state=directory
@@ -23,55 +23,49 @@
 - name: override tor systemd dependencies
   copy: src=tor-systemd-override dest=/etc/systemd/system/tor.service.d/override.conf owner=root group=root mode=644
 
-- name: stop tor service
-  service:  name={{ item }} state=stopped
-  with_items:
-    - tor
-  when: not tor|bool
-  tags:
-    - toggle_tor
-
-  #restarting tor with a handler is necessary, if the hostapd config was changed and tor is enabled
+  #restarting tor with a handler is necessary, if the hostapd config was changed
 - name: restart service tor
   shell: "/bin/true"
   notify: reload hostapd before tor
-  when: tor|bool and hostapd_status is defined and hostapd_status|changed
-  tags:
-    - toggle_tor
-    
+  when: hostapd_status is defined and hostapd_status|changed
+
 - name: copy tor config
   template: src=torrc dest=/etc/tor/torrc
   notify: reload hostapd before tor
-  when: tor|bool
-  tags:
-    - toggle_tor
-  
+
 - name: modify logdir in tor init script
   lineinfile:
     dest: /etc/init.d/tor
     regexp: "^TORLOGDIR="
     line: "TORLOGDIR={{default_settings.log.general.path}}/{{default_settings.log.tor.subdir}}"
   notify: reload hostapd before tor
-  when: tor|bool
   register: res
-  tags:
-    - toggle_tor
-    
+
 - name: remove default logfiles
   file: path=/var/log/tor state=absent
-  when: res|changed or default_settings.log.general.path != "/var/log" or default_settings.log.tor.subdir != "tor" 
+  when: res|changed or default_settings.log.general.path != "/var/log" or default_settings.log.tor.subdir != "tor"
 
 - name: remove log files from other environment
   file: path={{other_env.default_settings.log.general.path}}/{{other_env.default_settings.log.tor.subdir}} state=absent #/{{item.value}}
   #with_dict: "{{other_env.default_settings.log.tor.logfiles}}"
   when: res|changed or (other_env.default_settings.log.general.path != default_settings.log.general.path or other_env.default_settings.log.tor.subdir != default_settings.log.tor.subdir or other_env.default_settings.log.tor.logfiles.logname != default_settings.log.tor.logfiles.logname)
 
-- name: remove tor log files, if tor disabled
-  file: path={{default_settings.log.general.path}}/{{default_settings.log.tor.subdir}} state=absent
-  when: not tor|bool
-
 - name: modify logrotate.d entry
   template: src=logrotate dest=/etc/logrotate.d/tor mode=0644
-  when: tor|bool
-  tags:
-    - toggle_tor
+
+  # stretch
+- name: remove dummy systemd unit file
+  file: path="/lib/systemd/system/{{ item }}" state=absent
+  when: ansible_distribution_release != "jessie"
+  with_items:
+    - tor.service
+    - tor@.service
+    - tor@default.service
+  register: systemd_res
+
+  # stretch
+- name: reload services
+  systemd:
+    daemon-reload: yes
+    name: tor
+  when: systemd_res|changed

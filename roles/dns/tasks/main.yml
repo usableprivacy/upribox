@@ -1,7 +1,10 @@
 ---
-- include: ../../tor/tasks/tor_state.yml tags=toggle_tor,toggle_silent
-- include: ../../common/tasks/other_env.yml tags=toggle_tor,toggle_silent
-- include: ../../wlan/tasks/dhcpd_state.yml tags=network_config
+- include: ../../wlan/tasks/wlan_state.yml
+  tags: [toggle_silent]
+- include: ../../common/tasks/other_env.yml
+  tags: [toggle_silent]
+- include: ../../wlan/tasks/dhcpd_state.yml
+  tags: [network_config]
 
 - name: install services
   apt: name={{ item }} state={{ apt_target_state }} force=yes update_cache=yes cache_valid_time={{ apt_cache_time }}
@@ -10,9 +13,16 @@
     - dnsmasq
 
 - name: enable services
-  service: name={{ item }} enabled=yes
+  service: name={{ item }} enabled=yes use=service
   with_items:
     - dnsmasq
+
+- name: create systemd directory for dnsmasq
+  file: path=/etc/systemd/system/dnsmasq.service.d state=directory
+
+- name: override tor systemd dependencies
+  copy: src=override.conf dest=/etc/systemd/system/dnsmasq.service.d/override.conf owner=root group=root mode=644
+  notify: restart dnsmasq
 
 - name: add dnsmasq user to loggers group
   user: name=dnsmasq groups="tmp-logger" append=yes
@@ -22,13 +32,11 @@
   notify: restart dnsmasq
   register: res
   tags:
-    - toggle_tor
     - toggle_silent
 
 - name: create dnsmasq log dir
   file: path={{default_settings.log.general.path}}/{{default_settings.log.dnsmasq.subdir}} state=directory mode=0755 owner=dnsmasq
   tags:
-    - toggle_tor
     - toggle_silent
 
 - name: ensure dnsmasq logfile exists
@@ -40,13 +48,11 @@
     owner: dnsmasq
     mode: 0640
   tags:
-    - toggle_tor
     - toggle_silent
 
 - name: create tmpfiles.d conf file
   template: src=systemd-log-dir dest=/usr/lib/tmpfiles.d/dnsmasq.conf
   tags:
-    - toggle_tor
     - toggle_silent
 
 - name: remove dnsmasq log files from other environment
@@ -54,7 +60,6 @@
   with_dict: "{{other_env.default_settings.log.dnsmasq.logfiles}}"
   when: res|changed
   tags:
-    - toggle_tor
     - toggle_silent
 
 - name: check if dnsmasq-resolv.conf is link
@@ -63,14 +68,8 @@
   tags:
     - network_config
 
-- name: remove dnsmasq-resolv.conf if link and dhcp
-  file: path=/etc/dnsmasq-resolv.conf state=absent
-  when: not mode == "static" and dnsres.stat.islnk is defined and dnsres.stat.islnk
-  tags:
-    - network_config
-
-- name: copy the openresolv config file
-  template: src=resolvconf.conf dest=/etc/resolvconf.conf mode="0644"
+- name: remove the openresolv config file
+  file: path=/etc/resolvconf.conf state=absent
   notify:
     - restart dnsmasq
     - ifupdown eth0
@@ -80,22 +79,31 @@
 - name: modify logrotate.d entry
   template: src=logrotate.j2 dest=/etc/logrotate.d/dnsmasq mode=0644
   tags:
-    - toggle_tor
     - toggle_silent
 
-- name: configure systemd-resolved
-  service: name=systemd-resolved state={{'started' if mode == "static" else 'stopped'}} enabled={{mode == "static"}}
-  tags:
-    - network_config
+# removes 127.0.0.1 (and 8.8.8.8, which is present if 127.0.0.1 is absent)
+# from dnsmasq-resolv.conf (stretch)
+# FallbackDNS Option does not prevent systemd from adding 8.8.8.8
+- name: modify resolved.conf
+  lineinfile:
+    path: /etc/systemd/resolved.conf
+    regexp: '^DNS='
+    line: 'DNS='
+    state: present
+  notify:
+    - restart systemd-resolved
+    - restart dnsmasq
+    - restart dnsmasq_unfiltered
+    - ifupdown eth0
 
-- name: remove dnsmasq-resolv.conf if static ip
+- name: remove dnsmasq-resolv.conf if not link
   file: path=/etc/dnsmasq-resolv.conf state=absent
-  when: mode == "static" and dnsres.stat.islnk is defined and not dnsres.stat.islnk
+  when: dnsres.stat.islnk is defined and not dnsres.stat.islnk
   tags:
     - network_config
 
 - name: link dnsmasq-resolv.conf to /run/systemd/resolve/resolv.conf
-  file: src=/run/systemd/resolve/resolv.conf dest=/etc/dnsmasq-resolv.conf state=link
-  when: mode == "static" and dnsres.stat.islnk is defined and not dnsres.stat.islnk
+  file: src=/run/systemd/resolve/resolv.conf dest=/etc/dnsmasq-resolv.conf state=link force=yes
+  when: not dnsres.stat.exists or (dnsres.stat.islnk is defined and not dnsres.stat.islnk)
   tags:
     - network_config

@@ -17,4 +17,9 @@ CSS filters are loaded from `/etc/nginx/lua/css.lua` and periodically updated.
 upribox web interface
 ^^^^^^^^^^^^^^^^^^^^^
 The nginx role finally prepares the setup for the upribox web interface. The nginx configuration ensures that requests to
-http://upri.box are forwarded to the upribox Django web interface.
+following URLs are forwarded to the upribox Django web interface.
+
+- `http://upri.box <http://upri.box/>`_
+- `https://upri.box:4300 <https://upri.box:4300/>`_
+- `http://upribox.local <http://upribox.local/>`_
+- `https://upribox.local:4300 <https://upribox.local:4300/>`_

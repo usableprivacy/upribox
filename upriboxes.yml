@@ -5,6 +5,7 @@
   become_method: sudo
   roles:
     - { role: common, tags: ["common"] }
+    - { role: upri_config, tags: ["upri_config"] }
     - { role: iptables, tags: ["iptables"] }
     - { role: unattended_upgrades, tags: ["unattended_upgrades"] }
     - { role: wlan, tags: ["wlan"] }
@@ -12,12 +13,16 @@
     - { role: privoxy, tags: ["privoxy"] }
     - { role: squid, tags: ["squid"] }
     - { role: tor, tags: ["tor"] }
+    - { role: nginx, tags: ["nginx"] }
+    - { role: dns, tags: ["dns"] }
     - { role: dns_ninja, tags: ["dns_ninja"] }
     - { role: dns_unfiltered, tags: ["dns_unfiltered"] }
-    - { role: nginx, tags: ["nginx"] }
     - { role: arp, tags: ["arp"] }
-    - { role: dns, tags: ["dns"] }
     - { role: fingerprinting, tags: ["fingerprinting"] }
+    - { role: ntopng, tags: ["ntopng"] }
     - { role: django, tags: ["django"] }
+  environment:
+    PATH: "{{ root_path }}"
   post_tasks:
-    - include: roles/ssh/main.yml tags=toggle_ssh
+    - include: roles/ssh/main.yml
+      tags: [toggle_ssh]

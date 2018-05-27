@@ -1,14 +1,48 @@
 #!/bin/bash
 
+function cleanup() {
+    rm -f {{ recovery_file }} >>{{ default_settings.log.general.path }}/{{ default_settings.log.ansible_pull.logfiles.logname }} 2>&1
+}
+
+# trap ctrl-c and call cleanup()
+# to avoid a very unlikely race condition
+trap cleanup INT
+
 # Ansible Update Cronjob: runs ansible-pull up to three times
 n=0
 until [ $n -ge 3 ]
 do
-    # update ansible
-    /usr/local/bin/ansible-pull -d {{ pull_workdir }} -C {{ pull_branch }} \
-    -i {{ pull_workdir }}/environments/production/inventory_pull -U {{ pull_repo_url }} \
-    >>{{ default_settings.log.general.path }}/{{ default_settings.log.ansible_pull.logfiles.logname }} 2>&1 && break
+    # first run in loop and not called with --force
+    if [ $n -eq 0 ] && ( [ $# -eq 0 ] || [ $1 != "--force" ])
+    then
+        # exit if update is already running (if not forced)
+        # e.g. don't collide with recovery update on system boot
+        /usr/bin/test -f {{ recovery_file }} && \
+        echo "update already running" >>{{ default_settings.log.general.path }}/{{ default_settings.log.ansible_pull.logfiles.logname }} && \
+        exit
+
+        # update ansible only if repo changed
+        option=-o
+    else
+        # update ansible in case first run encountered errors
+        # or update is forced
+        option=
+    fi
+
+    # create update status file
+    touch {{ recovery_file }}
+    if [ -f {{ recovery_file }} ]
+    then
+        /usr/local/bin/ansible-pull $option -d {{ pull_workdir }} -C {{ pull_branch }} \
+        -i {{ pull_workdir }}/environments/production/inventory_pull -U {{ pull_repo_url }} \
+        >>{{ default_settings.log.general.path }}/{{ default_settings.log.ansible_pull.logfiles.logname }} 2>&1 && break
+    else
+        echo "unable to create update status file" >>{{ default_settings.log.general.path }}/{{ default_settings.log.ansible_pull.logfiles.logname }}
+    fi
 
     n=$[$n+1]
 	echo "update $n failed" >>{{ default_settings.log.general.path }}/{{ default_settings.log.ansible_pull.logfiles.logname }}
 done
+
+# remove update status file
+cleanup

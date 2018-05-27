@@ -1,21 +1,35 @@
 #!/usr/bin/env python
 # coding=utf-8
 """This script is used to control the Registrar fingerprinting daemon."""
-import logging
-import sys
-import signal
-import os
 import json
+import logging
+import os
+import signal
+import sys
+
 import lockfile
-
 from daemon import runner
-
 from lib import daemon_app
 
 CONFIG_FILE = "/etc/registrar/config.json"
 """Path of the config file for the Registrar fingerprinting daemon."""
-CONFIG_OPTIONS = ('logfile', 'pidfile', 'interface', 'stderr', 'stdout', 'django-db')
+CONFIG_OPTIONS = (
+    'logfile',
+    'pidfile',
+    'interface',
+    'stderr',
+    'stdout',
+    'django-db',
+    'loglevel',
+)
 """Options that need to be present in the config file."""
+LOG_LEVELS = {
+    'CRITICAL': logging.CRITICAL,
+    'ERROR': logging.ERROR,
+    'WARNING': logging.WARNING,
+    'INFO': logging.INFO,
+    'DEBUG': logging.DEBUG,
+}
 
 
 def main():
@@ -48,7 +62,11 @@ def main():
 
     # set up logger for daemon
     logger = logging.getLogger("RegistrarLog")
-    logger.setLevel(logging.INFO)
+    try:
+        logger.setLevel(LOG_LEVELS[data['loglevel'].upper()])
+    except KeyError:
+        print "Invalid loglevel option"
+        sys.exit(5)
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     handler = logging.FileHandler(data['logfile'])
     handler.setFormatter(formatter)

@@ -16,7 +16,6 @@ import sys
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
@@ -31,9 +30,8 @@ ALLOWED_HOSTS = [
     'localhost',
     'upribox.local',
     '127.0.0.1',
-    '[::1]'
+    '[::1]',
 ]
-
 
 # Application definition
 
@@ -51,10 +49,12 @@ INSTALLED_APPS = (
     'vpn',
     'statistics',
     'devices',
-    'more'
+    'more',
+    'setup',
+    'traffic'
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -64,7 +64,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-)
+    'middleware.setup_middleware.SetupMiddleware',
+]
 
 ROOT_URLCONF = 'urls'
 
@@ -73,20 +74,20 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, 'www/templates')],
         'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
+        'OPTIONS':
+            {
+                'context_processors':
+                    [
+                        'django.template.context_processors.debug',
+                        'django.template.context_processors.request',
+                        'django.contrib.auth.context_processors.auth',
+                        'django.contrib.messages.context_processors.messages',
+                    ],
+            },
     },
 ]
 
-
 WSGI_APPLICATION = 'wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -97,7 +98,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -117,15 +117,12 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "www/static"),
-)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "www/static"), )
 
 STATIC_ROOT = '/usr/local/static/upribox_interface/'
 
@@ -151,35 +148,37 @@ LOGGING = {
             'datefmt': '%d/%b/%Y %H:%M:%S'
         }
     },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
+    'handlers':
+        {
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'simple',
+            },
+            'err': {
+                'level': 'WARNING',
+                'class': 'logging.StreamHandler',
+                'formatter': 'simple',
+            },
+            'out': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'simple',
+                'stream': sys.stdout,
+            }
         },
-        'err': {
-            'level': 'WARNING',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
+    'loggers':
+        {
+            'uprilogger': {
+                'handlers': ['console'],
+                'level': 'DEBUG',
+                'propagate': True,
+            },
+            "rq.worker": {
+                "handlers": ['err', 'out'],
+                "level": "DEBUG"
+            },
         },
-        'out': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
-            'stream': sys.stdout,
-        }
-    },
-    'loggers': {
-        'uprilogger': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        "rq.worker": {
-            "handlers": ['err', 'out'],
-            "level": "DEBUG"
-        },
-    },
 }
 
 ANSIBLE_FACTS_DIR = '/etc/ansible/facts.d'
@@ -189,7 +188,7 @@ DEFAULT_SETTINGS = 'lib/default_settings.json'
 # /usr/local/bin/upri-config.py is missing
 # this is meant for local debugging where things like SSID changes cannot
 # be tested. In Production, this variable should be set to False
-IGNORE_MISSING_UPRICONFIG = False
+IGNORE_MISSING_UPRICONFIG = True
 
 RQ_QUEUES = {
     'default': {
@@ -210,3 +209,33 @@ SSL_PINNING_PATH = '/usr/local/etc/upri-filter-update/update-server.pem'
 PRIVOXY_LOGFILE = 'privoxy_testlog'  # '/var/log/privoxy/privoxy.log'
 OPENVPN_LOGFILE = '/var/log/log/openvpn.log'
 DNS_FILE = '/etc/dnsmasq-resolv.conf'
+
+SETUP_PREFIX = "interface"
+# """str: Prefix which is used for every key in the redis db."""
+SETUP_DELIMITER = ":"
+# """str: Delimiter used for separating parts of keys in the redis db."""
+SETUP_KEY = "setup"
+SETUP_RES = "result"
+
+# from django.urls import reverse
+
+SETUP_NO_REDIRECT = [
+    LOGIN_URL,
+    LOGIN_REDIRECT_URL,
+    "upri_logout",
+    "upri_setup",
+    "upri_setup_error",
+    "upri_setup_success",
+    "upri_setup_failed",
+    "upri_setup_eval",
+    "upri_jobstatus",
+    "upri_clear_jobstatus",
+    'upri_clear_failed',
+    'upri_jobstatus_failed',
+]
+
+REDIS = {
+    'HOST': 'localhost',
+    'PORT': 6379,
+    'DB': 7,
+}

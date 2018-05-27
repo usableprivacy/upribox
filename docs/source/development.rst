@@ -3,7 +3,7 @@
 Development
 ===========
 
-The current upribox image is based on Raspbian [#Raspbian]_ Jessie
+The current upribox image is based on Raspbian [#Raspbian]_ Stretch
 Lite and customized with Ansible (see :ref:`architecture`). The
 Raspbian image can be staged into *production* or *development* mode.
 
@@ -12,7 +12,7 @@ Development environment
 
 The following guide assumes that you have a Raspberry Pi with the
 upribox image set-up. If you still need help with that task please read
-the :ref:`intro` guide. The following guide explains the steps necessary
+the :doc:`intro` guide. The following guide explains the steps necessary
 to setup a development environment for the upribox software.
 
 .. _prerequisities:
@@ -20,7 +20,7 @@ to setup a development environment for the upribox software.
 Prerequisites [on your development machine]
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
--  install *ansible* 1.9.6 (``sudo pip install ansible==1.9.6``) and
+-  install *ansible* 2.3.0, jmespath (``sudo pip install ansible==2.3.0 jmespath``) and
    *git*
 -  install requirements for the *ansible* modules (``sudo apt-get install python-pip python-dev libffi-dev libssl-dev libxml2-dev libxslt1-dev libjpeg8-dev zlib1g-dev``)
 -  make sure to log into your Raspberry via SSH once because ansible
@@ -52,7 +52,7 @@ downloaded and updated via github.
     pre-assembled boxes. In this process we also create a new user and
     generate a cryptographically secure password. This happens out of scope
     of the production ansible playbook and therefore you have to create a
-    user on your own when deploying in production mode from scratch.
+    user for the web interface on your own when deploying in production mode from scratch.
 
 Development Mode
 ^^^^^^^^^^^^^^^^
@@ -103,6 +103,9 @@ Set-up the initial upribox base image
    ``--ask-pass`` if you change the default password.
 -  from now on, you can deploy the upribox software in
    production or development mode (see :ref:`dev_vs_prod`).
+-  after deyploing the upribox software in production mode for the first time,
+   you need to create a new webinterface user in */usr/share/nginx/www-upri-interface* on the upribox with
+   ``/var/webapp-virtualenv/bin/python manage.py createsuperuser --settings settings_prod``
 
 .. rubric:: Footnotes
 

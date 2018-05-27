@@ -62,8 +62,8 @@ def get_device_enabled(redis_device):
     return redis_device.rsplit("|", 1)[-1]
 
 
-def get_device_ip(redis_device):
-    """Returns the ip address part of a device entry."""
+def get_device_mac(redis_device):
+    """Returns the mac address part of a device entry."""
     return redis_device.rsplit("|", 2)[-2]
 
 

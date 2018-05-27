@@ -1,12 +1,12 @@
 import subprocess
 import os
+import netifaces as ni
+from netaddr import IPAddress
 
 
 class ModelInfo:
 
     MODEL_PATH = '/proc/device-tree/model'
-    WIFI_DEVICE_PATH = '/sys/class/net/wlan0/device/driver/module'
-    INTERNAL_KERNEL_MODULE = 'brcmfmac'
 
     def __init__(self):
         self.model = self.get_model_str()
@@ -27,12 +27,6 @@ class ModelInfo:
         else:
             return False
 
-    def uses_external_wifi(self):
-        try:
-            link = os.readlink(self.WIFI_DEVICE_PATH)
-            return os.path.basename(link) != self.INTERNAL_KERNEL_MODULE
-        except (IOError, OSError):
-            return False
 
 class UpdateStatus:
 
@@ -97,3 +91,20 @@ class UpdateStatus:
                     self.upgrade_successful = True
         except:
             pass
+
+
+def check_ipv6():
+    try:
+        interface = ni.gateways()['default'][ni.AF_INET6][1]
+        if_info = ni.ifaddresses(interface)
+        ip = [x for x in if_info[ni.AF_INET6] if not IPAddress(x['addr'].split("%")[0]).is_private()]
+        return bool(ip)
+    except (ValueError, KeyError):
+        return False
+
+
+def check_connection():
+    try:
+        return bool(ni.gateways()['default'])
+    except (ValueError, KeyError):
+        return False

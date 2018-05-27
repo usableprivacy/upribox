@@ -725,7 +725,6 @@ enforce-blocks 0
 #      platforms):
 #
 permit-access  192.168.55.0/24
-permit-access  192.168.56.0/24
 permit-access  192.168.155.0/24
 # permit private networks
 permit-access  10.0.0.0/8

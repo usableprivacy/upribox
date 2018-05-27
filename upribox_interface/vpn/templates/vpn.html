@@ -11,25 +11,29 @@
     <p>{% trans "Sicherer Zugang von &uuml;berall." %}</p>
 {% endblock %}
 
+{% block breadcrumb  %}
+    <p><a href="{% url 'upri_index' %}">{% trans "Start" %}</a> > <a href="{% url 'upri_config' %}">{% trans "Konfiguration" %}</a> > {% trans "VPN" %}</p>
+{% endblock %}
+
 {% block content %}
-    <p><strong>{% trans "Sie wollen unterwegs auf sichere Weise Ihre E-Mails abrufen oder eine &Uuml;berweisung t&auml;tigen? Richten Sie daf&uuml;r VPN ein und nutzen Sie Ihr Internet, als w&auml;ren Sie zu Hause. Sie sch&uuml;tzen Ihre Daten vor dem Zugriff von Dritten in offenen Wireless-Netzwerken." %}</strong></p>
+    <!-- <p><strong>{% trans "Sie wollen unterwegs auf sichere Weise Ihre E-Mails abrufen oder eine &Uuml;berweisung t&auml;tigen? Richten Sie daf&uuml;r VPN ein und nutzen Sie Ihr Internet, als w&auml;ren Sie zu Hause. Sie sch&uuml;tzen Ihre Daten vor dem Zugriff von Dritten in offenen Wireless-Netzwerken." %}</strong></p> -->
      <div class="row clearfix">
-        <div class="col-2 col-2-main js-col-2-main">
+        <div class="col-3 col-3-main js-col-3-main">
     <form>
         <fieldset>
-            <legend>{% trans "Ein-/Ausschalten" %}</legend>
+            <!-- <legend>{% trans "Ein-/Ausschalten" %}</legend> -->
 
             {% get_fact 'vpn' 'general' 'enabled' as vpnenabled%}
 
             {% if vpnenabled == 'yes'%}
-                <div class="switch icon i-on">
+                <!-- <div class="switch icon i-on">
                     <p>{% trans "VPN läuft" %}</p>
                     <button class="js-toggle-button" data-state-enabled="no" href="{% url 'upri_vpn_toggle' %}">{% trans "Ausschalten" %}</button>
-                </div>
+                </div> -->
             {% get_fact 'vpn' 'connection' 'port' as vpn_port%}
             {% get_fact 'vpn' 'connection' 'protocol' as vpn_protocol%}
-                <div class="switch icon i-bad" id="vpn_connection_button">
-                    <p id="vpn_connection_text">{% trans "VPN Verbindung wird getestet..." %}</p>
+                <div class="switch" id="vpn_connection_button">
+                    <p id="vpn_connection_text" class="icon i-notconnected">{% trans "VPN Verbindung wird getestet..." %}</p>
                 </div>
                 <div id="vpn_connection_help" style="display:none">{% trans "Ihre upribox ist nicht aus dem Internet erreichbar. Ermöglichen Sie den Zugriff indem Sie:" %}
                 <ul>
@@ -57,14 +61,14 @@
                         if(http.readyState == 4 && http.status == 200) {
                             result = JSON.parse(http.responseText);
                             if (result['status'].localeCompare("failure") == 0) {
-                                document.getElementById("vpn_connection_button").className = "switch icon i-bad";
+                                document.getElementById("vpn_connection_text").className = "icon i-notconnected";
                                 document.getElementById("vpn_connection_text").innerHTML = {% trans '"Die upribox ist nicht erreichbar."' %};
                                 document.getElementById("vpn_connection_help").style.display = "block";
                             } else if (result['status'].localeCompare("success") == 0) {
-                                document.getElementById("vpn_connection_button").className = "switch icon i-good";
+                                document.getElementById("vpn_connection_text").className = "icon i-connected";
                                 document.getElementById("vpn_connection_text").innerHTML = {% trans '"Die upribox ist erreichbar."' %};
                             } else if (result['status'].localeCompare("error") == 0) {
-                                document.getElementById("vpn_connection_button").className = "switch icon i-ugly";
+                                document.getElementById("vpn_connection_text").className = "icon i-notconnected";
                                 document.getElementById("vpn_connection_text").innerHTML = {% trans '"Fehler beim Testen der Verbindung: "' %} + result['msg'];
                             }
                         }
@@ -72,36 +76,19 @@
                     http.send('');
 
                 </script>
-            {% else %}
-                <div class="switch icon i-off">
+                <!-- <div class="switch icon i-off">
                     <p>{% trans "VPN läuft nicht" %}</p>
                     <button class="js-toggle-button" data-state-enabled="yes" href="{% url 'upri_vpn_toggle' %}">{% trans "Einschalten" %}</button>
-                </div>
+                </div> -->
             {% endif %}
         </fieldset>
     </form>
-
-    </div>
-         <div class="col-2 col-2-info js-col-2-info">
-            <aside>
-                <h2 class="icon i-information js-info-trigger">
-                    <a href="#" title="{% trans "Information einklappen" %}" class="i-arrow">{% trans "Wie funktioniert VPN?" %}</a>
-                </h2>
-                <p>{% trans "Mit Hilfe von VPN (Virtual Private Network) surfen sie unterwegs &uuml;ber ihre upribox. Um den Zugriff auf ihre upribox zu sch&uuml;tzen, erfordern Verbindungen spezielle VPN-Profile. Erstellen Sie pro Benutzer ein VPN-Profil und laden sie das Profil dann z.B. auf ihr Smartphone." %}</p><p>
-
-                {% trans "Das upribox-VPN blockiert Werbung automatisch." %}</p>
-                {% url 'upri_faq' as faq_url %}
-                <p>{%  blocktrans %}H&auml;ufig gestellte Fragen zur upribox finden Sie unter <a href="{{ faq_url }}" title="FAQ">Hilfe</a>.{%  endblocktrans %}</p>
-                <a href="#" title="{% trans "Information ausblenden" %}" class="info-out i-arrow js-info-trigger">{% trans "Information ausblenden" %}</a>
-            </aside>
-        </div>
-    </div>
 
        <h2>{% trans "VPN-Profile" %}</h2>
 
     <p class="js-profile-placeholder{% if profiles %} hidden{% endif %}">{% trans "Noch kein Profil erstellt. Erstellen Sie gleich ein Profil!" %}</p>
 
-    <p>{% blocktrans with android="https://play.google.com/store/apps/details?id=net.openvpn.openvpn&hl=de" ios="https://itunes.apple.com/at/app/openvpn-connect/id590379981?mt=8" macos="https://tunnelblick.net/" windows="https://openvpn.net/" %}
+    <p>{% blocktrans with android="https://play.google.com/store/apps/details?id=net.openvpn.openvpn&hl=de" ios="https://itunes.apple.com/at/app/openvpn-connect/id590379981?mt=8" macos="https://tunnelblick.net/" windows="http://openvpn.se/" %}
         Die Verwendung des upribox-VPN erfordert die Erstellung von VPN-Profilen und die Installation der OpenVPN Client Software. F&uuml;r Ihr Smartphone k&ouml;nnen Sie einen der offziellen Clients f&uuml;r <a href="{{ android }}">Android</a> oder <a href="  {{ ios }}">iOS</a> herunterladen. Für den Desktop empfehlen wir folgende Programme: <a href="{{ macos }}">Tunnelblick f&uuml;r Mac OS</a> oder <a href="{{ windows }}">OpenVPN GUI f&uuml;r Windows</a>.{% endblocktrans %}</p>
     <div class="row">
         {% for profile in profiles %}
@@ -112,23 +99,24 @@
 
 
     <form>
-        <fieldset class="limited">
+        <fieldset>
+
             <h2>{% trans "Neues Profil erstellen" %}</h2>
-            {% for error in form.non_field_errors %}
-                <p class="error-message">{{ error|striptags }}</p>
-            {% endfor %}
 
-            {% for field in form %}
-                {{ field.label_tag }}
-                {{ field|add_error_class:'form-input-error'}}
-                {% for error in field.errors %}
-                    <p class="error-message">{{ error|striptags }}</p>
-                {% endfor %}
-            {% endfor %}
+            {% url "upri_vpn_generate" as href %}
+            {% url 'upri_config' as back %}
+            {% include "form.html" %}
 
-            {% csrf_token %}
-            <input type="submit" name="submit" href="{% url 'upri_vpn_generate' %}" id="button-vpn-generate" value="{% trans "Generieren" %}" />
         </fieldset>
     </form>
 
+{% endblock %}
+
+{% block info %}
+    <p class="icon i-info infohead"> {% trans "Wie funktioniert VPN?" %} </p>
+   <p class="infotext">
+       {% trans "Mit Hilfe von VPN (Virtual Private Network) surfen sie unterwegs &uuml;ber ihre upribox. Um den Zugriff auf ihre upribox zu sch&uuml;tzen, erfordern Verbindungen spezielle VPN-Profile. Erstellen Sie pro Benutzer ein VPN-Profil und laden sie das Profil dann z.B. auf ihr Smartphone." %} <br>
+       <br>
+       {% trans "Das upribox-VPN blockiert Werbung automatisch." %}<br><br>
+   </p>
 {% endblock %}

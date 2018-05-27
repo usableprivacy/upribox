@@ -1,3 +1,6 @@
 ---
 - name: restart dnsmasq_unfiltered
-  service: name=dnsmasq-unfiltered state=restarted
+  systemd:
+    daemon-reload: yes
+    name: dnsmasq-unfiltered
+    state: restarted

@@ -12,7 +12,6 @@
 		<meta name="description" content="{% trans "upribox - Ein einfaches Werkzeug zum Schutz der Privatsphäre" %}" />
 		<meta name="publisher" content="FH St. Pölten" />
 		<meta name="author" content="FH St. Pölten" />
-		<meta name="designer" content="Lisa Gringl" />
 		<meta name="robots" content="noindex, nofollow" />
 		<meta name="viewport" content="width=device-width, user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes" />
@@ -20,44 +19,56 @@
 		<link rel="stylesheet" href="{% static "css/fonts.css" %}" type="text/css" />
 		<link rel="stylesheet" href="{% static "css/style.css" %}" type="text/css" />
 	</head>
-	<body data-poll-url="{% url 'upri_jobstatus' %}" data-clear-url="{% url 'upri_clear_jobstatus' %}">
+	<body data-template-modal="{% url 'upri_modal' %}" data-poll-counter-url="{% url 'upri_counter_jobstatus' %}" data-poll-messages-url="{% url 'upri_jobstatus' %}" data-clear-url="{% url 'upri_clear_jobstatus' %}" data-poll-errors-url="{% url 'upri_jobstatus_failed' %}" data-clear-errors-url="{% url 'upri_clear_failed' %}" {% block additional-data-urls %} {% endblock %}>
 		<div id="site-container">
 			<header id="site-header">
 				<h1>
-					<a href="{% url 'upri_silent' %}" title="{% trans "Start" %}">{% trans "upribox" %}</a>
+					<a href="{% url 'upri_index' %}" title="{% trans "Start" %}">{% trans "upribox" %}</a>
 				</h1>
 				<p>{% trans "Usable Privacy Box" %}</p>
 
-                {% onpage request 'upri_login' as onlogin %}
+                {% onpage request 'upri_login upri_setup upri_setup_error upri_setup_success upri_setup_failed upri_setup_eval' as onlogin %}
                 {% if not onlogin %}
-                <a href="{% url 'upri_faq' %}" title="{% trans "FAQ" %}" class="faq-link only-mobile">{% trans "Hilfe" %}</a>
+                <!-- <a href="{% url 'upri_faq' %}" title="{% trans "FAQ" %}" class="faq-link only-mobile">{% trans "Hilfe" %}</a>-->
+				<!--<a href="{% url 'upri_faq' %}" title="{% trans "Status" %}" class="status-link only-mobile icon i-update ">{% trans "2 Änderungen" %}</a>-->
+
 				<button class="btn-menu only-mobile js-menu">{% trans "Menü" %}</button>
 
 				<nav class="clearfix">
 					<ul>
-						<li><a href="{% url 'upri_silent' %}" title="{% trans "Silent Modus" %}" class="icon i-silent {% navactive request 'upri_silent' %}">{% trans "Silent Modus" %}</a></li>
-						<li><a href="{% url 'upri_ninja' %}" title="{% trans "Ninja Modus" %}" class="icon i-ninja {% navactive request 'upri_ninja' %}">{% trans "Ninja Modus" %}</a></li>
-						<li><a href="{% url 'upri_vpn' %}" title="{% trans "VPN" %}" class="icon i-vpn {% navactive request 'upri_vpn' %}">{% trans "VPN" %}</a></li>
-						<li><a href="{% url 'upri_statistics' %}" title="{% trans "Statistiken" %}" class="icon i-statistics {% navactive request 'upri_statistics' %}">{% trans "Statistiken" %}</a></li>
-						<li class="only-mobile"><a href="{% url 'upri_more' %}" title="{% trans "Admin" %}" class="icon i-more">{% trans "Admin" %}</a></li>
+						<li><a href="{% url 'upri_devices' %}" title="{% trans "Geräteübersicht" %}" class="icon i-device {% navactive request 'upri_devices' %}">{% trans "Geräteübersicht" %}</a></li>
+						<li><a href="{% url 'upri_statistics' %}" title="{% trans "Statistiken" %}" class="icon i-statistic {% navactive request 'upri_statistics' %}">{% trans "Statistiken" %}</a></li>
+						<li><a href="{% url 'upri_config' %}" title="{% trans "Konfiguration" %}" class="icon i-konfig {% navactive request 'upri_config' %}">{% trans "Konfiguration" %}</a></li>
+						<li><a href="{% url 'upri_faq' %}" title="{% trans "Hilfe" %}" class="icon i-hilfe {% navactive request 'upri_faq' %}">{% trans "Hilfe" %}</a></li>
+						<li class="only-mobile"><a href="{% url 'upri_config_user' %}" title="{% trans "Admin" %}" class="icon i-user {% navactive request 'upri_config_user' %}">{{ request.user.username }}</a></li>
 						<li class="only-mobile"><a href="{% url 'upri_logout' %}" title="{% trans "Logout" %}" class="icon i-logout">{% trans "Logout" %}</a></li>
 					</ul>
 				</nav>
                 {% endif %}
 			</header>
 
-			<main role="main" class="clearfix">
+			<!-- Top Bar Header (Aenderungen, Submenu, Breadcrumbs) -->
+			<div id="top-bar">
                 {% if not onlogin %}
+				<a href="#" title="Update" id="changes-container" class="icon i-update"><span id="changes-count">0</span> <span id="changes-text-singular">{% trans "Änderung" %}</span><span id="changes-text-plural">{% trans "Änderungen" %}</span></a>
+				<a href="#" title="Update" id="error-container" class="icon i-error"><span id="error-count">0</span><span> {% trans "Fehler" %} </span></a>
+
 				<nav>
 					<ul>
-                        {% onpage request 'upri_faq' as onfaq %}
-                        {% onpage request 'upri_more' as onmore %}
-						{% if onfaq %}<li>{% trans "Hilfe" %}</li>{% else %}<li><a href="{% url 'upri_faq' %}" title="{% trans "FAQ" %}" class="">{% trans "Hilfe" %}</a></li>{% endif %}
-						{% if onmore %}<li>{% trans "Admin" %}</li>{% else %}<li><a href="{% url 'upri_more' %}" title="{% trans "Admin" %}" class="">{% trans "Admin" %}</a></li>{% endif %}
+						<li><a href="{% url 'upri_config_user' %}" title="User" class="icon i-user">{{ request.user.username }}</a></li>
 						<li><a href="{% url 'upri_logout' %}" title="{% trans "Logout" %}" class="icon i-logout">{% trans "Logout" %}</a></li>
 					</ul>
 				</nav>
+
+				<div class="breadcrumb">
+					{% block breadcrumb  %}
+                    {% endblock %}
+				</div>
                 {% endif %}
+			</div>
+
+			<main role="main" class="clearfix">
+
 
 				<article>
                     <header>
@@ -72,18 +83,41 @@
 				</article>
 			</main>
 
+			{% block info_wrapper %}
+			<div id="info-bar">
+				{% block info %}{% endblock %}
+			</div>
+			{% endblock %}
+
             {% block extra %}
             {% endblock %}
             {% if message or messagestore%}
-                {% include 'modal.html' %}
+                <!-- <div class="messages-to-show"/> -->
+                {# {% include 'modal.html' %} #}
             {% endif %}
 		</div>
-		<script type="text/javascript" src="{% static "js/vendor/chartist.min.js" %}"></script>
-		<script type="text/javascript" src="{% static "js/vendor/chartist-plugin-fill-donut.min.js" %}"></script>
+		<!--<script type="text/javascript" src="{% static "js/vendor/chartist.min.js" %}"></script>
+		<script type="text/javascript" src="{% static "js/vendor/chartist-plugin-fill-donut.min.js" %}"></script>-->
+
+		<script type="text/javascript" src="{% static "js/vendor/plotly_customized.js" %}"></script>
+		<!--
+            there are two things customized in ploty.js.
+             For this two changes, three (very small) parts in the code have been added and one line has been slightly changed.
+             You can easily find these new/changed parts by searching for the comment "//customized" in plotly_customized.js
+             three lines have been added, so links in the SVG graphic can now also have an id attribute
+             one function is changed a bit, so the onhover-tooltips are closer to the bars, when you hover them
+        -->
+
 		<script type="text/javascript" src="{% static "js/vendor/jquery-1.11.3.min.js" %}"></script>
-		<script type="text/javascript" src="{% static "js/vendor/js-cookie-2.0.2.js" %}"></script>
+		<script type="text/javascript" src="{% static "js/vendor/zxcvbn.js" %}"></script>
+
+        <script type="text/javascript" src="{% static "js/vendor/js-cookie-2.0.2.js" %}"></script>
         <script type="text/javascript" src="{% static "js/vendor/qrcode.min.js" %}"></script>
 
-		<script type="text/javascript" src="{% static "js/main.js" %}"></script>
+        {% block mainjs %}
+		      <script type="text/javascript" src="{% static "js/main.js" %}"></script>
+        {% endblock %}
+        {% block script %}
+        {% endblock %}
 	</body>
 </html>

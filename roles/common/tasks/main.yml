@@ -1,9 +1,9 @@
 ---
 - include: ../../common/tasks/other_env.yml
 
-- name: Stop update process if master is pulled from old wheezy image
-  fail: msg="You are running the outdated wheezy image, update process stoped."
-  when: ansible_distribution_release == "wheezy"
+- name: Stop update process if master is not pulled from stretch image 
+  fail: msg="You are running the outdated image, update process stoped."
+  when: ansible_distribution_release != "stretch"
 
 - name: configure hosts
   template: src=hosts dest=/etc/hosts owner=root group=root mode=644
@@ -74,9 +74,20 @@
     - libffi-dev
     - git
     - psmisc
+    # stretch
+    # this package is not preinstalled on stretch
+    # this is needed by ansible for becoming an unprivileged user
+    - acl
+
+- name: enable ntp
+  command: timedatectl set-ntp True
 
 - name: update pip via pip
   pip: name=pip state=present version="{{pip_version}}"
+
+- name: update setuptools on jessie
+  pip: name=setuptools state=present version="{{ setuptools_version }}"
+  when: ansible_distribution_release == "jessie"
 
 - name: install ansible via pip
   pip: name=ansible state=present version="{{ansible_pip_version}}"
@@ -96,18 +107,9 @@
 - name: configure root to use git deployment key
   template: src=ssh_config.j2 dest=/root/.ssh/config owner=root group=root mode=0644
 
-- name: create crontab entry to clone/pull git repository
-  template: src=etc_cron.d_ansible-pull.j2 dest=/etc/cron.d/ansible-pull owner=root group=root mode=0644
-  when: env == "production"
-  notify: touch pull crontab
-
 - name: add ansible cronupdate script
   template: src=usr_local_bin_ansible-cron.j2 dest=/usr/local/bin/ansible-cron owner=root group=root mode=0755
   when: env == "production"
-
-- name: create crontab entry to parse user-agents
-  template: src=etc_cron.d_parse-user-agents.j2 dest=/etc/cron.d/parse-user-agents owner=root group=root mode=0644
-  notify: touch user-agent crontab
 
 - name: create local directory for local git repo
   file: path="{{ pull_workdir }}" state=directory owner=root group=root mode=0751
@@ -120,7 +122,7 @@
   local_action: command pwd
   when: pull_deployment is not defined and env == "development"
   register: pwd
-  sudo: no
+  become: no
   tags:
     - copy-local
 
@@ -140,7 +142,7 @@
 - name: remove ansible-pull logfile if environment is development
   file: path={{other_env.default_settings.log.general.path}}/{{item.value}} state=absent
   when: env == "development"
-  with_dict: ansible_pull_log
+  with_dict: "{{ ansible_pull_log }}"
 
 - name: delete production files/entries
   file: path={{ item }} state=absent
@@ -160,27 +162,17 @@
   tags:
     - settings
 
-- name: install dependencies via pip
-  pip: name="{{ item.name }}" state=present version="{{ item.version }}"
-  with_items:
-    - { name: 'requests', version: '2.13.0' }
-    - { name: 'requests[security]', version: '2.13.0' }
-
-- name: copy filter update script
-  copy: src=upri-filter-update.py dest=/usr/local/bin/upri-filter-update.py owner=root group=root mode=755
-
-- name: copy filter update config
-  copy: src=etc_upri-filter-update/ dest=/usr/local/etc/upri-filter-update owner=root group=root mode=644
-
 - name: copy custom rc.local file
   copy: src=rc.local dest=/etc/rc.local owner=root group=root mode=755
   notify: fix led
 
-- name: create dnsmasq ninja directory for dnsblacklist rules
-  file: path=/etc/dnsmasq.d.ninja/ state=directory owner=root group=root
+- name: copy upri_recovery service file
+  template: src=upri_recovery.service dest=/etc/systemd/system/upri_recovery.service owner=root group=root mode=0644
+  register: service_file
 
-- name: update filter rules
-  shell: "/usr/local/bin/upri-filter-update.py"
-  register: update_result
-  changed_when: "update_result.rc == 1"
-  failed_when: "update_result.rc > 1"
+- name: systemctl daemon-reload
+  shell: /bin/systemctl daemon-reload
+  when: service_file.changed
+
+- name: configure upri_recovery service
+  service: name=upri_recovery enabled=yes use=service

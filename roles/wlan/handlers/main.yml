@@ -1,30 +1,10 @@
 ---
-- name: revert wifi configuration on errors
-  file: path=/etc/modprobe.d/disable_rpi3_wifi.conf state=absent
-  when: (wifi_res is defined and wifi_res|failed) or (driver is defined and driver|failed)
-  notify: enable internal wlan device
-
-- name: enable internal wlan device
-  modprobe: name=brcmfmac state=present
-  when: (wifi_res is defined and wifi_res|failed) or (driver is defined and driver|failed)
-  notify:
-    - remove lock file
-    - restart hostapd
-    - restart isc-dhcp-server
-
-- name: remove lock file
-  file: path=/var/run/wlan_stick.lock state=absent
-  when: (wifi_res is defined and wifi_res|failed) or (driver is defined and driver|failed)
-
-- name: restart dnsmasq
-  service: name=dnsmasq state=restarted
-
 - name: restart networking
   service: name=networking state=restarted
   notify: restart apate
 
 - name: restart hostapd
-  shell: service hostapd stop {{ "&& sleep 5 && service hostapd start" if (tor|bool or silent|bool) else "" }}
+  shell: service hostapd stop {{ "&& sleep 5 && service hostapd start" if silent|bool else "" }}
   notify: get ip address
 
 - name: get ip address
@@ -38,22 +18,19 @@
 - name: fix ip address
   shell: "ip addr add dev wlan0 192.168.55.254/24"
   when: ipaddr.stdout.find("192.168.55.254") == -1
-  register: ip_res
-  failed_when: ip_res.rc != 2 and ip_res.rc != 0
 
 - name: restart systemd-networkd
-  shell: systemctl restart systemd-networkd
+  systemd: name=systemd-networkd state=restarted daemon-reload=yes
+  notify:
+    - restart apate
 
 - name: configure isc-dhcp-server
-  service: name={{ item }} enabled={{'yes' if silent|bool or tor|bool or (dhcpd|bool and mode=='static') else 'no'}}
+  service: name={{ item }} enabled={{'yes' if silent|bool or (dhcpd|bool and mode=='static') else 'no'}} use=service
   with_items:
     - isc-dhcp-server
 
 - name: restart isc-dhcp-server
-  service: name=isc-dhcp-server state=restarted
+  service: name=isc-dhcp-server state={{'restarted' if silent|bool or (dhcpd|bool and mode=='static') else 'stopped'}}
 
 - name: restart avahi
   service: name=avahi-daemon state=restarted
-
-- name: restart udev
-  service: name=udev state=restarted

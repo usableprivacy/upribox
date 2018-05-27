@@ -18,6 +18,7 @@ interface=lo
 interface=eth0
 interface=wlan0
 interface=tun0
+no-dhcp-interface=eth0
 
 #Accept DNS queries only from hosts whose address is on a local subnet,
 # ie a subnet for which an interface exists on the server.
@@ -31,9 +32,6 @@ expand-hosts
 
 # Set a different domain for a particular subnet
 domain=silent.upri.box,192.168.55.0/24
-{% if tor|bool %}
-domain=ninja.upri.box,192.168.56.0/24
-{% endif %}
 
 # Set the cachesize here.
 #cache-size=150

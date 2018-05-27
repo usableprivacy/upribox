@@ -1,0 +1,110 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-05-18 07:49+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: setup/templates/setup.html:8 setup/templates/setup.html:11
+msgid "Einrichtung der upribox"
+msgstr "upribox Setup"
+
+#: setup/templates/setup.html:21
+#, python-format
+msgid ""
+"\n"
+"            <p> Die Funktionalität der upribox ist derzeit nur über das WLAN "
+"\"upribox\" verfügbar. Alternativ kann die upribox <a href=\"%(help)s"
+"\">manuell mittels DHCP</a> vollständig eingerichtet werden.</p>\n"
+"        "
+msgstr ""
+"\n"
+"The functionality of your upribox is currently only available via the "
+"\"upribox\" WLAN. Alternatively, you can complete the setup of your upribox "
+"manually by <a href=\"%(help)s\">configuring DHCP</a>."
+
+#: setup/templates/setup.html:26 setup/templates/setup.html:35
+#: setup/templates/setup.html:42
+msgid "Geräteübersicht"
+msgstr "Device Overview"
+
+#: setup/templates/setup.html:30
+msgid ""
+"\n"
+"            <p> Eine IPv6-fähige Internetverbindung wurde erkannt. Die "
+"upribox ist über das WLAN \"upribox\" verfügbar, der automatische Modus "
+"wurde nicht aktiviert. </p>\n"
+"        "
+msgstr ""
+"\n"
+"            <p> You Internet connection is IPv6-enabled. Use the "
+"upribox WiFi \"upribox\", the automatic modus "
+"has not been activated. </p>\n"
+"        "
+
+#: setup/templates/setup.html:39
+msgid "Ihre upribox wurde erfolgreich eingerichtet!"
+msgstr "Your upribox has been successfully set up!"
+
+#: setup/templates/setup.html:47
+msgid ""
+"\n"
+"            <p> Die upribox verfügt derzeit über keine Internetverbindung. "
+"Bitte stellen Sie sicher, dass die upribox mit ihrem Heimnetzwerk verbunden "
+"ist.</p>\n"
+"        "
+msgstr ""
+"\n"
+"           <p> The upribox has no internet connection currently.Please make "
+"sure the upribox is connected to your home network.</p>\n"
+"        "
+
+#: setup/templates/setup.html:52
+#, python-format
+msgid ""
+"\n"
+"            <p> Bitte testen Sie mit einem zweiten Gerät, das mit Ihrem "
+"Heimnetzwerk verbunden ist, ob eine Internetverbindung weiterhin besteht. "
+"Rufen Sie dazu einfach die Seite <a href=\"%(connect)s\">test.upribox.org</"
+"a> auf. <br> <br>\n"
+"            Ist die Seite erreichbar?  </p>\n"
+"        "
+msgstr ""
+"\n"
+"            <p> Please test with a second device that is connected with your "
+"Home network, if an internet connection persists. Simply go to this page <a "
+"href=\"%(connect)s\">test.upribox.org</a>. <br> <br>\n"
+"            Is the page reachable?  </p>\n"
+"        "
+
+#: setup/templates/setup.html:56
+msgid "Ja"
+msgstr "Yes"
+
+#: setup/templates/setup.html:56
+msgid "Nein"
+msgstr "No"
+
+#: setup/templates/setup.html:58
+msgid "Bitte warten, das Setup wird gestartet."
+msgstr "Please wait, while the setup is being started."
+
+#: setup/templates/setup.html:63
+msgid "Es ist leider ein Fehler während des Setups der upribox aufgetreten."
+msgstr "Unfortunately, an error occurred while setting up the upribox."
+
+#: setup/templates/setup.html:63
+msgid "Bitte versuchen Sie es erneut"
+msgstr "Please try again"

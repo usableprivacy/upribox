@@ -2,88 +2,70 @@
 
 {% load i18n %}
 
-{% block title %}{% trans "Statistiken - upribox" %}{% endblock %}
+{% block title %}{% trans "Statistik - upribox" %}{% endblock %}
 
 {% block header %}
-    <h1>{% trans "Statistik" %}</h1>
-    <p>{% trans "Geblockete Domains und gefilterte Inhalte." %}</p>
+<h1>{% trans "Statistik" %}</h1>
 {% endblock %}
 
+{% block additional-data-urls %}data-poll-statistics-main-url="{% url 'upri_get_statistics' %}" data-poll-statistics-update-url="{% url 'upri_update_statistics' %}"{% endblock %}
+
+{% block breadcrumb  %}
+<p><a href="{% url 'upri_index' %}">{% trans "Start" %}</a> > {% trans "Statistik" %}</p>
+{% endblock %}
+
+
 {% block content %}
-    <p><strong>{% trans "Die Statistiken liefern einen &Uuml;berblick &uuml;ber geblockte Domains und gefilterte Webinhalte." %}</strong></p>
 
-    <div class="loading"></div>
-    <div class="ct-pies">
-        <p>{% trans "Anzahl der geblockten (rosa) vs. werbefreien (rot) Domains" %}</p>
-        <div class="ct-pie1 ct-perfect-fourth"></div>
-        <div class="ct-pie1-label-mobile">{% trans "in den letzten 6 Monaten" %}</div>
-        <div class="ct-pie2 ct-perfect-fourth"></div>
-        <div class="ct-pie1-label">{% trans "in den letzten 6 Monaten" %}</div>
-        <div class="ct-pie2-label">{% trans "heute" %}</div>
+<div class="loading" style="display: block;"></div>
+<div class="loading-text">{% trans "Statistik wird geladen" %}</div>
+<div class="statistics-content" style="display: none;">
+    <h2> {% trans "Gesamtstatistik" %} </h2>
+
+    <div class="totalstat-div icon i-blockiert">
+        <p class="totalstat"> <span id="total-blocked" class="totalstat-numb blockiert"> </span> <br> {% trans "Domains blockiert" %}</p>
+    </div>
+    <div class="totalstat-div icon i-gefiltert">
+        <p class="totalstat"> <span id="total-filtered" class="totalstat-numb gefiltert"> </span> <br> {% trans "Inhalte gefiltert" %}</p>
     </div>
 
-    <div class="ct-chart ct-perfect-fourth"></div>
-    <p class="legend">
-        <span class="legend-filtered-content"></span>{% trans "Gefilterte Inhalte" %}<br/>
-        <span class="legend-blocked-domains"></span>{% trans "Geblockte Domains" %}
-    </p>
 
+    <h2 class="statistic-plot-heading clear">{% trans "Wochenstatistik" %} </h2>
+    <!--This span is not visible. Its only purpose is to hold the translated string for "KW", which is later needed for the plot-->
+    <span id="calendar-week-short-text">{% trans "KW" %}</span>
+
+
+    <!--<p class="overall-count">{% trans "Gesamtanzahl geblockter Anfragen" %}: <span id="total-blocked">2290</span><br>
+        {% trans "Gesamtanzahl gefilterter Inhalte" %}: <span id="total-filtered">2290</span>
+    </p>-->
+    <div class="legend">
+        <div class="legend-inner">
+            <span class="legend-blocked-domains"></span>{%trans "geblockt" %}<br>
+            <span class="legend-filtered-content"></span>{%trans "gefiltert" %}
+        </div>
+    </div>
+    <div class="y-axis-desc">{% trans "Anzahl" %}</div>
+    <div id="stats"></div>
+    <div class="x-axis-desc"><span class="weeks-full-text">{% trans "Kalenderwochen" %}</span><span class="weeks-short-text">{% trans "KW" %}</span></div>
     <div class="lists">
+        <p class="lists-headline">{%trans "Details für Kalenderwoche" %} <span id="statistic-details-calendar-week"></span></p>
 
-        <div class="column column-4 statistics js-filtered-sites"><p class="icon i-bad">{% trans "Top gefilterte Inhalte" %}</p>
-            <ol></ol>
+        <div class="statistics js-blocked-sites">
+            <p class="">{%trans "Top geblockte Domains" %}</p>
+            <ol id="blocked-pages">
+
+            </ol>
         </div>
+        <div class="statistics js-filtered-sites">
+            <p>{%trans "Top gefilterte Inhalte" %}</p>
+            <ol id="filtered-pages">
 
-{#        <div class="column column-4 statistics js-filtered-sites"><p class="icon i-good">{% trans "Good" %}</p>#}
-{#        {% comment %} {% blocktrans with name=page.name count=page.count %}{{ name }} - {{ count }} geblockte Inhalte{% endblocktrans %}{% endcomment %}#}
-{#        {% comment %} TODO: Translation der li-Bloecke an den Aufbau der Views anpassen (auf Vars zugreifen + for + etc.) {% endcomment %}#}
-{#        <ol><li>{% blocktrans with name="orf.at" count="200 000" %}{{ name }} - {{ count }} geblockte Inhalte{% endblocktrans %}</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li></ol></div>#}
-{##}
-{#        <div class="column column-4 statistics"><p class="icon i-bad">{% trans "Bad" %}</p>#}
-{#        <ol><li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li></ol>#}
-{#        </div>#}
-{##}
-{#        <div class="column column-4 statistics"><p class="icon i-ugly">{% trans "Ugly" %}</p>#}
-{#        <ol><li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li></ol></div>#}
-
-        <div class="column column-4 statistics js-blocked-sites"><p class="icon i-ugly">{% trans "Top geblockte Domains" %}</p>
-            <ol></ol>
+            </ol>
         </div>
-{#        <div class="column column-4 statistics js-blocked-sites"><p class="icon i-good">{% trans "Good" %}</p>#}
-{#        {% comment %} {% blocktrans with name=page.name count=page.count %}{{ name }} - {{ count }} geblockte Domains{% endblocktrans %}{% endcomment %}#}
-{#        {% comment %} TODO: Translation der li-Bloecke an den Aufbau der Views anpassen (auf Vars zugreifen + for + etc.) {% endcomment %}#}
-{#        <ol><li>{% blocktrans with name="orf.at" count="200 000" %}{{ name }} - {{ count }} geblockte Domains{% endblocktrans %}</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li></ol></div>#}
-{##}
-{#        <div class="column column-4 statistics"><p class="icon i-bad">{% trans "Bad" %}</p>#}
-{#        <ol><li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li></ol>#}
-{#        </div>#}
-{##}
-{#        <div class="column column-4 statistics"><p class="icon i-ugly">{% trans "Ugly" %}</p>#}
-{#        <ol><li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li>#}
-{#        <li>orf.at - 200 000 geblockte Inhalte</li></ol></div>#}
-
     </div>
+</div>
+
+{% endblock %}
+
+{% block info_wrapper %}
 {% endblock %}

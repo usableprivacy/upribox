@@ -1,0 +1,15 @@
+--redis 127.0.0.1:6379{% if ansible_distribution_release != "jessie"%}@2{% endif %}
+
+--packet-filter "ip and not proto ipv6 and not ether host ff:ff:ff:ff:ff:ff"
+
+--http-port {{ ":3000" if env=="production" else "3000"}}
+
+--interface eth0
+--interface wlan0
+--interface view:eth0,wlan0
+
+--community
+
+--daemon
+
+--disable-login 0

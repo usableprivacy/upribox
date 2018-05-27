@@ -14,8 +14,9 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 import sys
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+from lib.utils import get_fact
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -43,9 +44,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     'upri.box',
-    'upribox.local'
+    'upribox.local',
 ]
-
 
 # Application definition
 
@@ -63,10 +63,12 @@ INSTALLED_APPS = (
     'vpn',
     'statistics',
     'devices',
-    'more'
+    'more',
+    'setup',
+    'traffic'
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -76,30 +78,30 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-)
+    'middleware.setup_middleware.SetupMiddleware',
+]
 
 ROOT_URLCONF = 'urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'www/templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'www/templates')],
         'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
+        'OPTIONS':
+            {
+                'context_processors':
+                    [
+                        'django.template.context_processors.debug',
+                        'django.template.context_processors.request',
+                        'django.contrib.auth.context_processors.auth',
+                        'django.contrib.messages.context_processors.messages',
+                    ],
+            },
     },
 ]
 
-
 WSGI_APPLICATION = 'wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -111,15 +113,14 @@ DATABASES = {
     }
 }
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
 LANGUAGE_CODE = 'de'
 
 LANGUAGES = (
-  ('de', 'Deutsch'),
-  ('en', 'English'),
+    ('de', 'Deutsch'),
+    ('en', 'English'),
 )
 
 TIME_ZONE = 'UTC'
@@ -130,15 +131,12 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "www/static"),
-)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "www/static"), )
 
 STATIC_ROOT = '/usr/local/static/upribox_interface/'
 
@@ -149,9 +147,7 @@ LOGIN_URL = 'upri_login'
 LOGIN_REDIRECT_URL = 'upri_index'
 
 # Fixtures
-FIXTURE_DIRS = (
-    os.path.join(BASE_DIR, "www/prod_fixtures"),
-)
+FIXTURE_DIRS = (os.path.join(BASE_DIR, "www/prod_fixtures"), )
 
 ANSIBLE_FACTS_DIR = '/etc/ansible/facts.d'
 DEFAULT_SETTINGS = '/etc/ansible/default_settings.json'
@@ -178,34 +174,52 @@ LOGGING = {
     'formatters': {
         'simple': {
             'format': '[%(asctime)s]%(message)s',
-            'datefmt' : '%d/%b/%Y %H:%M:%S'
+            'datefmt': '%d/%b/%Y %H:%M:%S'
         }
     },
-    'handlers': {
-        'console': {
-            'level': 'WARNING',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
+    'handlers':
+        {
+            'console': {
+                'level': 'WARNING',
+                'class': 'logging.StreamHandler',
+                'formatter': 'simple',
+            },
+            'out': {
+                'level': 'INFO',
+                'class': 'logging.StreamHandler',
+                'formatter': 'simple',
+                'stream': sys.stdout,
+            },
         },
-        'out': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
-            'stream': sys.stdout,
-        }
-    },
-    'loggers': {
-        'uprilogger': {
-            'handlers': ['console'],
-            'level': 'WARNING',
-            'propagate': True,
+    'loggers':
+        {
+            'uprilogger': {
+                'handlers': ['console'],
+                'level': 'WARNING',
+                'propagate': True,
+            },
+            "rq.worker": {
+                "handlers": ['console', 'out'],
+                "level": "INFO"
+            },
         },
-        "rq.worker": {
-            "handlers": ['console', 'out'],
-            "level": "INFO"
-        },
-    },
 }
+
+LOG_FILE = get_fact('log', 'django', 'error')
+LOG_PATH = get_fact('log', 'general', 'path')
+
+if LOG_FILE and LOG_PATH:
+    LOGGING['handlers']['file'] = {
+        'level': 'ERROR',
+        'class': 'logging.handlers.WatchedFileHandler',
+        'filename': LOG_PATH + '/' + LOG_FILE,
+    }
+
+    LOGGING['loggers']['django'] = {
+        'handlers': ['file'],
+        'level': 'INFO',
+        'propagate': True,
+    }
 
 # Set the duration vpn profile download links are valid (in seconds)
 VPN_LINK_TIMEOUT = 60 * 5
@@ -217,3 +231,33 @@ SSL_PINNING_PATH = '/usr/local/etc/upri-filter-update/update-server.pem'
 PRIVOXY_LOGFILE = '/var/tmp/log/privoxy/privoxy.log'
 OPENVPN_LOGFILE = '/var/tmp/log/openvpn.log'
 DNS_FILE = '/etc/dnsmasq-resolv.conf'
+
+SETUP_PREFIX = "interface"
+# """str: Prefix which is used for every key in the redis db."""
+SETUP_DELIMITER = ":"
+# """str: Delimiter used for separating parts of keys in the redis db."""
+SETUP_KEY = "setup"
+SETUP_RES = "result"
+
+# from django.urls import reverse
+
+SETUP_NO_REDIRECT = [
+    LOGIN_URL,
+    LOGIN_REDIRECT_URL,
+    "upri_logout",
+    "upri_setup",
+    "upri_setup_error",
+    "upri_setup_success",
+    "upri_setup_failed",
+    "upri_setup_eval",
+    "upri_jobstatus",
+    "upri_clear_jobstatus",
+    'upri_clear_failed',
+    'upri_jobstatus_failed',
+]
+
+REDIS = {
+    'HOST': 'localhost',
+    'PORT': 6379,
+    'DB': 7,
+}

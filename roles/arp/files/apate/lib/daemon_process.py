@@ -51,7 +51,7 @@ class SelectiveIPv4Process(mp.Process):
 
         self.threads = {}
         # Initialise threads
-        self.threads['sniffthread'] = SelectiveIPv4SniffThread(self.interface, self.ipv4, self.sleeper)
+        self.threads['sniffthread'] = SelectiveIPv4SniffThread(self.interface, self.ipv4, self.sleeper, self.logger)
         self.threads['psthread'] = PubSubThread(self.ipv4, self.logger, self.spoof_devices)
         self.threads['arpthread'] = ARPDiscoveryThread(self.ipv4.ip, str(self.ipv4.network.network))#.gateway
         self.threads['igmpthread'] = IGMPDiscoveryThread(self.ipv4)
@@ -124,14 +124,12 @@ class SelectiveIPv4Process(mp.Process):
     @staticmethod
     def spoof_devices(ip, devs, logger):
         for entry in devs:
-            dev_ip = util.get_device_ip(entry)
-            dev_hw = ip.redis.get_device_mac(dev_ip, network=util.get_device_net(entry))
-            if util.get_device_enabled(entry) == "1":
+            dev_hw = util.get_device_mac(entry)
+            dev_ip = devs[entry]
+            if not ip.redis.check_device_disabled(util.get_device_mac(entry)):
                 sendp(Ether(dst=dev_hw) / ARP(op=2, psrc=ip.gateway, pdst=dev_ip, hwdst=dev_hw))
-                # sendp(Ether(dst=ip.gate_mac) / ARP(op=2, psrc=dev_ip, pdst=ip.gateway, hwdst=ip.gate_mac))
             else:
                 sendp(Ether(dst=dev_hw) / ARP(op=2, psrc=ip.gateway, pdst=dev_ip, hwdst=dev_hw, hwsrc=ip.gate_mac))
-                # sendp(Ether(dst=ip.gate_mac) / ARP(op=2, psrc=dev_ip, pdst=ip.gateway, hwsrc=dev_hw))
 
 
 class SelectiveIPv6Process(mp.Process):
@@ -173,7 +171,7 @@ class SelectiveIPv6Process(mp.Process):
 
         self.threads = {}
         # Initialise threads
-        self.threads['sniffthread'] = SelectiveIPv6SniffThread(self.interface, self.ipv6, self.sleeper)
+        self.threads['sniffthread'] = SelectiveIPv6SniffThread(self.interface, self.ipv6, self.sleeper, self.logger)
         self.threads['icmpv6thread'] = MulticastPingDiscoveryThread(self.interface)
         self.threads['mldv2thread'] = MulticastListenerDiscoveryThread(self.interface)
         self.threads['psthread6'] = PubSubThread(self.ipv6, self.logger, self.spoof_devices)
@@ -253,17 +251,13 @@ class SelectiveIPv6Process(mp.Process):
         tgt = (ip.gateway, ip.dns_servers[0]) if util.is_spoof_dns(ip) else (ip.gateway,)
 
         for entry in devs:
-            dev_ip = util.get_device_ip(entry)
-            dev_hw = ip.redis.get_device_mac(dev_ip, network=util.get_device_net(entry))
+            dev_hw = util.get_device_mac(entry)
+            dev_ip = devs[entry]
 
             for source in tgt:
-                if util.get_device_enabled(entry) == "1":
-                    # sendp(Ether(dst=dev_hw) / ARP(op=2, psrc=ip.gateway, pdst=dev_ip, hwdst=dev_hw))
+                if not ip.redis.check_device_disabled(util.get_device_mac(entry)):
                     sendp([Ether(dst=dev_hw) / IPv6(src=source, dst=dev_ip) /
                            ICMPv6ND_NA(tgt=source, R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=ip.mac)])
-                    # sendp(Ether(dst=ip.gate_mac) / ARP(op=2, psrc=dev_ip, pdst=ip.gateway, hwdst=ip.gate_mac))
                 else:
-                    # sendp(Ether(dst=dev_hw) / ARP(op=2, psrc=ip.gateway, pdst=dev_ip, hwdst=dev_hw, hwsrc=ip.gate_mac))
-                    # sendp(Ether(dst=ip.gate_mac) / ARP(op=2, psrc=dev_ip, pdst=ip.gateway, hwsrc=dev_hw))
                     sendp([Ether(dst=dev_hw) / IPv6(src=source, dst=dev_ip) /
                            ICMPv6ND_NA(tgt=source, R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=ip.gate_mac)])

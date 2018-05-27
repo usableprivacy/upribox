@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-04 13:02+0000\n"
+"POT-Creation-Date: 2018-04-19 19:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,200 +21,288 @@ msgstr ""
 msgid "upribox - Ein einfaches Werkzeug zum Schutz der Privatsphäre"
 msgstr "upribox - A simple gadget to protect your Internet privacy"
 
-#: www/templates/base.html:27
+#: www/templates/base.html:26 www/templates/faq.html:7
 msgid "Start"
 msgstr ""
 
-#: www/templates/base.html:27
+#: www/templates/base.html:26
 msgid "upribox"
 msgstr ""
 
-#: www/templates/base.html:29
+#: www/templates/base.html:28
 msgid "Usable Privacy Box"
 msgstr ""
 
-#: www/templates/base.html:33 www/templates/base.html.py:55
+#: www/templates/base.html:32
 msgid "FAQ"
 msgstr ""
 
-#: www/templates/base.html:33 www/templates/base.html.py:55
-#: www/templates/faq.html:8
+#: www/templates/base.html:32 www/templates/base.html:42
+#: www/templates/faq.html:7
 msgid "Hilfe"
 msgstr "Help"
 
-#: www/templates/base.html:34
+#: www/templates/base.html:33 www/templates/login.html:58
+#: www/templates/login.html:61
+msgid "Status"
+msgstr "status"
+
+#: www/templates/base.html:33
+msgid "2 Änderungen"
+msgstr "2 Changes"
+
+#: www/templates/base.html:35
 msgid "Menü"
 msgstr "menu"
 
-#: www/templates/base.html:38
-msgid "Silent Modus"
-msgstr "silent mode"
-
 #: www/templates/base.html:39
-msgid "Ninja Modus"
-msgstr "ninja mode"
+msgid "Geräteübersicht"
+msgstr "Device Overview"
 
 #: www/templates/base.html:40
-msgid "VPN"
-msgstr ""
+msgid "Statistiken"
+msgstr "Statistics"
 
 #: www/templates/base.html:41
-msgid "Statistiken"
-msgstr "statistics"
+msgid "Konfiguration"
+msgstr "Configuration"
 
-#: www/templates/base.html:42 www/templates/base.html.py:56
-#: www/templates/login.html:21
+#: www/templates/base.html:43
 msgid "Admin"
 msgstr "Admin"
 
-#: www/templates/base.html:43 www/templates/base.html.py:57
+#: www/templates/base.html:44 www/templates/base.html:59
 msgid "Logout"
 msgstr "logout"
 
-#: www/templates/faq.html:5
+#: www/templates/base.html:53
+msgid "Änderung"
+msgstr "Change"
+
+#: www/templates/base.html:53
+msgid "Änderungen"
+msgstr "Changes"
+
+#: www/templates/base.html:54
+msgid "Fehler"
+msgstr "Error"
+
+#: www/templates/faq.html:10
 msgid "Hilfe - upribox"
 msgstr "Help - upribox"
 
-#: www/templates/faq.html:9
-msgid "H&auml;ufig gestellte Fragen"
-msgstr "frequently asked questions"
-
-#: www/templates/faq.html:16
-msgid "WLAN-Zugangsdaten &auml;ndern"
-msgstr "Changing the WiFi settings"
+#: www/templates/faq.html:13
+msgid "Hilfe - Häufig gestellte Fragen"
+msgstr "Frequently asked questions"
 
 #: www/templates/faq.html:17
-#, python-format
-msgid ""
-" Frage: Ich will die Zugangsdaten zum Beispiel f&uuml;r das WLAN "
-"\"%(ninja_ssid)s\" &auml;ndern. Muss ich mich daf&uuml;r in das "
-"entsprechende WLAN einw&auml;hlen?"
-msgstr ""
-"Question: I want to change the password of the \"%(ninja_ssid)s\". Do I need "
-"to connect to this WiFi?"
+msgid "Was ist der Silent Modus?"
+msgstr "What is the Silent Mode?"
 
-#: www/templates/faq.html:18
-#, python-format
-msgid ""
-" Nein, die WLAN-Zugangsdaten k&ouml;nnen auch ge&auml;ndert werden, wenn du "
-"dich im WLAN \"%(upri_ssid)s\" befindest."
-msgstr ""
-"No. The WiFi passwords can also be changed if you are connected to the "
-"\"%(upri_ssid)s\"."
-
-#: www/templates/faq.html:20
-msgid "Kontakt"
-msgstr "Contact"
-
-#: www/templates/faq.html:21
+#: www/templates/faq.html:19
 #, python-format
 msgid ""
 "\n"
-"        Sie haben eine Frage zur upribox, die hier nicht angef&uuml;hrt ist? "
-"Sie wollen mit den EntwicklerInnen in Kontakt treten? Dann schreiben Sie uns "
-"eine E-Mail an die Adresse <a href=\"mailto:%(email)s\">%(email)s</a>."
+"               Der Silent-Modus erlaubt Ihnen, Webseiten ohne Werbung "
+"anzusehen. Diese wird einfach ausgeblendet. Weiters werden Tracking-Services "
+"blockiert bzw. nicht ausgeführt, um Ihre Privatsphäre zu schützen. In "
+"seltenen Fällen kann es zu Darstellungsfehlern oder der Blockierung von "
+"Webseiten kommen. Zur Verbesserung der upribox lassen Sie uns bitte solche "
+"Fehler wissen: <a href=\"mailto:%(email)s\">%(email)s</a>."
 msgstr ""
 "\n"
-"Do you have additional questions regarding the upribox? Get in touch with "
-"the upribox developers! Drop us an E-mail: <a href=\"mailto:%(email)s\">"
-"%(email)s</a>."
+"               Silent Mode allows you to use websites without ads.  These "
+"will simply be hidden and tracking services will be blocked or not executed "
+"to protect your privacy.  In rare cases, it may cause display errors or "
+"blocking of websites coming in. To improve the upribox please let us be "
+"informed with the error: <a href=\"mailto:%(email)s\">%(email)s </a>."
 
-#: www/templates/form.html:6
+#: www/templates/faq.html:23
+msgid "Was ist der Ninja Modus?"
+msgstr "What is the Ninja Mode?"
+
+#: www/templates/faq.html:25
+msgid "Im Ninja-Modus sind alle Eigenschaften des Silent-Modus integriert."
+msgstr "In Ninja Mode all features of the Silent Mode are integrated."
+
+#: www/templates/faq.html:27
+msgid ""
+"Außerdem befinden Sie sich in einem anonymen Netzwerk (Tor), womit eine "
+"Nachverfolgung Ihrer Aktivitäten im Internet erschwert wird. So kann Ihr "
+"Internet-Anbieter zum Beispiel nicht mehr nachverfolgen, welche Webseiten "
+"Sie besuchen. Da Ihre Anfrage für Webseiten über mehrere Router geleitet "
+"werden, kommt es aber zu einer spürbaren Reduktion der Internet-"
+"Geschwindigkeit."
+msgstr ""
+"In addition, you are in an anonymous network, where tracking your activity "
+"on the Internet is difficult. This way your Internet providers, for example, "
+"can no longer track which websites you visit. Since your request for "
+"websites is routed through multiple routers but there will be a noticeable "
+"reduction in the Internet speed."
+
+#: www/templates/faq.html:30
+msgid "Wie funktioniert VPN?"
+msgstr "How does the VPN work?"
+
+#: www/templates/faq.html:32
+msgid ""
+"Sie wollen unterwegs auf sichere Weise Ihre E-Mails abrufen oder eine "
+"Überweisung tätigen? Richten Sie dafür VPN ein und nutzen Sie Ihr Internet, "
+"als wären Sie zu Hause. Sie schützen Ihre Daten vor dem Zugriff von Dritten "
+"in offenen Wireless-Netzwerken."
+msgstr ""
+"You want to get your e-mails in a safe and secure way on the go? Confirm a "
+"bank transfer? Set up VPN and use your Internet, as if you were at home "
+"protecting your data from being accessed by third parties in open wireless "
+"networks."
+
+#: www/templates/faq.html:33
+msgid ""
+"Um den Zugriff auf Ihre upribox zu schützen, erfordern Verbindungen "
+"spezielle VPN-Profile. Erstellen Sie pro BenutzerIn ein VPN-Profil und laden "
+"Sie das Profil dann z.B. auf Ihr Smartphone."
+msgstr ""
+"To protect access to your upribox, connections require special VPN profiles. "
+"Create a VPN profile per user, then you load the profile, for example, on "
+"your smartphone."
+
+#: www/templates/faq.html:34
+msgid "Das upribox-VPN blockiert Werbung automatisch."
+msgstr "The upribox-VPN blocks advertisements automatically."
+
+#: www/templates/faq.html:37
+msgid "Wie funktioniert eine statische IP?"
+msgstr "How does the static IP work?"
+
+#: www/templates/faq.html:39
+msgid ""
+"Hier können erfahrene Nutzerinnen und Nutzer Ihrer upribox eine statische IP "
+"zuweisen. Zusätzlich ist es möglich, Ihre upribox als DHCP-Server agieren zu "
+"lassen, um sämtlichen Netzwerkverkehr über diese zu leiten. Dazu muss der "
+"DHCP-Server im Interface Ihres Routers deaktiviert werden."
+msgstr ""
+"Here, experienced users of the upribox can use a static IP configuration. In "
+"addition, it is possible to configure your upribox as a DHCP server to route "
+"all network traffic through it. The router's DHCP server has to be be "
+"disabled in the interface of your router."
+
+#: www/templates/form.html:9
 msgid "abbrechen"
 msgstr "cancel"
 
-#: www/templates/form.html:6
+#: www/templates/form.html:9
 msgid "&auml;ndern"
 msgstr "change"
 
-#: www/templates/form.html:26
+#: www/templates/form.html:22
+msgid "Schwach"
+msgstr "Weak"
+
+#: www/templates/form.html:29
+msgid "Stark"
+msgstr "Strong"
+
+#: www/templates/form.html:38
+msgid "Die Passwörter stimmen nicht überein"
+msgstr "The passwords do not match"
+
+#: www/templates/form.html:40
+msgid "Das Passwort muss zwischen 8 und 64 Zeichen lang sein"
+msgstr "The password must be between 8 and 64 characters"
+
+#: www/templates/form.html:45
 msgid "Speichern"
-msgstr "save"
+msgstr "Save"
+
+#: www/templates/form.html:45
+msgid "Abbrechen"
+msgstr "Cancel"
 
 #: www/templates/login.html:7
 msgid "Login - upribox"
-msgstr ""
+msgstr "Login - upribox"
 
 #: www/templates/login.html:9
 msgid "upribox Administration"
-msgstr "administration"
+msgstr "Administration"
 
 #: www/templates/login.html:19
 msgid "Legend"
 msgstr "legend"
 
-#: www/templates/login.html:20 www/templates/login.html.py:40
+#: www/templates/login.html:20 www/templates/login.html:42
 msgid "Login"
-msgstr ""
+msgstr "Login"
+
+#: www/templates/login.html:21
+msgid "Admin:"
+msgstr "Admin"
 
 #: www/templates/login.html:28
-msgid "Passwort"
-msgstr "password"
+msgid "Passwort:"
+msgstr "Password"
 
-#: www/templates/login.html:48
+#: www/templates/login.html:50
 msgid "Information einklappen"
 msgstr "hide information"
 
-#: www/templates/login.html:48
+#: www/templates/login.html:50 www/templates/login.html:100
 msgid "Wie kann ich mich einloggen?"
 msgstr "Where do I find the passwords?"
 
-#: www/templates/login.html:50
+#: www/templates/login.html:52 www/templates/login.html:101
 msgid ""
 "Die Daten für den Login finden Sie auf ihrer Anleitung \"upribox "
 "Administration\""
-msgstr "Your find your login credentials on your upribox instruction manual."
+msgstr ""
+"You can find your login credentials on your upribox instruction manual."
 
-#: www/templates/login.html:52
+#: www/templates/login.html:54
 msgid "Information ausblenden"
 msgstr "hide information"
 
-#: www/templates/login.html:56 www/templates/login.html.py:59
-msgid "Status"
-msgstr "status"
-
-#: www/templates/login.html:61
+#: www/templates/login.html:63
 msgid "Silent Modus l&auml;uft."
-msgstr "silent mode active."
+msgstr "Silent Mode active."
 
-#: www/templates/login.html:67
-msgid "Ninja Modus l&auml;uft."
-msgstr "ninja mode active."
+#: www/templates/login.html:69
+msgid "WLAN eingeschaltet."
+msgstr "WLAN switched on"
 
-#: www/templates/login.html:71
-msgid "Ninja Modus l&auml;uft nicht."
-msgstr "ninja mode inactive."
+#: www/templates/login.html:73
+msgid "WLAN ausgeschaltet."
+msgstr "WLAN switched off"
 
-#: www/templates/login.html:79
+#: www/templates/login.html:81
 msgid "VPN Modus l&auml;uft."
 msgstr "VPN active."
 
-#: www/templates/login.html:83
+#: www/templates/login.html:85
 msgid "VPN Modus l&auml;uft nicht."
 msgstr "VPN inactive."
 
-#: www/templates/login.html:89
+#: www/templates/login.html:91 www/templates/login.html:102
 msgid "Infos und Tipps"
-msgstr "general hints"
+msgstr "General hints"
 
-#: www/templates/login.html:91
+#: www/templates/login.html:93 www/templates/login.html:105
 msgid ""
 "Verwenden Sie einen aktuellen Webbrowser, wir empfehlen Mozilla Firefox."
 msgstr "Use an up-to-date web browser, we recommend Mozilla Firefox."
 
-#: www/templates/login.html:92
+#: www/templates/login.html:94 www/templates/login.html:106
 msgid ""
 "Verwenden Sie den Ninja-Modus zusammen mit dem \"Privaten Modus\" Ihres "
 "Browsers."
 msgstr ""
-"Use the ninja mode in combination with the \"private mode\" of your web "
+"Use the Ninja Mode in combination with the \"private mode\" of your web "
 "browser."
 
-#: www/templates/login.html:93
+#: www/templates/login.html:95 www/templates/login.html:107
 msgid "Setzen sie ihre Browsereinstellungen zurück, bevor Sie loslegen."
 msgstr "Reset your web browser before starting to use the upribox."
 
-#: www/templates/modal.html:10
+#: www/templates/modal.html:8
 msgid ""
 "\n"
 "                Sie wurden aus der upribox ausgeloggt! Bitte klicken Sie auf "
@@ -224,26 +312,68 @@ msgstr ""
 "\n"
 "You have been logged out! Click on \"close\" and login again."
 
-#: www/templates/modal.html:15
-#, python-format
+#: www/templates/modal.html:13
+#, fuzzy, python-format
+#| msgid ""
+#| "\n"
+#| "                Die Upribox konnte nicht erreicht werden. Bitte stellen "
+#| "Sie sicher, dass Sie sich mit dem Wlan \"%(upri_ssid)s\" verbunden sind.\n"
+#| "            "
 msgid ""
 "\n"
 "                Die Upribox konnte nicht erreicht werden. Bitte stellen Sie "
-"sicher, dass Sie sich mit dem Wlan \"%(upri_ssid)s\" oder \"%(ninja_ssid)s\" "
-"verbunden sind.\n"
+"sicher, dass Sie sich mit dem Wlan \"%(upri_ssid)s\" verbunden sind.\n"
 "            "
 msgstr ""
 "\n"
 "upribox can not be reached. Ensure that you are connected to the "
 "\"%(upri_ssid)s\" or \"%(ninja_ssid)s\" WiFi."
 
-#: www/templates/modal.html:24
+#: www/templates/modal.html:22
 msgid "Schließen"
-msgstr "close"
+msgstr "Close"
 
-#: www/templatetags/base_extras.py:40
-msgid "abgelaufen"
-msgstr "time out"
+#~ msgid "abgelaufen"
+#~ msgstr "time out"
+
+#~ msgid "WLAN-Zugangsdaten &auml;ndern"
+#~ msgstr "Changing the WiFi settings"
+
+#~ msgid ""
+#~ " Frage: Ich will die Zugangsdaten zum Beispiel f&uuml;r das WLAN "
+#~ "\"%(ninja_ssid)s\" &auml;ndern. Muss ich mich daf&uuml;r in das "
+#~ "entsprechende WLAN einw&auml;hlen?"
+#~ msgstr ""
+#~ "Question: I want to change the password of the \"%(ninja_ssid)s\". Do I "
+#~ "need to connect to this WiFi?"
+
+#~ msgid ""
+#~ " Nein, die WLAN-Zugangsdaten k&ouml;nnen auch ge&auml;ndert werden, wenn "
+#~ "du dich im WLAN \"%(upri_ssid)s\" befindest."
+#~ msgstr ""
+#~ "No. The WiFi passwords can also be changed if you are connected to the "
+#~ "\"%(upri_ssid)s\"."
+
+#~ msgid "Kontakt"
+#~ msgstr "Contact"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Sie haben eine Frage zur upribox, die hier nicht angef&uuml;hrt "
+#~ "ist? Sie wollen mit den EntwicklerInnen in Kontakt treten? Dann schreiben "
+#~ "Sie uns eine E-Mail an die Adresse <a href=\"mailto:%(email)s\">"
+#~ "%(email)s</a>."
+#~ msgstr ""
+#~ "\n"
+#~ "Do you have additional questions regarding the upribox? Get in touch with "
+#~ "the upribox developers! Drop us an E-mail: <a href=\"mailto:%(email)s\">"
+#~ "%(email)s</a>."
+
+#~ msgid "Ninja Modus l&auml;uft."
+#~ msgstr "Ninja Mode active."
+
+#~ msgid "Ninja Modus l&auml;uft nicht."
+#~ msgstr "Ninja Mode inactive."
 
 #~ msgid "Erweitert"
 #~ msgstr "extended"

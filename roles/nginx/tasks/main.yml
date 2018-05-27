@@ -7,7 +7,7 @@
     - nginx-extras
 
 - name: enable services
-  service: name={{ item }} enabled=yes
+  service: name={{ item }} enabled=yes use=service
   with_items:
     - nginx
 
@@ -74,3 +74,26 @@
     - upri_interface
   notify:
     - restart nginx
+
+- name: check if HTTPS Server Files exists
+  stat: path="{{ item }}"
+  with_items:
+    - /etc/ssl/certs/interfaceCert.pem
+    - /etc/ssl/private/interfaceKey.pem
+  register: res
+
+- name: creating self signed certificate
+  shell: 'openssl req -x509 -nodes -batch -newkey rsa:4096 -keyout /etc/ssl/private/interfaceKey.pem -out /etc/ssl/certs/interfaceCert.pem -days 3650 -sha256 -subj "/C=AT/ST=Austria/L=Vienna/O=Usable Privacy Box/OU=Webinterface/CN=upri.box"'
+  args:
+    chdir: /etc/openssl
+  when: not res.results[0].stat.exists and not res.results[1].stat.exists
+  notify:
+    - restart nginx
+  register: res
+
+- name: change permissions for Server Key
+  file: path="{{ item }}" owner=root group=root mode=640
+  with_items:
+    - /etc/ssl/certs/interfaceCert.pem
+    - /etc/ssl/private/interfaceKey.pem
+  when: res|changed

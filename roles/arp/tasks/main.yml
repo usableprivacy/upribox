@@ -1,6 +1,7 @@
 ---
 - include: ../../common/tasks/other_env.yml
-- include: apate_state.yml tags=toggle_apate
+- include: apate_state.yml
+  tags: [toggle_apate]
 
 - name: create working directory for apate daemon
   file: path=/opt/apate state=directory recurse=yes mode=0771 owner=root group=root
@@ -47,7 +48,7 @@
   template: src=logrotate.j2 dest=/etc/logrotate.d/apate mode=0644
 
 - name: configure apate service
-  service: name=apate state='{{ "started" if apate_enabled|bool else "stopped" }}' enabled='{{ apate_enabled|bool }}'
+  service: name=apate state='{{ "started" if apate_enabled|bool else "stopped" }}' enabled='{{ apate_enabled|bool }}' use=service
   tags:
     - toggle_apate
 
@@ -55,15 +56,8 @@
   lineinfile:
     dest: /etc/redis/redis.conf
     regexp: '^notify-keyspace-events'
-    line: 'notify-keyspace-events "EKxs"'
-  notify: restart redis
-
-- name: disable logging for redis-sever
-  lineinfile:
-    dest: /etc/redis/redis.conf
-    regexp: '^logfile'
-    state: absent
+    line: 'notify-keyspace-events "EKxh"'
   notify: restart redis
 
 - name: enable redis server
-  service: name=redis-server enabled=yes
+  service: name=redis-server enabled=yes use=service
