@@ -1597,9 +1597,13 @@ ul.all-done .success-message:last-child{
 .statistics-content .xtick tspan {
     display: inline;
 }
-.statistics-content .js-plotly-plot {
+#stats.js-plotly-plot {
     display: inline-block;
     max-width: 605px;
+}
+#device-stats.js-plotly-plot {
+    display: inline-block;
+    max-width: 700px;
 }
 .statistics-content .legend-inner {
     display: inline-block;
@@ -1674,12 +1678,21 @@ ul.all-done .success-message:last-child{
 .statistics-content .statistics  ol {
     padding-left: 0;
 }
-.statistics-content .js-blocked-sites {
+.statistics-content .js-blocked-sites{
     display: inline-block;
     margin-right: 19%;
     vertical-align: top;
 }
-.statistics-content .js-filtered-sites {
+.statistics-content .js-filtered-sites{
+    display: inline-block;
+    vertical-align: top;
+}
+.statistics-content .js-requested-domains{
+    display: inline-block;
+    margin-right: 19%;
+    vertical-align: top;
+}
+.statistics-content .js-blocked-domains{
     display: inline-block;
     vertical-align: top;
 }
@@ -1726,12 +1739,19 @@ ul.all-done .success-message:last-child{
     width: 83% !important;
     height: 380px;
 }
+.statistics-content #device-stats {
+    width: 100% !important;
+    height: 450px;
+}
 .statistics-content .weeks-short-text {
     display: none;
 }
 @media only screen and (max-width: 1080px) {
     .statistics-content #stats {
         width: 91% !important;
+    }
+    .statistics-content #device-stats {
+        width: 95% !important;
     }
     .statistics-content .weeks-short-text {
         display: inline;

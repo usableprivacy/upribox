@@ -44,18 +44,23 @@
 {#    </p>#}
 
 {#    <div class="y-axis-desc">{% trans "Datenvolumen (MB)" %}</div>#}
-    <div id="stats"></div>
+    <div id="device-stats"></div>
 {#    <div class="x-axis-desc"><span class="weeks-full-text">{% trans "Datum" %}</span><span class="weeks-short-text">{% trans "Tag" %}</span></div>#}
-    <div class="lists">
+    <div class="lists" style="display:none;">
         <p class="lists-headline">{%trans "Details für Kalenderwoche" %} <span id="statistic-details-calendar-week"></span></p>
-
+        <p class="lists-block-percentage"><span id="js-block-percentage"></span>{%trans "% aller Anfragen wurden automatisch geblockt." %} </p>
         <div class="statistics js-requested-domains">
             <p class="">{%trans "Domain Top 10 (Anfragen)" %}</p>
             <ol id="requested-domains">
-
+            </ol>
+        </div>
+        <div class="statistics js-blocked-domains">
+            <p class="">{%trans "Domain Top 10 (Geblockt)" %}</p>
+            <ol id="blocked-domains">
             </ol>
         </div>
     </div>
+
 </div>
 
 {% endblock %}

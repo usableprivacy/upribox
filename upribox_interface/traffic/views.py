@@ -118,10 +118,10 @@ def get_device_queries(request, slug, week=None):
     try:
 
         dev = DeviceEntry.objects.get(slug=slug)
-        domains = get_queries_for_device(dev.mac, week, sort=True, limit=10)
+        domains, blocked_domains, block_percent = get_queries_for_device(dev.mac, week, sort=True, limit=10)
 
     except (ValueError, TypeError, DeviceEntry.DoesNotExist) as error:
-        #return JsonResponse(error, safe=False)
-        return HttpResponse(status=412)
+        return HttpResponse(error)
+        #return HttpResponse(status=412)
 
-    return JsonResponse({'domains': domains})
+    return JsonResponse({'domains': domains, 'blocked_domains': blocked_domains, 'block_percent': block_percent})
