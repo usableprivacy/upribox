@@ -1700,6 +1700,13 @@ ul.all-done .success-message:last-child{
     font-weight: bold;
     margin-bottom: 10px;
 }
+.statistics-content .lists .lists-block-percentage {
+    font-weight: normal;
+    width: 100%;
+}
+.statistics-content #js-block-percentage {
+    font-weight: bold;
+}
 .statistics-content .hoverlayer text{
     fill: #fff !important;
 }

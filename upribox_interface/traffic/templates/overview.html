@@ -38,24 +38,17 @@
     <!--This span is not visible. Its only purpose is to hold the translated string for "KW", which is later needed for the plot-->
     <span id="calendar-week-short-text">{% trans "Tag" %}</span>
 
-{##}
-{# <p class="overall-count">{% trans "Gesamtanzahl geblockter Anfragen" %}: <span id="total-blocked">2290</span><br>#}
-{#        {% trans "Gesamtanzahl gefilterter Inhalte" %}: <span id="total-filtered">2290</span>#}
-{#    </p>#}
-
-{#    <div class="y-axis-desc">{% trans "Datenvolumen (MB)" %}</div>#}
     <div id="device-stats"></div>
-{#    <div class="x-axis-desc"><span class="weeks-full-text">{% trans "Datum" %}</span><span class="weeks-short-text">{% trans "Tag" %}</span></div>#}
     <div class="lists" style="display:none;">
         <p class="lists-headline">{%trans "Details für Kalenderwoche" %} <span id="statistic-details-calendar-week"></span></p>
         <p class="lists-block-percentage"><span id="js-block-percentage"></span>{%trans "% aller Anfragen wurden automatisch geblockt." %} </p>
         <div class="statistics js-requested-domains">
-            <p class="">{%trans "Domain Top 10 (Anfragen)" %}</p>
+            <p class="">{%trans "Domains (Top 10)" %}</p>
             <ol id="requested-domains">
             </ol>
         </div>
         <div class="statistics js-blocked-domains">
-            <p class="">{%trans "Domain Top 10 (Geblockt)" %}</p>
+            <p class="">{%trans "Geblockte Domains (Top 10)" %}</p>
             <ol id="blocked-domains">
             </ol>
         </div>

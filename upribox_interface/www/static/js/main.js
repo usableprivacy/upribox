@@ -877,7 +877,7 @@ function initialisePasswordFields(){
 
         var protocols_num = data['protocols'].length;
 
-        if (protocols_num == 0){
+        if (data.total == null || data.total == 0){
             $(".no-data-available").css("display", "block");
             $(".loading").css("display", "none");
             $(".loading-text").css("display", "none");
@@ -886,7 +886,8 @@ function initialisePasswordFields(){
         }
 
         function createHoverInfo(value){
-            if(value > 0) return "y+text";
+            //if(value > 0) return "y+text";
+            if(value > 0) return "text";
             else return "skip";
         }
 
@@ -900,7 +901,8 @@ function initialisePasswordFields(){
                 color: data['protocols'][i]['color']
             },
             name: data['protocols'][i]['protocol'],
-            text: data['protocols'][i]['protocol'],
+            //text: data['protocols'][i]['protocol'],
+            text: data['protocols'][i]['texts'],
             textposition: 'top',
             line: {
                 width: 1.0,
@@ -1421,8 +1423,10 @@ function initialisePasswordFields(){
 
     function updateTrafficStatistics(data) {
         if (data.domains){
+            if(data.domains.length > 0){
             $(".lists").css("display", "block");
             updateDomainList(data.domains, data.blocked_domains, data.block_percent);
+            }
         }
     }
 
