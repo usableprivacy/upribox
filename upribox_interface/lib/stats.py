@@ -76,14 +76,30 @@ def get_domain_counters(week, sort=False, limit=None):
 # limit only when sorted
 def get_queries_for_device(mac, week, sort=False, limit=None):
 
-    queries = redis.hgetall(_DELIMITER.join((_PREFIX, _DEVICE, _QUERIED, str(EUI(mac)), _WEEK, str(week), _DOMAIN)))
+    device_queries = redis.hgetall(_DELIMITER.join((_PREFIX, _DEVICE, _QUERIED, str(EUI(mac)), _WEEK, str(week), _DOMAIN)))
+    blocked = redis.hgetall(_DELIMITER.join((_PREFIX, _DNSMASQ, _BLOCKED, _WEEK, str(week), _DOMAIN)))
+    blocked_queries = list()
+    queries = list()
 
-    if not sort:
-        return queries.items()
+    if sort:
+        device_queries = sorted(device_queries.items(), cmp=lambda x, y: int(x) - int(y), key=operator.itemgetter(1), reverse=True)
     else:
-        return (
-            sorted(queries.items(), cmp=lambda x, y: int(x) - int(y), key=operator.itemgetter(1), reverse=True)[:limit]
-        )
+        device_queries = device_queries.items()
+
+    for domain, count in device_queries:
+        if domain in blocked:
+            blocked_queries.append([domain, count])
+        elif 'upri.box' not in domain:
+            queries.append([domain, count])
+
+    if len(blocked_queries) > 0:
+        blocked_queries_num = sum(float(query[1]) for query in blocked_queries)
+        device_queries_num = sum(float(query[1]) for query in device_queries)
+        block_percent = round(blocked_queries_num / (device_queries_num + blocked_queries_num) * 100.00, 2)
+    else:
+        block_percent = 0
+
+    return queries[:limit], blocked_queries[:limit], block_percent
 
 
 def sub_week(week, year, sub):
