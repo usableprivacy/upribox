@@ -89,11 +89,13 @@ def get_queries_for_device(mac, week, sort=False, limit=None):
     for domain, count in device_queries:
         if domain in blocked:
             blocked_queries.append([domain, count])
-        else:
+        elif 'upri.box' not in domain:
             queries.append([domain, count])
 
     if len(blocked_queries) > 0:
-        block_percent = round((sum(float(query[1]) for query in blocked_queries) / (sum(float(query[1]) for query in device_queries))) * 100.00, 2)
+        blocked_queries_num = sum(float(query[1]) for query in blocked_queries)
+        device_queries_num = sum(float(query[1]) for query in device_queries)
+        block_percent = round(blocked_queries_num / (device_queries_num + blocked_queries_num) * 100.00, 2)
     else:
         block_percent = 0
 
