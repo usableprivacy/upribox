@@ -15,4 +15,5 @@ vpn-psk
 !/upribox_interface/ansible/facts.d/.gitkeep
 
 .idea
-docs/build
+docs/build/html
+docs/build/latex

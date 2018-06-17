@@ -1,0 +1,124 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2018, upribox developers
+# This file is distributed under the same license as the upribox package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: upribox 2.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-16 20:59+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+
+#: ../../source/customization.rst:5
+msgid "Customization"
+msgstr ""
+
+#: ../../source/customization.rst:7
+msgid ""
+"There are two possible ways to adapt the settings of your upribox by "
+"writing to *custom facts*: use the Web Interface or edit the *custom "
+"facts* manually. Configuration options that are important for all users "
+"are available in the Web Interface, special configuration options for "
+"tech-savvy users can be set manually using SSH."
+msgstr ""
+
+#: ../../source/customization.rst:14
+msgid ""
+"The upribox Software update mechanisms ensures that the system remains in"
+" a consistent state. Manual changes to configuration files are therefore "
+"overwritten by the periodic software update process of the upribox. **The"
+" only way the persist your changes is by writing to the correspondent "
+"custom fact.**"
+msgstr ""
+
+#: ../../source/customization.rst:19
+msgid ""
+"The custom configuration options of the upribox Software are stored in "
+"**/etc/ansible/fact.d/**. Example for these configuration facts can be "
+"found here: :download:`local_facts.tar.gz <examples/local_facts.tar.gz>`."
+msgstr ""
+
+#: ../../source/customization.rst:24
+msgid "Advanced Network Settings"
+msgstr ""
+
+#: ../../source/customization.rst:27
+msgid "static network configuration"
+msgstr ""
+
+#: ../../source/customization.rst:29
+msgid ""
+"Connect to your upribox via SSH and create an **interfaces.fact** file in"
+" the */etc/ansible/facts.d* directory. The following interfaces "
+"configuration, will set the upribox to use a static IP configuration:"
+msgstr ""
+
+#: ../../source/customization.rst:47
+msgid ""
+"Make sure to adapt the *ip*,\\ *netmask*,\\ *gateway*, and *dns* values "
+"to reflect your setup. Once you created the *interfaces.fact* file, run"
+msgstr ""
+
+#: ../../source/customization.rst:55
+msgid ""
+"to configure the network device and to restart the upribox with the "
+"static IP setup. (see :ref:`upri-config`)"
+msgstr ""
+
+#: ../../source/customization.rst:60
+msgid "custom VPN server port"
+msgstr ""
+
+#: ../../source/customization.rst:62
+msgid ""
+"Connect to your upribox via SSH and use the following commands to set a "
+"custom *port* and *protocol* for the upribox OpenVPN server:"
+msgstr ""
+
+#: ../../source/customization.rst:72
+msgid ""
+"Make sure to use a correct port - protocol combination: valid ports are "
+"between *1025* and *65535* (**unprivileged ports**), and protocol can be "
+"either **UDP** or **TCP**. If you want to access your upribox's VPN "
+"server over **443/TCP** (standard HTTPS port) you need to set a custom "
+"port-forwarding rule in your router: set your VPN server to an "
+"unprivileged TCP port e.g. 4300/TCP and then forward port 443/TCP to port"
+" 4300/TCP of your upribox. (see :ref:`upri-config`)"
+msgstr ""
+
+#: ../../source/customization.rst:82
+msgid "custom wifi channel"
+msgstr ""
+
+#: ../../source/customization.rst:84
+msgid ""
+"Connect to your upribox via SSH and use the following commands to set a "
+"custom *channel* for the upribox WiFi:"
+msgstr ""
+
+#: ../../source/customization.rst:93
+msgid "Valid WiFi channels are numbers between 1 and 10. (see :ref:`upri-config`)"
+msgstr ""
+
+#: ../../source/customization.rst:97
+msgid "de/activate WiFi"
+msgstr ""
+
+#: ../../source/customization.rst:99
+msgid ""
+"If you have ssh enabled you can connect to your upribox and deactivate "
+"the upribox WiFi:"
+msgstr ""
+
+#: ../../source/customization.rst:106
+msgid "To activate it again replace \"no\" with \"yes\". (see :ref:`upri-config`)"
+msgstr ""
+

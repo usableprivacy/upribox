@@ -4,6 +4,11 @@
 Features
 ########
 
+******************
+Network Protection
+******************
+
+
 .. _silent:
 
 ***********
@@ -83,3 +88,10 @@ software for `Android <https://play.google.com/store/apps/details?id=net.openvpn
 or `iOS <https://itunes.apple.com/at/app/openvpn-connect/id590379981?mt=8>`__.
 For your desktop computer we recommend
 `Tunnelblick for Mac OS <https://tunnelblick.net/>`__ or `OpenVPN GUI for Windows <https://openvpn.net/>`__.
+
+**************
+IoT Monitoring
+**************
+
+You want to know how much data your IoT devices use and whom they are talking to?
+IoT monitoring shows an overview of all devices connected to your home network.

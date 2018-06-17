@@ -1,0 +1,240 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2018, upribox developers
+# This file is distributed under the same license as the upribox package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: upribox 2.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-16 20:59+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+
+#: ../../source/index.rst:3
+msgid "Getting Started"
+msgstr ""
+
+#: ../../source/intro.rst:4
+msgid ""
+"If you bought a pre-assembled upribox from `our online store "
+"<https://upribox.org/shop>`__ you can skip the getting started guide "
+"since everything is already set up and you only have to complete the "
+"simple tasks described in the enclosed manual. Go straight to"
+msgstr ""
+
+#: ../../source/intro.rst:7
+msgid ""
+"In a few easy steps you can build your own upribox and won't get bothered"
+" anymore by annoying ads and trackers (see :ref:`silent`). Additionally "
+"you can use your upribox to surf the web anonymously via Tor (see "
+":ref:`ninja`) and set it up to be your OpenVPN server which secures your "
+"connection in unprotected WiFis and lets you benefit from the ad-blocking"
+" features on the road (see :ref:`vpn`)."
+msgstr ""
+
+#: ../../source/intro.rst:15
+msgid "Installation"
+msgstr ""
+
+#: ../../source/intro.rst:17
+msgid ""
+"You can download the latest upribox image from `Github "
+"<https://github.com/usableprivacy/upribox/releases>`__ and verify its "
+"integrity and authenticity with the provided signature file and PGP key "
+"(see :ref:`signed-releases`). See the `official Raspberry Pi "
+"documentation <https://www.raspberrypi.org/documentation/installation"
+"/installing-images/>`__ for pointers on how to install the upribox image "
+"on the SD card. Upon the first boot the SSH/VPN keys are automatically "
+"re-generated (this will take a couple of minutes)."
+msgstr ""
+
+#: ../../source/intro.rst:25
+msgid "Hardware requirements"
+msgstr ""
+
+#: ../../source/intro.rst:27
+msgid ""
+"In the following you will find a list of required (and tested) hardware "
+"for the upribox software."
+msgstr ""
+
+#: ../../source/intro.rst:30
+msgid "Table of recommended hardware"
+msgstr ""
+
+#: ../../source/intro.rst:33
+msgid "Raspberry Pi 3 B / B+ [#f1]_"
+msgstr ""
+
+#: ../../source/intro.rst:35
+msgid "SD Card"
+msgstr ""
+
+#: ../../source/intro.rst:35
+msgid "microSDHC Class 10 (min. 4GB) [#f3]_"
+msgstr ""
+
+#: ../../source/intro.rst:37
+msgid "Power Supply"
+msgstr ""
+
+#: ../../source/intro.rst:37
+msgid "Micro USB 5V/2A [#f4]_"
+msgstr ""
+
+#: ../../source/intro.rst:39
+msgid "WiFi"
+msgstr ""
+
+#: ../../source/intro.rst:39
+msgid "onboard"
+msgstr ""
+
+#: ../../source/intro.rst:42
+msgid ""
+"Raspberry Pi 3 `[Element14] "
+"<https://www.element14.com/community/community/raspberry-"
+"pi/raspberrypi3>`__  `[Amazon.com] <https://www.amazon.com/Raspberry-Pi-"
+"RASP-PI-3-Model-Motherboard/dp/B01CD5VC92>`__"
+msgstr ""
+
+#: ../../source/intro.rst:43
+msgid ""
+"Sandisk SDHC 8GB `[Amazon.com] <https://www.amazon.com/SanDisk-MicroSDHC-"
+"Standard-Packaging-SDSDQUAN-008G-G4A/dp/B00M55C0VU/>`__"
+msgstr ""
+
+#: ../../source/intro.rst:44
+msgid ""
+"Power Supply `[Amazon.com] <https://www.amazon.com/Kootek-Universal-"
+"Charger-Raspberry-External/dp/B00GWDLJGS>`__ `[Adafruit] "
+"<https://www.adafruit.com/products/1995>`__"
+msgstr ""
+
+#: ../../source/intro.rst:47
+msgid "Web Interface"
+msgstr ""
+
+#: ../../source/intro.rst:50
+msgid ""
+"Once you are connected to the upribox WiFi network you can access the "
+"upribox web interface via one of the following URIs:"
+msgstr ""
+
+#: ../../source/intro.rst:52
+msgid "`http://upri.box <http://upri.box/>`_"
+msgstr ""
+
+#: ../../source/intro.rst:53
+msgid "`https://upri.box:4300 <https://upri.box:4300/>`_"
+msgstr ""
+
+#: ../../source/intro.rst:55
+msgid ""
+"In case your device is not connected to the upribox WiFi network and the "
+"traffic is not routed through the upribox, you can still access the web "
+"interface via:"
+msgstr ""
+
+#: ../../source/intro.rst:57
+msgid "`http://upribox.local <http://upribox.local/>`_"
+msgstr ""
+
+#: ../../source/intro.rst:58
+msgid "`https://upribox.local:4300 <https://upribox.local:4300/>`_"
+msgstr ""
+
+#: ../../source/intro.rst:60
+msgid "(see :ref:`integration`)"
+msgstr ""
+
+#: ../../source/intro.rst:63
+msgid "Default passwords"
+msgstr ""
+
+#: ../../source/intro.rst:65
+msgid ""
+"If you used the latest community upribox image for setting up your own "
+"privacy box you need the following passwords for accessing it:"
+msgstr ""
+
+#: ../../source/intro.rst:68
+msgid "Login"
+msgstr ""
+
+#: ../../source/intro.rst:68
+msgid "User"
+msgstr ""
+
+#: ../../source/intro.rst:68
+msgid "Default Password"
+msgstr ""
+
+#: ../../source/intro.rst:70
+msgid "Wifi (SSID: upribox)"
+msgstr ""
+
+#: ../../source/intro.rst:70
+msgid "\\-"
+msgstr ""
+
+#: ../../source/intro.rst:70
+msgid "changeme"
+msgstr ""
+
+#: ../../source/intro.rst:71
+msgid "Web Interface / SSH"
+msgstr ""
+
+#: ../../source/intro.rst:71
+msgid "upri"
+msgstr ""
+
+#: ../../source/intro.rst:71
+msgid "changethedefaults!"
+msgstr ""
+
+#: ../../source/intro.rst:75
+msgid ""
+"It is important that you change the passwords upon the first login in the"
+" admin section of the web interface. New passwords should have at least 8"
+" characters containing lower-case, upper-case, numbers and special "
+"characters."
+msgstr ""
+
+#: ../../source/intro.rst:78
+msgid ""
+"If you bought a pre-assembled upribox from our online store, the SSH "
+"password of your upribox is configured to be the equal to your "
+"webinterface password."
+msgstr ""
+
+#: ../../source/intro.rst:82
+msgid "Updates"
+msgstr ""
+
+#: ../../source/intro.rst:84
+msgid ""
+"The upribox performs an auto-update every **hour**, which includes "
+"software updates via ansible and updates from github. The blocking rules "
+"for privoxy and DNS are updated every **four hours**."
+msgstr ""
+
+#: ../../source/intro.rst:87
+msgid ""
+"Please note that this process overwrites manual changes to configuration "
+"files. To conduct persistent manual changes you have to use *custom "
+"facts* (see :ref:`customization`)."
+msgstr ""
+
+#: ../../source/index.rst:9
+msgid "Documentation"
+msgstr ""
+

@@ -1,0 +1,102 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2018, upribox developers
+# This file is distributed under the same license as the upribox package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: upribox 2.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-16 20:59+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/features.rst:5
+msgid "Features"
+msgstr ""
+
+#: ../../source/features.rst:9
+msgid "Network Protection"
+msgstr ""
+
+#: ../../source/features.rst:16
+msgid "Silent Mode"
+msgstr ""
+
+#: ../../source/features.rst:18
+msgid "The Silent mode automatically blocks advertisement from websites and mobile apps. In addition common tracking services are blocked as well."
+msgstr ""
+
+#: ../../source/features.rst:22
+msgid "What are trackers?"
+msgstr ""
+
+#: ../../source/features.rst:24
+msgid "No one likes annoying online advertisements. But this is just the tip of the iceberg when it comes to negative side effects of your internet browsing. Much more harmful and not directly visible to you websites include tools that gather your personal information and use them across multiple websites: so called trackers."
+msgstr ""
+
+#: ../../source/features.rst:30
+msgid "... and why should we block them?"
+msgstr ""
+
+#: ../../source/features.rst:32
+msgid "Trackers collect your private data and create a profile of you. This can include sensitive data like your name, gender, age or sexual orientation. Apart from the loss of sensitive information itself this can also be to your disadvantage when websites use this profile to decline or adapt their offer to you based on gathered information that my or may not be appropriate."
+msgstr ""
+
+#: ../../source/features.rst:42
+msgid "Ninja Mode"
+msgstr ""
+
+#: ../../source/features.rst:44
+msgid "The Ninja Mode can be activated inside the upribox webinterface for specific devices. Those devices benefit from the same ad- and tracker blocking mechanisms as in the Silent mode but additionally the traffic will be anonymized."
+msgstr ""
+
+#: ../../source/features.rst:47
+msgid "The upribox Ninja mode uses the Tor anonymity network to hinder tracking of your internet usage. For example, your internet provider will not be able to see which websites you access. Your requests are tunnelled through multiple Tor relays which may cause reduction of your internet speed and websites being displayed in foreign languages."
+msgstr ""
+
+#: ../../source/features.rst:53
+msgid "For the best protection of your anonymity we recommend the usage of the Tor Browser (download for `Windows <https://www.torproject.org/download/download-easy.html#windows>`__ or `macOS <https://www.torproject.org/download/download-easy.html#mac>`__) or alternatively `Tails <https://tails.boum.org/>`__. If you cannot use the Tor Browser, activate and use the upribox Ninja mode."
+msgstr ""
+
+#: ../../source/features.rst:63
+msgid "No Mode"
+msgstr ""
+
+#: ../../source/features.rst:64
+msgid "If you are experiencing issues with a specific device in either *Silent Mode* or *Ninja Mode*, you can disable the upribox functions for this device inside the upribox webinterface."
+msgstr ""
+
+#: ../../source/features.rst:67
+msgid "Traffic of devices, which are configured to use *No Mode*, is not filtered by the upribox, therefore advertisements are not filtered and your activities are not secured."
+msgstr ""
+
+#: ../../source/features.rst:74
+msgid "VPN Server"
+msgstr ""
+
+#: ../../source/features.rst:76
+msgid "You are on the move and want to access your E-mails or online banking securely? Use the upribox VPN to protect your data when using public WiFi hotspots."
+msgstr ""
+
+#: ../../source/features.rst:80
+msgid "VPN (virtual private network) makes it possible to surf with your upribox while on the road. Access to your upribox is protected via VPN user profiles. Create a VPN profile in the VPN section of the upribox user interface and download it to your device (e.g. smart phone)."
+msgstr ""
+
+#: ../../source/features.rst:85
+msgid "Usage of the upribox VPN requires the creation of VPN profiles and installation of OpenVPN. For your smartphone download the official OpenVPN software for `Android <https://play.google.com/store/apps/details?id=net.openvpn.openvpn>`__ or `iOS <https://itunes.apple.com/at/app/openvpn-connect/id590379981?mt=8>`__. For your desktop computer we recommend `Tunnelblick for Mac OS <https://tunnelblick.net/>`__ or `OpenVPN GUI for Windows <https://openvpn.net/>`__."
+msgstr ""
+
+#: ../../source/features.rst:94
+msgid "IoT Monitoring"
+msgstr ""
+
+#: ../../source/features.rst:96
+msgid "You want to know how much data your IoT devices use and whom they are talking to? IoT monitoring shows an overview of all devices connected to your home network."
+msgstr ""
+

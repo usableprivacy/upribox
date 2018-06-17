@@ -1,0 +1,105 @@
+[main]
+host = https://www.transifex.com
+
+[upribox-docs.integration]
+file_filter = locales/<lang>/LC_MESSAGES/integration.po
+source_file = docs/build/locale/integration.pot
+source_lang = en
+type = PO
+
+[upribox-docs.customization]
+file_filter = locales/<lang>/LC_MESSAGES/customization.po
+source_file = docs/build/locale/customization.pot
+source_lang = en
+type = PO
+
+[upribox-docs.development]
+file_filter = locales/<lang>/LC_MESSAGES/development.po
+source_file = docs/build/locale/development.pot
+source_lang = en
+type = PO
+
+[upribox-docs.security]
+file_filter = locales/<lang>/LC_MESSAGES/security.po
+source_file = docs/build/locale/security.pot
+source_lang = en
+type = PO
+
+[upribox-docs.architecture]
+file_filter = locales/<lang>/LC_MESSAGES/architecture.po
+source_file = docs/build/locale/architecture.pot
+source_lang = en
+type = PO
+
+[upribox-docs.features]
+file_filter = locales/<lang>/LC_MESSAGES/features.po
+source_file = docs/build/locale/features.pot
+source_lang = en
+type = PO
+
+[upribox-docs.intro]
+file_filter = locales/<lang>/LC_MESSAGES/intro.po
+source_file = docs/build/locale/intro.pot
+source_lang = en
+type = PO
+
+[upribox-docs.index]
+file_filter = locales/<lang>/LC_MESSAGES/index.po
+source_file = docs/build/locale/index.pot
+source_lang = en
+type = PO
+
+[upribox-web-ui.devices]
+file_filter = upribox_interface/devices/locale/<lang>/LC_MESSAGES/django.po
+source_file = upribox_interface/devices/locale/en/LC_MESSAGES/django.po
+source_lang = de
+type = PO
+
+[upribox-web-ui.vpn]
+file_filter = upribox_interface/vpn/locale/<lang>/LC_MESSAGES/django.po
+source_file = upribox_interface/vpn/locale/en/LC_MESSAGES/django.po
+source_lang = de
+type = PO
+
+[upribox-web-ui.traffic]
+file_filter = upribox_interface/traffic/locale/<lang>/LC_MESSAGES/django.po
+source_file = upribox_interface/traffic/locale/en/LC_MESSAGES/django.po
+source_lang = de
+type = PO
+
+[upribox-web-ui.more]
+file_filter = upribox_interface/more/locale/<lang>/LC_MESSAGES/django.po
+source_file = upribox_interface/more/locale/en/LC_MESSAGES/django.po
+source_lang = de
+type = PO
+
+[upribox-web-ui.lib]
+file_filter = upribox_interface/lib/locale/<lang>/LC_MESSAGES/django.po
+source_file = upribox_interface/lib/locale/en/LC_MESSAGES/django.po
+source_lang = de
+type = PO
+
+[upribox-web-ui.statistics]
+file_filter = upribox_interface/statistics/locale/<lang>/LC_MESSAGES/django.po
+source_file = upribox_interface/statistics/locale/en/LC_MESSAGES/django.po
+source_lang = de
+type = PO
+
+[upribox-web-ui.www]
+file_filter = upribox_interface/www/locale/<lang>/LC_MESSAGES/django.po
+source_file = upribox_interface/www/locale/en/LC_MESSAGES/django.po
+source_lang = de
+type = PO
+
+[upribox-web-ui.wlan]
+file_filter = upribox_interface/wlan/locale/<lang>/LC_MESSAGES/django.po
+source_file = upribox_interface/wlan/locale/en/LC_MESSAGES/django.po
+source_lang = de
+type = PO
+
+[upribox-web-ui.setup]
+file_filter = upribox_interface/setup/locale/<lang>/LC_MESSAGES/django.po
+source_file = upribox_interface/setup/locale/en/LC_MESSAGES/django.po
+source_lang = de
+type = PO
+

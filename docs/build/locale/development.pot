@@ -1,0 +1,154 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2018, upribox developers
+# This file is distributed under the same license as the upribox package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: upribox 2.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-16 20:59+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/development.rst:4
+msgid "Development"
+msgstr ""
+
+#: ../../source/development.rst:6
+msgid "The current upribox image is based on Raspbian [#Raspbian]_ Stretch Lite and customized with Ansible (see :ref:`architecture`). The Raspbian image can be staged into *production* or *development* mode."
+msgstr ""
+
+#: ../../source/development.rst:11
+msgid "Development environment"
+msgstr ""
+
+#: ../../source/development.rst:13
+msgid "The following guide assumes that you have a Raspberry Pi with the upribox image set-up. If you still need help with that task please read the :doc:`intro` guide. The following guide explains the steps necessary to setup a development environment for the upribox software."
+msgstr ""
+
+#: ../../source/development.rst:21
+msgid "Prerequisites [on your development machine]"
+msgstr ""
+
+#: ../../source/development.rst:23
+msgid "install *ansible* 2.3.0, jmespath (``sudo pip install ansible==2.3.0 jmespath``) and *git*"
+msgstr ""
+
+#: ../../source/development.rst:25
+msgid "install requirements for the *ansible* modules (``sudo apt-get install python-pip python-dev libffi-dev libssl-dev libxml2-dev libxslt1-dev libjpeg8-dev zlib1g-dev``)"
+msgstr ""
+
+#: ../../source/development.rst:26
+msgid "make sure to log into your Raspberry via SSH once because ansible uses ~/.ssh/known\\_hosts for verification (or disable host verification)"
+msgstr ""
+
+#: ../../source/development.rst:29
+msgid "add your SSH public key to your Raspberry, e.g. with ``ssh-copy-id```"
+msgstr ""
+
+#: ../../source/development.rst:31
+msgid "If you successfully completed the prerequisites you should be able to login into your upribox via SSH without the need of a password. In addition you should have *ansible* installed on your computer. Next, clone the upribox software to your computer:"
+msgstr ""
+
+#: ../../source/development.rst:36
+msgid "``git clone https://github.com/usableprivacy/upribox.git``"
+msgstr ""
+
+#: ../../source/development.rst:41
+msgid "Development vs. Production mode"
+msgstr ""
+
+#: ../../source/development.rst:43
+msgid "The development mode is intended for testing new features and debugging the upribox software. As such log files are persistent and auto software updates are disabled. The upribox images available for download are all set to production mode by default. In production mode log files are deleted on every reboot and the upribox configuration is automatically downloaded and updated via github."
+msgstr ""
+
+#: ../../source/development.rst:51
+msgid "The production mode is also intended for the production of purchasable pre-assembled boxes. In this process we also create a new user and generate a cryptographically secure password. This happens out of scope of the production ansible playbook and therefore you have to create a user for the web interface on your own when deploying in production mode from scratch."
+msgstr ""
+
+#: ../../source/development.rst:58
+msgid "Development Mode"
+msgstr ""
+
+#: ../../source/development.rst:60
+msgid "copy *environments/development/inventory.sample* to *environments/development/inventory*"
+msgstr ""
+
+#: ../../source/development.rst:62
+msgid "add your RaspberryPi address(es) in the [upriboxes] section in environments/development/inventory"
+msgstr ""
+
+#: ../../source/development.rst:65
+msgid "Once you added the IP address of your Raspberry Pi to the development inventory, start changing the upribox source and deploy your local config with:"
+msgstr ""
+
+#: ../../source/development.rst:69
+msgid "``ansible-playbook -i environments/development/inventory site.yml``"
+msgstr ""
+
+#: ../../source/development.rst:72
+msgid "Production Mode"
+msgstr ""
+
+#: ../../source/development.rst:74
+msgid "copy *environments/production/inventory.sample* to *environments/production/inventory*"
+msgstr ""
+
+#: ../../source/development.rst:76
+msgid "add your Raspberry IP address(es) in the [upriboxes] section in *environments/production/inventory*"
+msgstr ""
+
+#: ../../source/development.rst:78
+msgid "from now on, the config can be deployed with ``ansible-playbook -i   environments/production/inventory site.yml``"
+msgstr ""
+
+#: ../../source/development.rst:82
+msgid "Creating an image from scratch"
+msgstr ""
+
+#: ../../source/development.rst:84
+msgid "If you want to create the entire upribox image from scratch you can use *setup.yml* ansible playbook. Download the latest Raspian Lite image, make you sure you have installed all the prerequisites (see :ref:`prerequisities`) and in addition install *sshpass*."
+msgstr ""
+
+#: ../../source/development.rst:90
+msgid "Set-up the initial upribox base image"
+msgstr ""
+
+#: ../../source/development.rst:92
+msgid "copy *environments/development/inventory.sample* to *environments/init/inventory*"
+msgstr ""
+
+#: ../../source/development.rst:94
+msgid "add your RaspberryPi address(es) in the [upriboxes] section in *environments/init/inventory*"
+msgstr ""
+
+#: ../../source/development.rst:96
+msgid "make sure you have a public/private key pair for ssh on your development machine. *~/.ssh/id\\_rsa.pub* will be automatically added to the authorized\\_hosts on the Raspberry"
+msgstr ""
+
+#: ../../source/development.rst:99
+msgid "run the initial setup with ``ansible-playbook -i environments/init/inventory setup.yml`` This command will log into your Raspberry with the default credentials *pi/raspberry*, create a new user (*upri*) and delete *pi*. Add ``--ask-pass`` if you change the default password."
+msgstr ""
+
+#: ../../source/development.rst:104
+msgid "from now on, you can deploy the upribox software in production or development mode (see :ref:`dev_vs_prod`)."
+msgstr ""
+
+#: ../../source/development.rst:106
+msgid "after deyploing the upribox software in production mode for the first time, you need to create a new webinterface user in */usr/share/nginx/www-upri-interface* on the upribox with ``/var/webapp-virtualenv/bin/python manage.py createsuperuser --settings settings_prod``"
+msgstr ""
+
+#: ../../source/development.rst:111
+msgid "Footnotes"
+msgstr ""
+
+#: ../../source/development.rst:112
+msgid "https://www.raspberrypi.org/downloads/raspbian/"
+msgstr ""
+
