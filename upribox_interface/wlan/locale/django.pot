@@ -1,0 +1,111 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-20 19:58+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: wlan/forms.py:12
+msgid "SSID:"
+msgstr ""
+
+#: wlan/forms.py:17
+msgid "Neues Passwort:"
+msgstr ""
+
+#: wlan/forms.py:22
+msgid "Passwort bestätigen:"
+msgstr ""
+
+#: wlan/forms.py:44
+msgid "Die SSID muss zwischen 1 und 32 Zeichen lang sein"
+msgstr ""
+
+#: wlan/forms.py:47
+#, python-format
+msgid "Die SSID darf lediglich die Sonderzeichen %s enthalten"
+msgstr ""
+
+#: wlan/jobs.py:15
+msgid "Das Silent WLAN wird neu konfiguriert..."
+msgstr ""
+
+#: wlan/jobs.py:19
+msgid "Name wird geändert..."
+msgstr ""
+
+#: wlan/jobs.py:23
+msgid "Passwort wird geändert..."
+msgstr ""
+
+#: wlan/jobs.py:26
+msgid "Wlan wird neu gestartet..."
+msgstr ""
+
+#: wlan/jobs.py:30
+msgid "Konfiguration des WLANs erfolgreich."
+msgstr ""
+
+#: wlan/jobs.py:40 wlan/jobs.py:68
+msgid "Konfiguration des WLANs fehlgeschlagen."
+msgstr ""
+
+#: wlan/jobs.py:49
+msgid "silent WLAN wird gestartet..."
+msgstr ""
+
+#: wlan/jobs.py:51
+msgid "silent WLAN wird gestoppt..."
+msgstr ""
+
+#: wlan/jobs.py:56
+msgid "Konfiguration des silent WLAN erfolgreich."
+msgstr ""
+
+#: wlan/jobs.py:62
+msgid "Es ist ein unbekannter Fehler aufgetreten."
+msgstr ""
+
+#: wlan/templates/silent.html:7
+msgid "Start"
+msgstr ""
+
+#: wlan/templates/silent.html:7 wlan/templates/silent.html:10
+msgid "Konfiguration"
+msgstr ""
+
+#: wlan/templates/silent.html:7 wlan/templates/silent.html:13
+msgid "WLAN"
+msgstr ""
+
+#: wlan/templates/silent.html:30
+msgid "Tipps für sichere Passwörter:"
+msgstr ""
+
+#: wlan/templates/silent.html:31
+msgid "Mindestens 8 Zeichen."
+msgstr ""
+
+#: wlan/templates/silent.html:32
+msgid "Mindestens 1 Großbuchstabe."
+msgstr ""
+
+#: wlan/templates/silent.html:33
+msgid "Mindestens 1 Kleinbuchstabe."
+msgstr ""
+
+#: wlan/templates/silent.html:34
+msgid "Mindestens 1 Ziffer."
+msgstr ""

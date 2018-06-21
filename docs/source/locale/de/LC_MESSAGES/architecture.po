@@ -1,0 +1,840 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2018, upribox developers
+# This file is distributed under the same license as the upribox package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: upribox 2.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-16 20:59+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+
+#: ../../source/architecture.rst:5
+msgid "Architecture"
+msgstr ""
+
+#: ../../source/architecture.rst:7
+msgid ""
+"A core technology used in the upribox software is Ansible [#Ansible]_: a "
+"python-based configuration management software. Our rationale behind "
+"using Ansible is twofold:"
+msgstr ""
+
+#: ../../source/architecture.rst:10
+msgid ""
+"**Reproducibility** Every setting, installed package etc. should be "
+"documented in code. We use Ansible's default push mode to configure the "
+"base image in order to deploy the latest upribox software and harden the "
+"base image. All changes we perform on a given base images can be "
+"reproduced (see :ref:`base-image`)."
+msgstr ""
+
+#: ../../source/architecture.rst:15
+msgid ""
+"**Continuous delivery** Ansible enables us to roll out bugfixes as well "
+"as new features continuously. Once the upribox software is deployed it "
+"automatically gets changes from our Github repository and deploys them "
+"using Ansible's pull mode."
+msgstr ""
+
+#: ../../source/architecture.rst:19
+msgid "Config files are overwritten periodically (see :ref:`customization`)."
+msgstr ""
+
+#: ../../source/architecture.rst:23
+msgid "Modules"
+msgstr ""
+
+#: ../../source/architecture.rst:26
+msgid "Base setup"
+msgstr ""
+
+#: ../../source/modules/init.inc:2
+msgid "init"
+msgstr ""
+
+#: ../../source/modules/init.inc:4
+msgid ""
+"This role is responsible for basic configurations of the operating system"
+" such as"
+msgstr ""
+
+#: ../../source/modules/init.inc:6
+msgid "expanding disk space"
+msgstr ""
+
+#: ../../source/modules/init.inc:7
+msgid "configuring locale"
+msgstr ""
+
+#: ../../source/modules/init.inc:8
+msgid "user management"
+msgstr ""
+
+#: ../../source/modules/init.inc:10
+msgid "creating sudo group"
+msgstr ""
+
+#: ../../source/modules/init.inc:11
+msgid "creating remote user"
+msgstr ""
+
+#: ../../source/modules/init.inc:12
+msgid "removing default user (*pi*)"
+msgstr ""
+
+#: ../../source/modules/init.inc:14
+msgid "setting the hostname (*upri*)"
+msgstr ""
+
+#: ../../source/modules/init.inc:15
+msgid "adding authorized key"
+msgstr ""
+
+#: ../../source/modules/common.inc:2
+msgid "common"
+msgstr ""
+
+#: ../../source/modules/common.inc:4
+msgid ""
+"The *common* role lays the groundwork for the following more specific "
+"roles. The main parts of this role are the following:"
+msgstr ""
+
+#: ../../source/modules/common.inc:6
+msgid "installation of required software"
+msgstr ""
+
+#: ../../source/modules/common.inc:8
+msgid "building the infrastructure for logging"
+msgstr ""
+
+#: ../../source/modules/common.inc:10
+msgid ""
+"creating the logging directory (``/var/tmp/log`` for production and "
+"``/var/log/log`` for development mode, see :ref:`dev_vs_prod`)"
+msgstr ""
+
+#: ../../source/modules/common.inc:11
+msgid "updating rsyslog config and deleting old rsyslog logfiles"
+msgstr ""
+
+#: ../../source/modules/common.inc:12
+msgid "configuring logrotate"
+msgstr ""
+
+#: ../../source/modules/common.inc:14
+msgid "settings and configurations"
+msgstr ""
+
+#: ../../source/modules/common.inc:16
+msgid "writing default settings"
+msgstr ""
+
+#: ../../source/modules/common.inc:17
+msgid "copying ansible config"
+msgstr ""
+
+#: ../../source/modules/common.inc:18
+msgid "creating directory for local facts (see :ref:`customization`)"
+msgstr ""
+
+#: ../../source/modules/common.inc:20
+msgid "In order to be able to update the upribox, following task are necessary:"
+msgstr ""
+
+#: ../../source/modules/common.inc:22
+msgid "installing ansible"
+msgstr ""
+
+#: ../../source/modules/common.inc:23
+msgid "copying the update script"
+msgstr ""
+
+#: ../../source/modules/common.inc:24
+msgid "copying git deployment key"
+msgstr ""
+
+#: ../../source/modules/common.inc:26
+msgid "deploying the upribox recovery mechanism"
+msgstr ""
+
+#: ../../source/modules/common.inc:28
+msgid "restarts update at system boot if the update was interrupted"
+msgstr ""
+
+#: ../../source/modules/unattended_upgrades.inc:2
+msgid "unattended_upgrades"
+msgstr ""
+
+#: ../../source/modules/unattended_upgrades.inc:4
+msgid ""
+"Unattended Upgrades [#UnattendedUpgrades]_ provides the upribox "
+"automatically with the latest security updates."
+msgstr ""
+
+#: ../../source/modules/upri-config.inc:2
+msgid "upri-config"
+msgstr ""
+
+#: ../../source/modules/upri-config.inc:4
+msgid ""
+"The *upri-config* role deploys the upri-config script, which is used for "
+"configuring the upribox. Additionally necessary cron jobs for updates and"
+" other tasks are copied. The main parts of this role are the following:"
+msgstr ""
+
+#: ../../source/modules/upri-config.inc:8
+msgid "deployment of the upri-config script"
+msgstr ""
+
+#: ../../source/modules/upri-config.inc:10
+msgid "create virtualenv"
+msgstr ""
+
+#: ../../source/modules/upri-config.inc:11
+msgid "copy upri-config files"
+msgstr ""
+
+#: ../../source/modules/upri-config.inc:12
+msgid "link managament script"
+msgstr ""
+
+#: ../../source/modules/upri-config.inc:14
+msgid ""
+"The upribox updates every hour to the latest version on github via "
+"ansible. For this purpose the common role needs to execute among others "
+"the following tasks before updating:"
+msgstr ""
+
+#: ../../source/modules/upri-config.inc:17
+msgid "configuring cron jobs"
+msgstr ""
+
+#: ../../source/modules/upri-config.inc:19
+msgid "update the upribox"
+msgstr ""
+
+#: ../../source/modules/upri-config.inc:20
+msgid "update the filter rules"
+msgstr ""
+
+#: ../../source/modules/upri-config.inc:21
+msgid ""
+"parse user-agents which are used to fingerprint the devices connected to "
+"the upribox"
+msgstr ""
+
+#: ../../source/modules/upri-config.inc:22
+msgid "parse log files used for statistics"
+msgstr ""
+
+#: ../../source/architecture.rst:34
+msgid "Networking"
+msgstr ""
+
+#: ../../source/modules/arp.inc:4
+msgid "arp"
+msgstr ""
+
+#: ../../source/modules/arp.inc:6
+msgid ""
+"The upribox provides a zero-config service called *Apate* (see "
+":ref:`apate`) which allows you to benefit from the ad-blocking "
+"functionality on every device in your network not just when connected to "
+"the upribox WiFi. This works with a technique called *ARP spoofing*. In "
+"this role the Apate daemon files are copied and configured, requirements "
+"are installed to a virtual environment and eventually the daemon is "
+"(re)started."
+msgstr ""
+
+#: ../../source/modules/iptables.inc:2
+msgid "iptables"
+msgstr ""
+
+#: ../../source/modules/iptables.inc:4
+msgid ""
+"In order to be able to configure ad-blocking (Silent Mode) and Tor (Ninja"
+" Mode) for each device separately the upribox adds and removes iptables "
+"rules dynamically. Two lists of MAC addresses - one for devices which "
+"don't need ad-blocking and one for devices with Tor enabled - are stored "
+"in local facts. If a user deactivates ad-blocking or activates Tor for a "
+"device in the user interface the MAC address will be added to the "
+"no_adblocking list and the tor list, respectively. The iptables rules are"
+" immediately copied to ``/etc/iptables/`` and to take effect the service "
+"is restarted."
+msgstr ""
+
+#: ../../source/modules/vpn.inc:2
+msgid "vpn"
+msgstr ""
+
+#: ../../source/modules/vpn.inc:4
+msgid ""
+"The upribox uses OpenVPN [#OpenVPN]_ as a VPN service to protect your "
+"communication security on the road. This can be used to protect your "
+"sensitive information when using public WiFi hotspots. The role creates "
+"the necessary certificates and keys and installs and sets up the service."
+msgstr ""
+
+#: ../../source/modules/vpn.inc:9
+msgid ""
+"For security reasons OpenVPN is *not* executed as root and uses SHA384 "
+"for the packet HMAC authentication and AES-256 (CBC mode) for encryption."
+msgstr ""
+
+#: ../../source/modules/wlan.inc:2
+msgid "wlan"
+msgstr ""
+
+#: ../../source/modules/wlan.inc:4
+msgid ""
+"This role is responsible for installing and configuring all WiFi and "
+"network related services such as hostapd or isc-dhcp-server. Interface "
+"wlan0 is used as the WiFi interface for the upribox and to provide a "
+"wireless network with the default SSID *upribox*. Depending on the mode "
+"activated for a specific device, ads and trackers will automatically be "
+"blocked and the traffic might be routed through the Tor [#Tor]_ network."
+msgstr ""
+
+#: ../../source/architecture.rst:42
+msgid "Privacy"
+msgstr ""
+
+#: ../../source/modules/dns.inc:2
+msgid "dns"
+msgstr ""
+
+#: ../../source/modules/dns.inc:3
+msgid ""
+"The upribox uses the *dnsmasq* daemon to filter DNS requests. This role "
+"set-ups *dnsmasq* on all interfaces and listens for requests. Filtered "
+"domains are loaded from `/etc/dnsmasq.d`."
+msgstr ""
+
+#: ../../source/modules/dns_ninja.inc:2
+msgid "dns_ninja"
+msgstr ""
+
+#: ../../source/modules/dns_ninja.inc:3
+msgid ""
+"The DNS ninja *dnsmasq* daemon filters domains and in additions resolves "
+"all requests via the Tor network. The daemons listens for requests on "
+"port `5300/UDP`. This setup also does not log any DNS requests it "
+"receives."
+msgstr ""
+
+#: ../../source/modules/dns_unfiltered.inc:2
+msgid "dns_unfiltered"
+msgstr ""
+
+#: ../../source/modules/dns_unfiltered.inc:4
+msgid ""
+"The upribox needs another instance of the dnsmasq service which is "
+"responsible for handling DNS requests from devices on which ad-blocking "
+"is deactivated."
+msgstr ""
+
+#: ../../source/modules/nginx.inc:2
+msgid "nginx"
+msgstr ""
+
+#: ../../source/modules/nginx.inc:3
+msgid ""
+"This role is used to install and set-up nginx for the upribox. The nginx "
+"web server is responsible for a number of tasks:"
+msgstr ""
+
+#: ../../source/modules/nginx.inc:6
+msgid "upribox blackhole"
+msgstr ""
+
+#: ../../source/modules/nginx.inc:7
+msgid ""
+"The blackhole setup returns an empty response for any request it "
+"receives, depending on the type of request this could be either an empty "
+"HTML page, or a blank image file. The server in addition attempts to "
+"reset/delete browser cookies for filtered domains: for every cookie the "
+"server receives, the server responds with the same cookie with empty "
+"values and a validity of 0. This setup ensures that tracking cookies are "
+"deleted from the user's browser the moment the request for a domain "
+"filtered by the upribox is made."
+msgstr ""
+
+#: ../../source/modules/nginx.inc:13
+msgid "upribox CSS filter"
+msgstr ""
+
+#: ../../source/modules/nginx.inc:14
+msgid ""
+"The upribox serves custom CSS files to remove ad-content from websites. "
+"The custom domain to serve CSS files is: *filter.upri.box*. CSS filters "
+"are loaded from `/etc/nginx/lua/css.lua` and periodically updated."
+msgstr ""
+
+#: ../../source/modules/nginx.inc:18
+msgid "upribox web interface"
+msgstr ""
+
+#: ../../source/modules/nginx.inc:19
+msgid ""
+"The nginx role finally prepares the setup for the upribox web interface. "
+"The nginx configuration ensures that requests to following URLs are "
+"forwarded to the upribox Django web interface."
+msgstr ""
+
+#: ../../source/modules/nginx.inc:22
+msgid "`http://upri.box <http://upri.box/>`_"
+msgstr ""
+
+#: ../../source/modules/nginx.inc:23
+msgid "`https://upri.box:4300 <https://upri.box:4300/>`_"
+msgstr ""
+
+#: ../../source/modules/nginx.inc:24
+msgid "`http://upribox.local <http://upribox.local/>`_"
+msgstr ""
+
+#: ../../source/modules/nginx.inc:25
+msgid "`https://upribox.local:4300 <https://upribox.local:4300/>`_"
+msgstr ""
+
+#: ../../source/modules/privoxy.inc:2
+msgid "privoxy"
+msgstr ""
+
+#: ../../source/modules/privoxy.inc:4
+msgid ""
+"This role deploys the Privoxy [#Privoxy]_ filter proxy on the upribox. "
+"The upribox uses Privoxy to: filter unwanted content in HTTP requests "
+"such as advertisement or tracker code. In addition to content filtering, "
+"Privoxy injects a custom CSS file into websites to stop (filtered) ads "
+"from showing up in websites. The filter configuration for Privoxy is "
+"stored in `/etc/privoxy` and updated periodically."
+msgstr ""
+
+#: ../../source/modules/tor.inc:2
+msgid "tor"
+msgstr ""
+
+#: ../../source/modules/tor.inc:3
+msgid ""
+"This role setups the Tor network daemon for the upribox. The Tor daemon "
+"is configured for transparent proxying and offers its own DNS resolver to"
+" perform DNS queries through the Tor network."
+msgstr ""
+
+#: ../../source/architecture.rst:53
+msgid "User Interface"
+msgstr ""
+
+#: ../../source/modules/ssh.inc:2
+msgid "ssh"
+msgstr ""
+
+#: ../../source/modules/ssh.inc:4
+msgid ""
+"By default the upribox can be reached via SSH. This feature can be "
+"disabled in the admin page of the web interface or directly by calling "
+"the *enable_ssh* action of the configuration script *upri-config.py* (see"
+" :ref:`django-label`)."
+msgstr ""
+
+#: ../../source/modules/ssh.inc:8
+msgid ""
+"In the web interface it is not possible to deactivate WiFi, SSH and "
+"Apate, since this scenario would make the upribox unreachable. Therefore "
+"one of the services should always be up and running. (see "
+":ref:`integration`)"
+msgstr ""
+
+#: ../../source/modules/fingerprinting.inc:4
+msgid "fingerprinting"
+msgstr ""
+
+#: ../../source/modules/fingerprinting.inc:6
+msgid ""
+"The upribox provides a service called *registrar* which gathers MAC "
+"address, IP address and hostname of a device and saves the information "
+"into the database. A separate script uses the user-agents provided by "
+"squid and tries to extract a model name of the device. These names are "
+"later on suggested to the user in the web interface as a way to identify "
+"his or her device in a list of other devices on the network. Furthermore "
+"the chosen name acts as a label in the device overview."
+msgstr ""
+
+#: ../../source/modules/squid.inc:4
+msgid "squid"
+msgstr ""
+
+#: ../../source/modules/squid.inc:6
+msgid ""
+"In order to gather user-agents of (and subsequently fingerprint) "
+"connected devices (see :ref:`fingerprinting`) the upribox uses squid "
+"[#Squid]_. The squid log file is later parsed and the information saved "
+"into the database."
+msgstr ""
+
+#: ../../source/modules/django.inc:4
+msgid "django"
+msgstr ""
+
+#: ../../source/modules/django.inc:6
+msgid ""
+"The upribox user interface (see :doc:`intro`) is based on the Python Web "
+"framework Django [#Django]_. The role is responsible for installing the "
+"requirements to a virtual environment, copying the web interface files, "
+"setting up the database and installing services like a supervisor (for "
+"the rqworker) and the application container uWSGI. By deploying this role"
+" the upribox also starts a cleanup process for the saved statistic files "
+"removing data older than 6 months."
+msgstr ""
+
+#: ../../source/modules/django.inc:12
+msgid ""
+"For privacy reasons the upribox does not keep the ad-blocking logfile "
+"with timestamps and URLs but tries to aggregate the information as soon "
+"as possible to store only the information that is needed for the "
+"statistics and to assure anonymity. (see :ref:`logs`)"
+msgstr ""
+
+#: ../../source/architecture.rst:64
+msgid "CLI Tool"
+msgstr ""
+
+#: ../../source/architecture.rst:66
+msgid ""
+"All changes to the upribox configuration are perfomed via ``upri-"
+"config.py``. This nifty command line tool can be used via SSH and also "
+"provides a secure way to perform a limited set of privileged command via "
+"the Django webinterface."
+msgstr ""
+
+#: ../../None:1
+msgid ""
+"Actions cover tasks that are able to modify the configuration of the "
+"upribox"
+msgstr ""
+
+#: ../../None:1
+msgid ""
+"Possible choices: set_ssid, set_password, restart_wlan, enable_silent, "
+"restart_silent, enable_vpn, set_vpn_connection, set_wlan_channel, "
+"restart_vpn, enable_ssh, restart_ssh, enable_apate, enable_static_ip, "
+"restart_apate, parse_logs, parse_user_agents, generate_profile, "
+"delete_profile, restart_firewall, set_ip, configure_devices, "
+"set_dns_server, set_netmask, set_gateway, restart_network, set_dhcpd, "
+"restart_dhcpd, torify_device, exclude_device, untorify_device, "
+"include_device, silent_device, check_device, filter_update, vpn_forward, "
+"vpn_unforward, backup_settings, restore_settings"
+msgstr ""
+
+#: ../../None:4
+msgid "This script accepts the name of an action that shall be executed"
+msgstr ""
+
+#: ../../None:1
+msgid "Sets a new SSID for the Silent WiFi by writing to the fact *wlan*"
+msgstr ""
+
+#: ../../None:1
+msgid "The SSID for the Silent WiFi"
+msgstr ""
+
+#: ../../None:1
+msgid "Sets a new password for the Silent WiFi by writing to the fact *wlan*"
+msgstr ""
+
+#: ../../None:1
+msgid "Triggers the Ansible tasks with the tag *ssid*"
+msgstr ""
+
+#: ../../None:1
+msgid "Enables/disables the Silent WiFi by writing to the fact *wlan*"
+msgstr ""
+
+#: ../../None:1
+msgid "Possible choices: yes, no"
+msgstr ""
+
+#: ../../None:4
+msgid "Whether or not Silent WiFi is enabled (\"yes\" or \"no\")"
+msgstr ""
+
+#: ../../None:1
+msgid "Triggers the Ansible tasks with the tag *toggle_silent*"
+msgstr ""
+
+#: ../../None:1
+msgid "Enables/disables the VPN by writing to the fact *vpn*"
+msgstr ""
+
+#: ../../None:4
+msgid "Whether or not VPN is enabled (\"yes\" or \"no\")"
+msgstr ""
+
+#: ../../None:1
+msgid ""
+"Sets a custom port and protocol for the upribox OpenVPN server by writing"
+" to the fact *vpn*"
+msgstr ""
+
+#: ../../None:1
+msgid "The port and protocol used for the OpenVPN server (usage: \"1194/udp\")"
+msgstr ""
+
+#: ../../None:1
+msgid "Sets a new WiFi channel for the Silent WiFi by writing to the fact *wlan*"
+msgstr ""
+
+#: ../../None:1
+msgid "The channel for the Silent WiFi"
+msgstr ""
+
+#: ../../None:1
+msgid "Triggers the Ansible tasks with the tag *toggle_vpn*"
+msgstr ""
+
+#: ../../None:1
+msgid "Enables/disables the ssh by writing to the fact *ssh*"
+msgstr ""
+
+#: ../../None:4
+msgid "Whether or not SSH is enabled (\"yes\" or \"no\")"
+msgstr ""
+
+#: ../../None:1
+msgid "Triggers the Ansible tasks with the tag *toggle_ssh*"
+msgstr ""
+
+#: ../../None:1
+msgid "Enables/disables the Apate (see arp) by writing to the fact *apate*"
+msgstr ""
+
+#: ../../None:4
+msgid "Whether or not Apate is enabled (\"yes\" or \"no\")"
+msgstr ""
+
+#: ../../None:1
+msgid ""
+"Sets the upribox to DHCP or static IP mode by writing to the fact "
+"*interfaces*"
+msgstr ""
+
+#: ../../None:4
+msgid "Whether or not a static IP is enabled (\"yes\" or \"no\")"
+msgstr ""
+
+#: ../../None:1
+msgid "Triggers the Ansible tasks with the tag *toggle_apate*"
+msgstr ""
+
+#: ../../None:1
+msgid "Parses the log files of the services  and aggregates the statistics data"
+msgstr ""
+
+#: ../../None:1
+msgid ""
+"Parses the log file of the service squid containing MAC addresses, IP "
+"addresses and user-agents and saves the gathered information into the "
+"database"
+msgstr ""
+
+#: ../../None:1
+msgid ""
+"Generates openvpn client certificates and saves the generated openvpn "
+"client configuration into the database"
+msgstr ""
+
+#: ../../None:1
+msgid "The profile ID of a profile that was created in the web interface"
+msgstr ""
+
+#: ../../None:1
+msgid "Revokes previously generated openvpn client certificates"
+msgstr ""
+
+#: ../../None:1
+msgid "Triggers the Ansible tasks with the tag *iptables*"
+msgstr ""
+
+#: ../../None:1
+msgid "Sets a static IP by writing to the fact *interfaces*"
+msgstr ""
+
+#: ../../None:1
+msgid "The static IP address for the upribox"
+msgstr ""
+
+#: ../../None:1
+msgid "Triggers the Ansible tasks with the tag *configure_devices*"
+msgstr ""
+
+#: ../../None:1
+msgid "Sets the DNS server by writing to the fact *interfaces*"
+msgstr ""
+
+#: ../../None:1
+msgid "The DNS server for the upribox"
+msgstr ""
+
+#: ../../None:1
+msgid "Sets subnetmask by writing to the fact *interfaces*"
+msgstr ""
+
+#: ../../None:1
+msgid "The subnetmask for the upribox"
+msgstr ""
+
+#: ../../None:1
+msgid "Sets the gateway by writing to the fact *interfaces*"
+msgstr ""
+
+#: ../../None:1
+msgid "The gateway for the upribox"
+msgstr ""
+
+#: ../../None:1
+msgid "Triggers the Ansible tasks with the tag *network_config*"
+msgstr ""
+
+#: ../../None:1
+msgid "Enables/disables the DHCP server by writing to the fact *dhcpd*"
+msgstr ""
+
+#: ../../None:4
+msgid "Whether or not the upribox acts as a DHCP server (\"yes\" or \"no\")"
+msgstr ""
+
+#: ../../None:1
+msgid "Triggers the Ansible tasks with the tag *dhcp_server*"
+msgstr ""
+
+#: ../../None:1
+msgid "Adds iptables rule to torify a specific device"
+msgstr ""
+
+#: ../../None:1
+msgid ""
+"The MAC address of the device whose traffic shall be routed over the tor "
+"network"
+msgstr ""
+
+#: ../../None:1
+msgid "Adds iptables rule to disable ad-blocking for a specific device"
+msgstr ""
+
+#: ../../None:1
+msgid "The MAC address of the device whose traffic shall not be ad-blocked"
+msgstr ""
+
+#: ../../None:1
+msgid "Removes iptables rule to untorify a specific device"
+msgstr ""
+
+#: ../../None:1
+msgid ""
+"The MAC address of the device whose traffic shall not be routed over the "
+"tor network"
+msgstr ""
+
+#: ../../None:1
+msgid "Removes iptables rule to enable ad-blocking for a specific device"
+msgstr ""
+
+#: ../../None:1
+msgid "The MAC address of the device whose traffic shall be ad-blocked"
+msgstr ""
+
+#: ../../None:1
+msgid "Shortcut for calling of include_device and untorify_device"
+msgstr ""
+
+#: ../../None:1
+msgid "The MAC address of the device whose mode shall be set to silent"
+msgstr ""
+
+#: ../../None:1
+msgid "Checks if device with given ip address is online"
+msgstr ""
+
+#: ../../None:1
+msgid "The IP address of the device to check"
+msgstr ""
+
+#: ../../None:1
+msgid "updates the filter files"
+msgstr ""
+
+#: ../../None:1
+msgid "enables vpn port forwarding if possible"
+msgstr ""
+
+#: ../../None:1
+msgid "Print additional debug messages"
+msgstr ""
+
+#: ../../None:3
+msgid "Default: False"
+msgstr ""
+
+#: ../../None:1
+msgid "removes vpn port forwarding"
+msgstr ""
+
+#: ../../None:1
+msgid "Saves settings and logs to a backup archive"
+msgstr ""
+
+#: ../../None:1
+msgid "The path of the backup archive"
+msgstr ""
+
+#: ../../None:3
+msgid "Default: \"/home/upri\""
+msgstr ""
+
+#: ../../None:1
+msgid "Restore settings from backup archive"
+msgstr ""
+
+#: ../../source/architecture.rst:76
+msgid "Footnotes"
+msgstr ""
+
+#: ../../source/architecture.rst:77
+msgid "https://www.ansible.com"
+msgstr ""
+
+#: ../../source/architecture.rst:78
+msgid "https://wiki.debian.org/UnattendedUpgrades"
+msgstr ""
+
+#: ../../source/architecture.rst:79
+msgid "https://openvpn.net/"
+msgstr ""
+
+#: ../../source/architecture.rst:80
+msgid "https://www.privoxy.org/"
+msgstr ""
+
+#: ../../source/architecture.rst:81
+msgid "https://www.torproject.org/"
+msgstr ""
+
+#: ../../source/architecture.rst:82
+msgid "https://www.djangoproject.com"
+msgstr ""
+
+#: ../../source/architecture.rst:83
+msgid "http://www.squid-cache.org/"
+msgstr ""
+

@@ -1,8 +1,8 @@
 .. _intro:
 
 .. note::
-   If you bought a pre-assembled upribox from our online store you do not have to read this guide since everything is
-   already set up and you only have to complete the simple tasks described in the enclosed manual.
+   If you bought a pre-assembled upribox from `our online store <https://upribox.org/shop>`__ you can skip the getting started guide since everything is
+   already set up and you only have to complete the simple tasks described in the enclosed manual. Go straight to
 
 In a few easy steps you can build your own upribox and won't get bothered anymore by annoying ads and trackers (see :ref:`silent`).
 Additionally you can use your upribox to surf the web anonymously via Tor (see :ref:`ninja`) and set it up to be your
@@ -30,7 +30,7 @@ Table of recommended hardware
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 +--------------+------------------------------------------------+
-|              |      Raspberry Pi 3 [#f1]_                     |
+|              |      Raspberry Pi 3 B / B+ [#f1]_              |
 +==============+================================================+
 | SD Card      |      microSDHC Class 10 (min. 4GB) [#f3]_      |
 +--------------+------------------------------------------------+
@@ -43,11 +43,8 @@ Table of recommended hardware
 .. [#f3] Sandisk SDHC 8GB `[Amazon.com] <https://www.amazon.com/SanDisk-MicroSDHC-Standard-Packaging-SDSDQUAN-008G-G4A/dp/B00M55C0VU/>`__
 .. [#f4] Power Supply `[Amazon.com] <https://www.amazon.com/Kootek-Universal-Charger-Raspberry-External/dp/B00GWDLJGS>`__ `[Adafruit] <https://www.adafruit.com/products/1995>`__
 
-User manual
-===========
-
 Web Interface
--------------
+=============
 .. _web_interface:
 
 Once you are connected to the upribox WiFi network you can access the upribox web interface via one of the following URIs:
@@ -70,7 +67,7 @@ If you used the latest community upribox image for setting up your own privacy b
 ===============================  ============   ======================
 Login                            User           Default Password
 ===============================  ============   ======================
-Wifi (SSID: upribox)             \-              changeme
+Wifi (SSID: upribox)             \-             changeme
 Web Interface / SSH              upri           changethedefaults!
 ===============================  ============   ======================
 
@@ -82,7 +79,7 @@ If you bought a pre-assembled upribox from our online store,
 the SSH password of your upribox is configured to be the equal to your webinterface password.
 
 Updates
--------
+=======
 
 The upribox performs an auto-update every **hour**, which includes software updates via ansible and updates from github.
 The blocking rules for privoxy and DNS are updated every **four hours**.

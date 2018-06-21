@@ -19,100 +19,74 @@ msgstr ""
 
 #: statistics/templates/statistics.html:5
 msgid "Statistik - upribox"
-msgstr "Statistics - upribox"
+msgstr ""
 
 #: statistics/templates/statistics.html:8
 #: statistics/templates/statistics.html:14
 msgid "Statistik"
-msgstr "Statistics"
+msgstr ""
 
 #: statistics/templates/statistics.html:14
 msgid "Start"
-msgstr "start"
+msgstr ""
 
 #: statistics/templates/statistics.html:21
 msgid "Statistik wird geladen"
-msgstr "Statistics are loading"
+msgstr ""
 
 #: statistics/templates/statistics.html:23
 msgid "Gesamtstatistik"
-msgstr "Statistics"
+msgstr ""
 
 #: statistics/templates/statistics.html:26
 msgid "Domains blockiert"
-msgstr "Domains blocked"
+msgstr ""
 
 #: statistics/templates/statistics.html:29
 msgid "Inhalte gefiltert"
-msgstr "Content filtered"
+msgstr ""
 
 #: statistics/templates/statistics.html:33
 msgid "Wochenstatistik"
-msgstr "Statistics"
+msgstr ""
 
 #: statistics/templates/statistics.html:35
 #: statistics/templates/statistics.html:49
 msgid "KW"
-msgstr "CW"
+msgstr ""
 
 #: statistics/templates/statistics.html:38
 msgid "Gesamtanzahl geblockter Anfragen"
-msgstr "Total number of blocked requests"
+msgstr ""
 
 #: statistics/templates/statistics.html:39
 msgid "Gesamtanzahl gefilterter Inhalte"
-msgstr "filtered content"
+msgstr ""
 
 #: statistics/templates/statistics.html:43
 msgid "geblockt"
-msgstr "blocked"
+msgstr ""
 
 #: statistics/templates/statistics.html:44
 msgid "gefiltert"
-msgstr "filtered"
+msgstr ""
 
 #: statistics/templates/statistics.html:47
 msgid "Anzahl"
-msgstr "Quantity"
+msgstr ""
 
 #: statistics/templates/statistics.html:49
 msgid "Kalenderwochen"
-msgstr "Calendar weeks"
+msgstr ""
 
 #: statistics/templates/statistics.html:51
 msgid "Details für Kalenderwoche"
-msgstr "Details for calendar week"
+msgstr ""
 
 #: statistics/templates/statistics.html:54
 msgid "Top geblockte Domains"
-msgstr "Most blocked domains"
+msgstr ""
 
 #: statistics/templates/statistics.html:60
 msgid "Top gefilterte Inhalte"
-msgstr "Most filtered content"
-
-#, fuzzy
-#~| msgid "Geblockete Domains und gefilterte Inhalte."
-#~ msgid "Geblockte Domains und gefilterte Inhalte."
-#~ msgstr "overview on blocked domains and filtered content."
-
-#~ msgid ""
-#~ "Die Statistiken liefern einen &Uuml;berblick &uuml;ber geblockte Domains "
-#~ "und gefilterte Webinhalte."
-#~ msgstr ""
-#~ "Statistics offer an overview on blocked domains and filtered web content."
-
-#~ msgid "Anzahl der geblockten (rosa) vs. werbefreien (rot) Domains"
-#~ msgstr "amount of blocked (lightred) vs. ad free (red) domains"
-
-#~ msgid "in den letzten 6 Monaten"
-#~ msgstr "last 6 months"
-
-#~ msgid "heute"
-#~ msgstr "today"
-
-#~ msgid "Geblockte Domains"
-#~ msgstr "blocked domains"
-
-#~ msgid "Besuchte Webseiten"
-#~ msgstr "visited websites"
+msgstr ""

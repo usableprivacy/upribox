@@ -1,0 +1,138 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2018, upribox developers
+# This file is distributed under the same license as the upribox package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: upribox 2.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-16 20:59+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../source/security.rst:5
+msgid "Security"
+msgstr ""
+
+#: ../../source/security.rst:7
+msgid "When we designed the upribox architecture and features security was the first thing on our minds. We wanted to create a box that protects your privacy while surfing the web and we knew that our ambitions would be in vain if we endangered this valuable asset with the mechanisms that were supposed to guard it. For this reason every new feature has to undergo a strict security evaluation before it is rolled out to you. In this process we test the new feature in its entirety and validate that the other security mechanism are still intact. The following chapter covers these security mechanisms and features and tries to give you additional understanding of our thoughts behind them:"
+msgstr ""
+
+#: ../../source/security.rst:22
+msgid "General Security"
+msgstr ""
+
+#: ../../source/security.rst:25
+msgid "Unattended Upgrades"
+msgstr ""
+
+#: ../../source/security.rst:27
+msgid "The software package unattended-upgrades is responsible for automatically keeping the upribox current with the latest security updates. We configured your upribox in a way that it searches for important updates every day and installs them without the need of any interaction with you. In more detail the package will perform the following tasks:"
+msgstr ""
+
+#: ../../source/security.rst:34
+msgid "update the package lists"
+msgstr ""
+
+#: ../../source/security.rst:35
+msgid "download upgradeable packages"
+msgstr ""
+
+#: ../../source/security.rst:36
+msgid "upgrade packages"
+msgstr ""
+
+#: ../../source/security.rst:37
+msgid "remove downloaded packages that are not available anymore in the sources (every three weeks)"
+msgstr ""
+
+#: ../../source/security.rst:41
+msgid "Passwords"
+msgstr ""
+
+#: ../../source/security.rst:43
+msgid "If you ordered a fully assembled upribox from our website you will find your passwords for the web interface and the WiFi in the included manual. These passwords were generated with a cryptographically secure pseudo-random number generator (CSPRNG) which means that the program that created the passwords used operating system specific randomness sources which leads to high unpredictability. The SSH password of your upribox is configured to be the equal to your webinterface password."
+msgstr ""
+
+#: ../../source/security.rst:52
+msgid "Upriboxes that you assembled yourself with the provided community image are pre-configured with passwords that can be changed in the web interface. Secure passwords should consist of at least 8 characters containing lower-case, upper-case, numbers and special characters."
+msgstr ""
+
+#: ../../source/security.rst:58
+msgid "SSH/VPN Keys"
+msgstr ""
+
+#: ../../source/security.rst:60
+msgid "When generating a new profile for OpenVPN we create a new pair of certificate (also known as public key) and private key for this profile. Furthermore, we ensure that every upribox has different SSH and VPN keys by re-generating them automatically upon the first boot on every bought upribox but also on upriboxes that you built with the community image."
+msgstr ""
+
+#: ../../source/security.rst:69
+msgid "Least Privilege"
+msgstr ""
+
+#: ../../source/security.rst:71
+msgid "The upribox architecture follows the principle of least privilege. This means that every part of the system (such as a process, script or user) is only able to access and modify those parts of the system that are necessary for the completion of its tasks. One example for this implementation is that only the central configuration script *upri-config.py* (see :ref:`django-label`) is able to modify files with root privileges."
+msgstr ""
+
+#: ../../source/security.rst:81
+msgid "Privacy"
+msgstr ""
+
+#: ../../source/security.rst:86
+msgid "Logs"
+msgstr ""
+
+#: ../../source/security.rst:88
+msgid "Your upribox saves log files in memory instead of the SD card. This helps to extend the life time of the card and protects your privacy since data on the RAM disk are deleted regularly."
+msgstr ""
+
+#: ../../source/security.rst:93
+msgid "User Statistics"
+msgstr ""
+
+#: ../../source/security.rst:95
+msgid "To calculate the necessary data for the statistics the upribox aggregates and anonymizes information by calculating the sum of blocked contents and filtered domains over a specific time. This procedure ensures that nobody can make assumptions about another user's internet behaviour. Furthermore, the calculated information is only stored on the upribox itself and never leaves it."
+msgstr ""
+
+#: ../../source/security.rst:105
+msgid "Cryptography"
+msgstr ""
+
+#: ../../source/security.rst:108
+msgid "Raspberry Pi Hardware RNG"
+msgstr ""
+
+#: ../../source/security.rst:110
+msgid "A common problem with small devices like the upribox is that the hardware and the operating system do not provide enough entropy for a cryptographically secure generation of random numbers. This is a crucial requirement for a fast and secure calculation of keys. The Raspberry Pi has an included random number generator in its hardware. To feed the Raspberry Pi hardware RNG to the entropy pool at */dev/random* that is used in the upribox' Python scripts the package *rng-tools* is installed."
+msgstr ""
+
+#: ../../source/security.rst:121
+msgid "Certificate Pinning"
+msgstr ""
+
+#: ../../source/security.rst:123
+msgid "To get the latest filter rules your upribox communicates with our backend server which provides a self-signed SSL certificate to ensure the authenticity of the received updates. Your upribox uses certificate pinning to associate the server with the expected certificate and is so able to detect an attempted attack immediately."
+msgstr ""
+
+#: ../../source/security.rst:131
+msgid "Strong Ciphers/Hashes for OpenVPN"
+msgstr ""
+
+#: ../../source/security.rst:133
+msgid "For the VPN feature of the upribox we use OpenVPN which is *not* executed as root and uses the strong cryptographic hash function SHA384 for the packet HMAC authentication and AES-256 (CBC mode) for encryption."
+msgstr ""
+
+#: ../../source/security.rst:141
+msgid "Signed Releases"
+msgstr ""
+
+#: ../../source/security.rst:143
+msgid "On `Github <https://github.com/usableprivacy/upribox/releases>`__ you can download our latest community image and verify its integrity and authenticity with the provided signature file."
+msgstr ""
+
