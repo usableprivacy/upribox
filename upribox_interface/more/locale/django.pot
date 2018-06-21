@@ -1,0 +1,304 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-20 19:58+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: more/forms.py:14
+msgid "Benutzername"
+msgstr ""
+
+#: more/forms.py:19
+msgid "Altes Passwort"
+msgstr ""
+
+#: more/forms.py:24
+msgid "Neues Passwort"
+msgstr ""
+
+#: more/forms.py:29
+msgid "Neues Passwort erneut eingeben"
+msgstr ""
+
+#: more/forms.py:43
+msgid "Das alte Passwort ist inkorrekt"
+msgstr ""
+
+#: more/forms.py:56
+msgid "IP:"
+msgstr ""
+
+#: more/forms.py:61
+msgid "Subnetzmaske:"
+msgstr ""
+
+#: more/forms.py:65
+msgid "Gateway:"
+msgstr ""
+
+#: more/forms.py:69
+msgid "DNS-Server:"
+msgstr ""
+
+#: more/forms.py:93
+msgid "Es handelt sich nicht um eine Subnetzmaske"
+msgstr ""
+
+#: more/forms.py:95
+msgid "Die Subnetzmaske ist inkorrekt"
+msgstr ""
+
+#: more/forms.py:100
+msgid "Die IP Adresse ist inkorrekt"
+msgstr ""
+
+#: more/forms.py:105
+msgid "Die IP Adresse des Gateways ist inkorrekt"
+msgstr ""
+
+#: more/forms.py:110
+msgid "Die IP Adresse des DNS Servers ist inkorrekt"
+msgstr ""
+
+#: more/forms.py:115 more/forms.py:117
+msgid "Es handelt sich nicht um eine korrekte Hostadresse"
+msgstr ""
+
+#: more/jobs.py:15
+msgid "Die Netzwerkeinstellungen werden neu konfiguriert..."
+msgstr ""
+
+#: more/jobs.py:20
+msgid "Modus zur Vergabe statischer IP Adressen wird aktiviert..."
+msgstr ""
+
+#: more/jobs.py:24
+msgid "IP Adresse wird geändert..."
+msgstr ""
+
+#: more/jobs.py:28
+msgid "Subnetzmaske wird geändert..."
+msgstr ""
+
+#: more/jobs.py:32
+msgid "Gateway wird geändert..."
+msgstr ""
+
+#: more/jobs.py:36
+msgid "DNS Server wird geändert..."
+msgstr ""
+
+#: more/jobs.py:40
+msgid "Netzwerk wird neu gestartet..."
+msgstr ""
+
+#: more/jobs.py:44
+msgid "Konfiguration der Netzwerkeinstellungen erfolgreich."
+msgstr ""
+
+#: more/jobs.py:53
+msgid "Konfiguration der Netzwerkeinstellungen fehlgeschlagen."
+msgstr ""
+
+#: more/jobs.py:62
+msgid "SSH wird gestartet..."
+msgstr ""
+
+#: more/jobs.py:64
+msgid "SSH wird gestoppt..."
+msgstr ""
+
+#: more/jobs.py:69
+msgid "Konfiguration von SSH erfolgreich."
+msgstr ""
+
+#: more/jobs.py:81
+msgid "Konfiguration von SSH fehlgeschlagen."
+msgstr ""
+
+#: more/jobs.py:91
+msgid "Apate ARP Spoofing Daemon wird gestartet..."
+msgstr ""
+
+#: more/jobs.py:94
+msgid "Apate ARP Spoofing Daemon wird gestoppt..."
+msgstr ""
+
+#: more/jobs.py:100
+msgid "Konfiguration von Apate ARP Spoofing Daemon erfolgreich."
+msgstr ""
+
+#: more/jobs.py:113
+msgid "Konfiguration von Apate ARP Spoofing Daemon fehlgeschlagen."
+msgstr ""
+
+#: more/jobs.py:122
+msgid "Statische IP wird aktiviert..."
+msgstr ""
+
+#: more/jobs.py:124
+msgid "Statische IP wird deaktiviert..."
+msgstr ""
+
+#: more/jobs.py:129
+msgid "Konfiguration der statischen IP erfolgreich."
+msgstr ""
+
+#: more/jobs.py:141
+msgid "Konfiguration der statischen IP fehlgeschlagen."
+msgstr ""
+
+#: more/jobs.py:151
+msgid "DHCP Server wird aktiviert..."
+msgstr ""
+
+#: more/jobs.py:153
+msgid "DHCP Server wird deaktiviert..."
+msgstr ""
+
+#: more/jobs.py:156
+msgid "DHCP Server wird konfiguriert..."
+msgstr ""
+
+#: more/jobs.py:158
+msgid "Konfiguration des DHCP Servers erfolgreich."
+msgstr ""
+
+#: more/jobs.py:164
+msgid "Es ist ein unbekannter Fehler aufgetreten."
+msgstr ""
+
+#: more/jobs.py:170
+msgid "Konfiguration des DHCP Servers fehlgeschlagen."
+msgstr ""
+
+#: more/templates/config.html:7 more/templates/config.html:10
+#: more/templates/config.html:14 more/templates/static.html:7
+#: more/templates/static.html:10
+msgid "Konfiguration"
+msgstr ""
+
+#: more/templates/config.html:10 more/templates/static.html:10
+#: more/templates/user.html:10
+msgid "Start"
+msgstr ""
+
+#: more/templates/config.html:19
+msgid "Funktionen"
+msgstr ""
+
+#: more/templates/config.html:29
+msgid "SSH"
+msgstr ""
+
+#: more/templates/config.html:34
+msgid "WLAN"
+msgstr ""
+
+#: more/templates/config.html:34 more/templates/config.html:38
+#: more/templates/config.html:44 more/templates/config.html:51
+msgid "Einstellungen"
+msgstr ""
+
+#: more/templates/config.html:37
+msgid "VPN"
+msgstr ""
+
+#: more/templates/config.html:43
+msgid "Statische IP"
+msgstr ""
+
+#: more/templates/config.html:43
+msgid "Deaktivieren nicht möglich, weil upribox-Zugang \"Manuell\" ausgewählt"
+msgstr ""
+
+#: more/templates/config.html:46
+msgid "upribox-Zugang"
+msgstr ""
+
+#: more/templates/config.html:48
+msgid "Automatisch"
+msgstr ""
+
+#: more/templates/config.html:48
+msgid "Wird vom Router nicht unterstützt"
+msgstr ""
+
+#: more/templates/config.html:50
+msgid "Manuell"
+msgstr ""
+
+#: more/templates/config.html:54
+msgid "Nur über WLAN \"upribox\""
+msgstr ""
+
+#: more/templates/config.html:58
+msgid "Setup"
+msgstr ""
+
+#: more/templates/config.html:59
+#, python-format
+msgid "Die upribox wurde am %(setup_date)s eingerichtet"
+msgstr ""
+
+#: more/templates/config.html:60
+msgid "upribox erneut einrichten"
+msgstr ""
+
+#: more/templates/config.html:71
+msgid "VPN:"
+msgstr ""
+
+#: more/templates/config.html:72
+msgid ""
+"Sie wollen unterwegs auf sichere Weise Ihre E-Mails abrufen oder eine &Uuml;"
+"berweisung t&auml;tigen? Richten Sie daf&uuml;r VPN ein und nutzen Sie Ihr "
+"Internet, als w&auml;ren Sie zu Hause. Sie sch&uuml;tzen Ihre Daten vor dem "
+"Zugriff von Dritten in offenen Wireless-Netzwerken."
+msgstr ""
+
+#: more/templates/static.html:10 more/templates/static.html:14
+msgid "Static IP"
+msgstr ""
+
+#: more/templates/static.html:24
+msgid "Hinweis"
+msgstr ""
+
+#: more/templates/static.html:25
+msgid ""
+"Im Normalfall können die voreingestellten Werte für IP-Adresse, "
+"Subnetzmaske, Standardgateway und DNS Server übernommen werden. Bitte rufen "
+"Sie abschließend noch die Administration-Oberfläche Ihres Routers auf und "
+"deaktivieren Sie dort den DHCP-Server, da diese Funktion von nun an von der "
+"upribox übernommen wird."
+msgstr ""
+
+#: more/templates/user.html:7
+msgid "Admin - upribox"
+msgstr ""
+
+#: more/templates/user.html:10
+msgid "Benutzer"
+msgstr ""
+
+#: more/templates/user.html:14
+msgid "Admin"
+msgstr ""
+
+#: more/templates/user.html:15
+msgid "Admin-Daten &auml;ndern."
+msgstr ""

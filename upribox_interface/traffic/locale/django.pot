@@ -19,40 +19,40 @@ msgstr ""
 
 #: traffic/templates/overview.html:6
 msgid "Übersicht - "
-msgstr "Overview - "
+msgstr ""
 
 #: traffic/templates/overview.html:15
 msgid "Start"
-msgstr "Start"
+msgstr ""
 
 #: traffic/templates/overview.html:15
 msgid "Geräteübersicht"
-msgstr "devices"
+msgstr ""
 
 #: traffic/templates/overview.html:22
 msgid "Statistik wird geladen"
-msgstr "statistics are loading ..."
+msgstr ""
 
 #: traffic/templates/overview.html:24
 msgid "Keine Daten vorhanden."
-msgstr "No data available."
+msgstr ""
 
 #: traffic/templates/overview.html:30
 msgid "Datenvolumen gesamt"
-msgstr "Total data volume"
+msgstr ""
 
 #: traffic/templates/overview.html:33
 msgid "Kalenderwoche"
-msgstr "calendar week"
+msgstr ""
 
 #: traffic/templates/overview.html:39
 msgid "Tag"
-msgstr "day"
+msgstr ""
 
 #: traffic/templates/overview.html:50
 msgid "Details für Kalenderwoche"
-msgstr "details for calendar week"
+msgstr ""
 
 #: traffic/templates/overview.html:53
 msgid "Domain Top 10 (Anfragen)"
-msgstr "domain top 10 (requests)"
+msgstr ""

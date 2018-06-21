@@ -19,29 +19,17 @@ msgstr ""
 
 #: lib/utils.py:85
 msgid "Bitte das Passwort zur Bestätigung erneut eingeben."
-msgstr "Please re-enter the password."
+msgstr ""
 
 #: lib/utils.py:89
 msgid "Die beiden Passwörter stimmen nicht überein."
-msgstr "The passwords do not match."
+msgstr ""
 
 #: lib/utils.py:104
 msgid "Das Passwort muss zwischen 8 und 63 Zeichen lang sein."
-msgstr "The password must be between 8 and 63 characters long."
+msgstr ""
 
 #: lib/utils.py:107
 #, python-format
 msgid "Das Passwort darf lediglich die Sonderzeichen %s enthalten."
-msgstr "The password may only contain the following special characters: %s ."
-
-#~ msgid "Das Passwort muss mindestens 1 Ziffer beinhalten."
-#~ msgstr "The password must contain at least one digit."
-
-#~ msgid "Das Passwort muss mindestens 1 Kleinbuchstaben beinhalten."
-#~ msgstr "The password must contain at least one lower case character."
-
-#~ msgid "Das Passwort muss mindestens 1 Großbuchstaben beinhalten."
-#~ msgstr "The password must contain at least one upper case character."
-
-#~ msgid "Das Passwort muss mindestens 1 Sonderzeichen beinhalten."
-#~ msgstr "The password must contain at least one special character."
+msgstr ""

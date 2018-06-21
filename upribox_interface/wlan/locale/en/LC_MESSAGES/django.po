@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-19 19:05+0000\n"
+"POT-Creation-Date: 2018-06-20 19:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,9 +17,70 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: wlan/forms.py:12
+msgid "SSID:"
+msgstr "SSID"
+
+#: wlan/forms.py:17
+msgid "Neues Passwort:"
+msgstr "New password"
+
+#: wlan/forms.py:22
+msgid "Passwort bestätigen:"
+msgstr "Re-enter password"
+
+#: wlan/forms.py:44
+msgid "Die SSID muss zwischen 1 und 32 Zeichen lang sein"
+msgstr "SSID must be between 1 and 32 characters long."
+
+#: wlan/forms.py:47
+#, python-format
+msgid "Die SSID darf lediglich die Sonderzeichen %s enthalten"
+msgstr "SSID may only contain the following special characters: %s"
+
+#: wlan/jobs.py:15
+msgid "Das Silent WLAN wird neu konfiguriert..."
+msgstr "reconfiguring silent WiFi..."
+
+#: wlan/jobs.py:19
+msgid "Name wird geändert..."
+msgstr "changing name..."
+
+#: wlan/jobs.py:23
+msgid "Passwort wird geändert..."
+msgstr "chaning password..."
+
+#: wlan/jobs.py:26
+msgid "Wlan wird neu gestartet..."
+msgstr "restarting WiFi..."
+
+#: wlan/jobs.py:30
+msgid "Konfiguration des WLANs erfolgreich."
+msgstr "Configuration of Wifi successful."
+
+#: wlan/jobs.py:40 wlan/jobs.py:68
+msgid "Konfiguration des WLANs fehlgeschlagen."
+msgstr "Configuration of Wifi failed."
+
+#: wlan/jobs.py:49
+msgid "silent WLAN wird gestartet..."
+msgstr "starting silent WiFi..."
+
+#: wlan/jobs.py:51
+msgid "silent WLAN wird gestoppt..."
+msgstr "stopping silent WiFi..."
+
+#: wlan/jobs.py:56
+msgid "Konfiguration des silent WLAN erfolgreich."
+msgstr "successfully configured silent Wifi."
+
+#: wlan/jobs.py:62
+msgid "Es ist ein unbekannter Fehler aufgetreten."
+msgstr "an unknown error occurred."
+
 #: wlan/templates/silent.html:7
 msgid "Start"
-msgstr ""
+msgstr "start"
 
 #: wlan/templates/silent.html:7 wlan/templates/silent.html:10
 msgid "Konfiguration"
@@ -27,7 +88,7 @@ msgstr "configuration"
 
 #: wlan/templates/silent.html:7 wlan/templates/silent.html:13
 msgid "WLAN"
-msgstr ""
+msgstr "WiFi"
 
 #: wlan/templates/silent.html:30
 msgid "Tipps für sichere Passwörter:"
@@ -48,51 +109,6 @@ msgstr "At least 1 small letter."
 #: wlan/templates/silent.html:34
 msgid "Mindestens 1 Ziffer."
 msgstr "At least 1 digit."
-
-#~ msgid "SSID:"
-#~ msgstr "SSID"
-
-#~ msgid "Neues Passwort:"
-#~ msgstr "New password"
-
-#~ msgid "Passwort bestätigen:"
-#~ msgstr "Re-enter password"
-
-#~ msgid "Die SSID muss zwischen 1 und 32 Zeichen lang sein"
-#~ msgstr "SSID must be between 1 and 32 characters long."
-
-#~ msgid "Die SSID darf lediglich die Sonderzeichen %s enthalten"
-#~ msgstr "SSID may only contain the following special characters: %s"
-
-#~ msgid "Das Silent WLAN wird neu konfiguriert..."
-#~ msgstr "reconfiguring silent WiFi..."
-
-#~ msgid "Name wird geändert..."
-#~ msgstr "changing name..."
-
-#~ msgid "Passwort wird geändert..."
-#~ msgstr "chaning password..."
-
-#~ msgid "Wlan wird neu gestartet..."
-#~ msgstr "restarting WiFi..."
-
-#~ msgid "Konfiguration des WLANs erfolgreich."
-#~ msgstr "Configuration of Wifi successful."
-
-#~ msgid "Konfiguration des WLANs fehlgeschlagen."
-#~ msgstr "Configuration of Wifi failed."
-
-#~ msgid "silent WLAN wird gestartet..."
-#~ msgstr "starting silent WiFi..."
-
-#~ msgid "silent WLAN wird gestoppt..."
-#~ msgstr "stopping silent WiFi..."
-
-#~ msgid "Konfiguration des silent WLAN erfolgreich."
-#~ msgstr "successfully configured silent Wifi."
-
-#~ msgid "Es ist ein unbekannter Fehler aufgetreten."
-#~ msgstr "an unknown error occurred."
 
 #, fuzzy
 #~| msgid "Passwort"
