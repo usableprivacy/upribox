@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-20 19:58+0000\n"
+"POT-Creation-Date: 2018-06-12 14:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,10 +49,20 @@ msgstr "calendar week"
 msgid "Tag"
 msgstr "day"
 
-#: traffic/templates/overview.html:50
+#: traffic/templates/overview.html:43
 msgid "Details für Kalenderwoche"
 msgstr "details for calendar week"
 
-#: traffic/templates/overview.html:53
-msgid "Domain Top 10 (Anfragen)"
-msgstr "domain top 10 (requests)"
+#: traffic/templates/overview.html:44
+#, python-format
+msgid "%% aller Anfragen wurden automatisch geblockt."
+msgstr "%% of all requests have been automatically blocked."
+
+#: traffic/templates/overview.html:46
+
+msgid "Domains (Top 10)"
+msgstr "domains (top 10)"
+
+#: traffic/templates/overview.html:51
+msgid "Geblockte Domains (Top 10)"
+msgstr "blocked domains (top 10)"

@@ -877,7 +877,7 @@ function initialisePasswordFields(){
 
         var protocols_num = data['protocols'].length;
 
-        if (protocols_num == 0){
+        if (data.total == null || data.total == 0){
             $(".no-data-available").css("display", "block");
             $(".loading").css("display", "none");
             $(".loading-text").css("display", "none");
@@ -886,7 +886,8 @@ function initialisePasswordFields(){
         }
 
         function createHoverInfo(value){
-            if(value > 0) return "y+text";
+            //if(value > 0) return "y+text";
+            if(value > 0) return "text";
             else return "skip";
         }
 
@@ -900,7 +901,8 @@ function initialisePasswordFields(){
                 color: data['protocols'][i]['color']
             },
             name: data['protocols'][i]['protocol'],
-            text: data['protocols'][i]['protocol'],
+            //text: data['protocols'][i]['protocol'],
+            text: data['protocols'][i]['texts'],
             textposition: 'top',
             line: {
                 width: 1.0,
@@ -942,7 +944,7 @@ function initialisePasswordFields(){
             margin: {
                 l: 50,
                 r: 0,
-                b: 40,
+                b: 50,
                 t: 30,
                 pad: 0
             },
@@ -1078,13 +1080,14 @@ function initialisePasswordFields(){
 
         var d3 = Plotly.d3;
 
-        var WIDTH_IN_PERCENT_OF_PARENT = 73,
+        var WIDTH_IN_PERCENT_OF_PARENT = 100,
             HEIGHT_IN_PERCENT_OF_PARENT = 150;
 
-        var gd3 = d3.select('#stats').style({
-         //width: WIDTH_IN_PERCENT_OF_PARENT + '%',
-         height: HEIGHT_IN_PERCENT_OF_PARENT + '%'
-         });
+        var gd3 = d3.select('#device-stats');
+            /*.style({
+         width: WIDTH_IN_PERCENT_OF_PARENT + '%'
+         //height: HEIGHT_IN_PERCENT_OF_PARENT + '%'
+         });*/
 
         gd = gd3.node();
         window.onresize = function() {
@@ -1358,10 +1361,23 @@ function initialisePasswordFields(){
         }
     }
 
-    function updateDomainList(domainList) {
+    function updateDomainList(domainList, blockedDomainList, blockedPercent) {
+        if (blockedPercent != 0){
+            $("#js-block-percentage").text(blockedPercent);
+            $(".lists-block-percentage").css("display", "inline-block");
+            $(".js-blocked-domains").css("display", "inline-block");
+        }
+        else{
+            $(".lists-block-percentage").css("display", "none");
+            $(".js-blocked-domains").css("display", "none");
+        }
         $("#requested-domains").empty();
         for (var detailUrl in domainList) {
             $("#requested-domains").append("<li>" + domainList[detailUrl][0] + ": " + domainList[detailUrl][1] + "</li>")
+        }
+        $("#blocked-domains").empty();
+        for (var detailUrl in blockedDomainList) {
+            $("#blocked-domains").append("<li>" + blockedDomainList[detailUrl][0] + ": " + blockedDomainList[detailUrl][1] + "</li>")
         }
     }
 
@@ -1406,9 +1422,12 @@ function initialisePasswordFields(){
     }
 
     function updateTrafficStatistics(data) {
-
-        //console.log(data);
-        updateDomainList(data.domains);
+        if (data.domains){
+            if(data.domains.length > 0){
+            $(".lists").css("display", "block");
+            updateDomainList(data.domains, data.blocked_domains, data.block_percent);
+            }
+        }
     }
 
 
