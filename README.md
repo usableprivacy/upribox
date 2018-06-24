@@ -9,7 +9,7 @@ The [upribox](https://upribox.org) Software turns your RaspberryPi into a privac
 
 ---
 
-## [upribox-image-v2.zip](https://github.com/usableprivacy/upribox/releases/download/v2.0/upribox-image-v2.zip) (May 2018, 786MB)
+## [upribox-image-v2.zip](https://github.com/usableprivacy/upribox/releases/download/v2.0/upribox-image-v2.zip) (May 2018, 801MB)
 
 ---
 
