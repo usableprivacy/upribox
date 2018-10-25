@@ -255,7 +255,7 @@ class SelectiveDaemonApp(_DaemonApp):
 
     def exit(self, signal_number, stack_frame):
         """This method is called from the python-daemon when the daemon is stopping.
-        Threads are stopped and clients are despoofed via _return_to_normal().
+        Processes are stopped and clients are despoofed via the processes _return_to_normal().
         """
         if self.processv4:
             self.processv4.shutdown()
@@ -282,7 +282,7 @@ class SelectiveDaemonApp(_DaemonApp):
 
         # a child-process object has to be created in the same parent process as the process that wants to start the child
         # __init__ is called inside the initial process, whereas run() is called inside the newly created deamon process
-        # therefore create the process here
+        # therefore create the processes here
         if self.ipv4:
             self.processv4 = SelectiveIPv4Process(self.logger, self.interface, self.ipv4)
             self.processv4.start()
