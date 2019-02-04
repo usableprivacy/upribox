@@ -1,0 +1,319 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# cbk <cbk914@riseup.net>, 2019
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-20 19:58+0000\n"
+"PO-Revision-Date: 2018-06-17 20:06+0000\n"
+"Last-Translator: cbk <cbk914@riseup.net>, 2019\n"
+"Language-Team: Spanish (https://www.transifex.com/upribox/teams/87489/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: more/forms.py:14
+msgid "Benutzername"
+msgstr "Nombre de usuario"
+
+#: more/forms.py:19
+msgid "Altes Passwort"
+msgstr "Contraseña antigua"
+
+#: more/forms.py:24
+msgid "Neues Passwort"
+msgstr "Nueva contraseña"
+
+#: more/forms.py:29
+msgid "Neues Passwort erneut eingeben"
+msgstr "Introduzca de nuevo la nueva contraseña"
+
+#: more/forms.py:43
+msgid "Das alte Passwort ist inkorrekt"
+msgstr "La contraseña antigua es incorrecta"
+
+#: more/forms.py:56
+msgid "IP:"
+msgstr "IP:"
+
+#: more/forms.py:61
+msgid "Subnetzmaske:"
+msgstr "Máscara de subred:"
+
+#: more/forms.py:65
+msgid "Gateway:"
+msgstr "Puerta de Enlace:"
+
+#: more/forms.py:69
+msgid "DNS-Server:"
+msgstr "Servidor-DNS:"
+
+#: more/forms.py:93
+msgid "Es handelt sich nicht um eine Subnetzmaske"
+msgstr "No es una máscara de subred."
+
+#: more/forms.py:95
+msgid "Die Subnetzmaske ist inkorrekt"
+msgstr "La máscara de subred es incorrecta"
+
+#: more/forms.py:100
+msgid "Die IP Adresse ist inkorrekt"
+msgstr "La dirección IP es incorrecta"
+
+#: more/forms.py:105
+msgid "Die IP Adresse des Gateways ist inkorrekt"
+msgstr "La dirección IP de la puerta de enlace es incorrecta"
+
+#: more/forms.py:110
+msgid "Die IP Adresse des DNS Servers ist inkorrekt"
+msgstr "La dirección IP del servidor DNS es incorrecta"
+
+#: more/forms.py:115 more/forms.py:117
+msgid "Es handelt sich nicht um eine korrekte Hostadresse"
+msgstr "No es una dirección de host correcta"
+
+#: more/jobs.py:15
+msgid "Die Netzwerkeinstellungen werden neu konfiguriert..."
+msgstr "Reconfigurando los ajustes de red..."
+
+#: more/jobs.py:20
+msgid "Modus zur Vergabe statischer IP Adressen wird aktiviert..."
+msgstr "El modo para asignar direcciones IP estáticas está activado ..."
+
+#: more/jobs.py:24
+msgid "IP Adresse wird geändert..."
+msgstr "Cambiando la dirección IP..."
+
+#: more/jobs.py:28
+msgid "Subnetzmaske wird geändert..."
+msgstr "Cambiando la máscara de subred..."
+
+#: more/jobs.py:32
+msgid "Gateway wird geändert..."
+msgstr "Cambiando la puerta de enlace..."
+
+#: more/jobs.py:36
+msgid "DNS Server wird geändert..."
+msgstr "Cambiando el Servidor DNS..."
+
+#: more/jobs.py:40
+msgid "Netzwerk wird neu gestartet..."
+msgstr "La red se está reiniciando..."
+
+#: more/jobs.py:44
+msgid "Konfiguration der Netzwerkeinstellungen erfolgreich."
+msgstr "Ajustes de red configurados con éxito."
+
+#: more/jobs.py:53
+msgid "Konfiguration der Netzwerkeinstellungen fehlgeschlagen."
+msgstr "Falló la configuración de los ajustes de red."
+
+#: more/jobs.py:62
+msgid "SSH wird gestartet..."
+msgstr "Reiniciando SSH..."
+
+#: more/jobs.py:64
+msgid "SSH wird gestoppt..."
+msgstr "Deteniendo SSH..."
+
+#: more/jobs.py:69
+msgid "Konfiguration von SSH erfolgreich."
+msgstr "SSH configurado con éxito."
+
+#: more/jobs.py:81
+msgid "Konfiguration von SSH fehlgeschlagen."
+msgstr "La configuración de SSH ha fallado."
+
+#: more/jobs.py:91
+msgid "Apate ARP Spoofing Daemon wird gestartet..."
+msgstr "Reiniciando el demonio de Suplantación de Identidad ARP Apate..."
+
+#: more/jobs.py:94
+msgid "Apate ARP Spoofing Daemon wird gestoppt..."
+msgstr "Deteniendo el demonio de Suplantación de Identidad ARP Apate..."
+
+#: more/jobs.py:100
+msgid "Konfiguration von Apate ARP Spoofing Daemon erfolgreich."
+msgstr ""
+"Se ha configurado el demonio de Suplantación de Identidad ARP Apate con "
+"éxito..."
+
+#: more/jobs.py:113
+msgid "Konfiguration von Apate ARP Spoofing Daemon fehlgeschlagen."
+msgstr ""
+"Falló la configuración del demonio de Suplantación de Identidad ARP Apate."
+
+#: more/jobs.py:122
+msgid "Statische IP wird aktiviert..."
+msgstr "Se ha activado la IP estática..."
+
+#: more/jobs.py:124
+msgid "Statische IP wird deaktiviert..."
+msgstr "Se ha desactivado la IP estática..."
+
+#: more/jobs.py:129
+msgid "Konfiguration der statischen IP erfolgreich."
+msgstr "IP estática configurada con éxito."
+
+#: more/jobs.py:141
+msgid "Konfiguration der statischen IP fehlgeschlagen."
+msgstr "Ha fallado la configuración de la IP estática."
+
+#: more/jobs.py:151
+msgid "DHCP Server wird aktiviert..."
+msgstr "El Servidor DHCP está activado..."
+
+#: more/jobs.py:153
+msgid "DHCP Server wird deaktiviert..."
+msgstr "El Servidor DHCP está desactivado..."
+
+#: more/jobs.py:156
+msgid "DHCP Server wird konfiguriert..."
+msgstr "Se ha configurado el Servidor DHCP..."
+
+#: more/jobs.py:158
+msgid "Konfiguration des DHCP Servers erfolgreich."
+msgstr "Se ha configurado con éxito el Servidor DHCP."
+
+#: more/jobs.py:164
+msgid "Es ist ein unbekannter Fehler aufgetreten."
+msgstr "Se ha producido un error desconocido."
+
+#: more/jobs.py:170
+msgid "Konfiguration des DHCP Servers fehlgeschlagen."
+msgstr "Falló la configuración del servidor DHCP."
+
+#: more/templates/config.html:7 more/templates/config.html:10
+#: more/templates/config.html:14 more/templates/static.html:7
+#: more/templates/static.html:10
+msgid "Konfiguration"
+msgstr "Configuración"
+
+#: more/templates/config.html:10 more/templates/static.html:10
+#: more/templates/user.html:10
+msgid "Start"
+msgstr "Inicio"
+
+#: more/templates/config.html:19
+msgid "Funktionen"
+msgstr "Características"
+
+#: more/templates/config.html:29
+msgid "SSH"
+msgstr "SSH"
+
+#: more/templates/config.html:34
+msgid "WLAN"
+msgstr "WLAN"
+
+#: more/templates/config.html:34 more/templates/config.html:38
+#: more/templates/config.html:44 more/templates/config.html:51
+msgid "Einstellungen"
+msgstr "Ajustes"
+
+#: more/templates/config.html:37
+msgid "VPN"
+msgstr "VPN"
+
+#: more/templates/config.html:43
+msgid "Statische IP"
+msgstr "IP estática"
+
+#: more/templates/config.html:43
+msgid "Deaktivieren nicht möglich, weil upribox-Zugang \"Manuell\" ausgewählt"
+msgstr ""
+"No es posible desactivar ya que se selecciono el modo \"manual\" de acceso a"
+" upribox"
+
+#: more/templates/config.html:46
+msgid "upribox-Zugang"
+msgstr "Acceso upribox"
+
+#: more/templates/config.html:48
+msgid "Automatisch"
+msgstr "Automático"
+
+#: more/templates/config.html:48
+msgid "Wird vom Router nicht unterstützt"
+msgstr "No soportado por el enrutador"
+
+#: more/templates/config.html:50
+msgid "Manuell"
+msgstr "Manual"
+
+#: more/templates/config.html:54
+msgid "Nur über WLAN \"upribox\""
+msgstr "Sólo a través de WLAN \"upribox\""
+
+#: more/templates/config.html:58
+msgid "Setup"
+msgstr "Ajustes"
+
+#: more/templates/config.html:59
+#, python-format
+msgid "Die upribox wurde am %(setup_date)s eingerichtet"
+msgstr "Este upribox ha sido creado el %(setup_date)s"
+
+#: more/templates/config.html:60
+msgid "upribox erneut einrichten"
+msgstr "Configurar upribox de nuevo"
+
+#: more/templates/config.html:71
+msgid "VPN:"
+msgstr "VPN:"
+
+#: more/templates/config.html:72
+msgid ""
+"Sie wollen unterwegs auf sichere Weise Ihre E-Mails abrufen oder eine "
+"&Uuml;berweisung t&auml;tigen? Richten Sie daf&uuml;r VPN ein und nutzen Sie"
+" Ihr Internet, als w&auml;ren Sie zu Hause. Sie sch&uuml;tzen Ihre Daten vor"
+" dem Zugriff von Dritten in offenen Wireless-Netzwerken."
+msgstr ""
+"¿Desea recuperar de forma segura sus correos electrónicos o realizar una "
+"transferencia mientras viaja? Configure la VPN y use su Internet como si "
+"estuviera en casa. Usted protege sus datos del acceso de terceros en redes "
+"inalámbricas abiertas."
+
+#: more/templates/static.html:10 more/templates/static.html:14
+msgid "Static IP"
+msgstr "IP estática"
+
+#: more/templates/static.html:24
+msgid "Hinweis"
+msgstr "Indicio"
+
+#: more/templates/static.html:25
+msgid ""
+"Im Normalfall können die voreingestellten Werte für IP-Adresse, "
+"Subnetzmaske, Standardgateway und DNS Server übernommen werden. Bitte rufen "
+"Sie abschließend noch die Administration-Oberfläche Ihres Routers auf und "
+"deaktivieren Sie dort den DHCP-Server, da diese Funktion von nun an von der "
+"upribox übernommen wird."
+msgstr ""
+"64\n"
+"Normalmente, se pueden aplicar los valores predeterminados para la dirección IP, la máscara de subred, la puerta de enlace predeterminada y el servidor DNS. Finalmente, vaya a la interfaz de administración de su enrutador y desactive el servidor DHCP allí, ya que esta función ahora es asumida por el upribox."
+
+#: more/templates/user.html:7
+msgid "Admin - upribox"
+msgstr "Admin - upribox"
+
+#: more/templates/user.html:10
+msgid "Benutzer"
+msgstr "Usuario"
+
+#: more/templates/user.html:14
+msgid "Admin"
+msgstr "Admin"
+
+#: more/templates/user.html:15
+msgid "Admin-Daten &auml;ndern."
+msgstr "Copiar datos de Administración"

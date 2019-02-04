@@ -17,4 +17,6 @@ vpn-psk
 .idea
 docs/build/html
 docs/build/latex
-docs/build/doctress
+docs/build/doctrees
+
+environments/init/inventory

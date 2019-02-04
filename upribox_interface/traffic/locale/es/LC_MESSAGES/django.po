@@ -1,0 +1,62 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# cbk <cbk914@riseup.net>, 2019
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-20 19:58+0000\n"
+"PO-Revision-Date: 2018-06-17 19:59+0000\n"
+"Last-Translator: cbk <cbk914@riseup.net>, 2019\n"
+"Language-Team: Spanish (https://www.transifex.com/upribox/teams/87489/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: traffic/templates/overview.html:6
+msgid "Übersicht - "
+msgstr "Estudio - "
+
+#: traffic/templates/overview.html:15
+msgid "Start"
+msgstr "Inicio"
+
+#: traffic/templates/overview.html:15
+msgid "Geräteübersicht"
+msgstr "Descripción general del producto"
+
+#: traffic/templates/overview.html:22
+msgid "Statistik wird geladen"
+msgstr "Se están cargando las estadísticas"
+
+#: traffic/templates/overview.html:24
+msgid "Keine Daten vorhanden."
+msgstr "No hay datos disponibles."
+
+#: traffic/templates/overview.html:30
+msgid "Datenvolumen gesamt"
+msgstr "Volumen total de datos"
+
+#: traffic/templates/overview.html:33
+msgid "Kalenderwoche"
+msgstr "Semana"
+
+#: traffic/templates/overview.html:39
+msgid "Tag"
+msgstr "Etiqueta"
+
+#: traffic/templates/overview.html:50
+msgid "Details für Kalenderwoche"
+msgstr "Detalles del calendario semanal"
+
+#: traffic/templates/overview.html:53
+msgid "Domain Top 10 (Anfragen)"
+msgstr "Top 10 Dominios (Peticiones)"
