@@ -183,7 +183,7 @@ msgstr "Perfil VPN"
 
 #: vpn/templates/vpn.html:89
 msgid "Noch kein Profil erstellt. Erstellen Sie gleich ein Profil!"
-msgstr ""
+msgstr "No se ha creado ningún perfil todavía. ¡Cree un perfil ahora!"
 
 #: vpn/templates/vpn.html:91
 #, python-format
@@ -191,14 +191,16 @@ msgid ""
 "\n"
 "        Die Verwendung des upribox-VPN erfordert die Erstellung von VPN-Profilen und die Installation der OpenVPN Client Software. F&uuml;r Ihr Smartphone k&ouml;nnen Sie einen der offziellen Clients f&uuml;r <a href=\"%(android)s\">Android</a> oder <a href=\"  %(ios)s\">iOS</a> herunterladen. Für den Desktop empfehlen wir folgende Programme: <a href=\"%(macos)s\">Tunnelblick f&uuml;r Mac OS</a> oder <a href=\"%(windows)s\">OpenVPN GUI f&uuml;r Windows</a>."
 msgstr ""
+"\n"
+"El uso de la VPN upribox requiere la creación de perfiles VPN y la instalación del software cliente OpenVPN. Para su teléfono inteligente, puede descargar uno de los clientes oficiales para <a href=\"%(android)s\">Android</a> o <a href=\"  %(ios)s\">iOS</a>. Para el escritorio, recomendamos los siguientes programas: <a href=\"%(macos)s\">Tunnelblick para Mac OS</a> o <a href=\"%(windows)s\">OpenVPN GUI para Windows</a>."
 
 #: vpn/templates/vpn.html:104
 msgid "Neues Profil erstellen"
-msgstr ""
+msgstr "Crear un nuevo perfil"
 
 #: vpn/templates/vpn.html:116
 msgid "Wie funktioniert VPN?"
-msgstr ""
+msgstr "¿Cómo funciona la VPN?"
 
 #: vpn/templates/vpn.html:118
 msgid ""
@@ -207,39 +209,43 @@ msgid ""
 "Verbindungen spezielle VPN-Profile. Erstellen Sie pro Benutzer ein VPN-"
 "Profil und laden sie das Profil dann z.B. auf ihr Smartphone."
 msgstr ""
+"Con la ayuda de VPN (red privada virtual) puede navegar sobre la marcha a "
+"través de su upribox. Para proteger el acceso a su upribox, las conexiones "
+"requieren perfiles especiales de VPN. Cree un perfil VPN para cada usuario y"
+" luego cargue el perfil, por ejemplo. en su teléfono inteligente."
 
 #: vpn/templates/vpn.html:120
 msgid "Das upribox-VPN blockiert Werbung automatisch."
-msgstr ""
+msgstr "El upribox VPN bloquea la publicidad automáticamente."
 
 #: vpn/templates/vpn_profile.html:11
 msgid "Gültig: "
-msgstr ""
+msgstr "Válida:"
 
 #: vpn/templates/vpn_profile.html:15
 msgid "Profil herunterladen"
-msgstr ""
+msgstr "Descargar perfil"
 
 #: vpn/templates/vpn_profile.html:19
 msgid "QR-Code anzeigen"
-msgstr ""
+msgstr "Mostrar código QR"
 
 #: vpn/templates/vpn_profile.html:24
 msgid "Profil l&ouml;schen"
-msgstr ""
+msgstr "Borrar el perfil"
 
 #: vpn/views.py:41 vpn/views.py:54
 msgid "openvpn.log konnte nicht geöffnet werden."
-msgstr ""
+msgstr "openvpn.log no se pudo abrir."
 
 #: vpn/views.py:47
 msgid "Verbindung zu api.upribox.org fehlgeschlagen."
-msgstr ""
+msgstr "La conexión a api.upribox.org ha fallado."
 
 #: vpn/views.py:70
 msgid "Die Verbindung war erfolgreich!"
-msgstr ""
+msgstr "¡La conexión fue exitosa!"
 
 #: vpn/views.py:73
 msgid "Die Verbindung war nicht erfolgreich!"
-msgstr ""
+msgstr "¡La conexión no fue exitosa!"

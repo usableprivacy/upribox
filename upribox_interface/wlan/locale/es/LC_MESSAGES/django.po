@@ -3,6 +3,9 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
+# Translators:
+# cbk <cbk914@riseup.net>, 2019
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -10,6 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-06-20 19:58+0000\n"
 "PO-Revision-Date: 2018-06-17 20:04+0000\n"
+"Last-Translator: cbk <cbk914@riseup.net>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/upribox/teams/87489/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,93 +23,93 @@ msgstr ""
 
 #: wlan/forms.py:12
 msgid "SSID:"
-msgstr ""
+msgstr "SSID:"
 
 #: wlan/forms.py:17
 msgid "Neues Passwort:"
-msgstr ""
+msgstr "Nueva Contraseña:"
 
 #: wlan/forms.py:22
 msgid "Passwort bestätigen:"
-msgstr ""
+msgstr "Confirmar contraseña:"
 
 #: wlan/forms.py:44
 msgid "Die SSID muss zwischen 1 und 32 Zeichen lang sein"
-msgstr ""
+msgstr "El SSID debe tener entre 1 y 32 caracteres."
 
 #: wlan/forms.py:47
 #, python-format
 msgid "Die SSID darf lediglich die Sonderzeichen %s enthalten"
-msgstr ""
+msgstr "El SSID solo puede contener los caracteres especiales %s."
 
 #: wlan/jobs.py:15
 msgid "Das Silent WLAN wird neu konfiguriert..."
-msgstr ""
+msgstr "Reconfigurando la WLAN silenciosa..."
 
 #: wlan/jobs.py:19
 msgid "Name wird geändert..."
-msgstr ""
+msgstr "Se cambió el nombre ..."
 
 #: wlan/jobs.py:23
 msgid "Passwort wird geändert..."
-msgstr ""
+msgstr "Se cambió la contraseña ..."
 
 #: wlan/jobs.py:26
 msgid "Wlan wird neu gestartet..."
-msgstr ""
+msgstr "Reiniciando WLAN."
 
 #: wlan/jobs.py:30
 msgid "Konfiguration des WLANs erfolgreich."
-msgstr ""
+msgstr "WLAN configurada con éxito."
 
 #: wlan/jobs.py:40 wlan/jobs.py:68
 msgid "Konfiguration des WLANs fehlgeschlagen."
-msgstr ""
+msgstr "Falló la configuración de la WLAN."
 
 #: wlan/jobs.py:49
 msgid "silent WLAN wird gestartet..."
-msgstr ""
+msgstr "Iniciando WLAN silenciosa..."
 
 #: wlan/jobs.py:51
 msgid "silent WLAN wird gestoppt..."
-msgstr ""
+msgstr "Deteniendo WLAN silenciosa..."
 
 #: wlan/jobs.py:56
 msgid "Konfiguration des silent WLAN erfolgreich."
-msgstr ""
+msgstr "WLAN silenciosa configurada con éxito."
 
 #: wlan/jobs.py:62
 msgid "Es ist ein unbekannter Fehler aufgetreten."
-msgstr ""
+msgstr "Se ha producido un error desconocido."
 
 #: wlan/templates/silent.html:7
 msgid "Start"
-msgstr ""
+msgstr "Inicio"
 
 #: wlan/templates/silent.html:7 wlan/templates/silent.html:10
 msgid "Konfiguration"
-msgstr ""
+msgstr "Configuración"
 
 #: wlan/templates/silent.html:7 wlan/templates/silent.html:13
 msgid "WLAN"
-msgstr ""
+msgstr "WLAN"
 
 #: wlan/templates/silent.html:30
 msgid "Tipps für sichere Passwörter:"
-msgstr ""
+msgstr "Consejos para contraseñas seguras:"
 
 #: wlan/templates/silent.html:31
 msgid "Mindestens 8 Zeichen."
-msgstr ""
+msgstr "Al menos 8 caracteres."
 
 #: wlan/templates/silent.html:32
 msgid "Mindestens 1 Großbuchstabe."
-msgstr ""
+msgstr "Al menos 1 letra mayúscula."
 
 #: wlan/templates/silent.html:33
 msgid "Mindestens 1 Kleinbuchstabe."
-msgstr ""
+msgstr "Al menos 1 letra minúscula."
 
 #: wlan/templates/silent.html:34
 msgid "Mindestens 1 Ziffer."
-msgstr ""
+msgstr "Al menos 1 dígito."

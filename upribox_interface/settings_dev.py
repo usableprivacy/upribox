@@ -107,6 +107,7 @@ LANGUAGE_CODE = 'de'
 LANGUAGES = (
     ('de', 'Deutsch'),
     ('en', 'English'),
+    ('es', 'Spanish'),
 )
 
 TIME_ZONE = 'UTC'
