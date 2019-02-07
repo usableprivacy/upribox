@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Markus Donko-Huber, 2019
+# cbk <cbk914@riseup.net>, 2019
 # 
 #, fuzzy
 msgid ""
@@ -13,21 +13,21 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-06-20 19:58+0000\n"
 "PO-Revision-Date: 2018-06-17 20:04+0000\n"
-"Last-Translator: Markus Donko-Huber, 2019\n"
-"Language-Team: English (https://www.transifex.com/upribox/teams/87489/en/)\n"
+"Last-Translator: cbk <cbk914@riseup.net>, 2019\n"
+"Language-Team: Spanish (https://www.transifex.com/upribox/teams/87489/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: en\n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: www/templates/base.html:12
 msgid "upribox - Ein einfaches Werkzeug zum Schutz der Privatsphäre"
-msgstr "upribox - A simple gadget to protect your Internet privacy"
+msgstr "upribox - Una herramienta sencilla para la privacidad"
 
 #: www/templates/base.html:26 www/templates/faq.html:7
 msgid "Start"
-msgstr "Start"
+msgstr "Inicio"
 
 #: www/templates/base.html:26
 msgid "upribox"
@@ -35,41 +35,41 @@ msgstr "upribox"
 
 #: www/templates/base.html:28
 msgid "Usable Privacy Box"
-msgstr "Usable Privacy Box"
+msgstr "Caja de Privacidad Usable"
 
 #: www/templates/base.html:32
 msgid "FAQ"
-msgstr "FAQ"
+msgstr "PUF"
 
 #: www/templates/base.html:32 www/templates/base.html:42
 #: www/templates/faq.html:7
 msgid "Hilfe"
-msgstr "Help"
+msgstr "Ayuda"
 
 #: www/templates/base.html:33 www/templates/login.html:58
 #: www/templates/login.html:61
 msgid "Status"
-msgstr "status"
+msgstr "Estado"
 
 #: www/templates/base.html:33
 msgid "2 Änderungen"
-msgstr "2 Changes"
+msgstr "2 cambios"
 
 #: www/templates/base.html:35
 msgid "Menü"
-msgstr "menu"
+msgstr "Menú"
 
 #: www/templates/base.html:39
 msgid "Geräteübersicht"
-msgstr "Device Overview"
+msgstr "Descripción general del producto"
 
 #: www/templates/base.html:40
 msgid "Statistiken"
-msgstr "Statistics"
+msgstr "Estadísticas"
 
 #: www/templates/base.html:41
 msgid "Konfiguration"
-msgstr "Configuration"
+msgstr "Configuración"
 
 #: www/templates/base.html:43
 msgid "Admin"
@@ -77,15 +77,15 @@ msgstr "Admin"
 
 #: www/templates/base.html:44 www/templates/base.html:59
 msgid "Logout"
-msgstr "logout"
+msgstr "Cerrar sesión"
 
 #: www/templates/base.html:53
 msgid "Änderung"
-msgstr "Change"
+msgstr "Cambio"
 
 #: www/templates/base.html:53
 msgid "Änderungen"
-msgstr "Changes"
+msgstr " Modificación"
 
 #: www/templates/base.html:54
 msgid "Fehler"
@@ -93,15 +93,15 @@ msgstr "Error"
 
 #: www/templates/faq.html:10
 msgid "Hilfe - upribox"
-msgstr "Help - upribox"
+msgstr "Ayuda - upribox"
 
 #: www/templates/faq.html:13
 msgid "Hilfe - Häufig gestellte Fragen"
-msgstr "Frequently asked questions"
+msgstr "Ayuda - Preguntas frecuentes"
 
 #: www/templates/faq.html:17
 msgid "Was ist der Silent Modus?"
-msgstr "What is the Silent Mode?"
+msgstr "¿Qué es el modo silencioso?"
 
 #: www/templates/faq.html:19
 #, python-format
@@ -110,15 +110,17 @@ msgid ""
 "               Der Silent-Modus erlaubt Ihnen, Webseiten ohne Werbung anzusehen. Diese wird einfach ausgeblendet. Weiters werden Tracking-Services blockiert bzw. nicht ausgeführt, um Ihre Privatsphäre zu schützen. In seltenen Fällen kann es zu Darstellungsfehlern oder der Blockierung von Webseiten kommen. Zur Verbesserung der upribox lassen Sie uns bitte solche Fehler wissen: <a href=\"mailto:%(email)s\">%(email)s</a>."
 msgstr ""
 "\n"
-"               Silent Mode allows you to use websites without ads.  These will simply be hidden and tracking services will be blocked or not executed to protect your privacy.  In rare cases, it may cause display errors or blocking of websites coming in. To improve the upribox please let us be informed with the error: <a href=\"mailto:%(email)s\">%(email)s </a>."
+"El modo silencioso le permite ver sitios web sin anuncios. Simplemente quedan ocultos. Además, los servicios de seguimiento están bloqueados o no se ejecutan para proteger su privacidad. En casos raros, puede llevar a mostrar errores o el bloqueo de páginas web. Para mejorar el upribox por favor háganos saber tales errores: <a href=\"mailto:%(email)s\">%(email)s</a>."
 
 #: www/templates/faq.html:23
 msgid "Was ist der Ninja Modus?"
-msgstr "What is the Ninja Mode?"
+msgstr "¿Qué es el Modo Ninja?"
 
 #: www/templates/faq.html:25
 msgid "Im Ninja-Modus sind alle Eigenschaften des Silent-Modus integriert."
-msgstr "In Ninja Mode all features of the Silent Mode are integrated."
+msgstr ""
+"En el Modo Ninja, todas las propiedades del Modo Milencioso están "
+"integradas."
 
 #: www/templates/faq.html:27
 msgid ""
@@ -129,15 +131,15 @@ msgid ""
 "werden, kommt es aber zu einer spürbaren Reduktion der Internet-"
 "Geschwindigkeit."
 msgstr ""
-"In addition, you are in an anonymous network, where tracking your activity "
-"on the Internet is difficult. This way your Internet providers, for example,"
-" can no longer track which websites you visit. Since your request for "
-"websites is routed through multiple routers but there will be a noticeable "
-"reduction in the Internet speed."
+"También está en una red anónima (Tor), lo que dificulta el seguimiento de su"
+" actividad en Internet. Por ejemplo, su proveedor de servicios de Internet "
+"ya no puede rastrear qué sitios web visita. Como su solicitud de sitios web "
+"se enruta a través de múltiples enrutadores, hay una notable reducción en la"
+" velocidad de Internet."
 
 #: www/templates/faq.html:30
 msgid "Wie funktioniert VPN?"
-msgstr "How does the VPN work?"
+msgstr "¿Cómo funciona la VPN?"
 
 #: www/templates/faq.html:32
 msgid ""
@@ -146,10 +148,10 @@ msgid ""
 "als wären Sie zu Hause. Sie schützen Ihre Daten vor dem Zugriff von Dritten "
 "in offenen Wireless-Netzwerken."
 msgstr ""
-"You want to get your e-mails in a safe and secure way on the go? Confirm a "
-"bank transfer? Set up VPN and use your Internet, as if you were at home "
-"protecting your data from being accessed by third parties in open wireless "
-"networks."
+"¿Desea revisar sus correos electrónicos de manera segura o hacer una "
+"transferencia mientras viaja? Configure VPN y use su Internet como si "
+"estuviera en casa. Usted protege sus datos del acceso de terceros en redes "
+"inalámbricas abiertas."
 
 #: www/templates/faq.html:33
 msgid ""
@@ -157,17 +159,17 @@ msgid ""
 "spezielle VPN-Profile. Erstellen Sie pro BenutzerIn ein VPN-Profil und laden"
 " Sie das Profil dann z.B. auf Ihr Smartphone."
 msgstr ""
-"To protect access to your upribox, connections require special VPN profiles."
-" Create a VPN profile per user, then you load the profile, for example, on "
-"your smartphone."
+"Para proteger el acceso a su upribox, las conexiones requieren perfiles "
+"especiales de VPN. Cree un perfil VPN para cada usuario y luego cargue el "
+"perfil, por ejemplo. en su teléfono inteligente."
 
 #: www/templates/faq.html:34
 msgid "Das upribox-VPN blockiert Werbung automatisch."
-msgstr "The upribox-VPN blocks advertisements automatically."
+msgstr "El upribox VPN bloquea la publicidad automáticamente."
 
 #: www/templates/faq.html:37
 msgid "Wie funktioniert eine statische IP?"
-msgstr "How does the static IP work?"
+msgstr "¿Cómo funciona una IP estática?"
 
 #: www/templates/faq.html:39
 msgid ""
@@ -176,126 +178,125 @@ msgid ""
 "zu lassen, um sämtlichen Netzwerkverkehr über diese zu leiten. Dazu muss der"
 " DHCP-Server im Interface Ihres Routers deaktiviert werden."
 msgstr ""
-"Here, experienced users of the upribox can use a static IP configuration. In"
-" addition, it is possible to configure your upribox as a DHCP server to "
-"route all network traffic through it. The router's DHCP server has to be be "
-"disabled in the interface of your router."
+"Aquí, los usuarios experimentados pueden asignar una IP estática a su "
+"upribox. Además, es posible que su upribox actúe como un servidor DHCP para "
+"enrutar todo el tráfico de la red a través de él. Para esto, el servidor "
+"DHCP debe estar desactivado en la interfaz de su enrutador."
 
 #: www/templates/form.html:9
 msgid "abbrechen"
-msgstr "cancel"
+msgstr "abortar"
 
 #: www/templates/form.html:9
 msgid "&auml;ndern"
-msgstr "change"
+msgstr "cambiar"
 
 #: www/templates/form.html:22
 msgid "Schwach"
-msgstr "Weak"
+msgstr "Débil"
 
 #: www/templates/form.html:29
 msgid "Stark"
-msgstr "Strong"
+msgstr "Fuerte"
 
 #: www/templates/form.html:38
 msgid "Die Passwörter stimmen nicht überein"
-msgstr "The passwords do not match"
+msgstr "Las contraseñas no coinciden"
 
 #: www/templates/form.html:40
 msgid "Das Passwort muss zwischen 8 und 64 Zeichen lang sein"
-msgstr "The password must be between 8 and 64 characters"
+msgstr "La contraseña debe tener entre 8 y 64 caracteres."
 
 #: www/templates/form.html:45
 msgid "Speichern"
-msgstr "Save"
+msgstr "Guardar"
 
 #: www/templates/form.html:45
 msgid "Abbrechen"
-msgstr "Cancel"
+msgstr "Abortar"
 
 #: www/templates/login.html:7
 msgid "Login - upribox"
-msgstr "Login - upribox"
+msgstr "Inicio de Sesión - upribox"
 
 #: www/templates/login.html:9
 msgid "upribox Administration"
-msgstr "Administration"
+msgstr "Administración upribox"
 
 #: www/templates/login.html:19
 msgid "Legend"
-msgstr "legend"
+msgstr "Leyenda"
 
 #: www/templates/login.html:20 www/templates/login.html:42
 msgid "Login"
-msgstr "Login"
+msgstr "Inicio de Sesión"
 
 #: www/templates/login.html:21
 msgid "Admin:"
-msgstr "Admin"
+msgstr "Admin:"
 
 #: www/templates/login.html:28
 msgid "Passwort:"
-msgstr "Password"
+msgstr "Contraseña:"
 
 #: www/templates/login.html:50
 msgid "Information einklappen"
-msgstr "hide information"
+msgstr "Doblar informacion"
 
 #: www/templates/login.html:50 www/templates/login.html:100
 msgid "Wie kann ich mich einloggen?"
-msgstr "Where do I find the passwords?"
+msgstr "¿Cómo puedo iniciar sesión?"
 
 #: www/templates/login.html:52 www/templates/login.html:101
 msgid ""
 "Die Daten für den Login finden Sie auf ihrer Anleitung \"upribox "
 "Administration\""
 msgstr ""
-"You can find your login credentials on your upribox instruction manual."
+"Los datos para el inicio de sesión se pueden encontrar en sus instrucciones "
+"\"Administración upribox\""
 
 #: www/templates/login.html:54
 msgid "Information ausblenden"
-msgstr "hide information"
+msgstr "Ocultar información"
 
 #: www/templates/login.html:63
 msgid "Silent Modus l&auml;uft."
-msgstr "Silent Mode active."
+msgstr "El Modo Silencioso está activado."
 
 #: www/templates/login.html:69
 msgid "WLAN eingeschaltet."
-msgstr "WLAN switched on"
+msgstr "WLAN activada."
 
 #: www/templates/login.html:73
 msgid "WLAN ausgeschaltet."
-msgstr "WLAN switched off"
+msgstr "WLAN desactivada."
 
 #: www/templates/login.html:81
 msgid "VPN Modus l&auml;uft."
-msgstr "VPN active."
+msgstr "El modo VPN se está ejecutando."
 
 #: www/templates/login.html:85
 msgid "VPN Modus l&auml;uft nicht."
-msgstr "VPN inactive."
+msgstr "El modo VPN no funciona."
 
 #: www/templates/login.html:91 www/templates/login.html:102
 msgid "Infos und Tipps"
-msgstr "General hints"
+msgstr "Información y consejos."
 
 #: www/templates/login.html:93 www/templates/login.html:105
 msgid ""
 "Verwenden Sie einen aktuellen Webbrowser, wir empfehlen Mozilla Firefox."
-msgstr "Use an up-to-date web browser, we recommend Mozilla Firefox."
+msgstr "Utilice un navegador web actualizado, recomendamos Mozilla Firefox."
 
 #: www/templates/login.html:94 www/templates/login.html:106
 msgid ""
 "Verwenden Sie den Ninja-Modus zusammen mit dem \"Privaten Modus\" Ihres "
 "Browsers."
-msgstr ""
-"Use the Ninja Mode in combination with the \"private mode\" of your web "
-"browser."
+msgstr "Utilice el Modo Ninja junto con el \"Modo Privado\" de su navegador."
 
 #: www/templates/login.html:95 www/templates/login.html:107
 msgid "Setzen sie ihre Browsereinstellungen zurück, bevor Sie loslegen."
-msgstr "Reset your web browser before starting to use the upribox."
+msgstr "Restablezca la configuración de su navegador antes de comenzar."
 
 #: www/templates/modal.html:8
 msgid ""
@@ -304,7 +305,7 @@ msgid ""
 "            "
 msgstr ""
 "\n"
-"You have been logged out! Click on \"close\" and login again."
+"                  ¡Fueron desconectados del upribox! Haga clic en \"Cerrar\" e inicie sesión de nuevo."
 
 #: www/templates/modal.html:13
 #, python-format
@@ -314,12 +315,12 @@ msgid ""
 "            "
 msgstr ""
 "\n"
-"Could not reach your upribox. Make sure that you connected to the WiFi \"%(upri_ssid)s\"."
+"                El Upribox no está al alcance. Por favor, asegúrese de que está conectado a la wifi. \"%(upri_ssid)s\""
 
 #: www/templates/modal.html:22
 msgid "Schließen"
-msgstr "Close"
+msgstr "Acerca"
 
 #: www/templatetags/base_extras.py:47
 msgid "abgelaufen"
-msgstr "time out"
+msgstr "caducado"

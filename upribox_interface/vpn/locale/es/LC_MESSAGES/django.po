@@ -1,0 +1,251 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# cbk <cbk914@riseup.net>, 2019
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-20 19:58+0000\n"
+"PO-Revision-Date: 2018-06-17 20:01+0000\n"
+"Last-Translator: cbk <cbk914@riseup.net>, 2019\n"
+"Language-Team: Spanish (https://www.transifex.com/upribox/teams/87489/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: vpn/forms.py:20
+msgid "Name:"
+msgstr "Nombre:"
+
+#: vpn/forms.py:26
+msgid "Domain:"
+msgstr "Dominio:"
+
+#: vpn/forms.py:49
+msgid "Profil existiert bereits"
+msgstr "Perfil existente."
+
+#: vpn/forms.py:62
+msgid "Die Domain darf maximal 255 Zeichen lang sein"
+msgstr "El dominio puede tener hasta 255 caracteres de longitud."
+
+#: vpn/forms.py:64
+msgid ""
+"Die Domain darf lediglich Buchstaben, Ziffern, Punkte und Minusse enthalten"
+msgstr "El dominio solo puede contener letras, números, puntos y guón."
+
+#: vpn/forms.py:66
+msgid "Die Domain ist nicht gültig"
+msgstr "El dominio no es valido"
+
+#: vpn/jobs.py:18
+msgid "VPN wird gestartet..."
+msgstr "Iniciando VPN..."
+
+#: vpn/jobs.py:20
+msgid "VPN wird gestoppt..."
+msgstr "Deteniendo VPN..."
+
+#: vpn/jobs.py:26
+msgid "Konfiguration des VPNs erfolgreich."
+msgstr "VPN configurada con éxito."
+
+#: vpn/jobs.py:32
+msgid "Es ist ein unbekannter Fehler aufgetreten."
+msgstr "Se ha producido un error desconocido."
+
+#: vpn/jobs.py:37
+msgid "Konfiguration des VPNs fehlgeschlagen."
+msgstr "Ha fallado la configuración de la VPN."
+
+#: vpn/jobs.py:44
+msgid "VPN Profile wird generiert..."
+msgstr "Generando perfil VPN..."
+
+#: vpn/jobs.py:47
+msgid "Generieren des VPN Profiles erfolgreich."
+msgstr "Perfil VPN generado con éxito."
+
+#: vpn/jobs.py:58
+msgid "Generieren des VPN Profiles fehlgeschlagen."
+msgstr "Ha fallado la configuración del perfil VPN."
+
+#: vpn/jobs.py:65
+msgid "VPN Profile wird entfernt..."
+msgstr "Eliminando perfil VPN..."
+
+#: vpn/jobs.py:68
+msgid "Entfernen des VPN Profiles erfolgreich."
+msgstr "Perfil VPN eliminado con éxito."
+
+#: vpn/jobs.py:78
+msgid "Entfernen des VPN Profiles fehlgeschlagen."
+msgstr "Ha fallado la eliminación del perfil VPN."
+
+#: vpn/templates/vpn.html:7
+msgid "VPN - upribox"
+msgstr "VPN - upribox"
+
+#: vpn/templates/vpn.html:10 vpn/templates/vpn.html:15
+msgid "VPN"
+msgstr "VPN"
+
+#: vpn/templates/vpn.html:11
+msgid "Sicherer Zugang von &uuml;berall."
+msgstr "Acceso seguro desde cualquier lugar."
+
+#: vpn/templates/vpn.html:15
+msgid "Start"
+msgstr "Inicio"
+
+#: vpn/templates/vpn.html:15
+msgid "Konfiguration"
+msgstr "Configuración"
+
+#: vpn/templates/vpn.html:19
+msgid ""
+"Sie wollen unterwegs auf sichere Weise Ihre E-Mails abrufen oder eine "
+"&Uuml;berweisung t&auml;tigen? Richten Sie daf&uuml;r VPN ein und nutzen Sie"
+" Ihr Internet, als w&auml;ren Sie zu Hause. Sie sch&uuml;tzen Ihre Daten vor"
+" dem Zugriff von Dritten in offenen Wireless-Netzwerken."
+msgstr ""
+"¿Desea leer de forma segura sus correos electrónicos o realizar una "
+"transferencia mientras viaja? Configúre la VPN y use su Internet como si "
+"estuviera en casa. Usted protege sus datos del acceso de terceros en redes "
+"inalámbricas abiertas."
+
+#: vpn/templates/vpn.html:24
+msgid "Ein-/Ausschalten"
+msgstr "Encendido / apagado"
+
+#: vpn/templates/vpn.html:30
+msgid "VPN läuft"
+msgstr "VPN en ejecución"
+
+#: vpn/templates/vpn.html:31
+msgid "Ausschalten"
+msgstr "Desconectar"
+
+#: vpn/templates/vpn.html:36
+msgid "VPN Verbindung wird getestet..."
+msgstr "Se está probando la conexión VPN ..."
+
+#: vpn/templates/vpn.html:38
+msgid ""
+"Ihre upribox ist nicht aus dem Internet erreichbar. Ermöglichen Sie den "
+"Zugriff indem Sie:"
+msgstr "Su upribox no es accesible desde internet. Habilitar el acceso por:"
+
+#: vpn/templates/vpn.html:40
+msgid "UPnP oder NAT-PMP auf Ihrem Router (Gateway) aktivieren, oder"
+msgstr "Habilite UPnP o NAT-PMP en su enrutador (puerta de enlace), o"
+
+#: vpn/templates/vpn.html:41
+#, python-format
+msgid ""
+"eine Port-Weiterleitung auf Ihrem Router für %(vpn_protocol)s-Port "
+"%(vpn_port)s zu Ihrer upribox konfigurieren!"
+msgstr ""
+"¡Configure un reenvío de puerto en su enrutador para %(vpn_protocol)spuerto "
+"%(vpn_port)s a su upribox!"
+
+#: vpn/templates/vpn.html:65
+msgid "\"Die upribox ist nicht erreichbar.\""
+msgstr "\"El upribox es inalcanzable\"."
+
+#: vpn/templates/vpn.html:69
+msgid "\"Die upribox ist erreichbar.\""
+msgstr "\"El upribox está disponible\"."
+
+#: vpn/templates/vpn.html:72
+msgid "\"Fehler beim Testen der Verbindung: \""
+msgstr "\"Error al probar la conexión:\""
+
+#: vpn/templates/vpn.html:80
+msgid "VPN läuft nicht"
+msgstr "VPN no se está ejecutando"
+
+#: vpn/templates/vpn.html:81
+msgid "Einschalten"
+msgstr "Encender"
+
+#: vpn/templates/vpn.html:87
+msgid "VPN-Profile"
+msgstr "Perfil VPN"
+
+#: vpn/templates/vpn.html:89
+msgid "Noch kein Profil erstellt. Erstellen Sie gleich ein Profil!"
+msgstr "No se ha creado ningún perfil todavía. ¡Cree un perfil ahora!"
+
+#: vpn/templates/vpn.html:91
+#, python-format
+msgid ""
+"\n"
+"        Die Verwendung des upribox-VPN erfordert die Erstellung von VPN-Profilen und die Installation der OpenVPN Client Software. F&uuml;r Ihr Smartphone k&ouml;nnen Sie einen der offziellen Clients f&uuml;r <a href=\"%(android)s\">Android</a> oder <a href=\"  %(ios)s\">iOS</a> herunterladen. Für den Desktop empfehlen wir folgende Programme: <a href=\"%(macos)s\">Tunnelblick f&uuml;r Mac OS</a> oder <a href=\"%(windows)s\">OpenVPN GUI f&uuml;r Windows</a>."
+msgstr ""
+"\n"
+"El uso de la VPN upribox requiere la creación de perfiles VPN y la instalación del software cliente OpenVPN. Para su teléfono inteligente, puede descargar uno de los clientes oficiales para <a href=\"%(android)s\">Android</a> o <a href=\"  %(ios)s\">iOS</a>. Para el escritorio, recomendamos los siguientes programas: <a href=\"%(macos)s\">Tunnelblick para Mac OS</a> o <a href=\"%(windows)s\">OpenVPN GUI para Windows</a>."
+
+#: vpn/templates/vpn.html:104
+msgid "Neues Profil erstellen"
+msgstr "Crear un nuevo perfil"
+
+#: vpn/templates/vpn.html:116
+msgid "Wie funktioniert VPN?"
+msgstr "¿Cómo funciona la VPN?"
+
+#: vpn/templates/vpn.html:118
+msgid ""
+"Mit Hilfe von VPN (Virtual Private Network) surfen sie unterwegs &uuml;ber "
+"ihre upribox. Um den Zugriff auf ihre upribox zu sch&uuml;tzen, erfordern "
+"Verbindungen spezielle VPN-Profile. Erstellen Sie pro Benutzer ein VPN-"
+"Profil und laden sie das Profil dann z.B. auf ihr Smartphone."
+msgstr ""
+"Con la ayuda de VPN (red privada virtual) puede navegar sobre la marcha a "
+"través de su upribox. Para proteger el acceso a su upribox, las conexiones "
+"requieren perfiles especiales de VPN. Cree un perfil VPN para cada usuario y"
+" luego cargue el perfil, por ejemplo. en su teléfono inteligente."
+
+#: vpn/templates/vpn.html:120
+msgid "Das upribox-VPN blockiert Werbung automatisch."
+msgstr "El upribox VPN bloquea la publicidad automáticamente."
+
+#: vpn/templates/vpn_profile.html:11
+msgid "Gültig: "
+msgstr "Válida:"
+
+#: vpn/templates/vpn_profile.html:15
+msgid "Profil herunterladen"
+msgstr "Descargar perfil"
+
+#: vpn/templates/vpn_profile.html:19
+msgid "QR-Code anzeigen"
+msgstr "Mostrar código QR"
+
+#: vpn/templates/vpn_profile.html:24
+msgid "Profil l&ouml;schen"
+msgstr "Borrar el perfil"
+
+#: vpn/views.py:41 vpn/views.py:54
+msgid "openvpn.log konnte nicht geöffnet werden."
+msgstr "openvpn.log no se pudo abrir."
+
+#: vpn/views.py:47
+msgid "Verbindung zu api.upribox.org fehlgeschlagen."
+msgstr "La conexión a api.upribox.org ha fallado."
+
+#: vpn/views.py:70
+msgid "Die Verbindung war erfolgreich!"
+msgstr "¡La conexión fue exitosa!"
+
+#: vpn/views.py:73
+msgid "Die Verbindung war nicht erfolgreich!"
+msgstr "¡La conexión no fue exitosa!"

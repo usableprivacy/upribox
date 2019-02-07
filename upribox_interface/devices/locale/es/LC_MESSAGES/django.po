@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Markus Donko-Huber, 2018
+# cbk <cbk914@riseup.net>, 2019
 # 
 #, fuzzy
 msgid ""
@@ -13,112 +13,113 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-06-20 19:58+0000\n"
 "PO-Revision-Date: 2018-06-17 19:46+0000\n"
-"Last-Translator: Markus Donko-Huber, 2018\n"
-"Language-Team: English (https://www.transifex.com/upribox/teams/87489/en/)\n"
+"Last-Translator: cbk <cbk914@riseup.net>, 2019\n"
+"Language-Team: Spanish (https://www.transifex.com/upribox/teams/87489/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: en\n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: devices/jobs.py:31
 msgid "Gerätemodus wird geändert..."
-msgstr "Device mode is being changed..."
+msgstr "Se cambia el modo de dispositivo..."
 
 #: devices/jobs.py:57
 msgid "Gerätemodus erfolgreich geändert."
-msgstr "Device mode successfully changed."
+msgstr "El modo de dispositivo se cambió con éxito."
 
 #: devices/jobs.py:69
 msgid "Ändern des Gerätemodus fehlgeschlagen."
-msgstr "Changing the device mode failed."
+msgstr "El cambio del modo de dispositivo falló."
 
 #: devices/jobs.py:82
 msgid "Job fehlgeschlagen."
-msgstr "Job failed."
+msgstr "Trabajo fallido."
 
 #: devices/templates/devices.html:7
 msgid "Start"
-msgstr "Start"
+msgstr "Inicio"
 
 #: devices/templates/devices.html:7 devices/templates/devices.html:13
 msgid "Geräteübersicht"
-msgstr "Device Overview"
+msgstr "Vista general del dispositivo"
 
 #: devices/templates/devices.html:10
 msgid "Geräteübersicht - upribox"
-msgstr "Device Overview - upribox"
+msgstr "Vista general del dispositivo - upribox"
 
 #: devices/templates/devices.html:24
 msgid "Die Geräteliste wird noch mit dem Server synchonisiert..."
-msgstr "Synchronizing device list..."
+msgstr "La lista de dispositivos todavía está sincronizada con el servidor..."
 
 #: devices/templates/devices.html:25
 msgid "Es wird noch überprüft welche Geräte online sind..."
-msgstr "Checking for online devices..."
+msgstr "Se está comprobando qué dispositivos están en línea..."
 
 #: devices/templates/devices.html:46
 msgid "Keine Geräte verfügbar"
-msgstr "No devices available"
+msgstr "No hay dispositivos disponibles"
 
 #: devices/templates/devices.html:65
 msgid "Kein Modus:"
-msgstr "No Mode:"
+msgstr "Sin modo:"
 
 #: devices/templates/devices.html:66
 msgid ""
 "Ist dieser Modus aktiviert, werden weder Werbung ausgeblendet, noch ihre "
 "Aktivitäten geschützt."
-msgstr "Advertisements are not filtered and your activities are not secured."
+msgstr ""
+"Cuando este modo está activado, no se ocultan los anuncios ni se protegen "
+"sus actividades."
 
 #: devices/templates/devices.html:66 devices/templates/devices.html:70
 #: devices/templates/devices.html:74
 msgid "mehr"
-msgstr "more"
+msgstr "más"
 
 #: devices/templates/devices.html:69
 msgid "Silent Modus:"
-msgstr "Silent Mode:"
+msgstr "Modo Silencioso:"
 
 #: devices/templates/devices.html:70
 msgid ""
 "Ermöglicht werbefreie Nutzung von Internetseiten. Außerdem wird Ihr "
 "Verhalten nicht beobachtet."
 msgstr ""
-"Enables ad-free usage of websites and your online activities are not "
-"monitored."
+"Permite el uso sin publicidad de sitios web. Además, no se observa su "
+"comportamiento."
 
 #: devices/templates/devices.html:73
 msgid "Ninja Modus:"
-msgstr "Ninja Mode:"
+msgstr "Modo Ninja:"
 
 #: devices/templates/devices.html:74
 msgid ""
 "Ermöglicht anonyme Nutzung. Ihre Aktivitäten können nur schwer nachverfolgt "
 "werden."
-msgstr ""
-"Tracking your activities is aggravated and anonymous usage is enabled."
+msgstr "Permite el uso anónimo. Sus actividades son difíciles de seguir."
 
 #: devices/templates/name_modal.html:6
 msgid "Gerätenamen ändern"
-msgstr "Change device name"
+msgstr "Cambiar el nombre del dispositivo"
 
 #: devices/templates/name_modal.html:16
 msgid "eigener Name"
-msgstr "custom name"
+msgstr "nombre propio"
 
 #: devices/templates/name_modal.html:20
 msgid "Vorschlag"
-msgstr "suggestion"
+msgstr "Propuesta"
 
 #: devices/templates/name_modal.html:30
 msgid "Ändern"
-msgstr "Apply"
+msgstr "cambio"
 
 #: devices/templates/name_modal.html:30
 msgid "Abbrechen"
-msgstr "Cancel"
+msgstr "Abortar"
 
 #: devices/views.py:115
 msgid "Der gewählte Name darf nicht leer sein"
-msgstr "Empty names are not permitted"
+msgstr "El nombre seleccionado no puede estar vacío"
