@@ -5,5 +5,5 @@ netifaces==0.10.5
 netaddr==0.7.19
 argcomplete==1.8.2
 scapy==2.3.3
-requests[security]==2.13.0
+requests[security]==2.20.0
 miniupnpc==1.9
