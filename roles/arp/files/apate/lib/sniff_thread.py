@@ -280,7 +280,7 @@ class SelectiveIPv6SniffThread(_SelectiveSniffThread):
             self.logger.exception(e)
 
     def _icmpv6_handler(self, pkt):
-        """"This method is called for each ICMPv6 echo reply packet or multicast listener report packet
+        """This method is called for each ICMPv6 echo reply packet or multicast listener report packet
         received through scapy's sniff function.
         Incoming packets are used to spoof involved devices and add new devices
         to the redis db.
@@ -293,7 +293,7 @@ class SelectiveIPv6SniffThread(_SelectiveSniffThread):
         # impersonate gateway
         if not self.ip.redis.check_device_disabled(pkt[Ether].src):
             sendp(
-                Ether(dst=pkt[Ether].src) / IPv6(src=self.ip.gateway, dst=pkt[IPv6].src) / ICMPv6ND_NA(tgt=self.ip.gateway, R=0, S=1) /
+                Ether(dst=pkt[Ether].src) / IPv6(src=self.ip.gateway, dst=pkt[IPv6].src) / ICMPv6ND_NA(tgt=self.ip.gateway, R=1, S=1) /
                 ICMPv6NDOptDstLLAddr(lladdr=self.ip.mac)
             )
 
@@ -302,5 +302,5 @@ class SelectiveIPv6SniffThread(_SelectiveSniffThread):
             if not self.ip.redis.check_device_disabled(pkt[Ether].src):
                 sendp(
                     Ether(dst=pkt[Ether].src) / IPv6(src=self.ip.dns_servers[0], dst=pkt[IPv6].src) /
-                    ICMPv6ND_NA(tgt=self.ip.dns_servers[0], R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=self.ip.mac)
+                    ICMPv6ND_NA(tgt=self.ip.dns_servers[0], R=1, S=1) / ICMPv6NDOptDstLLAddr(lladdr=self.ip.mac)
                 )
