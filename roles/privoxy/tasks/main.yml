@@ -58,5 +58,5 @@
   file: path={{other_env.default_settings.log.general.path}}/{{other_env.default_settings.log.privoxy.subdir}} state=absent
   when: res|changed
 
-- name: modify logrotate.d entry
-  file: path=/etc/logrotate.d/privoxy state=absent
+- name: create logrotate.d entry
+  template: src=privoxy-logrotate.j2 dest=/etc/logrotate.d/privoxy
