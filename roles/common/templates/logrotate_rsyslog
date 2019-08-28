@@ -3,11 +3,12 @@
     su root tmp-logger
 	rotate 0
 	daily
-    maxsize 10M
+    maxsize 5M
 	missingok
 	notifempty
 	postrotate
-		invoke-rc.d rsyslog rotate > /dev/null
+		service rsyslog rotate > /dev/null
+		service rsyslog restart > /dev/null
 	endscript
 }
 
@@ -32,6 +33,7 @@
     maxsize 10M
 	sharedscripts
 	postrotate
-		invoke-rc.d rsyslog rotate > /dev/null
+		service rsyslog rotate > /dev/null
+		service rsyslog restart > /dev/null
 	endscript
 }
