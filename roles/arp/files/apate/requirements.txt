@@ -3,5 +3,5 @@ netaddr==0.7.19
 netifaces==0.10.5
 python-daemon==2.1.2
 redis==2.10.5
-scapy==2.3.3
+scapy==2.4.3
 dnspython==1.15.0
