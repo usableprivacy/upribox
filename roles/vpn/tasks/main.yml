@@ -136,6 +136,9 @@
     - restart openvpn
     - restart openvpn-su
 
+- name: deploy Server Certificate renewal cronjob
+  template: src=server-cert-renewal.sh dest=/etc/cron.weekly/openvpn-server-cert owner=root group=root mode=0755
+
 - name: deleting unused files
   file: path={{item}} state=absent
   with_items:

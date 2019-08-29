@@ -267,13 +267,14 @@ class ApateRedis(object):
         """
         # True if devices is disabled
         # return self.redis.get(self._get_device_name(mac, network or self.network, enabled=False)) is not None
-        return self.redis.sismember(self.get_excluded_key(), mac)
+        return self.redis.sismember(self.get_excluded_key(), str(mac).lower())
 
     def _toggle_device(self, mac, ip, network, enabled):
         # add new device first and delete old device afterwards
         # this is done to avoid race conditions
         # self.add_device(mac, self.get_device_ip(mac, network, enabled=not enabled), network, enabled=enabled, force=True)
         # self.remove_device(mac, network, enabled=not enabled)
+        mac = str(mac).lower()
         if not enabled:
             self.redis.sadd(self.get_excluded_key(), mac)
         else:

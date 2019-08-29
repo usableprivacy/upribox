@@ -148,10 +148,7 @@ class SelectiveIPv6Process(mp.Process):
         Args:
             logger (logging.Logger): Used for logging messages.
             interface (str): The network interface which should be used. (e.g. eth0)
-            pidfile (str): Path of the pidfile, used by the daemon.
-            stdout (str): Path of stdout, used by the daemon.
-            stderr (str): Path of stderr, used by the daemon.
-            dns_file (str): Path of file containing the nameservers.
+            ipv6 (collection.namedtuple): collection of network information
 
         Raises:
             DaemonError: Signalises the failure of the daemon.
@@ -182,18 +179,16 @@ class SelectiveIPv6Process(mp.Process):
 
     def _return_to_normal(self):
         """This method is called when the daemon is stopping.
-        First, sends a GARP broadcast request to all clients to tell them the real gateway.
-        Then ARP replies for existing clients are sent to the gateway.
-        If IPv6 is enabled, Apate tells the clients the real gateway via neighbor advertisements.
+        Apate tells the clients the real gateway via neighbor advertisements.
         """
-        # spoof clients with GARP broadcast request
+        # spoof clients with nd advertisements
         with self.sleeper:
             # check if the impersonation of the DNS server is necessary
             tgt = (self.ipv6.gateway, self.ipv6.dns_servers[0]) if util.is_spoof_dns(self.ipv6) else (self.ipv6.gateway,)
 
             for source in tgt:
                 sendp(Ether(dst=ETHER_BROADCAST) / IPv6(src=source, dst=MulticastPingDiscoveryThread._MULTICAST_DEST) /
-                      ICMPv6ND_NA(tgt=source, R=0, S=0) / ICMPv6NDOptDstLLAddr(lladdr=self.ipv6.gate_mac))
+                      ICMPv6ND_NA(tgt=source, R=1, S=0, O=1) / ICMPv6NDOptDstLLAddr(lladdr=self.ipv6.gate_mac))
 
     def shutdown(self):
         self.exit.set()
@@ -228,7 +223,7 @@ class SelectiveIPv6Process(mp.Process):
 
                 for source in tgt:
                     packets.extend([Ether(dst=dev[1]) / IPv6(src=source, dst=dev[0]) /
-                                    ICMPv6ND_NA(tgt=source, R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=self.ipv6.mac)
+                                    ICMPv6ND_NA(tgt=source, R=1, S=1, O=1) / ICMPv6NDOptDstLLAddr(lladdr=self.ipv6.mac)
                                     for dev in self.ipv6.redis.get_devices_values(filter_values=True)])
 
                 sendp(packets)
@@ -257,7 +252,7 @@ class SelectiveIPv6Process(mp.Process):
             for source in tgt:
                 if not ip.redis.check_device_disabled(util.get_device_mac(entry)):
                     sendp([Ether(dst=dev_hw) / IPv6(src=source, dst=dev_ip) /
-                           ICMPv6ND_NA(tgt=source, R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=ip.mac)])
+                           ICMPv6ND_NA(tgt=source, R=1, S=1) / ICMPv6NDOptDstLLAddr(lladdr=ip.mac)])
                 else:
                     sendp([Ether(dst=dev_hw) / IPv6(src=source, dst=dev_ip) /
-                           ICMPv6ND_NA(tgt=source, R=0, S=1) / ICMPv6NDOptDstLLAddr(lladdr=ip.gate_mac)])
+                           ICMPv6ND_NA(tgt=source, R=1, S=1) / ICMPv6NDOptDstLLAddr(lladdr=ip.gate_mac)])

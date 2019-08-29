@@ -53,7 +53,7 @@ http_port 3128 intercept
 #
 cache_peer 127.0.0.1 parent 8118 0 no-query default no-digest no-netdb-exchange
 cache_peer ::1 parent 8119 0 no-query default no-digest no-netdb-exchange
-cache_mem 128 MB
+cache_mem 64 MB
 
 logformat useragent_short %>eui;|;%>a;|;%"{User-Agent}>h;|;%ts.%tu
 access_log daemon:{{ default_settings.log.general.path }}/{{ default_settings.log.squid.subdir }}/{{ default_settings.log.squid.logfiles.logname }} useragent_short

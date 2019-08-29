@@ -122,6 +122,7 @@ class PubSubThread(threading.Thread):
     __SUBSCRIBE_TO = "__keyevent@{}__:expired"
     """Used to subscribe to the keyspace event expired."""
     __SUBSCRIBE_TOO = "__keyspace@{}__:{}"
+    """Used to subscribe to the keyspace event creation for a specific key."""
 
     def __init__(self, ip, logger, handler):
         """Initialises the thread.

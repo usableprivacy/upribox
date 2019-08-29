@@ -21,6 +21,10 @@
   file: path=/var/log/log state=directory owner=root group=tmp-logger mode=0771
   when: env == "development"
 
+- name: try to disable swapfile
+  service: name=dphys-swapfile state=stopped enabled=no
+  ignore_errors: yes
+
 - name: create tmpfs for logging
   lineinfile:
     dest: /etc/fstab
