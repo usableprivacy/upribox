@@ -14,8 +14,8 @@ server {
     # the port your site will be served on
     listen 80;
     listen [::]:80;
-    listen 4300 ssl;
-    listen [::]:4300 ssl;
+    listen 4300 ssl http2;
+    listen [::]:4300 ssl http2;
     ssl_certificate     /etc/ssl/certs/interfaceCert.pem;
     ssl_certificate_key /etc/ssl/private/interfaceKey.pem;
     ssl_protocols TLSv1.2;
@@ -33,6 +33,11 @@ server {
     error_log {{default_settings.log.general.path}}/{{default_settings.log.nginx.logfiles.interface_error}} error;
 
     location /static {
+        gzip on;
+        gzip_vary on;
+        gzip_min_length 10240;
+        gzip_types text/plain text/css text/javascript application/javascript;
+        gzip_disable "MSIE [1-6]\.";
         alias /usr/local/static/upribox_interface/; # your Django project's static files - amend as required
     }
 
