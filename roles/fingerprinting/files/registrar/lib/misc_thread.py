@@ -63,8 +63,10 @@ class StaticIPNoModeDiscoveryThread(threading.Thread):
                         if devices:
                             ans, unans = arping(devices, iface=None, verbose=0)
                             for device in ans:
-                                if check_preconditions(device[1][ARP].psrc, device[1][ARP].hwsrc):
-                                    insert_or_update_fingerprint(self.conn, ip=device[1][ARP].psrc, mac=device[1][ARP].hwsrc)
+                                ip_addr = device[1][ARP].psrc
+                                mac_addr = str(device[1][ARP].hwsrc).lower()
+                                if check_preconditions(ip_addr, mac_addr):
+                                    insert_or_update_fingerprint(self.conn, ip=ip_addr, mac=mac_addr)
 
                         self.logger.info("checked no mode devices: " + str(devices))
 
