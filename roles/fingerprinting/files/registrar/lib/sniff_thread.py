@@ -115,7 +115,7 @@ class RegistrarSniffThread(_SniffThread):
     def _handle_dhcp(self, pkt):
         # self.logger.error(pkt[DHCP].command())
         params = {}
-        params['mac'] = ":".join(hexstr(pkt[BOOTP].chaddr, onlyhex=True).split(" ")[:6])
+        params['mac'] = str(":".join(hexstr(pkt[BOOTP].chaddr, onlyhex=True).split(" ")[:6])).lower()
 
         for entry in pkt[DHCP].options:
             if entry[0] == "message-type":

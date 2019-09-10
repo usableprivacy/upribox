@@ -37,7 +37,8 @@ def get_entries():
         pass
 
     return sorted(
-        DeviceEntry.objects.filter(last_seen__gte=datetime.now() - timedelta(weeks=1)).exclude(ip=gateway), key=lambda x: get_device_name(x).upper()
+        DeviceEntry.objects.filter(last_seen__gte=datetime.now() - timedelta(weeks=1), mac__regex=r'([0-9a-f]:?){12}')
+        .exclude(ip=gateway), key=lambda x: get_device_name(x).upper()
     )
 
 
