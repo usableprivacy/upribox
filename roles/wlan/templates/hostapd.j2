@@ -1,7 +1,7 @@
 interface=wlan0
 bssid={{ ansible_wlan0.macaddress | regex_replace('^..', magic_mac_prefix) | regex_replace('..$', magic_mac_postfix) }}
-hw_mode={{ default_settings.wlan.general.hw_mode if not (ansible_local is defined and ansible_local.wlan is defined and ansible_local.wlan.general is defined) else ansible_local.wlan.general.hw_mode| default(default_settings.wlan.general.hw_mode) }}
-channel={{ default_settings.wlan.general.channel if not (ansible_local is defined and ansible_local.wlan is defined and ansible_local.wlan.general is defined) else ansible_local.wlan.general.channel | default(default_settings.wlan.general.channel) }}
+hw_mode={{ wireless_mode }}
+channel={{ wireless_channel }}
 ieee80211n={{ default_settings.wlan.general.ieee80211n if not (ansible_local is defined and ansible_local.wlan is defined and ansible_local.wlan.general is defined) else ansible_local.wlan.general.ieee80211n| default(default_settings.wlan.general.ieee80211n) }}
 driver=nl80211
 wmm_enabled={{ default_settings.wlan.general.wmm_enabled if not (ansible_local is defined and ansible_local.wlan is defined and ansible_local.wlan.general is defined) else ansible_local.wlan.general.wmm_enabled | default(default_settings.wlan.general.wmm_enabled) }}

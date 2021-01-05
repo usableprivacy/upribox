@@ -1,0 +1,5 @@
+---
+
+# port and protocol for openvpn server
+wireless_mode: "{{ default_settings.wlan.general.hw_mode if not (ansible_local is defined and ansible_local.wlan is defined and ansible_local.wlan.general is defined) else ansible_local.wlan.general.hw_mode| default(default_settings.wlan.general.hw_mode) }}"
+wireless_channel: "{{ default_settings.wlan.general.channel if not (ansible_local is defined and ansible_local.wlan is defined and ansible_local.wlan.general is defined) else ansible_local.wlan.general.channel | default(default_settings.wlan.general.channel) }}"

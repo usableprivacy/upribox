@@ -6,6 +6,7 @@ from jsonmerge import merge
 from os import path
 import sys
 sys.path.insert(0, "/usr/share/nginx/www-upri-interface/lib/")
+sys.path.insert(1, "../../www-upri-interface/lib/")
 import passwd
 import ssid
 import domain
