@@ -7,8 +7,6 @@ days=60
 
 if [ $? -eq 1 ]
 then
-  currentyear=$(date +'%Y')
-  openssl req -newkey rsa:2048 -nodes -subj "/C=AT/ST=Austria/L=Vienna/O=Usable Privacy Box/OU=VPN$currentyear/CN=server" -keyout /etc/openvpn/ca/serverKey.pem -out /etc/openvpn/ca/serverReq.pem
   openssl ca -in /etc/openvpn/ca/serverReq.pem -days 730 -batch -out /etc/openvpn/ca/serverCert.pem -notext -cert /etc/openvpn/ca/caCert.pem -keyfile /etc/openvpn/ca/caKey.pem
   service openvpn-su restart
 fi
