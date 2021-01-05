@@ -67,11 +67,23 @@
   apt: name={{ item }} state="{{ apt_target_state }}" force=yes update_cache=yes cache_valid_time="{{ apt_cache_time }}"
   with_items:
     - libssl-dev
-    - python-pip
+    #- python-pip
     - python-dev
+    - python-cffi
+    - python-openssl
     - libffi-dev
     - git
     - psmisc
+    - sqlite3
+
+- name: install pip via curl
+  command: curl https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py
+
+- name: install pip from get-pi.py
+  command: python /tmp/get-pip.py
+
+- name: remove pip setup file
+  file: path=/tmp/get-pip.py state=absent
 
 - name: install ansible via pip
   pip: name=ansible state=present version="{{ansible_pip_version}}"
