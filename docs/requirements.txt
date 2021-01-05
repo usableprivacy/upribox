@@ -1,3 +1,5 @@
 sphinx-argparse==0.2.5
 argcomplete==1.8.2
 sphinx-intl==0.9.11
+
+sphinx>=3.0.4 # not directly required, pinned by Snyk to avoid a vulnerability
