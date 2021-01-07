@@ -19,7 +19,7 @@ The [upribox](https://upribox.org) Software turns your RaspberryPi into a privac
 ---
 
 ## License
-Copyright (C) 2019 by [upribox developers](https://upribox.org/#contact)
+Copyright (C) 2021 by [upribox developers](https://upribox.org/#contact)
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
