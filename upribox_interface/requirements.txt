@@ -12,7 +12,7 @@ pytz==2017.2
 redis==2.10.5
 requests==2.20.0
 rq==0.8.1
-sqlparse==0.2.3
+sqlparse==0.4.1
 ua-parser==0.7.3
 user-agents==1.1.0
 wsgiref==0.1.2
