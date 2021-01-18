@@ -1,4 +1,4 @@
-python-daemon==2.1.2
+python-daemon==2.2.4
 scapy==2.4.3
 netaddr==0.7.19
 http-parser==0.8.3
