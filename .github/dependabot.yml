@@ -3,13 +3,13 @@ updates:
 
   # apate
   - package-ecosystem: "pip"
-    directory: "roles/arp/files/apate/requirements.txt"
+    directory: "roles/arp/files/apate/"
     schedule:
       interval: "daily"
 
   # django web ui
   - package-ecosystem: "pip"
-    directory: "upribox_interface/requirements.txt"
+    directory: "upribox_interface/"
     schedule:
       interval: "daily"
 
@@ -21,12 +21,12 @@ updates:
 
   # fingerprinter
   - package-ecosystem: "pip"
-    directory: "roles/fingerprinting/files/registrar/requirements.txt"
+    directory: "roles/fingerprinting/files/registrar/"
     schedule:
       interval: "daily"
 
   # upribox-config.py
   - package-ecosystem: "pip"
-    directory: "roles/upri_config/files/upri-config/requirements.txt"
+    directory: "roles/upri_config/files/upri-config/"
     schedule:
       interval: "daily"
