@@ -3,7 +3,7 @@ functools32==3.2.3-2
 redis==2.10.5
 netifaces==0.10.5
 netaddr==0.7.19
-argcomplete==1.8.2
+argcomplete==1.12.2
 scapy==2.4.3
 requests[security]==2.20.0
 miniupnpc==1.9
