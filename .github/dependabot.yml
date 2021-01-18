@@ -1,0 +1,32 @@
+version: 2
+updates:
+
+  # apate
+  - package-ecosystem: "pip"
+    directory: "roles/arp/files/apate/requirements.txt"
+    schedule:
+      interval: "daily"
+
+  # django web ui
+  - package-ecosystem: "pip"
+    directory: "upribox_interface/requirements.txt"
+    schedule:
+      interval: "daily"
+
+  # docs
+  - package-ecosystem: "pip"
+    directory: "docs/requirements.txt"
+    schedule:
+      interval: "daily"
+
+  # fingerprinter
+  - package-ecosystem: "pip"
+    directory: "roles/fingerprinting/files/registrar/requirements.txt"
+    schedule:
+      interval: "daily"
+
+  # upribox-config.py
+  - package-ecosystem: "pip"
+    directory: "roles/upri_config/files/upri-config/requirements.txt"
+    schedule:
+      interval: "daily"
