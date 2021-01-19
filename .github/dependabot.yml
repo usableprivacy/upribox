@@ -6,27 +6,32 @@ updates:
     directory: "roles/arp/files/apate/"
     schedule:
       interval: "daily"
+    open-pull-requests-limit: 0
 
   # django web ui
   - package-ecosystem: "pip"
     directory: "upribox_interface/"
     schedule:
       interval: "daily"
+    open-pull-requests-limit: 0
 
   # docs
   - package-ecosystem: "pip"
     directory: "docs/requirements.txt"
     schedule:
       interval: "daily"
+    open-pull-requests-limit: 0
 
   # fingerprinter
   - package-ecosystem: "pip"
     directory: "roles/fingerprinting/files/registrar/"
     schedule:
       interval: "daily"
+    open-pull-requests-limit: 0
 
   # upribox-config.py
   - package-ecosystem: "pip"
     directory: "roles/upri_config/files/upri-config/"
     schedule:
       interval: "daily"
+    open-pull-requests-limit: 0
