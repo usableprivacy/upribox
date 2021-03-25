@@ -1,5 +1,5 @@
 Django>=1.11.1,<=1.11.99
-PyYAML==5.3.1
+PyYAML==5.4
 argparse==1.2.1
 click==6.7
 django-autoslug==1.9.3
