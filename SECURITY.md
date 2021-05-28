@@ -12,6 +12,6 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-Reach out to markus [AT] usableorivacy.com
-Public PGP Key: [keybase.io/nysos](https://keybase.io/nysos/pgp_keys.asc)
+Reach out to markus [AT] usableprivacy.com
 
+[keybase.io/nysos](https://keybase.io/nysos/pgp_keys.asc) `(Public PGP Key)`
