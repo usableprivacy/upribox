@@ -1,11 +1,10 @@
-jsonmerge==1.3.0
-functools32==3.2.3-2
+jsonmerge==1.8.0
+functools32==3.2.3.post2
 redis==2.10.5
 netifaces==0.10.5
 netaddr==0.7.19
 argcomplete==1.8.2
 scapy==2.4.3
-requests[security]==2.20.0
+requests==2.25.1
 miniupnpc==1.9
-
-urllib3>=1.25.9 # not directly required, pinned by Snyk to avoid a vulnerability
+urllib3==1.26.3
