@@ -4,4 +4,4 @@ netifaces==0.10.5
 python-daemon==2.1.2
 redis==2.10.5
 scapy==2.4.3
-dnspython==1.15.0
+dnspython==2.2.1
