@@ -9,7 +9,7 @@ dnspython==1.15.0
 netaddr==0.7.19
 netifaces==0.10.5
 pytz==2017.2
-redis==2.10.5
+redis==4.2.0
 requests==2.20.0
 rq==0.8.1
 sqlparse==0.2.3
