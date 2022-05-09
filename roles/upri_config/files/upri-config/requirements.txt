@@ -1,6 +1,6 @@
 jsonmerge==1.8.0
 functools32==3.2.3.post2
-redis==2.10.5
+redis==4.3.1
 netifaces==0.10.5
 netaddr==0.7.19
 argcomplete==1.8.2
