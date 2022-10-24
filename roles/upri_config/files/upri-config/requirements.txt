@@ -6,5 +6,5 @@ netaddr==0.7.19
 argcomplete==1.8.2
 scapy==2.4.3
 requests==2.25.1
-miniupnpc==1.9
+miniupnpc==2.2.4
 urllib3==1.26.5
