@@ -1,3 +1,6 @@
+> :warning: 04/2024: **PLEASE NOTE THAT THIS PROJECT IS NOT MAINTAINED**, refer to **[UP Box 4](https://docs.usableprivacy.com/box)**
+
+
 [![upribox Homepage](https://upribox.org/wp-content/uploads/2017/09/upribox-logo-300x98.png)](https://upribox.org/)
 
 ## Privacy made easy for the Raspberry Pi 3
@@ -19,7 +22,7 @@ The [upribox](https://upribox.org) Software turns your RaspberryPi into a privac
 ---
 
 ## License
-Copyright (C) 2021 by [upribox developers](https://upribox.org/#contact)
+Copyright (C) 2024 by [upribox developers](https://upribox.org/#contact)
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
